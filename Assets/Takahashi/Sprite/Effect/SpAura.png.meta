@@ -1,0 +1,1709 @@
+fileFormatVersion: 2
+guid: d7119f97d6121f340845817ff0d702d8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7895550427849895712
+    second: SpAura_0
+  - first:
+      213: -6824840495530909774
+    second: SpAura_1
+  - first:
+      213: -7827597517264633805
+    second: SpAura_2
+  - first:
+      213: 3590625030769846505
+    second: SpAura_3
+  - first:
+      213: -7658125979787340601
+    second: SpAura_4
+  - first:
+      213: -3810815155177136202
+    second: SpAura_5
+  - first:
+      213: 3636961656363226050
+    second: SpAura_6
+  - first:
+      213: 9169400125774684969
+    second: SpAura_7
+  - first:
+      213: -1489389029711679456
+    second: SpAura_8
+  - first:
+      213: -2338188437184040901
+    second: SpAura_9
+  - first:
+      213: -4167657038888818933
+    second: SpAura_10
+  - first:
+      213: -8215684783511190322
+    second: SpAura_11
+  - first:
+      213: 656110065345942793
+    second: SpAura_12
+  - first:
+      213: 6813322493328065266
+    second: SpAura_13
+  - first:
+      213: -4679851058634759631
+    second: SpAura_14
+  - first:
+      213: -7833666662827533831
+    second: SpAura_15
+  - first:
+      213: 7199737969947166999
+    second: SpAura_16
+  - first:
+      213: 73391847321437065
+    second: SpAura_17
+  - first:
+      213: -355532785175148406
+    second: SpAura_18
+  - first:
+      213: -9199016868916454334
+    second: SpAura_19
+  - first:
+      213: -5572146810282916255
+    second: SpAura_20
+  - first:
+      213: -4043364914517024935
+    second: SpAura_21
+  - first:
+      213: 8838056356164794991
+    second: SpAura_22
+  - first:
+      213: 748035436772536300
+    second: SpAura_23
+  - first:
+      213: -6543153411451167818
+    second: SpAura_24
+  - first:
+      213: -6322110433708995576
+    second: SpAura_25
+  - first:
+      213: 5557415566686271106
+    second: SpAura_26
+  - first:
+      213: -377704377390344474
+    second: SpAura_27
+  - first:
+      213: -7785540425663588256
+    second: SpAura_28
+  - first:
+      213: 86161320203314343
+    second: SpAura_29
+  - first:
+      213: -907052573226501418
+    second: SpAura_30
+  - first:
+      213: 5707208240408643706
+    second: SpAura_31
+  - first:
+      213: -1486695551799352571
+    second: SpAura_32
+  - first:
+      213: -5266874756671824109
+    second: SpAura_33
+  - first:
+      213: -2944530039388362064
+    second: SpAura_34
+  - first:
+      213: -8496778716200177057
+    second: SpAura_35
+  - first:
+      213: -6678632630887992978
+    second: SpAura_36
+  - first:
+      213: 4242816061734688572
+    second: SpAura_37
+  - first:
+      213: -732282931592010687
+    second: SpAura_38
+  - first:
+      213: -5935562391518756828
+    second: SpAura_39
+  - first:
+      213: -9061775091332142550
+    second: SpAura_40
+  - first:
+      213: -5539908884841769379
+    second: SpAura_41
+  - first:
+      213: 8792312617589188606
+    second: SpAura_42
+  - first:
+      213: 7993303863962575188
+    second: SpAura_43
+  - first:
+      213: -8878796806981464639
+    second: SpAura_44
+  - first:
+      213: -8671695785557485706
+    second: SpAura_45
+  - first:
+      213: 6224306060608751973
+    second: SpAura_46
+  - first:
+      213: -7406061169400125709
+    second: SpAura_47
+  - first:
+      213: 6753630366221119665
+    second: SpAura_48
+  - first:
+      213: 6091600666044180434
+    second: SpAura_49
+  - first:
+      213: -6248656664008909440
+    second: SpAura_50
+  - first:
+      213: -5665836330321068120
+    second: SpAura_51
+  - first:
+      213: -1378138483030245075
+    second: SpAura_52
+  - first:
+      213: 5562896818602011233
+    second: SpAura_53
+  - first:
+      213: -7116426148892330565
+    second: SpAura_54
+  - first:
+      213: -8281285987131713398
+    second: SpAura_55
+  - first:
+      213: -4144239570996290789
+    second: SpAura_56
+  - first:
+      213: 138951656456718568
+    second: SpAura_57
+  - first:
+      213: -7588715259740443222
+    second: SpAura_58
+  - first:
+      213: 5689943758685160636
+    second: SpAura_59
+  - first:
+      213: 8041669435348218102
+    second: SpAura_60
+  - first:
+      213: -6381847041982494642
+    second: SpAura_61
+  - first:
+      213: -4146758696579632098
+    second: SpAura_62
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SpAura_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02f2d2e1841a29d60800000000000000
+      internalID: 7895550427849895712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_1
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bfdd279abb4941a0800000000000000
+      internalID: -6824840495530909774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_2
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33046bac789ce5390800000000000000
+      internalID: -7827597517264633805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_3
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e8a9a8017674d130800000000000000
+      internalID: 3590625030769846505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_4
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c4d591fefed8b590800000000000000
+      internalID: -7658125979787340601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_5
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bfddf29ec34d1bc0800000000000000
+      internalID: -3810815155177136202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_6
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c31f356b55197230800000000000000
+      internalID: 3636961656363226050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_7
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 406
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 923e83435d0404f70800000000000000
+      internalID: 9169400125774684969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 020fbaf8190a45be0800000000000000
+      internalID: -1489389029711679456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_9
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3038bf21061d8fd0800000000000000
+      internalID: -2338188437184040901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_10
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b07206b11028926c0800000000000000
+      internalID: -4167657038888818933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_11
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec4cb3cc7360cfd80800000000000000
+      internalID: -8215684783511190322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_12
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 905d082d0a8fa1900800000000000000
+      internalID: 656110065345942793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_13
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f28ffa85b8cd8e50800000000000000
+      internalID: 6813322493328065266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_14
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 132e650d144dd0fb0800000000000000
+      internalID: -4679851058634759631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_15
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 348
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f95859bca9394390800000000000000
+      internalID: -7833666662827533831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 719c79ea98b9ae360800000000000000
+      internalID: 7199737969947166999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_17
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 983010d0f7db40100800000000000000
+      internalID: 73391847321437065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_18
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8841a9c0d4e01bf0800000000000000
+      internalID: -355532785175148406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_19
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24c986d65e6865080800000000000000
+      internalID: -9199016868916454334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_20
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 166c2c0aff1cba2b0800000000000000
+      internalID: -5572146810282916255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_21
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95f5fec680513e7c0800000000000000
+      internalID: -4043364914517024935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_22
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6af51e0e6517aa70800000000000000
+      internalID: 8838056356164794991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_23
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 290
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cef2b38344e816a00800000000000000
+      internalID: 748035436772536300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bb519fa3ac0235a0800000000000000
+      internalID: -6543153411451167818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_25
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80c0cf77e0a5348a0800000000000000
+      internalID: -6322110433708995576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_26
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 286bf817308ef1d40800000000000000
+      internalID: 5557415566686271106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_27
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e6d983bedf12caf0800000000000000
+      internalID: -377704377390344474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_28
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 068d0ef7b3434f390800000000000000
+      internalID: -7785540425663588256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_29
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a4e814a34b123100800000000000000
+      internalID: 86161320203314343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_30
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dafa3c8d708963f0800000000000000
+      internalID: -907052573226501418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_31
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 232
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a784db418a3143f40800000000000000
+      internalID: 5707208240408643706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 503a8d1c5423e5be0800000000000000
+      internalID: -1486695551799352571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_33
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31f9a1c505d48e6b0800000000000000
+      internalID: -5266874756671824109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_34
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ba2acba78de227d0800000000000000
+      internalID: -2944530039388362064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_35
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f52f9c586c0651a80800000000000000
+      internalID: -8496778716200177057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_36
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e61b692d10bb053a0800000000000000
+      internalID: -6678632630887992978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_37
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c37940f8ab281ea30800000000000000
+      internalID: 4242816061734688572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_38
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1446063bd8866d5f0800000000000000
+      internalID: -732282931592010687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_39
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 174
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4204b5fe375a0ada0800000000000000
+      internalID: -5935562391518756828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2a2aa6d09b1e3280800000000000000
+      internalID: -9061775091332142550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_41
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d56d9fe883a4e13b0800000000000000
+      internalID: -5539908884841769379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_42
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef7a695fdb1940a70800000000000000
+      internalID: 8792312617589188606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_43
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4512f31938bedee60800000000000000
+      internalID: 7993303863962575188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_44
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cd4ffe885d28c480800000000000000
+      internalID: -8878796806981464639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_45
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 677189da0a2f7a780800000000000000
+      internalID: -8671695785557485706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_46
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56945e3626d216650800000000000000
+      internalID: 6224306060608751973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_47
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 116
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f6671dfa92683990800000000000000
+      internalID: -7406061169400125709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b0b6ea2907b9bd50800000000000000
+      internalID: 6753630366221119665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_49
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d7a815f786b98450800000000000000
+      internalID: 6091600666044180434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_50
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08d1f52fedf4849a0800000000000000
+      internalID: -6248656664008909440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_51
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8afb5bf50e7ee51b0800000000000000
+      internalID: -5665836330321068120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_52
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d21cfa3f95edfdce0800000000000000
+      internalID: -1378138483030245075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_53
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16a6ceade21633d40800000000000000
+      internalID: 5562896818602011233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_54
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb5b8fc3f106d3d90800000000000000
+      internalID: -7116426148892330565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_55
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 58
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8818955546f21d80800000000000000
+      internalID: -8281285987131713398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1b16aa3114bc76c0800000000000000
+      internalID: -4144239570996290789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_57
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e80e0c9bc7ade100800000000000000
+      internalID: 138951656456718568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_58
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aada5919da77fa690800000000000000
+      internalID: -7588715259740443222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_59
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb44160b3bdb6fe40800000000000000
+      internalID: 5689943758685160636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_60
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f0fb0faebfb99f60800000000000000
+      internalID: 8041669435348218102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_61
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4881c38def1f67a0800000000000000
+      internalID: -6381847041982494642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_62
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e14fb199fe0c376c0800000000000000
+      internalID: -4146758696579632098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpAura_63
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 0
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef202b15642de18408cb8c70cf872cae
+      internalID: 1069487580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: fbbbc4544cc87f44a8788ba5a8f8d68a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SpAura_0: 7895550427849895712
+      SpAura_1: -6824840495530909774
+      SpAura_10: -4167657038888818933
+      SpAura_11: -8215684783511190322
+      SpAura_12: 656110065345942793
+      SpAura_13: 6813322493328065266
+      SpAura_14: -4679851058634759631
+      SpAura_15: -7833666662827533831
+      SpAura_16: 7199737969947166999
+      SpAura_17: 73391847321437065
+      SpAura_18: -355532785175148406
+      SpAura_19: -9199016868916454334
+      SpAura_2: -7827597517264633805
+      SpAura_20: -5572146810282916255
+      SpAura_21: -4043364914517024935
+      SpAura_22: 8838056356164794991
+      SpAura_23: 748035436772536300
+      SpAura_24: -6543153411451167818
+      SpAura_25: -6322110433708995576
+      SpAura_26: 5557415566686271106
+      SpAura_27: -377704377390344474
+      SpAura_28: -7785540425663588256
+      SpAura_29: 86161320203314343
+      SpAura_3: 3590625030769846505
+      SpAura_30: -907052573226501418
+      SpAura_31: 5707208240408643706
+      SpAura_32: -1486695551799352571
+      SpAura_33: -5266874756671824109
+      SpAura_34: -2944530039388362064
+      SpAura_35: -8496778716200177057
+      SpAura_36: -6678632630887992978
+      SpAura_37: 4242816061734688572
+      SpAura_38: -732282931592010687
+      SpAura_39: -5935562391518756828
+      SpAura_4: -7658125979787340601
+      SpAura_40: -9061775091332142550
+      SpAura_41: -5539908884841769379
+      SpAura_42: 8792312617589188606
+      SpAura_43: 7993303863962575188
+      SpAura_44: -8878796806981464639
+      SpAura_45: -8671695785557485706
+      SpAura_46: 6224306060608751973
+      SpAura_47: -7406061169400125709
+      SpAura_48: 6753630366221119665
+      SpAura_49: 6091600666044180434
+      SpAura_5: -3810815155177136202
+      SpAura_50: -6248656664008909440
+      SpAura_51: -5665836330321068120
+      SpAura_52: -1378138483030245075
+      SpAura_53: 5562896818602011233
+      SpAura_54: -7116426148892330565
+      SpAura_55: -8281285987131713398
+      SpAura_56: -4144239570996290789
+      SpAura_57: 138951656456718568
+      SpAura_58: -7588715259740443222
+      SpAura_59: 5689943758685160636
+      SpAura_6: 3636961656363226050
+      SpAura_60: 8041669435348218102
+      SpAura_61: -6381847041982494642
+      SpAura_62: -4146758696579632098
+      SpAura_63: 1069487580
+      SpAura_7: 9169400125774684969
+      SpAura_8: -1489389029711679456
+      SpAura_9: -2338188437184040901
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

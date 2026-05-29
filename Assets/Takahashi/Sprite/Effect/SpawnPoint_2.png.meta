@@ -1,0 +1,1612 @@
+fileFormatVersion: 2
+guid: 686ad06fbb58b7e45b35ced4c87b2e0d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6857559603846345999
+    second: SpawnPoint_2_0
+  - first:
+      213: 559039057613067106
+    second: SpawnPoint_2_1
+  - first:
+      213: -4943925060766928758
+    second: SpawnPoint_2_2
+  - first:
+      213: -6395054593509301797
+    second: SpawnPoint_2_3
+  - first:
+      213: 111921977681886382
+    second: SpawnPoint_2_4
+  - first:
+      213: -8964069195615156027
+    second: SpawnPoint_2_5
+  - first:
+      213: -3983109679345395555
+    second: SpawnPoint_2_6
+  - first:
+      213: -1209591848031897188
+    second: SpawnPoint_2_7
+  - first:
+      213: -3069307917652734070
+    second: SpawnPoint_2_8
+  - first:
+      213: -2750264685919303571
+    second: SpawnPoint_2_9
+  - first:
+      213: -8270065394357746655
+    second: SpawnPoint_2_10
+  - first:
+      213: -2679690109146939249
+    second: SpawnPoint_2_11
+  - first:
+      213: -1168508488326195738
+    second: SpawnPoint_2_12
+  - first:
+      213: -1399279413209450493
+    second: SpawnPoint_2_13
+  - first:
+      213: -67390201111680976
+    second: SpawnPoint_2_14
+  - first:
+      213: -7934580922595073066
+    second: SpawnPoint_2_15
+  - first:
+      213: 2181895912343699203
+    second: SpawnPoint_2_16
+  - first:
+      213: 8967449797834129510
+    second: SpawnPoint_2_17
+  - first:
+      213: -6197910349158453987
+    second: SpawnPoint_2_18
+  - first:
+      213: -1245030901749372029
+    second: SpawnPoint_2_19
+  - first:
+      213: 7070198433130945638
+    second: SpawnPoint_2_20
+  - first:
+      213: 5186967461720349949
+    second: SpawnPoint_2_21
+  - first:
+      213: -1974621825940824071
+    second: SpawnPoint_2_22
+  - first:
+      213: -3722507289192904794
+    second: SpawnPoint_2_23
+  - first:
+      213: -6683959110738227932
+    second: SpawnPoint_2_24
+  - first:
+      213: 3303061015881403245
+    second: SpawnPoint_2_25
+  - first:
+      213: -6503585998031644715
+    second: SpawnPoint_2_26
+  - first:
+      213: 934491076641013579
+    second: SpawnPoint_2_27
+  - first:
+      213: 1828275212338941161
+    second: SpawnPoint_2_28
+  - first:
+      213: -5703493534378031230
+    second: SpawnPoint_2_29
+  - first:
+      213: -2657313444507233841
+    second: SpawnPoint_2_30
+  - first:
+      213: 4454526163831436392
+    second: SpawnPoint_2_31
+  - first:
+      213: -2067680854760629914
+    second: SpawnPoint_2_32
+  - first:
+      213: 666347436340347711
+    second: SpawnPoint_2_33
+  - first:
+      213: -5510972643915787037
+    second: SpawnPoint_2_34
+  - first:
+      213: -1327933934147670318
+    second: SpawnPoint_2_35
+  - first:
+      213: -7970866124566788958
+    second: SpawnPoint_2_36
+  - first:
+      213: 3486010857845834890
+    second: SpawnPoint_2_37
+  - first:
+      213: -4834730493240802093
+    second: SpawnPoint_2_38
+  - first:
+      213: 5184863871862677755
+    second: SpawnPoint_2_39
+  - first:
+      213: 6548074447547123636
+    second: SpawnPoint_2_40
+  - first:
+      213: -5279064934370005711
+    second: SpawnPoint_2_41
+  - first:
+      213: 4818082579225049000
+    second: SpawnPoint_2_42
+  - first:
+      213: -3059553584987999353
+    second: SpawnPoint_2_43
+  - first:
+      213: 4186742033672885449
+    second: SpawnPoint_2_44
+  - first:
+      213: 4707689207829296970
+    second: SpawnPoint_2_45
+  - first:
+      213: 2445779669111216221
+    second: SpawnPoint_2_46
+  - first:
+      213: 7128188844375471238
+    second: SpawnPoint_2_47
+  - first:
+      213: -4474675646582308637
+    second: SpawnPoint_2_48
+  - first:
+      213: 4187828934607882881
+    second: SpawnPoint_2_49
+  - first:
+      213: 1098298103173460478
+    second: SpawnPoint_2_50
+  - first:
+      213: 8153985197440344145
+    second: SpawnPoint_2_51
+  - first:
+      213: -7367100004363461511
+    second: SpawnPoint_2_52
+  - first:
+      213: 2319103622833327753
+    second: SpawnPoint_2_53
+  - first:
+      213: 245709395639805529
+    second: SpawnPoint_2_54
+  - first:
+      213: 45777731601211162
+    second: SpawnPoint_2_55
+  - first:
+      213: 5761447158903169013
+    second: SpawnPoint_2_56
+  - first:
+      213: 5038658454237391557
+    second: SpawnPoint_2_57
+  - first:
+      213: 2481126422068806514
+    second: SpawnPoint_2_58
+  - first:
+      213: 4257913486117917140
+    second: SpawnPoint_2_59
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SpawnPoint_2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0574557022fa2f50800000000000000
+      internalID: 6857559603846345999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 263989c9f0b12c700800000000000000
+      internalID: 559039057613067106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_2
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a80f5dce956a36bb0800000000000000
+      internalID: -4943925060766928758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd1e5aacab33047a0800000000000000
+      internalID: -6395054593509301797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_4
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eacb94a1270ad8100800000000000000
+      internalID: 111921977681886382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_5
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c8465d6f8a399380800000000000000
+      internalID: -8964069195615156027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_6
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d98923d99d629b8c0800000000000000
+      internalID: -3983109679345395555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_7
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c99b9d67f9aa63fe0800000000000000
+      internalID: -1209591848031897188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8fc306f5b0a765d0800000000000000
+      internalID: -3069307917652734070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_9
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d688a75f6d815d9d0800000000000000
+      internalID: -2750264685919303571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_10
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1244e0c2753da3d80800000000000000
+      internalID: -8270065394357746655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_11
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f804b281b04dfcad0800000000000000
+      internalID: -2679690109146939249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_12
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e5d94c88bf98cfe0800000000000000
+      internalID: -1168508488326195738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_13
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 308322299c2c49ce0800000000000000
+      internalID: -1399279413209450493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_14
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 038656918f4901ff0800000000000000
+      internalID: -67390201111680976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_15
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d3212ba0b4b2e190800000000000000
+      internalID: -7934580922595073066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30f7f18a5c6a74e10800000000000000
+      internalID: 2181895912343699203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_17
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6604d0d5418c27c70800000000000000
+      internalID: 8967449797834129510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_18
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1d61b810699cf9a0800000000000000
+      internalID: -6197910349158453987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_19
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38b28d6cdf2c8bee0800000000000000
+      internalID: -1245030901749372029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_20
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66c1b42f3046e1260800000000000000
+      internalID: 7070198433130945638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_21
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfcd959bc6fcbf740800000000000000
+      internalID: 5186967461720349949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_22
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ff501b49ebb894e0800000000000000
+      internalID: -1974621825940824071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_23
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a7cad9d75ff65cc0800000000000000
+      internalID: -3722507289192904794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42d46371a9ecd33a0800000000000000
+      internalID: -6683959110738227932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_25
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6b4d0b5e74d6dd20800000000000000
+      internalID: 3303061015881403245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_26
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d79e150efe9eb5a0800000000000000
+      internalID: -6503585998031644715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_27
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4fb5fcdeaaf7fc00800000000000000
+      internalID: 934491076641013579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_28
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ec4d177e965f5910800000000000000
+      internalID: 1828275212338941161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_29
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28709a059de19d0b0800000000000000
+      internalID: -5703493534378031230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_30
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc1d64350835f1bd0800000000000000
+      internalID: -2657313444507233841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_31
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8643bd5e1f7a1dd30800000000000000
+      internalID: 4454526163831436392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 669dd17b73f1e43e0800000000000000
+      internalID: -2067680854760629914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_33
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f330f0086775f3900800000000000000
+      internalID: 666347436340347711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_34
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e4118824971583b0800000000000000
+      internalID: -5510972643915787037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_35
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2dee0f16f1b329de0800000000000000
+      internalID: -1327933934147670318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_36
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a4800dbd7bc16190800000000000000
+      internalID: -7970866124566788958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_37
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a844e01d76cc06030800000000000000
+      internalID: 3486010857845834890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_38
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d402ad5b3697ecb0800000000000000
+      internalID: -4834730493240802093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_39
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf0a12b883654f740800000000000000
+      internalID: 5184863871862677755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b7cbd0540f6fda50800000000000000
+      internalID: 6548074447547123636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_41
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13da7a0796efcb6b0800000000000000
+      internalID: -5279064934370005711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_42
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a7f43914944dd240800000000000000
+      internalID: 4818082579225049000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_43
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 783748389384a85d0800000000000000
+      internalID: -3059553584987999353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_44
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c4d44382bb4a1a30800000000000000
+      internalID: 4186742033672885449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_45
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a47fa916462155140800000000000000
+      internalID: 4707689207829296970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_46
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d581f3896a721f120800000000000000
+      internalID: 2445779669111216221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_47
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 684f6e8bcf96ce260800000000000000
+      internalID: 7128188844375471238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e0ce501532c6e1c0800000000000000
+      internalID: -4474675646582308637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_49
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18ac76b5a382e1a30800000000000000
+      internalID: 4187828934607882881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_50
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef1b3294e40fd3f00800000000000000
+      internalID: 1098298103173460478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_51
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 150a93dd556c82170800000000000000
+      internalID: 8153985197440344145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_52
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97c132f149dc2c990800000000000000
+      internalID: -7367100004363461511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_53
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98e4d44357c1f2020800000000000000
+      internalID: 2319103622833327753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_54
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 956261db46fe86300800000000000000
+      internalID: 245709395639805529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_55
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1f96b6ba92a2a000800000000000000
+      internalID: 45777731601211162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ff5b926aa5c4ff40800000000000000
+      internalID: 5761447158903169013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_57
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5caa65d0b29ece540800000000000000
+      internalID: 5038658454237391557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_58
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2734f36d55bbe6220800000000000000
+      internalID: 2481126422068806514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpawnPoint_2_59
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d1576891c5271b30800000000000000
+      internalID: 4257913486117917140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: dedb01a81fb0a08418cd7d892536aaac
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SpawnPoint_2_0: 6857559603846345999
+      SpawnPoint_2_1: 559039057613067106
+      SpawnPoint_2_10: -8270065394357746655
+      SpawnPoint_2_11: -2679690109146939249
+      SpawnPoint_2_12: -1168508488326195738
+      SpawnPoint_2_13: -1399279413209450493
+      SpawnPoint_2_14: -67390201111680976
+      SpawnPoint_2_15: -7934580922595073066
+      SpawnPoint_2_16: 2181895912343699203
+      SpawnPoint_2_17: 8967449797834129510
+      SpawnPoint_2_18: -6197910349158453987
+      SpawnPoint_2_19: -1245030901749372029
+      SpawnPoint_2_2: -4943925060766928758
+      SpawnPoint_2_20: 7070198433130945638
+      SpawnPoint_2_21: 5186967461720349949
+      SpawnPoint_2_22: -1974621825940824071
+      SpawnPoint_2_23: -3722507289192904794
+      SpawnPoint_2_24: -6683959110738227932
+      SpawnPoint_2_25: 3303061015881403245
+      SpawnPoint_2_26: -6503585998031644715
+      SpawnPoint_2_27: 934491076641013579
+      SpawnPoint_2_28: 1828275212338941161
+      SpawnPoint_2_29: -5703493534378031230
+      SpawnPoint_2_3: -6395054593509301797
+      SpawnPoint_2_30: -2657313444507233841
+      SpawnPoint_2_31: 4454526163831436392
+      SpawnPoint_2_32: -2067680854760629914
+      SpawnPoint_2_33: 666347436340347711
+      SpawnPoint_2_34: -5510972643915787037
+      SpawnPoint_2_35: -1327933934147670318
+      SpawnPoint_2_36: -7970866124566788958
+      SpawnPoint_2_37: 3486010857845834890
+      SpawnPoint_2_38: -4834730493240802093
+      SpawnPoint_2_39: 5184863871862677755
+      SpawnPoint_2_4: 111921977681886382
+      SpawnPoint_2_40: 6548074447547123636
+      SpawnPoint_2_41: -5279064934370005711
+      SpawnPoint_2_42: 4818082579225049000
+      SpawnPoint_2_43: -3059553584987999353
+      SpawnPoint_2_44: 4186742033672885449
+      SpawnPoint_2_45: 4707689207829296970
+      SpawnPoint_2_46: 2445779669111216221
+      SpawnPoint_2_47: 7128188844375471238
+      SpawnPoint_2_48: -4474675646582308637
+      SpawnPoint_2_49: 4187828934607882881
+      SpawnPoint_2_5: -8964069195615156027
+      SpawnPoint_2_50: 1098298103173460478
+      SpawnPoint_2_51: 8153985197440344145
+      SpawnPoint_2_52: -7367100004363461511
+      SpawnPoint_2_53: 2319103622833327753
+      SpawnPoint_2_54: 245709395639805529
+      SpawnPoint_2_55: 45777731601211162
+      SpawnPoint_2_56: 5761447158903169013
+      SpawnPoint_2_57: 5038658454237391557
+      SpawnPoint_2_58: 2481126422068806514
+      SpawnPoint_2_59: 4257913486117917140
+      SpawnPoint_2_6: -3983109679345395555
+      SpawnPoint_2_7: -1209591848031897188
+      SpawnPoint_2_8: -3069307917652734070
+      SpawnPoint_2_9: -2750264685919303571
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,2717 @@
+fileFormatVersion: 2
+guid: 15e7870cb7d85c24d9eea7caaf0f6ed1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6656435738816624089
+    second: FramePillar_Outline_0
+  - first:
+      213: -4175551569400790352
+    second: FramePillar_Outline_1
+  - first:
+      213: 2851144373017318339
+    second: FramePillar_Outline_2
+  - first:
+      213: -2274970492672949670
+    second: FramePillar_Outline_3
+  - first:
+      213: 3323654975513284795
+    second: FramePillar_Outline_4
+  - first:
+      213: -2263525432871172932
+    second: FramePillar_Outline_5
+  - first:
+      213: 494938317328204486
+    second: FramePillar_Outline_6
+  - first:
+      213: -353498392919442448
+    second: FramePillar_Outline_7
+  - first:
+      213: 9222010770866852975
+    second: FramePillar_Outline_8
+  - first:
+      213: -7409574563160921612
+    second: FramePillar_Outline_9
+  - first:
+      213: 4738329014874662934
+    second: FramePillar_Outline_10
+  - first:
+      213: -3263176591483833118
+    second: FramePillar_Outline_11
+  - first:
+      213: -3901599142857304241
+    second: FramePillar_Outline_12
+  - first:
+      213: -6688602820232352880
+    second: FramePillar_Outline_13
+  - first:
+      213: 4135747945815825425
+    second: FramePillar_Outline_14
+  - first:
+      213: 7049723944626804053
+    second: FramePillar_Outline_15
+  - first:
+      213: -497451288133365715
+    second: FramePillar_Outline_16
+  - first:
+      213: -7313072203107826693
+    second: FramePillar_Outline_17
+  - first:
+      213: 8786841541461584154
+    second: FramePillar_Outline_18
+  - first:
+      213: 1346634478097417610
+    second: FramePillar_Outline_19
+  - first:
+      213: -1459505291804965151
+    second: FramePillar_Outline_20
+  - first:
+      213: 6722345910267097724
+    second: FramePillar_Outline_21
+  - first:
+      213: 445460200763989242
+    second: FramePillar_Outline_22
+  - first:
+      213: -1305084407759080199
+    second: FramePillar_Outline_23
+  - first:
+      213: -162136501561803067
+    second: FramePillar_Outline_24
+  - first:
+      213: -145424246361406215
+    second: FramePillar_Outline_25
+  - first:
+      213: 845389110555119558
+    second: FramePillar_Outline_26
+  - first:
+      213: 6284793200662999091
+    second: FramePillar_Outline_27
+  - first:
+      213: -8824316073678342963
+    second: FramePillar_Outline_28
+  - first:
+      213: -8899994186088427903
+    second: FramePillar_Outline_29
+  - first:
+      213: 8673129572467097170
+    second: FramePillar_Outline_30
+  - first:
+      213: -5168518561666677642
+    second: FramePillar_Outline_31
+  - first:
+      213: 1459452754542906446
+    second: FramePillar_Outline_32
+  - first:
+      213: -7150559345027525759
+    second: FramePillar_Outline_33
+  - first:
+      213: -5857213775982786608
+    second: FramePillar_Outline_34
+  - first:
+      213: -4851991315679854767
+    second: FramePillar_Outline_35
+  - first:
+      213: 5349750189781638675
+    second: FramePillar_Outline_36
+  - first:
+      213: 8302045846243558497
+    second: FramePillar_Outline_37
+  - first:
+      213: 8124331951736777820
+    second: FramePillar_Outline_38
+  - first:
+      213: -7931789805283282840
+    second: FramePillar_Outline_39
+  - first:
+      213: 3357428808377827283
+    second: FramePillar_Outline_40
+  - first:
+      213: -4232393735547394494
+    second: FramePillar_Outline_41
+  - first:
+      213: 4334210037028826790
+    second: FramePillar_Outline_42
+  - first:
+      213: 3449871100113494615
+    second: FramePillar_Outline_43
+  - first:
+      213: -7102886740644626202
+    second: FramePillar_Outline_44
+  - first:
+      213: -165036201591176046
+    second: FramePillar_Outline_45
+  - first:
+      213: -7611944903026918459
+    second: FramePillar_Outline_46
+  - first:
+      213: -4007947774978218495
+    second: FramePillar_Outline_47
+  - first:
+      213: 6074987408850712655
+    second: FramePillar_Outline_48
+  - first:
+      213: 1786776072912098131
+    second: FramePillar_Outline_49
+  - first:
+      213: 5066789655288701446
+    second: FramePillar_Outline_50
+  - first:
+      213: -2626650939239448946
+    second: FramePillar_Outline_51
+  - first:
+      213: -6231567195806291732
+    second: FramePillar_Outline_52
+  - first:
+      213: -4501834853519191969
+    second: FramePillar_Outline_53
+  - first:
+      213: -6938528960089628740
+    second: FramePillar_Outline_54
+  - first:
+      213: -2435526159778595066
+    second: FramePillar_Outline_55
+  - first:
+      213: 3643528400368247396
+    second: FramePillar_Outline_56
+  - first:
+      213: 8096281074709400795
+    second: FramePillar_Outline_57
+  - first:
+      213: -3651614392760458425
+    second: FramePillar_Outline_58
+  - first:
+      213: 6432162363932125027
+    second: FramePillar_Outline_59
+  - first:
+      213: 7676198684090722990
+    second: FramePillar_Outline_60
+  - first:
+      213: -3286973381714419696
+    second: FramePillar_Outline_61
+  - first:
+      213: 4428096831652721257
+    second: FramePillar_Outline_62
+  - first:
+      213: 4576554703797582563
+    second: FramePillar_Outline_63
+  - first:
+      213: 2565230773639435953
+    second: FramePillar_Outline_64
+  - first:
+      213: -1517869726595364605
+    second: FramePillar_Outline_65
+  - first:
+      213: -2288874266424230825
+    second: FramePillar_Outline_66
+  - first:
+      213: -6791898278365083632
+    second: FramePillar_Outline_67
+  - first:
+      213: 6568616800965956715
+    second: FramePillar_Outline_68
+  - first:
+      213: -5731739557863804810
+    second: FramePillar_Outline_69
+  - first:
+      213: 7988989801086017109
+    second: FramePillar_Outline_70
+  - first:
+      213: 5646975318491663183
+    second: FramePillar_Outline_71
+  - first:
+      213: -966324023089434999
+    second: FramePillar_Outline_72
+  - first:
+      213: 2939576833831866625
+    second: FramePillar_Outline_73
+  - first:
+      213: 8806773354627830230
+    second: FramePillar_Outline_74
+  - first:
+      213: 8713671857023403065
+    second: FramePillar_Outline_75
+  - first:
+      213: -4311150152880981606
+    second: FramePillar_Outline_76
+  - first:
+      213: 5774786345404990634
+    second: FramePillar_Outline_77
+  - first:
+      213: -1543614062650050782
+    second: FramePillar_Outline_78
+  - first:
+      213: -851744393554481284
+    second: FramePillar_Outline_79
+  - first:
+      213: 6490590690168899145
+    second: FramePillar_Outline_80
+  - first:
+      213: -8527955962653381224
+    second: FramePillar_Outline_81
+  - first:
+      213: -7403617195129954821
+    second: FramePillar_Outline_82
+  - first:
+      213: 3716152157411278366
+    second: FramePillar_Outline_83
+  - first:
+      213: 7056099302961296641
+    second: FramePillar_Outline_84
+  - first:
+      213: 2995589721216221535
+    second: FramePillar_Outline_85
+  - first:
+      213: 7703618320464243550
+    second: FramePillar_Outline_86
+  - first:
+      213: -667070454712437153
+    second: FramePillar_Outline_87
+  - first:
+      213: -3929373258812203329
+    second: FramePillar_Outline_88
+  - first:
+      213: -6581759460687968002
+    second: FramePillar_Outline_89
+  - first:
+      213: 5551526752409740030
+    second: FramePillar_Outline_90
+  - first:
+      213: -311244555774332405
+    second: FramePillar_Outline_91
+  - first:
+      213: -5203185627960257128
+    second: FramePillar_Outline_92
+  - first:
+      213: 3037642271441721917
+    second: FramePillar_Outline_93
+  - first:
+      213: -5301134856674745321
+    second: FramePillar_Outline_94
+  - first:
+      213: 7326063922494907347
+    second: FramePillar_Outline_95
+  - first:
+      213: 7009560838298149132
+    second: FramePillar_Outline_96
+  - first:
+      213: -5623897677210019626
+    second: FramePillar_Outline_97
+  - first:
+      213: 1977432480096314136
+    second: FramePillar_Outline_98
+  - first:
+      213: 675935477829679551
+    second: FramePillar_Outline_99
+  - first:
+      213: -465860368672246863
+    second: FramePillar_Outline_100
+  - first:
+      213: 1584674947005079847
+    second: FramePillar_Outline_101
+  - first:
+      213: 3934870967030628600
+    second: FramePillar_Outline_102
+  - first:
+      213: 2439267019440787927
+    second: FramePillar_Outline_103
+  - first:
+      213: 2165003044699943453
+    second: FramePillar_Outline_104
+  - first:
+      213: -9093327535945761152
+    second: FramePillar_Outline_105
+  - first:
+      213: -5123157760315543035
+    second: FramePillar_Outline_106
+  - first:
+      213: -5887861169456699452
+    second: FramePillar_Outline_107
+  - first:
+      213: 1155467959974509895
+    second: FramePillar_Outline_108
+  - first:
+      213: -364095053717744223
+    second: FramePillar_Outline_109
+  - first:
+      213: -5725945663745905650
+    second: FramePillar_Outline_110
+  - first:
+      213: -3994584083334514911
+    second: FramePillar_Outline_111
+  - first:
+      213: -2864023208258482894
+    second: FramePillar_Outline_112
+  - first:
+      213: 8929108314866378349
+    second: FramePillar_Outline_113
+  - first:
+      213: 9101215327756281622
+    second: FramePillar_Outline_114
+  - first:
+      213: 1849416770051691069
+    second: FramePillar_Outline_115
+  - first:
+      213: 7915102395702912149
+    second: FramePillar_Outline_116
+  - first:
+      213: 6889155961078201107
+    second: FramePillar_Outline_117
+  - first:
+      213: -3754895111137159566
+    second: FramePillar_Outline_118
+  - first:
+      213: -7914146713086644303
+    second: FramePillar_Outline_119
+  - first:
+      213: 2704709700892359185
+    second: FramePillar_Outline_120
+  - first:
+      213: 5212501539848121594
+    second: FramePillar_Outline_121
+  - first:
+      213: -634579601911430492
+    second: FramePillar_Outline_122
+  - first:
+      213: 546722894668511277
+    second: FramePillar_Outline_123
+  - first:
+      213: -8546012523918781537
+    second: FramePillar_Outline_124
+  - first:
+      213: -4243378769834962571
+    second: FramePillar_Outline_125
+  - first:
+      213: 9188444459492353965
+    second: FramePillar_Outline_126
+  - first:
+      213: 6657486385520503598
+    second: FramePillar_Outline_127
+  - first:
+      213: -1258904228917986717
+    second: FramePillar_Outline_128
+  - first:
+      213: -1868724747336224352
+    second: FramePillar_Outline_129
+  - first:
+      213: -8368847453884121997
+    second: FramePillar_Outline_130
+  - first:
+      213: 5442203909344862207
+    second: FramePillar_Outline_131
+  - first:
+      213: 3504672063335544004
+    second: FramePillar_Outline_132
+  - first:
+      213: 752700996627002056
+    second: FramePillar_Outline_133
+  - first:
+      213: -9189551298973455763
+    second: FramePillar_Outline_134
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FramePillar_Outline_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72ace9d76f69f93a0800000000000000
+      internalID: -6656435738816624089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_1
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b28a8c78f57d06c0800000000000000
+      internalID: -4175551569400790352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_2
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c31d0583bc419720800000000000000
+      internalID: 2851144373017318339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_3
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a52cbb5e36ead60e0800000000000000
+      internalID: -2274970492672949670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_4
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb0dd6b379eff1e20800000000000000
+      internalID: 3323654975513284795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_5
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb4c6a98c975690e0800000000000000
+      internalID: -2263525432871172932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_6
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c2c31ef6cf5ed600800000000000000
+      internalID: 494938317328204486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_7
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fb7d55a51f181bf0800000000000000
+      internalID: -353498392919442448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_8
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6458509fe92bff70800000000000000
+      internalID: 9222010770866852975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_9
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 900
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f9e5024137eb2990800000000000000
+      internalID: -7409574563160921612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 618e780622de1c140800000000000000
+      internalID: 4738329014874662934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_11
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e47c39dd2ed6b2d0800000000000000
+      internalID: -3263176591483833118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_12
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f47950a404cbad9c0800000000000000
+      internalID: -3901599142857304241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_13
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09bef583c2f4d23a0800000000000000
+      internalID: -6688602820232352880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_14
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11c57e638d0256930800000000000000
+      internalID: 4135747945815825425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_15
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 555db0c9396a5d160800000000000000
+      internalID: 7049723944626804053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_16
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2010c560b2b819f0800000000000000
+      internalID: -497451288133365715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_17
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf389fcd39fb28a90800000000000000
+      internalID: -7313072203107826693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_18
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a19a678c3d121f970800000000000000
+      internalID: 8786841541461584154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_19
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 800
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a854a4d4ce430b210800000000000000
+      internalID: 1346634478097417610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e6892e7babcebbe0800000000000000
+      internalID: -1459505291804965151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_21
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7235c62df19a4d50800000000000000
+      internalID: 6722345910267097724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_22
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afc9c1441b79e2600800000000000000
+      internalID: 445460200763989242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_23
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f47e9155a863ede0800000000000000
+      internalID: -1305084407759080199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_24
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ceb84bf5b9ffbdf0800000000000000
+      internalID: -162136501561803067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_25
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f446ed1b695bfdf0800000000000000
+      internalID: -145424246361406215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_26
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cf0f9fbaec6bbb00800000000000000
+      internalID: 845389110555119558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_27
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 330fe442e12183750800000000000000
+      internalID: 6284793200662999091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_28
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc4f1a2c84bb98580800000000000000
+      internalID: -8824316073678342963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_29
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18e4823217edc7480800000000000000
+      internalID: -8899994186088427903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25e36d9d4652d5870800000000000000
+      internalID: 8673129572467097170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_31
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67448dc80cbb548b0800000000000000
+      internalID: -5168518561666677642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_32
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4ccef83c84014410800000000000000
+      internalID: 1459452754542906446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_33
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 183d846392c14cc90800000000000000
+      internalID: -7150559345027525759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_34
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d785058a1ff6bea0800000000000000
+      internalID: -5857213775982786608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_35
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15f3f97fa934aacb0800000000000000
+      internalID: -4851991315679854767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_36
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31e530314712e3a40800000000000000
+      internalID: 5349750189781638675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_37
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 164ca5606bac63370800000000000000
+      internalID: 8302045846243558497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_38
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5c60a49ddc6fb070800000000000000
+      internalID: 8124331951736777820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_39
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 860760f423f9ce190800000000000000
+      internalID: -7931789805283282840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dff50a76bbf79e20800000000000000
+      internalID: 3357428808377827283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_41
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 246eb1b52548345c0800000000000000
+      internalID: -4232393735547394494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_42
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ae2907a015362c30800000000000000
+      internalID: 4334210037028826790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_43
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 752a623cc7760ef20800000000000000
+      internalID: 3449871100113494615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_44
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e08b00642a7d6d90800000000000000
+      internalID: -7102886740644626202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_45
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2940415f27ca5bdf0800000000000000
+      internalID: -165036201591176046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_46
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cb3c35c070fc5690800000000000000
+      internalID: -7611944903026918459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_47
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1062b12dbb8e068c0800000000000000
+      internalID: -4007947774978218495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_48
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4874879cd0be4450800000000000000
+      internalID: 6074987408850712655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_49
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 353d71f1f57ebc810800000000000000
+      internalID: 1786776072912098131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_50
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6026b13b85ad05640800000000000000
+      internalID: 5066789655288701446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_51
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8ebfa923e24c8bd0800000000000000
+      internalID: -2626650939239448946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_52
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce82df3d6a60589a0800000000000000
+      internalID: -6231567195806291732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_53
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f50148e6d054681c0800000000000000
+      internalID: -4501834853519191969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_54
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbfd8163ca465bf90800000000000000
+      internalID: -6938528960089628740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_55
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60fb9359cd5433ed0800000000000000
+      internalID: -2435526159778595066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_56
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4622ff0a6c9609230800000000000000
+      internalID: 3643528400368247396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_57
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdc85c3ddb4cb5070800000000000000
+      internalID: 8096281074709400795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_58
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7432fce8e0cd25dc0800000000000000
+      internalID: -3651614392760458425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_59
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 367afc74791a34950800000000000000
+      internalID: 6432162363932125027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaa6c8e6806578a60800000000000000
+      internalID: 7676198684090722990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_61
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0106fbcdf135262d0800000000000000
+      internalID: -3286973381714419696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_62
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96271b97b92c37d30800000000000000
+      internalID: 4428096831652721257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_63
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ea7ff66140338f30800000000000000
+      internalID: 4576554703797582563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_64
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b6dda52cc7899320800000000000000
+      internalID: 2565230773639435953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_65
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 309c6f296817feae0800000000000000
+      internalID: -1517869726595364605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_66
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75c304e4bf84c30e0800000000000000
+      internalID: -2288874266424230825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_67
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 018467730845eb1a0800000000000000
+      internalID: -6791898278365083632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_68
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b641d3fad2a682b50800000000000000
+      internalID: 6568616800965956715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_69
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 670397c7d35c470b0800000000000000
+      internalID: -5731739557863804810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_70
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55e53f785e79ede60800000000000000
+      internalID: 7988989801086017109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_71
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4b081a12261e5e40800000000000000
+      internalID: 5646975318491663183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_72
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98ee3d9bb6de692f0800000000000000
+      internalID: -966324023089434999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_73
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 101148a4e897bc820800000000000000
+      internalID: 2939576833831866625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_74
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d197fba4b1f73a70800000000000000
+      internalID: 8806773354627830230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_75
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 934c23f036e2de870800000000000000
+      internalID: 8713671857023403065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_76
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a99782407c7bb24c0800000000000000
+      internalID: -4311150152880981606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_77
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa404a3c599242050800000000000000
+      internalID: 5774786345404990634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_78
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 227327d303bf39ae0800000000000000
+      internalID: -1543614062650050782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_79
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7f21ce9cfefd24f0800000000000000
+      internalID: -851744393554481284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_80
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94689f518d5331a50800000000000000
+      internalID: 6490590690168899145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_81
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89deed92c3d96a980800000000000000
+      internalID: -8527955962653381224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_82
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfd1e471361114990800000000000000
+      internalID: -7403617195129954821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_83
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1efcc9b2bc629330800000000000000
+      internalID: 3716152157411278366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_84
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 105b3e46eec4ce160800000000000000
+      internalID: 7056099302961296641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_85
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5187e9eaf8729920800000000000000
+      internalID: 2995589721216221535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_86
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5b66740c00c8ea60800000000000000
+      internalID: 7703618320464243550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_87
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f56f4baa4f61eb6f0800000000000000
+      internalID: -667070454712437153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_88
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbe549ef6df0879c0800000000000000
+      internalID: -3929373258812203329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_89
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef880a464a4e8a4a0800000000000000
+      internalID: -6581759460687968002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_90
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef2e5760b2cfa0d40800000000000000
+      internalID: 5551526752409740030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_91
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b02fbceb9bc3eabf0800000000000000
+      internalID: -311244555774332405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_92
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895d2013d329ac7b0800000000000000
+      internalID: -5203185627960257128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_93
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3a9eff3d8fd72a20800000000000000
+      internalID: 3037642271441721917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_94
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 714e5793fe59e66b0800000000000000
+      internalID: -5301134856674745321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_95
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d32d1682586ba560800000000000000
+      internalID: 7326063922494907347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_96
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c012046b176f64160800000000000000
+      internalID: 7009560838298149132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_97
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d890c8fbd6e3f1b0800000000000000
+      internalID: -5623897677210019626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_98
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 813e57f1d50417b10800000000000000
+      internalID: 1977432480096314136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FramePillar_Outline_99
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb93f1f5cb7616900800000000000000
+      internalID: 675935477829679551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: ecd1a9a0a747a3b47b49ba9c2627030e
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      FramePillar_Outline_0: -6656435738816624089
+      FramePillar_Outline_1: -4175551569400790352
+      FramePillar_Outline_10: 4738329014874662934
+      FramePillar_Outline_11: -3263176591483833118
+      FramePillar_Outline_12: -3901599142857304241
+      FramePillar_Outline_13: -6688602820232352880
+      FramePillar_Outline_14: 4135747945815825425
+      FramePillar_Outline_15: 7049723944626804053
+      FramePillar_Outline_16: -497451288133365715
+      FramePillar_Outline_17: -7313072203107826693
+      FramePillar_Outline_18: 8786841541461584154
+      FramePillar_Outline_19: 1346634478097417610
+      FramePillar_Outline_2: 2851144373017318339
+      FramePillar_Outline_20: -1459505291804965151
+      FramePillar_Outline_21: 6722345910267097724
+      FramePillar_Outline_22: 445460200763989242
+      FramePillar_Outline_23: -1305084407759080199
+      FramePillar_Outline_24: -162136501561803067
+      FramePillar_Outline_25: -145424246361406215
+      FramePillar_Outline_26: 845389110555119558
+      FramePillar_Outline_27: 6284793200662999091
+      FramePillar_Outline_28: -8824316073678342963
+      FramePillar_Outline_29: -8899994186088427903
+      FramePillar_Outline_3: -2274970492672949670
+      FramePillar_Outline_30: 8673129572467097170
+      FramePillar_Outline_31: -5168518561666677642
+      FramePillar_Outline_32: 1459452754542906446
+      FramePillar_Outline_33: -7150559345027525759
+      FramePillar_Outline_34: -5857213775982786608
+      FramePillar_Outline_35: -4851991315679854767
+      FramePillar_Outline_36: 5349750189781638675
+      FramePillar_Outline_37: 8302045846243558497
+      FramePillar_Outline_38: 8124331951736777820
+      FramePillar_Outline_39: -7931789805283282840
+      FramePillar_Outline_4: 3323654975513284795
+      FramePillar_Outline_40: 3357428808377827283
+      FramePillar_Outline_41: -4232393735547394494
+      FramePillar_Outline_42: 4334210037028826790
+      FramePillar_Outline_43: 3449871100113494615
+      FramePillar_Outline_44: -7102886740644626202
+      FramePillar_Outline_45: -165036201591176046
+      FramePillar_Outline_46: -7611944903026918459
+      FramePillar_Outline_47: -4007947774978218495
+      FramePillar_Outline_48: 6074987408850712655
+      FramePillar_Outline_49: 1786776072912098131
+      FramePillar_Outline_5: -2263525432871172932
+      FramePillar_Outline_50: 5066789655288701446
+      FramePillar_Outline_51: -2626650939239448946
+      FramePillar_Outline_52: -6231567195806291732
+      FramePillar_Outline_53: -4501834853519191969
+      FramePillar_Outline_54: -6938528960089628740
+      FramePillar_Outline_55: -2435526159778595066
+      FramePillar_Outline_56: 3643528400368247396
+      FramePillar_Outline_57: 8096281074709400795
+      FramePillar_Outline_58: -3651614392760458425
+      FramePillar_Outline_59: 6432162363932125027
+      FramePillar_Outline_6: 494938317328204486
+      FramePillar_Outline_60: 7676198684090722990
+      FramePillar_Outline_61: -3286973381714419696
+      FramePillar_Outline_62: 4428096831652721257
+      FramePillar_Outline_63: 4576554703797582563
+      FramePillar_Outline_64: 2565230773639435953
+      FramePillar_Outline_65: -1517869726595364605
+      FramePillar_Outline_66: -2288874266424230825
+      FramePillar_Outline_67: -6791898278365083632
+      FramePillar_Outline_68: 6568616800965956715
+      FramePillar_Outline_69: -5731739557863804810
+      FramePillar_Outline_7: -353498392919442448
+      FramePillar_Outline_70: 7988989801086017109
+      FramePillar_Outline_71: 5646975318491663183
+      FramePillar_Outline_72: -966324023089434999
+      FramePillar_Outline_73: 2939576833831866625
+      FramePillar_Outline_74: 8806773354627830230
+      FramePillar_Outline_75: 8713671857023403065
+      FramePillar_Outline_76: -4311150152880981606
+      FramePillar_Outline_77: 5774786345404990634
+      FramePillar_Outline_78: -1543614062650050782
+      FramePillar_Outline_79: -851744393554481284
+      FramePillar_Outline_8: 9222010770866852975
+      FramePillar_Outline_80: 6490590690168899145
+      FramePillar_Outline_81: -8527955962653381224
+      FramePillar_Outline_82: -7403617195129954821
+      FramePillar_Outline_83: 3716152157411278366
+      FramePillar_Outline_84: 7056099302961296641
+      FramePillar_Outline_85: 2995589721216221535
+      FramePillar_Outline_86: 7703618320464243550
+      FramePillar_Outline_87: -667070454712437153
+      FramePillar_Outline_88: -3929373258812203329
+      FramePillar_Outline_89: -6581759460687968002
+      FramePillar_Outline_9: -7409574563160921612
+      FramePillar_Outline_90: 5551526752409740030
+      FramePillar_Outline_91: -311244555774332405
+      FramePillar_Outline_92: -5203185627960257128
+      FramePillar_Outline_93: 3037642271441721917
+      FramePillar_Outline_94: -5301134856674745321
+      FramePillar_Outline_95: 7326063922494907347
+      FramePillar_Outline_96: 7009560838298149132
+      FramePillar_Outline_97: -5623897677210019626
+      FramePillar_Outline_98: 1977432480096314136
+      FramePillar_Outline_99: 675935477829679551
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

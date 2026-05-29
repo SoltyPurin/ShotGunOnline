@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8955623146422157152
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2463156472759330181}
+  - component: {fileID: 4857914789793552881}
+  - component: {fileID: 9071517967618440093}
+  m_Layer: 0
+  m_Name: WaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2463156472759330181
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8955623146422157152}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4857914789793552881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8955623146422157152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9a38aa93c544349b0d81d82a0196e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _waveList:
+  - {fileID: 4488695613238839114, guid: 385647f334569e5448ebe30220d5bce4, type: 3}
+  - {fileID: 8148412621587062984, guid: 943ca790213a7de46bfc4a513d37493a, type: 3}
+  - {fileID: 1318554499801635217, guid: 945c6dd31ad6c324e8e88869e36fe41a, type: 3}
+  - {fileID: 1777896031348892627, guid: 08fa0d9a19e7a114a9d378c753341b24, type: 3}
+  - {fileID: 3693511631293548677, guid: 842427fbb9dbc5b429da34f69fedfcdc, type: 3}
+  - {fileID: 4240586108544169347, guid: 991ba405e020e4848968a32947e455a6, type: 3}
+  - {fileID: 4344976678224942146, guid: 07ee1219c168684448752ec56e33f613, type: 3}
+  _waveIndex: 0
+  _bgmControll: {fileID: 0}
+  _uiManager: {fileID: 9071517967618440093}
+  _scoreManager: {fileID: 0}
+  _endManager: {fileID: 0}
+  _transitionInterval: 2
+  _bossTransitionInterval: 4
+  _listEnd: 0
+  _canTransition: 1
+--- !u!114 &9071517967618440093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8955623146422157152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ee746a5198273645af076b38c9119f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _waveTexts:
+  - {fileID: 0}
+  - {fileID: 0}
+  _animators:
+  - {fileID: 0}
+  - {fileID: 0}
+  _fadeAnimator: {fileID: 0}
+  _a: 0

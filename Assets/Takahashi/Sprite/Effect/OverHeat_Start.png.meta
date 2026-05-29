@@ -1,0 +1,1703 @@
+fileFormatVersion: 2
+guid: 460c5c6f9363d8644856bf55788e34f1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4631482995327560760
+    second: OverHeat_Start_0
+  - first:
+      213: -1384739263180136206
+    second: OverHeat_Start_1
+  - first:
+      213: 165614527156157674
+    second: OverHeat_Start_2
+  - first:
+      213: 2874828854188506697
+    second: OverHeat_Start_3
+  - first:
+      213: -5610834261329978480
+    second: OverHeat_Start_4
+  - first:
+      213: 436548607369159633
+    second: OverHeat_Start_5
+  - first:
+      213: -5093209051233590360
+    second: OverHeat_Start_6
+  - first:
+      213: -3590270352858700451
+    second: OverHeat_Start_7
+  - first:
+      213: -5022997725706847287
+    second: OverHeat_Start_8
+  - first:
+      213: 1117225236124710823
+    second: OverHeat_Start_9
+  - first:
+      213: 744710101842760101
+    second: OverHeat_Start_10
+  - first:
+      213: -3054118831750149489
+    second: OverHeat_Start_11
+  - first:
+      213: 6608399901134663032
+    second: OverHeat_Start_12
+  - first:
+      213: 4226187750320941933
+    second: OverHeat_Start_13
+  - first:
+      213: 2586864834468641449
+    second: OverHeat_Start_14
+  - first:
+      213: 4703981691492016800
+    second: OverHeat_Start_15
+  - first:
+      213: 8781436650611856155
+    second: OverHeat_Start_16
+  - first:
+      213: 758833681237377059
+    second: OverHeat_Start_17
+  - first:
+      213: -4498466380066832329
+    second: OverHeat_Start_18
+  - first:
+      213: -5041164883101815669
+    second: OverHeat_Start_19
+  - first:
+      213: 8486604354836838493
+    second: OverHeat_Start_20
+  - first:
+      213: 1544473556028008828
+    second: OverHeat_Start_21
+  - first:
+      213: 773862742084021653
+    second: OverHeat_Start_22
+  - first:
+      213: 115127422760242879
+    second: OverHeat_Start_23
+  - first:
+      213: -5510254762214226779
+    second: OverHeat_Start_24
+  - first:
+      213: 755146759624518767
+    second: OverHeat_Start_25
+  - first:
+      213: 816387658891074852
+    second: OverHeat_Start_26
+  - first:
+      213: -4080203572378038687
+    second: OverHeat_Start_27
+  - first:
+      213: 2396180733995836634
+    second: OverHeat_Start_28
+  - first:
+      213: 8246300165642050041
+    second: OverHeat_Start_29
+  - first:
+      213: -5591435071884036941
+    second: OverHeat_Start_30
+  - first:
+      213: 3825630621918284035
+    second: OverHeat_Start_31
+  - first:
+      213: -6149841639632427057
+    second: OverHeat_Start_32
+  - first:
+      213: 1539668135534043264
+    second: OverHeat_Start_33
+  - first:
+      213: 427253373060354883
+    second: OverHeat_Start_34
+  - first:
+      213: 5007670862271370859
+    second: OverHeat_Start_35
+  - first:
+      213: -7618324431130521195
+    second: OverHeat_Start_36
+  - first:
+      213: 2044347539273841671
+    second: OverHeat_Start_37
+  - first:
+      213: -8789697289590027510
+    second: OverHeat_Start_38
+  - first:
+      213: 3491274990143438765
+    second: OverHeat_Start_39
+  - first:
+      213: -2372185221128372107
+    second: OverHeat_Start_40
+  - first:
+      213: 2849076926949420618
+    second: OverHeat_Start_41
+  - first:
+      213: 4830940967881305513
+    second: OverHeat_Start_42
+  - first:
+      213: 416871492676642603
+    second: OverHeat_Start_43
+  - first:
+      213: -2063532749559523339
+    second: OverHeat_Start_44
+  - first:
+      213: -2586917558746345022
+    second: OverHeat_Start_45
+  - first:
+      213: -4307916309202703285
+    second: OverHeat_Start_46
+  - first:
+      213: -8055332377752264273
+    second: OverHeat_Start_47
+  - first:
+      213: -7026167659576864514
+    second: OverHeat_Start_48
+  - first:
+      213: 6926342974332927442
+    second: OverHeat_Start_49
+  - first:
+      213: -289893067875590934
+    second: OverHeat_Start_50
+  - first:
+      213: -8347421939774703328
+    second: OverHeat_Start_51
+  - first:
+      213: -6050870772623543278
+    second: OverHeat_Start_52
+  - first:
+      213: 9015874647633446392
+    second: OverHeat_Start_53
+  - first:
+      213: 2526394089379026551
+    second: OverHeat_Start_54
+  - first:
+      213: -4376841363615169996
+    second: OverHeat_Start_55
+  - first:
+      213: -135466411143937696
+    second: OverHeat_Start_56
+  - first:
+      213: -7176171020624679692
+    second: OverHeat_Start_57
+  - first:
+      213: -8264262952222791356
+    second: OverHeat_Start_58
+  - first:
+      213: 5741220299332823667
+    second: OverHeat_Start_59
+  - first:
+      213: 3833097165459018850
+    second: OverHeat_Start_60
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: OverHeat_Start_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c31d3021caa9bfb0800000000000000
+      internalID: -4631482995327560760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f0ac9f0afa68cce0800000000000000
+      internalID: -1384739263180136206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_2
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aec79c4f8816c4200800000000000000
+      internalID: 165614527156157674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94ef2f38c9175e720800000000000000
+      internalID: 2874828854188506697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_4
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09bd5df77ff4222b0800000000000000
+      internalID: -5610834261329978480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_5
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d32e6d35aeee0600800000000000000
+      internalID: 436548607369159633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_6
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a3ea665a594159b0800000000000000
+      internalID: -5093209051233590360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_7
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d55ad3ad22ccc2ec0800000000000000
+      internalID: -3590270352858700451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cbf5a37e2aba4ab0800000000000000
+      internalID: -5022997725706847287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_9
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a7b055de6e218f00800000000000000
+      internalID: 1117225236124710823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_10
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a19bf854edb55a00800000000000000
+      internalID: 744710101842760101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_11
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8a83bb9a179d95d0800000000000000
+      internalID: -3054118831750149489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_12
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87dabd082b0c5bb50800000000000000
+      internalID: 6608399901134663032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_13
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6bacfb1e5f66aa30800000000000000
+      internalID: 4226187750320941933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_14
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aaf3747cd366e320800000000000000
+      internalID: 2586864834468641449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_15
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a2a257fc66e74140800000000000000
+      internalID: 4703981691492016800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b13d0519b1eedd970800000000000000
+      internalID: 8781436650611856155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_17
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32081cd663be78a00800000000000000
+      internalID: 758833681237377059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_18
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 730441649ac3291c0800000000000000
+      internalID: -4498466380066832329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_19
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8cea808f3f2a0ab0800000000000000
+      internalID: -5041164883101815669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_20
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d58355f52b976c570800000000000000
+      internalID: 8486604354836838493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_21
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c79a80824821f6510800000000000000
+      internalID: 1544473556028008828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_22
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59de3d650105dba00800000000000000
+      internalID: 773862742084021653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_23
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbec781f7c3099100800000000000000
+      internalID: 115127422760242879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a401540d74a783b0800000000000000
+      internalID: -5510254762214226779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_25
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6ce4b81af1da7a00800000000000000
+      internalID: 755146759624518767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_26
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42d17371044645b00800000000000000
+      internalID: 816387658891074852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_27
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16e802108743067c0800000000000000
+      internalID: -4080203572378038687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_28
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad4e47b9ea1f04120800000000000000
+      internalID: 2396180733995836634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_29
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f9d6545f4eb07270800000000000000
+      internalID: 8246300165642050041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_30
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b4f0b34d6b3762b0800000000000000
+      internalID: -5591435071884036941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_31
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 309cb4518ce571530800000000000000
+      internalID: 3825630621918284035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc7adccac9f57aaa0800000000000000
+      internalID: -6149841639632427057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_33
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 080ae7203000e5510800000000000000
+      internalID: 1539668135534043264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_34
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 343995adda8ede500800000000000000
+      internalID: 427253373060354883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_35
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6652c11e12de7540800000000000000
+      internalID: 5007670862271370859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_36
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59119c22b46464690800000000000000
+      internalID: -7618324431130521195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_37
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70c7cdb614bfe5c10800000000000000
+      internalID: 2044347539273841671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_38
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0bc5ca82e8b40680800000000000000
+      internalID: -8789697289590027510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_39
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daf74b02b10837030800000000000000
+      internalID: 3491274990143438765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57046391c1e441fd0800000000000000
+      internalID: -2372185221128372107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_41
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4ee498be54f98720800000000000000
+      internalID: 2849076926949420618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_42
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ad62710733fa0340800000000000000
+      internalID: 4830940967881305513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_43
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b276af5f96609c500800000000000000
+      internalID: 416871492676642603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_44
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f79e18b5ebdc53e0800000000000000
+      internalID: -2063532749559523339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_45
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 740da448f9eca144caabd2f399228729
+      internalID: -2586917558746345022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_46
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8ae9b40e1cef7b44ae2b36832830095
+      internalID: -4307916309202703285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_47
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33cb9ff052b205749b29aa73ecf51890
+      internalID: -8055332377752264273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc72af2893ac6e94cb93170ecf0e1484
+      internalID: -7026167659576864514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_49
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70728fdf2b599ba4788bec90ce614865
+      internalID: 6926342974332927442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_50
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06d2d010176c9874aa4f3d8ec2ff4422
+      internalID: -289893067875590934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_51
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22f0004d16ef42649b00cb6b4bdf4d93
+      internalID: -8347421939774703328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_52
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bce9d578c8f34f0439e375135b8eba29
+      internalID: -6050870772623543278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_53
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bfdd164d2e78db408dee76ddba51028
+      internalID: 9015874647633446392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_54
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cd14522462da574486de8baf25c39f4
+      internalID: 2526394089379026551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_55
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93c5c84b5baea0a4daf9a58295e4354d
+      internalID: -4376841363615169996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 861ca6a66894c7947b892f2543d37e44
+      internalID: -135466411143937696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_57
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1e1939b0891c4247a84e731681ccebe
+      internalID: -7176171020624679692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_58
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11b30e126dd3c4a4aab2d0d18b662bc2
+      internalID: -8264262952222791356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_59
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba81e39d40f0ffb418c5996de1b81f5a
+      internalID: 5741220299332823667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_60
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 865894291e5f9ef46885a29e7d43af16
+      internalID: 3833097165459018850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_61
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b91a983ffefa8046b6f5b5097ede78b
+      internalID: 540493369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_62
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe6cc009a30427144988aae1b5c279b5
+      internalID: -1675130554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OverHeat_Start_63
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33d265687b1dfd7448d2dc7477f572e8
+      internalID: -2137120477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 94eae2fde7a45424f88a587ab6f23ac4
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      OverHeat_Start_0: -4631482995327560760
+      OverHeat_Start_1: -1384739263180136206
+      OverHeat_Start_10: 744710101842760101
+      OverHeat_Start_11: -3054118831750149489
+      OverHeat_Start_12: 6608399901134663032
+      OverHeat_Start_13: 4226187750320941933
+      OverHeat_Start_14: 2586864834468641449
+      OverHeat_Start_15: 4703981691492016800
+      OverHeat_Start_16: 8781436650611856155
+      OverHeat_Start_17: 758833681237377059
+      OverHeat_Start_18: -4498466380066832329
+      OverHeat_Start_19: -5041164883101815669
+      OverHeat_Start_2: 165614527156157674
+      OverHeat_Start_20: 8486604354836838493
+      OverHeat_Start_21: 1544473556028008828
+      OverHeat_Start_22: 773862742084021653
+      OverHeat_Start_23: 115127422760242879
+      OverHeat_Start_24: -5510254762214226779
+      OverHeat_Start_25: 755146759624518767
+      OverHeat_Start_26: 816387658891074852
+      OverHeat_Start_27: -4080203572378038687
+      OverHeat_Start_28: 2396180733995836634
+      OverHeat_Start_29: 8246300165642050041
+      OverHeat_Start_3: 2874828854188506697
+      OverHeat_Start_30: -5591435071884036941
+      OverHeat_Start_31: 3825630621918284035
+      OverHeat_Start_32: -6149841639632427057
+      OverHeat_Start_33: 1539668135534043264
+      OverHeat_Start_34: 427253373060354883
+      OverHeat_Start_35: 5007670862271370859
+      OverHeat_Start_36: -7618324431130521195
+      OverHeat_Start_37: 2044347539273841671
+      OverHeat_Start_38: -8789697289590027510
+      OverHeat_Start_39: 3491274990143438765
+      OverHeat_Start_4: -5610834261329978480
+      OverHeat_Start_40: -2372185221128372107
+      OverHeat_Start_41: 2849076926949420618
+      OverHeat_Start_42: 4830940967881305513
+      OverHeat_Start_43: 416871492676642603
+      OverHeat_Start_44: -2063532749559523339
+      OverHeat_Start_45: -2586917558746345022
+      OverHeat_Start_46: -4307916309202703285
+      OverHeat_Start_47: -8055332377752264273
+      OverHeat_Start_48: -7026167659576864514
+      OverHeat_Start_49: 6926342974332927442
+      OverHeat_Start_5: 436548607369159633
+      OverHeat_Start_50: -289893067875590934
+      OverHeat_Start_51: -8347421939774703328
+      OverHeat_Start_52: -6050870772623543278
+      OverHeat_Start_53: 9015874647633446392
+      OverHeat_Start_54: 2526394089379026551
+      OverHeat_Start_55: -4376841363615169996
+      OverHeat_Start_56: -135466411143937696
+      OverHeat_Start_57: -7176171020624679692
+      OverHeat_Start_58: -8264262952222791356
+      OverHeat_Start_59: 5741220299332823667
+      OverHeat_Start_6: -5093209051233590360
+      OverHeat_Start_60: 3833097165459018850
+      OverHeat_Start_61: 540493369
+      OverHeat_Start_62: -1675130554
+      OverHeat_Start_63: -2137120477
+      OverHeat_Start_7: -3590270352858700451
+      OverHeat_Start_8: -5022997725706847287
+      OverHeat_Start_9: 1117225236124710823
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

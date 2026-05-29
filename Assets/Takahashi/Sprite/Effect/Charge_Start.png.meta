@@ -1,0 +1,2369 @@
+fileFormatVersion: 2
+guid: 721bce417ee7cf94dbe29fefac5bbe4d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7008875585858843424
+    second: Charge_Start_0
+  - first:
+      213: -1542232619063788309
+    second: Charge_Start_1
+  - first:
+      213: -1176722002454192496
+    second: Charge_Start_2
+  - first:
+      213: -4047250953716856611
+    second: Charge_Start_3
+  - first:
+      213: 1876908168094617003
+    second: Charge_Start_4
+  - first:
+      213: 3079995046804800059
+    second: Charge_Start_5
+  - first:
+      213: -5735064746448756318
+    second: Charge_Start_6
+  - first:
+      213: -1186575449850539263
+    second: Charge_Start_7
+  - first:
+      213: 6838693283866202777
+    second: Charge_Start_8
+  - first:
+      213: -5007456410376838047
+    second: Charge_Start_9
+  - first:
+      213: -3879068154960575713
+    second: Charge_Start_10
+  - first:
+      213: -3587636570691010834
+    second: Charge_Start_11
+  - first:
+      213: 4018010395174887345
+    second: Charge_Start_12
+  - first:
+      213: -1240300644828654767
+    second: Charge_Start_13
+  - first:
+      213: 9134249170427860098
+    second: Charge_Start_14
+  - first:
+      213: -296011097897172433
+    second: Charge_Start_15
+  - first:
+      213: 2054321909555768941
+    second: Charge_Start_16
+  - first:
+      213: -6372361570185485550
+    second: Charge_Start_17
+  - first:
+      213: -8444570730044907350
+    second: Charge_Start_18
+  - first:
+      213: -5563625741448307020
+    second: Charge_Start_19
+  - first:
+      213: 8295026071598075130
+    second: Charge_Start_20
+  - first:
+      213: 5523595614673263237
+    second: Charge_Start_21
+  - first:
+      213: 6116903277786348711
+    second: Charge_Start_22
+  - first:
+      213: 8759686011423752800
+    second: Charge_Start_23
+  - first:
+      213: -7334268265483640289
+    second: Charge_Start_24
+  - first:
+      213: 8447035184578640771
+    second: Charge_Start_25
+  - first:
+      213: 8730752363261151810
+    second: Charge_Start_26
+  - first:
+      213: -7460968685066813885
+    second: Charge_Start_27
+  - first:
+      213: 4670001146189083796
+    second: Charge_Start_28
+  - first:
+      213: 4100940229473835354
+    second: Charge_Start_29
+  - first:
+      213: 7985813544093331353
+    second: Charge_Start_30
+  - first:
+      213: -2780937700908158712
+    second: Charge_Start_31
+  - first:
+      213: 5116055784363103707
+    second: Charge_Start_32
+  - first:
+      213: -3875690364273070255
+    second: Charge_Start_33
+  - first:
+      213: -9051676952430485365
+    second: Charge_Start_34
+  - first:
+      213: 6214400158542005611
+    second: Charge_Start_35
+  - first:
+      213: 2098660694011438987
+    second: Charge_Start_36
+  - first:
+      213: -1154883626091609960
+    second: Charge_Start_37
+  - first:
+      213: 775522970874917796
+    second: Charge_Start_38
+  - first:
+      213: -306668632218985002
+    second: Charge_Start_39
+  - first:
+      213: -689066183798909691
+    second: Charge_Start_40
+  - first:
+      213: -6460155825567536758
+    second: Charge_Start_41
+  - first:
+      213: -3975582156439510815
+    second: Charge_Start_42
+  - first:
+      213: -4196074782666041942
+    second: Charge_Start_43
+  - first:
+      213: 3017722656790425402
+    second: Charge_Start_44
+  - first:
+      213: -5076742226601917886
+    second: Charge_Start_45
+  - first:
+      213: -2516621655008332753
+    second: Charge_Start_46
+  - first:
+      213: -744007961246581787
+    second: Charge_Start_47
+  - first:
+      213: -7253283851265197562
+    second: Charge_Start_48
+  - first:
+      213: 3669631367263020188
+    second: Charge_Start_49
+  - first:
+      213: -388123298254562354
+    second: Charge_Start_50
+  - first:
+      213: -3471787206601715309
+    second: Charge_Start_51
+  - first:
+      213: -6759892532889057314
+    second: Charge_Start_52
+  - first:
+      213: 2286666086346673167
+    second: Charge_Start_53
+  - first:
+      213: 5619215687711728299
+    second: Charge_Start_54
+  - first:
+      213: -2140426138876155034
+    second: Charge_Start_55
+  - first:
+      213: 6887254778615533361
+    second: Charge_Start_56
+  - first:
+      213: 8921601634010255150
+    second: Charge_Start_57
+  - first:
+      213: 6344056269715634536
+    second: Charge_Start_58
+  - first:
+      213: -4996832723597761758
+    second: Charge_Start_59
+  - first:
+      213: -2497795728427880942
+    second: Charge_Start_60
+  - first:
+      213: 8252976142260908321
+    second: Charge_Start_61
+  - first:
+      213: 2709581118587512126
+    second: Charge_Start_62
+  - first:
+      213: 3079559044215158451
+    second: Charge_Start_63
+  - first:
+      213: -4704224978376075735
+    second: Charge_Start_64
+  - first:
+      213: 5977082409437189344
+    second: Charge_Start_65
+  - first:
+      213: -8121495641009672309
+    second: Charge_Start_66
+  - first:
+      213: -6986332777168842742
+    second: Charge_Start_67
+  - first:
+      213: 6444967440322352293
+    second: Charge_Start_68
+  - first:
+      213: -1896477803967701384
+    second: Charge_Start_69
+  - first:
+      213: 1093306881871229795
+    second: Charge_Start_70
+  - first:
+      213: 8510822794832560200
+    second: Charge_Start_71
+  - first:
+      213: 5274841931296184392
+    second: Charge_Start_72
+  - first:
+      213: -2914938303233132677
+    second: Charge_Start_73
+  - first:
+      213: -4577908937329769265
+    second: Charge_Start_74
+  - first:
+      213: -2880842783856719463
+    second: Charge_Start_75
+  - first:
+      213: -8039687268566846070
+    second: Charge_Start_76
+  - first:
+      213: 5870699551549750443
+    second: Charge_Start_77
+  - first:
+      213: 2412887389163046595
+    second: Charge_Start_78
+  - first:
+      213: -1182789518516788613
+    second: Charge_Start_79
+  - first:
+      213: 4201552381133713994
+    second: Charge_Start_80
+  - first:
+      213: 578846925795543022
+    second: Charge_Start_81
+  - first:
+      213: 8013771903834738226
+    second: Charge_Start_82
+  - first:
+      213: -7193166755067701170
+    second: Charge_Start_83
+  - first:
+      213: -8281899318546814463
+    second: Charge_Start_84
+  - first:
+      213: 1467531869907509095
+    second: Charge_Start_85
+  - first:
+      213: 8531592129072034837
+    second: Charge_Start_86
+  - first:
+      213: -5683535241136487778
+    second: Charge_Start_87
+  - first:
+      213: -3943040213927006076
+    second: Charge_Start_88
+  - first:
+      213: 4367670365906755635
+    second: Charge_Start_89
+  - first:
+      213: -2433595565298401917
+    second: Charge_Start_90
+  - first:
+      213: -622501877374762267
+    second: Charge_Start_91
+  - first:
+      213: 2661205073884495521
+    second: Charge_Start_92
+  - first:
+      213: -8262168371762011624
+    second: Charge_Start_93
+  - first:
+      213: 1801870047482104320
+    second: Charge_Start_94
+  - first:
+      213: -3490322081441220549
+    second: Charge_Start_95
+  - first:
+      213: 4709694696004013151
+    second: Charge_Start_96
+  - first:
+      213: -805983763906263428
+    second: Charge_Start_97
+  - first:
+      213: -1739613187995743760
+    second: Charge_Start_98
+  - first:
+      213: 118800363546702189
+    second: Charge_Start_99
+  - first:
+      213: 8716423225484494421
+    second: Charge_Start_100
+  - first:
+      213: -387734289554410495
+    second: Charge_Start_101
+  - first:
+      213: -4817610039785302452
+    second: Charge_Start_102
+  - first:
+      213: 6471243220027621145
+    second: Charge_Start_103
+  - first:
+      213: 4714394881940884370
+    second: Charge_Start_104
+  - first:
+      213: 5154947528652748884
+    second: Charge_Start_105
+  - first:
+      213: -1736972627918842518
+    second: Charge_Start_106
+  - first:
+      213: -6700632050169095709
+    second: Charge_Start_107
+  - first:
+      213: 3280894740039162297
+    second: Charge_Start_108
+  - first:
+      213: -5928442498508790236
+    second: Charge_Start_109
+  - first:
+      213: -6809906506936422993
+    second: Charge_Start_110
+  - first:
+      213: 8348245663142522427
+    second: Charge_Start_111
+  - first:
+      213: -5870059450856029130
+    second: Charge_Start_112
+  - first:
+      213: -3636870543373429002
+    second: Charge_Start_113
+  - first:
+      213: -8160216428535286428
+    second: Charge_Start_114
+  - first:
+      213: 6035561049641495624
+    second: Charge_Start_115
+  - first:
+      213: -8520584525243900464
+    second: Charge_Start_116
+  - first:
+      213: 4238994218950282795
+    second: Charge_Start_117
+  - first:
+      213: 2328971072441027046
+    second: Charge_Start_118
+  - first:
+      213: -5500940878419006414
+    second: Charge_Start_119
+  - first:
+      213: 8921586058420323970
+    second: Charge_Start_120
+  - first:
+      213: -7218337549880309434
+    second: Charge_Start_121
+  - first:
+      213: -5204652523218553395
+    second: Charge_Start_122
+  - first:
+      213: 1220145245609871604
+    second: Charge_Start_123
+  - first:
+      213: 208840793213730267
+    second: Charge_Start_124
+  - first:
+      213: -8612250591434538804
+    second: Charge_Start_125
+  - first:
+      213: -7116278390729950856
+    second: Charge_Start_126
+  - first:
+      213: 8224374650964166691
+    second: Charge_Start_127
+  - first:
+      213: 6435087480102503094
+    second: Charge_Start_128
+  - first:
+      213: -1226393022799866907
+    second: Charge_Start_129
+  - first:
+      213: 334284895035295489
+    second: Charge_Start_130
+  - first:
+      213: -7666783081309598619
+    second: Charge_Start_131
+  - first:
+      213: -7413989050090851396
+    second: Charge_Start_132
+  - first:
+      213: 5940175818678163585
+    second: Charge_Start_133
+  - first:
+      213: -1527009200530483065
+    second: Charge_Start_134
+  - first:
+      213: -7866738236415528251
+    second: Charge_Start_135
+  - first:
+      213: 510655339581999951
+    second: Charge_Start_136
+  - first:
+      213: -5461004181761758729
+    second: Charge_Start_137
+  - first:
+      213: -4359015569413006675
+    second: Charge_Start_138
+  - first:
+      213: 1158176579218408644
+    second: Charge_Start_139
+  - first:
+      213: 7173064270348130873
+    second: Charge_Start_140
+  - first:
+      213: 158478000619544894
+    second: Charge_Start_141
+  - first:
+      213: -2995476626227622693
+    second: Charge_Start_142
+  - first:
+      213: -169272070833580320
+    second: Charge_Start_143
+  - first:
+      213: -6710847479256332466
+    second: Charge_Start_144
+  - first:
+      213: -2227982126778018305
+    second: Charge_Start_145
+  - first:
+      213: 3890533073849488947
+    second: Charge_Start_146
+  - first:
+      213: 5687781395821526124
+    second: Charge_Start_147
+  - first:
+      213: -630178249605753856
+    second: Charge_Start_148
+  - first:
+      213: 6214833080427194628
+    second: Charge_Start_149
+  - first:
+      213: 175519761502167455
+    second: Charge_Start_150
+  - first:
+      213: -2973187725518265771
+    second: Charge_Start_151
+  - first:
+      213: 716391525469844837
+    second: Charge_Start_152
+  - first:
+      213: -6730156774252369652
+    second: Charge_Start_153
+  - first:
+      213: -1805169420327232790
+    second: Charge_Start_154
+  - first:
+      213: -8157243302999707617
+    second: Charge_Start_155
+  - first:
+      213: -692944438352005688
+    second: Charge_Start_156
+  - first:
+      213: 5826395293973583158
+    second: Charge_Start_157
+  - first:
+      213: 4273344812881796632
+    second: Charge_Start_158
+  - first:
+      213: 4174957662888195230
+    second: Charge_Start_159
+  - first:
+      213: -6150293466899256834
+    second: Charge_Start_160
+  - first:
+      213: 6395805595781730276
+    second: Charge_Start_161
+  - first:
+      213: 5765462307359320836
+    second: Charge_Start_162
+  - first:
+      213: -3927590910468355100
+    second: Charge_Start_163
+  - first:
+      213: -8744194642813832649
+    second: Charge_Start_164
+  - first:
+      213: 9201350946814206391
+    second: Charge_Start_165
+  - first:
+      213: 6392877111406799355
+    second: Charge_Start_166
+  - first:
+      213: 2642884285398343019
+    second: Charge_Start_167
+  - first:
+      213: -5226573044659626908
+    second: Charge_Start_168
+  - first:
+      213: 1173362061903881268
+    second: Charge_Start_169
+  - first:
+      213: -7449980179814866089
+    second: Charge_Start_170
+  - first:
+      213: -827247136014374067
+    second: Charge_Start_171
+  - first:
+      213: -541365584050561860
+    second: Charge_Start_172
+  - first:
+      213: 7617048104571976825
+    second: Charge_Start_173
+  - first:
+      213: -7064746658692759378
+    second: Charge_Start_174
+  - first:
+      213: 5792004533018018327
+    second: Charge_Start_175
+  - first:
+      213: 7205685556709077451
+    second: Charge_Start_176
+  - first:
+      213: 837875088424235850
+    second: Charge_Start_177
+  - first:
+      213: 4147487811397379111
+    second: Charge_Start_178
+  - first:
+      213: 1918828618480991773
+    second: Charge_Start_179
+  - first:
+      213: 8877193759934254009
+    second: Charge_Start_180
+  - first:
+      213: 3796108182336658898
+    second: Charge_Start_181
+  - first:
+      213: 6071728711822227834
+    second: Charge_Start_182
+  - first:
+      213: -5191234153264214488
+    second: Charge_Start_183
+  - first:
+      213: 5522638797014629244
+    second: Charge_Start_184
+  - first:
+      213: -3602849845153540028
+    second: Charge_Start_185
+  - first:
+      213: -5215463279204732917
+    second: Charge_Start_186
+  - first:
+      213: 2910316013021457541
+    second: Charge_Start_187
+  - first:
+      213: -8892291520271851231
+    second: Charge_Start_188
+  - first:
+      213: 3040254613868618605
+    second: Charge_Start_189
+  - first:
+      213: 2621099388940977075
+    second: Charge_Start_190
+  - first:
+      213: 7140738774944074383
+    second: Charge_Start_191
+  - first:
+      213: 8900260661415989911
+    second: Charge_Start_192
+  - first:
+      213: 8226539065917069699
+    second: Charge_Start_193
+  - first:
+      213: -4720706192706743493
+    second: Charge_Start_194
+  - first:
+      213: 4839653667882328970
+    second: Charge_Start_195
+  - first:
+      213: 4222245335658314757
+    second: Charge_Start_196
+  - first:
+      213: -3102350270638767229
+    second: Charge_Start_197
+  - first:
+      213: 5516191951578890993
+    second: Charge_Start_198
+  - first:
+      213: -3172124003689754344
+    second: Charge_Start_199
+  - first:
+      213: 4088090399212566889
+    second: Charge_Start_200
+  - first:
+      213: -8675011508280060956
+    second: Charge_Start_201
+  - first:
+      213: -759701821783489267
+    second: Charge_Start_202
+  - first:
+      213: -1574118736509350214
+    second: Charge_Start_203
+  - first:
+      213: -4660870109079437875
+    second: Charge_Start_204
+  - first:
+      213: 162193325273781201
+    second: Charge_Start_205
+  - first:
+      213: 2297931861226901128
+    second: Charge_Start_206
+  - first:
+      213: -298351519223746394
+    second: Charge_Start_207
+  - first:
+      213: -1551930353446141932
+    second: Charge_Start_208
+  - first:
+      213: -914877852106609653
+    second: Charge_Start_209
+  - first:
+      213: 267309639662158818
+    second: Charge_Start_210
+  - first:
+      213: 7659408977676353797
+    second: Charge_Start_211
+  - first:
+      213: -957726321443570087
+    second: Charge_Start_212
+  - first:
+      213: 2663387704229896311
+    second: Charge_Start_213
+  - first:
+      213: -1288105029735699240
+    second: Charge_Start_214
+  - first:
+      213: -3385487687740751156
+    second: Charge_Start_215
+  - first:
+      213: -5640785645968821387
+    second: Charge_Start_216
+  - first:
+      213: -7643104552485534215
+    second: Charge_Start_217
+  - first:
+      213: 2281678886822125343
+    second: Charge_Start_218
+  - first:
+      213: 3683381013511308596
+    second: Charge_Start_219
+  - first:
+      213: 2725545159884768826
+    second: Charge_Start_220
+  - first:
+      213: -199437029110286313
+    second: Charge_Start_221
+  - first:
+      213: -282652582246763085
+    second: Charge_Start_222
+  - first:
+      213: 3785949701291718800
+    second: Charge_Start_223
+  - first:
+      213: -2927742948835171545
+    second: Charge_Start_224
+  - first:
+      213: 568566201236415263
+    second: Charge_Start_225
+  - first:
+      213: -2075258960004623074
+    second: Charge_Start_226
+  - first:
+      213: 4717353393366069665
+    second: Charge_Start_227
+  - first:
+      213: 4036803822790575256
+    second: Charge_Start_228
+  - first:
+      213: -4351731307237203431
+    second: Charge_Start_229
+  - first:
+      213: 4352840475299187076
+    second: Charge_Start_230
+  - first:
+      213: -6333565053006306896
+    second: Charge_Start_231
+  - first:
+      213: 1193023793308976215
+    second: Charge_Start_232
+  - first:
+      213: 7264022365725090881
+    second: Charge_Start_233
+  - first:
+      213: -686295174107570125
+    second: Charge_Start_234
+  - first:
+      213: -6886971221133592476
+    second: Charge_Start_235
+  - first:
+      213: 6350787340307349832
+    second: Charge_Start_236
+  - first:
+      213: -8011061403252067781
+    second: Charge_Start_237
+  - first:
+      213: -2882636620853384274
+    second: Charge_Start_238
+  - first:
+      213: 3722429518532745039
+    second: Charge_Start_239
+  - first:
+      213: 1348062351812227213
+    second: Charge_Start_240
+  - first:
+      213: -204341434622072501
+    second: Charge_Start_241
+  - first:
+      213: 4400104094367683878
+    second: Charge_Start_242
+  - first:
+      213: 1114134396852625849
+    second: Charge_Start_243
+  - first:
+      213: -130434789815348729
+    second: Charge_Start_244
+  - first:
+      213: -7811220346065667869
+    second: Charge_Start_245
+  - first:
+      213: -1427490486238985646
+    second: Charge_Start_246
+  - first:
+      213: 6593099510227599881
+    second: Charge_Start_247
+  - first:
+      213: 6256221045286880614
+    second: Charge_Start_248
+  - first:
+      213: -2622252758809857355
+    second: Charge_Start_249
+  - first:
+      213: 3946310640970183007
+    second: Charge_Start_250
+  - first:
+      213: 2217912196780056872
+    second: Charge_Start_251
+  - first:
+      213: 3553602634173129417
+    second: Charge_Start_252
+  - first:
+      213: -3172861787392975010
+    second: Charge_Start_253
+  - first:
+      213: 1577391222413085150
+    second: Charge_Start_254
+  - first:
+      213: 1782458217287432106
+    second: Charge_Start_255
+  - first:
+      213: 7382462093637827793
+    second: Charge_Start_256
+  - first:
+      213: -4095672926358035789
+    second: Charge_Start_257
+  - first:
+      213: -9029019924848890034
+    second: Charge_Start_258
+  - first:
+      213: -5230287646239712545
+    second: Charge_Start_259
+  - first:
+      213: 4709606127721836763
+    second: Charge_Start_260
+  - first:
+      213: 3882574728188056917
+    second: Charge_Start_261
+  - first:
+      213: 5352283588649421788
+    second: Charge_Start_262
+  - first:
+      213: -1162194757950756964
+    second: Charge_Start_263
+  - first:
+      213: 7574941970986711013
+    second: Charge_Start_264
+  - first:
+      213: 3960031470980897404
+    second: Charge_Start_265
+  - first:
+      213: -7588503730673291636
+    second: Charge_Start_266
+  - first:
+      213: -2526564807499584248
+    second: Charge_Start_267
+  - first:
+      213: -6711986471843641354
+    second: Charge_Start_268
+  - first:
+      213: 6074831784478940752
+    second: Charge_Start_269
+  - first:
+      213: 3873480088480486330
+    second: Charge_Start_270
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Charge_Start_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0233602f537844160800000000000000
+      internalID: 7008875585858843424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_1
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: becbea3aa93e89ae0800000000000000
+      internalID: -1542232619063788309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_2
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09ed454c2917bafe0800000000000000
+      internalID: -1176722002454192496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_3
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd888da63b645d7c0800000000000000
+      internalID: -4047250953716856611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_4
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bad0f4bd80e1c0a10800000000000000
+      internalID: 1876908168094617003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_5
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3243c23d275eba20800000000000000
+      internalID: 3079995046804800059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_6
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a16e00bff4f860b0800000000000000
+      internalID: -5735064746448756318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_7
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 700
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10395744aef688fe0800000000000000
+      internalID: -1186575449850539263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 992d1b80f4be7ee50800000000000000
+      internalID: 6838693283866202777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_9
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1646c37ece0f18ab0800000000000000
+      internalID: -5007456410376838047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_10
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f138b04b018ca2ac0800000000000000
+      internalID: -3879068154960575713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_11
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eeef2cc0c87263ec0800000000000000
+      internalID: -3587636570691010834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_12
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bfd9348a27d2c730800000000000000
+      internalID: 4018010395174887345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_13
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 153dc4a822199cee0800000000000000
+      internalID: -1240300644828654767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_14
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2845245a93f53ce70800000000000000
+      internalID: 9134249170427860098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_15
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 600
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f22044c897b54ebf0800000000000000
+      internalID: -296011097897172433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6eaf5974ea628c10800000000000000
+      internalID: 2054321909555768941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_17
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2136eb40ae2d097a0800000000000000
+      internalID: -6372361570185485550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_18
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa0230b89abdeca80800000000000000
+      internalID: -8444570730044907350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_19
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4be11c19dd70ac2b0800000000000000
+      internalID: -5563625741448307020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_20
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afc0530634add1370800000000000000
+      internalID: 8295026071598075130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_21
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58a518f32f0c7ac40800000000000000
+      internalID: 5523595614673263237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_22
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7acb0e55f1b93e450800000000000000
+      internalID: 6116903277786348711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_23
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0620fde3408a09970800000000000000
+      internalID: 8759686011423752800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f126d640fd1773a90800000000000000
+      internalID: -7334268265483640289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_25
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38b390efeb5e93570800000000000000
+      internalID: 8447035184578640771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_26
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24a4512540dd92970800000000000000
+      internalID: 8730752363261151810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_27
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34e7746c280557890800000000000000
+      internalID: -7460968685066813885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_28
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 494744bbc4d2fc040800000000000000
+      internalID: 4670001146189083796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_29
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5995e6396779e830800000000000000
+      internalID: 4100940229473835354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_30
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99faf229b1f43de60800000000000000
+      internalID: 7985813544093331353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_31
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 801b0e225ef1869d0800000000000000
+      internalID: -2780937700908158712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd59b0e31a1eff640800000000000000
+      internalID: 5116055784363103707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_33
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15f6912e528c63ac0800000000000000
+      internalID: -3875690364273070255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_34
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b806ac405cbf16280800000000000000
+      internalID: -9051676952430485365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_35
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b650706d40cfd3650800000000000000
+      internalID: 6214400158542005611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_36
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8760a238c0ff1d10800000000000000
+      internalID: 2098660694011438987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_37
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89005edf57709ffe0800000000000000
+      internalID: -1154883626091609960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_38
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a3b72a780633ca00800000000000000
+      internalID: 775522970874917796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_39
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dd15d8f08e7ebbf0800000000000000
+      internalID: -306668632218985002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5059ee7e4f1ff66f0800000000000000
+      internalID: -689066183798909691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_41
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a896067018ae856a0800000000000000
+      internalID: -6460155825567536758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_42
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e0aa0e9715e3d8c0800000000000000
+      internalID: -3975582156439510815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_43
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa55738873c84c5c0800000000000000
+      internalID: -4196074782666041942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_44
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3f24ac84ca11e920800000000000000
+      internalID: 3017722656790425402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_45
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 242ca27b7d9cb89b0800000000000000
+      internalID: -5076742226601917886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_46
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f243c2b30f9231dd0800000000000000
+      internalID: -2516621655008332753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_47
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ebb5df73b0cca5f0800000000000000
+      internalID: -744007961246581787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60ab24e44c8275b90800000000000000
+      internalID: -7253283851265197562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_49
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c134fa7a85a037c47aa770473157cfbc
+      internalID: 3669631367263020188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_50
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8748c230e817cc2499af182d75042312
+      internalID: -388123298254562354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_51
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eaf2286494dd7404bacfb28ad0096e19
+      internalID: -3471787206601715309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_52
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 798cad32267d3a94495ef63c05a19ba6
+      internalID: -6759892532889057314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_53
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03b5602a28a57894cb8811d96aa1a116
+      internalID: 2286666086346673167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_54
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96d4275631f621f40bd2538dea5a6d53
+      internalID: 5619215687711728299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_55
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a104af1e8155a6246abe14da40ca9533
+      internalID: -2140426138876155034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cc356f139e6db647b0979cf9cf7b6eb
+      internalID: 6887254778615533361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_57
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3522eb4c76f51d449bce62b73ead10b
+      internalID: 8921601634010255150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_58
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85732813244fc5147b0c7d0ef962c72c
+      internalID: 6344056269715634536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_59
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e4d756d1a3d888488d4c5f7ff993e78
+      internalID: -4996832723597761758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_60
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9eb6aa64ee505e44ace83b3d4564b10
+      internalID: -2497795728427880942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_61
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12c7693095b78f246b8954d77dfca03f
+      internalID: 8252976142260908321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_62
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9635bf5741090a34a8796c8f1981422c
+      internalID: 2709581118587512126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Charge_Start_63
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f40722433a7f9c428ab43c7c00050de
+      internalID: 3079559044215158451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: d17b3b5e970041a449a21ff469e95aeb
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Charge_Start_0: 7008875585858843424
+      Charge_Start_1: -1542232619063788309
+      Charge_Start_10: -3879068154960575713
+      Charge_Start_11: -3587636570691010834
+      Charge_Start_12: 4018010395174887345
+      Charge_Start_13: -1240300644828654767
+      Charge_Start_14: 9134249170427860098
+      Charge_Start_15: -296011097897172433
+      Charge_Start_16: 2054321909555768941
+      Charge_Start_17: -6372361570185485550
+      Charge_Start_18: -8444570730044907350
+      Charge_Start_19: -5563625741448307020
+      Charge_Start_2: -1176722002454192496
+      Charge_Start_20: 8295026071598075130
+      Charge_Start_21: 5523595614673263237
+      Charge_Start_22: 6116903277786348711
+      Charge_Start_23: 8759686011423752800
+      Charge_Start_24: -7334268265483640289
+      Charge_Start_25: 8447035184578640771
+      Charge_Start_26: 8730752363261151810
+      Charge_Start_27: -7460968685066813885
+      Charge_Start_28: 4670001146189083796
+      Charge_Start_29: 4100940229473835354
+      Charge_Start_3: -4047250953716856611
+      Charge_Start_30: 7985813544093331353
+      Charge_Start_31: -2780937700908158712
+      Charge_Start_32: 5116055784363103707
+      Charge_Start_33: -3875690364273070255
+      Charge_Start_34: -9051676952430485365
+      Charge_Start_35: 6214400158542005611
+      Charge_Start_36: 2098660694011438987
+      Charge_Start_37: -1154883626091609960
+      Charge_Start_38: 775522970874917796
+      Charge_Start_39: -306668632218985002
+      Charge_Start_4: 1876908168094617003
+      Charge_Start_40: -689066183798909691
+      Charge_Start_41: -6460155825567536758
+      Charge_Start_42: -3975582156439510815
+      Charge_Start_43: -4196074782666041942
+      Charge_Start_44: 3017722656790425402
+      Charge_Start_45: -5076742226601917886
+      Charge_Start_46: -2516621655008332753
+      Charge_Start_47: -744007961246581787
+      Charge_Start_48: -7253283851265197562
+      Charge_Start_49: 3669631367263020188
+      Charge_Start_5: 3079995046804800059
+      Charge_Start_50: -388123298254562354
+      Charge_Start_51: -3471787206601715309
+      Charge_Start_52: -6759892532889057314
+      Charge_Start_53: 2286666086346673167
+      Charge_Start_54: 5619215687711728299
+      Charge_Start_55: -2140426138876155034
+      Charge_Start_56: 6887254778615533361
+      Charge_Start_57: 8921601634010255150
+      Charge_Start_58: 6344056269715634536
+      Charge_Start_59: -4996832723597761758
+      Charge_Start_6: -5735064746448756318
+      Charge_Start_60: -2497795728427880942
+      Charge_Start_61: 8252976142260908321
+      Charge_Start_62: 2709581118587512126
+      Charge_Start_63: 3079559044215158451
+      Charge_Start_7: -1186575449850539263
+      Charge_Start_8: 6838693283866202777
+      Charge_Start_9: -5007456410376838047
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

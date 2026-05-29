@@ -1,0 +1,1717 @@
+fileFormatVersion: 2
+guid: c0766d006512fb74e9e03fc90f382bfc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1933541469627299122
+    second: Death_Effect2_0
+  - first:
+      213: 7306591301782273138
+    second: Death_Effect2_1
+  - first:
+      213: 5409251333900642118
+    second: Death_Effect2_2
+  - first:
+      213: -1904327825801884317
+    second: Death_Effect2_3
+  - first:
+      213: -2323893010908790266
+    second: Death_Effect2_4
+  - first:
+      213: 1457897229977562332
+    second: Death_Effect2_5
+  - first:
+      213: -3385407567150246935
+    second: Death_Effect2_6
+  - first:
+      213: -857582749922897364
+    second: Death_Effect2_7
+  - first:
+      213: -5833556071765971630
+    second: Death_Effect2_8
+  - first:
+      213: 1047157170813447749
+    second: Death_Effect2_9
+  - first:
+      213: -824390630452852043
+    second: Death_Effect2_10
+  - first:
+      213: 7371697068474906545
+    second: Death_Effect2_11
+  - first:
+      213: -4698130198123785540
+    second: Death_Effect2_12
+  - first:
+      213: 1819055425098382029
+    second: Death_Effect2_13
+  - first:
+      213: -22041393657099043
+    second: Death_Effect2_14
+  - first:
+      213: 8792704632423346190
+    second: Death_Effect2_15
+  - first:
+      213: 706031476720349306
+    second: Death_Effect2_16
+  - first:
+      213: -3572395890138167844
+    second: Death_Effect2_17
+  - first:
+      213: 245254324754494909
+    second: Death_Effect2_18
+  - first:
+      213: 7577341488269774970
+    second: Death_Effect2_19
+  - first:
+      213: -5690192643523808808
+    second: Death_Effect2_20
+  - first:
+      213: 9042799700815793242
+    second: Death_Effect2_21
+  - first:
+      213: 6118727579550704162
+    second: Death_Effect2_22
+  - first:
+      213: -4768356000355198702
+    second: Death_Effect2_23
+  - first:
+      213: 411230782136143299
+    second: Death_Effect2_24
+  - first:
+      213: 2408050351188774626
+    second: Death_Effect2_25
+  - first:
+      213: 3072530040181230421
+    second: Death_Effect2_26
+  - first:
+      213: 6250321258540071626
+    second: Death_Effect2_27
+  - first:
+      213: -2108168977632620102
+    second: Death_Effect2_28
+  - first:
+      213: -970858114272793182
+    second: Death_Effect2_29
+  - first:
+      213: -1737531122796602948
+    second: Death_Effect2_30
+  - first:
+      213: 5537365485271740770
+    second: Death_Effect2_31
+  - first:
+      213: 7481132487034956536
+    second: Death_Effect2_32
+  - first:
+      213: 2561791255475622614
+    second: Death_Effect2_33
+  - first:
+      213: 3391728002445890057
+    second: Death_Effect2_34
+  - first:
+      213: 4171038741109376904
+    second: Death_Effect2_35
+  - first:
+      213: 8005880198078692145
+    second: Death_Effect2_36
+  - first:
+      213: -239327828130103372
+    second: Death_Effect2_37
+  - first:
+      213: 8138995728609700160
+    second: Death_Effect2_38
+  - first:
+      213: 8836091832801482103
+    second: Death_Effect2_39
+  - first:
+      213: 6126802656056841651
+    second: Death_Effect2_40
+  - first:
+      213: 4437624300028652258
+    second: Death_Effect2_41
+  - first:
+      213: -7421990020780681498
+    second: Death_Effect2_42
+  - first:
+      213: -8794009297351302926
+    second: Death_Effect2_43
+  - first:
+      213: -1947537555381265243
+    second: Death_Effect2_44
+  - first:
+      213: 3778749879053149551
+    second: Death_Effect2_45
+  - first:
+      213: -3004907772714014303
+    second: Death_Effect2_46
+  - first:
+      213: -6426763363433459121
+    second: Death_Effect2_47
+  - first:
+      213: 7699110494455735079
+    second: Death_Effect2_48
+  - first:
+      213: 8047056718564939605
+    second: Death_Effect2_49
+  - first:
+      213: -3146057453883978925
+    second: Death_Effect2_50
+  - first:
+      213: -2925441328787085055
+    second: Death_Effect2_51
+  - first:
+      213: -4396236640759283991
+    second: Death_Effect2_52
+  - first:
+      213: -5799432458903855448
+    second: Death_Effect2_53
+  - first:
+      213: 4576626164103853913
+    second: Death_Effect2_54
+  - first:
+      213: -8629890662595367985
+    second: Death_Effect2_55
+  - first:
+      213: 7686632312633231024
+    second: Death_Effect2_56
+  - first:
+      213: -2175060492414831796
+    second: Death_Effect2_57
+  - first:
+      213: -3515413915926587503
+    second: Death_Effect2_58
+  - first:
+      213: 5485564456503461349
+    second: Death_Effect2_59
+  - first:
+      213: 1860909520790962536
+    second: Death_Effect2_60
+  - first:
+      213: 8530870358159845764
+    second: Death_Effect2_61
+  - first:
+      213: 4043323378799094630
+    second: Death_Effect2_62
+  - first:
+      213: -3240012379698059881
+    second: Death_Effect2_63
+  - first:
+      213: 685383684826163884
+    second: Death_Effect2_64
+  - first:
+      213: -183892385002592029
+    second: Death_Effect2_65
+  - first:
+      213: -7353767714313051297
+    second: Death_Effect2_66
+  - first:
+      213: 3251928662829603902
+    second: Death_Effect2_67
+  - first:
+      213: 4666169552034999745
+    second: Death_Effect2_68
+  - first:
+      213: -4287096822661508801
+    second: Death_Effect2_69
+  - first:
+      213: 447789201358187242
+    second: Death_Effect2_70
+  - first:
+      213: -5020180993134132142
+    second: Death_Effect2_71
+  - first:
+      213: 1588996433959278549
+    second: Death_Effect2_72
+  - first:
+      213: 8485810253887420672
+    second: Death_Effect2_73
+  - first:
+      213: 1032545282048934716
+    second: Death_Effect2_74
+  - first:
+      213: -50514319914030409
+    second: Death_Effect2_75
+  - first:
+      213: -6073703274531291274
+    second: Death_Effect2_76
+  - first:
+      213: 6733097320711735729
+    second: Death_Effect2_77
+  - first:
+      213: 334126661832538184
+    second: Death_Effect2_78
+  - first:
+      213: -4304222122438143333
+    second: Death_Effect2_79
+  - first:
+      213: 2863764390025932317
+    second: Death_Effect2_80
+  - first:
+      213: -1922447187116164883
+    second: Death_Effect2_81
+  - first:
+      213: -5703487781640313799
+    second: Death_Effect2_82
+  - first:
+      213: -6265547361540400118
+    second: Death_Effect2_83
+  - first:
+      213: 861821123367354081
+    second: Death_Effect2_84
+  - first:
+      213: -5672190819709729722
+    second: Death_Effect2_85
+  - first:
+      213: -6920380214256563793
+    second: Death_Effect2_86
+  - first:
+      213: -7969740139119215634
+    second: Death_Effect2_87
+  - first:
+      213: 2889454002644584275
+    second: Death_Effect2_88
+  - first:
+      213: -2317598249744788521
+    second: Death_Effect2_89
+  - first:
+      213: -1355132580470429103
+    second: Death_Effect2_90
+  - first:
+      213: -634285937804956858
+    second: Death_Effect2_91
+  - first:
+      213: -1274392130186689648
+    second: Death_Effect2_92
+  - first:
+      213: -5440344075542749547
+    second: Death_Effect2_93
+  - first:
+      213: 3846110200752610085
+    second: Death_Effect2_94
+  - first:
+      213: -8185093078448443171
+    second: Death_Effect2_95
+  - first:
+      213: 3447353963831265528
+    second: Death_Effect2_96
+  - first:
+      213: 1942841556590403184
+    second: Death_Effect2_97
+  - first:
+      213: 7608571458053722488
+    second: Death_Effect2_98
+  - first:
+      213: -441123545668225279
+    second: Death_Effect2_99
+  - first:
+      213: -7060540750227828286
+    second: Death_Effect2_100
+  - first:
+      213: -20565800609873405
+    second: Death_Effect2_101
+  - first:
+      213: -4645328280401383354
+    second: Death_Effect2_102
+  - first:
+      213: 3747215777027125947
+    second: Death_Effect2_103
+  - first:
+      213: -8905983441666340812
+    second: Death_Effect2_104
+  - first:
+      213: -380394373922748488
+    second: Death_Effect2_105
+  - first:
+      213: -3626986297425711562
+    second: Death_Effect2_106
+  - first:
+      213: 2624009288802876669
+    second: Death_Effect2_107
+  - first:
+      213: 8611434800457338334
+    second: Death_Effect2_108
+  - first:
+      213: 3160859854941507525
+    second: Death_Effect2_109
+  - first:
+      213: -8102445613303190109
+    second: Death_Effect2_110
+  - first:
+      213: 8560256779549665960
+    second: Death_Effect2_111
+  - first:
+      213: 5335871049187904499
+    second: Death_Effect2_112
+  - first:
+      213: -7858322172412009290
+    second: Death_Effect2_113
+  - first:
+      213: 3097021114481874583
+    second: Death_Effect2_114
+  - first:
+      213: 6278052175981827757
+    second: Death_Effect2_115
+  - first:
+      213: -1230623069082531567
+    second: Death_Effect2_116
+  - first:
+      213: 6104971155897864009
+    second: Death_Effect2_117
+  - first:
+      213: -7818232509125995346
+    second: Death_Effect2_118
+  - first:
+      213: -6015620135933122456
+    second: Death_Effect2_119
+  - first:
+      213: 6907891357311059971
+    second: Death_Effect2_120
+  - first:
+      213: 4548276522518042424
+    second: Death_Effect2_121
+  - first:
+      213: 9079831465729815693
+    second: Death_Effect2_122
+  - first:
+      213: 6155350697732043064
+    second: Death_Effect2_123
+  - first:
+      213: -1582097390279397971
+    second: Death_Effect2_124
+  - first:
+      213: -2373556806587604879
+    second: Death_Effect2_125
+  - first:
+      213: 3606092377163387946
+    second: Death_Effect2_126
+  - first:
+      213: 4082393855693240740
+    second: Death_Effect2_127
+  - first:
+      213: 7864710372929563611
+    second: Death_Effect2_128
+  - first:
+      213: -8074991003042330397
+    second: Death_Effect2_129
+  - first:
+      213: 1162382347747632445
+    second: Death_Effect2_130
+  - first:
+      213: -3558048886628861409
+    second: Death_Effect2_131
+  - first:
+      213: 1001751656353304320
+    second: Death_Effect2_132
+  - first:
+      213: 3991866067060580215
+    second: Death_Effect2_133
+  - first:
+      213: 6040334335992965437
+    second: Death_Effect2_134
+  - first:
+      213: 6431694223295895336
+    second: Death_Effect2_135
+  - first:
+      213: -5421466460840598148
+    second: Death_Effect2_136
+  - first:
+      213: -7890448794047078839
+    second: Death_Effect2_137
+  - first:
+      213: 8897349881802870539
+    second: Death_Effect2_138
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Death_Effect2_0
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecac068174eaa25e0800000000000000
+      internalID: -1933541469627299122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_1
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27cf0b5b31a366560800000000000000
+      internalID: 7306591301782273138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_2
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 647a4f1cd65811b40800000000000000
+      internalID: 5409251333900642118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_3
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36dcf279ee77295e0800000000000000
+      internalID: -1904327825801884317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 602c4cc7e9fdfbfd0800000000000000
+      internalID: -2323893010908790266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_5
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdca6df6ecd7b3410800000000000000
+      internalID: 1457897229977562332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_6
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e3171c11cd9401d0800000000000000
+      internalID: -3385407567150246935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_7
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c22d75958014914f0800000000000000
+      internalID: -857582749922897364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_8
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25de01509ab0b0fa0800000000000000
+      internalID: -5833556071765971630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_9
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54ea65616ef388e00800000000000000
+      internalID: 1047157170813447749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_10
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ba82b3e61d2f84f0800000000000000
+      internalID: -824390630452852043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_11
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b73c364d678d4660800000000000000
+      internalID: 7371697068474906545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb2db400a73ecceb0800000000000000
+      internalID: -4698130198123785540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_13
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dca7cb775459e3910800000000000000
+      internalID: 1819055425098382029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_14
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddcc6b02871b1bff0800000000000000
+      internalID: -22041393657099043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_15
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0076860746f50a70800000000000000
+      internalID: 8792704632423346190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_16
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a70392a23e35cc900800000000000000
+      internalID: 706031476720349306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_17
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd5cf338ddc4c6ec0800000000000000
+      internalID: -3572395890138167844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_18
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db5be9a4281576300800000000000000
+      internalID: 245254324754494909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_19
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a705626efef182960800000000000000
+      internalID: 7577341488269774970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d1f83b40ff5801b0800000000000000
+      internalID: -5690192643523808808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_21
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5c4226ca6a7e7d70800000000000000
+      internalID: 9042799700815793242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_22
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2226180b0561ae450800000000000000
+      internalID: 6118727579550704162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_23
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 219d9344b7563ddb0800000000000000
+      internalID: -4768356000355198702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_24
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cd4ee1b73cf4b500800000000000000
+      internalID: 411230782136143299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_25
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ee8cd7390d1b6120800000000000000
+      internalID: 2408050351188774626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_26
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55b08b6eac1d3aa20800000000000000
+      internalID: 3072530040181230421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_27
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aca7a5ba11a9db650800000000000000
+      internalID: 6250321258540071626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab195b10c774eb2e0800000000000000
+      internalID: -2108168977632620102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_29
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ade67b50b1d682f0800000000000000
+      internalID: -970858114272793182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_30
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb9d58f46ac03e7e0800000000000000
+      internalID: -1737531122796602948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_31
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2617125129ca8dc40800000000000000
+      internalID: 5537365485271740770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_32
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fa6a573c5252d760800000000000000
+      internalID: 7481132487034956536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_33
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d2935be29f4d8320800000000000000
+      internalID: 2561791255475622614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_34
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9025888e5a6d11f20800000000000000
+      internalID: 3391728002445890057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_35
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 887873cc2a182e930800000000000000
+      internalID: 4171038741109376904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13b70d88f999a1f60800000000000000
+      internalID: 8005880198078692145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_37
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bf707bbb9cbdacf0800000000000000
+      internalID: -239327828130103372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_38
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 049e3303e7583f070800000000000000
+      internalID: 8138995728609700160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_39
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 775dcd0d4ba10aa70800000000000000
+      internalID: 8836091832801482103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_40
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b51033fd86c60550800000000000000
+      internalID: 6126802656056841651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_41
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ea69d11acb959d30800000000000000
+      internalID: 4437624300028652258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_42
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e69fd4466bcff890800000000000000
+      internalID: -7421990020780681498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_43
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f0a4eff22765f580800000000000000
+      internalID: -8794009297351302926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_44
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ac54c079e4f8f4e0800000000000000
+      internalID: -1947537555381265243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_45
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f65630c8ef0d07430800000000000000
+      internalID: 3778749879053149551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_46
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a922982d4c6c46d0800000000000000
+      internalID: -3004907772714014303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_47
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f42dd0b75cc8fc6a0800000000000000
+      internalID: -6426763363433459121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_48
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 723248cf33cb8da60800000000000000
+      internalID: 7699110494455735079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_49
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 557db7d4373ecaf60800000000000000
+      internalID: 8047056718564939605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_50
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35b864a0a65f654d0800000000000000
+      internalID: -3146057453883978925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_51
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10926627c9eb667d0800000000000000
+      internalID: -2925441328787085055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ee7cf6411e6df2c0800000000000000
+      internalID: -4396236640759283991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Effect2_53
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ae5a24c7e6448fa0800000000000000
+      internalID: -5799432458903855448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: fa79dfb044e30d84e999ddb4b90bbb5d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Death_Effect2_0: -1933541469627299122
+      Death_Effect2_1: 7306591301782273138
+      Death_Effect2_10: -824390630452852043
+      Death_Effect2_11: 7371697068474906545
+      Death_Effect2_12: -4698130198123785540
+      Death_Effect2_13: 1819055425098382029
+      Death_Effect2_14: -22041393657099043
+      Death_Effect2_15: 8792704632423346190
+      Death_Effect2_16: 706031476720349306
+      Death_Effect2_17: -3572395890138167844
+      Death_Effect2_18: 245254324754494909
+      Death_Effect2_19: 7577341488269774970
+      Death_Effect2_2: 5409251333900642118
+      Death_Effect2_20: -5690192643523808808
+      Death_Effect2_21: 9042799700815793242
+      Death_Effect2_22: 6118727579550704162
+      Death_Effect2_23: -4768356000355198702
+      Death_Effect2_24: 411230782136143299
+      Death_Effect2_25: 2408050351188774626
+      Death_Effect2_26: 3072530040181230421
+      Death_Effect2_27: 6250321258540071626
+      Death_Effect2_28: -2108168977632620102
+      Death_Effect2_29: -970858114272793182
+      Death_Effect2_3: -1904327825801884317
+      Death_Effect2_30: -1737531122796602948
+      Death_Effect2_31: 5537365485271740770
+      Death_Effect2_32: 7481132487034956536
+      Death_Effect2_33: 2561791255475622614
+      Death_Effect2_34: 3391728002445890057
+      Death_Effect2_35: 4171038741109376904
+      Death_Effect2_36: 8005880198078692145
+      Death_Effect2_37: -239327828130103372
+      Death_Effect2_38: 8138995728609700160
+      Death_Effect2_39: 8836091832801482103
+      Death_Effect2_4: -2323893010908790266
+      Death_Effect2_40: 6126802656056841651
+      Death_Effect2_41: 4437624300028652258
+      Death_Effect2_42: -7421990020780681498
+      Death_Effect2_43: -8794009297351302926
+      Death_Effect2_44: -1947537555381265243
+      Death_Effect2_45: 3778749879053149551
+      Death_Effect2_46: -3004907772714014303
+      Death_Effect2_47: -6426763363433459121
+      Death_Effect2_48: 7699110494455735079
+      Death_Effect2_49: 8047056718564939605
+      Death_Effect2_5: 1457897229977562332
+      Death_Effect2_50: -3146057453883978925
+      Death_Effect2_51: -2925441328787085055
+      Death_Effect2_52: -4396236640759283991
+      Death_Effect2_53: -5799432458903855448
+      Death_Effect2_6: -3385407567150246935
+      Death_Effect2_7: -857582749922897364
+      Death_Effect2_8: -5833556071765971630
+      Death_Effect2_9: 1047157170813447749
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,1556 @@
+fileFormatVersion: 2
+guid: 8b1291cb3265a4d4d9025f822e655de8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 636445515251571501
+    second: SoulForce_0
+  - first:
+      213: -5318359548623204808
+    second: SoulForce_1
+  - first:
+      213: -1763874499981291726
+    second: SoulForce_2
+  - first:
+      213: 8026443010807214217
+    second: SoulForce_3
+  - first:
+      213: -4307514229456739398
+    second: SoulForce_4
+  - first:
+      213: -7626918270380599840
+    second: SoulForce_5
+  - first:
+      213: 8102019600887882310
+    second: SoulForce_6
+  - first:
+      213: -6783207954857226936
+    second: SoulForce_7
+  - first:
+      213: 5126286831196992411
+    second: SoulForce_8
+  - first:
+      213: -8854521093327410595
+    second: SoulForce_9
+  - first:
+      213: -5217453804613638289
+    second: SoulForce_10
+  - first:
+      213: -29270287505726527
+    second: SoulForce_11
+  - first:
+      213: -8277251696850926851
+    second: SoulForce_12
+  - first:
+      213: -6503750525371777958
+    second: SoulForce_13
+  - first:
+      213: 9029803012459988923
+    second: SoulForce_14
+  - first:
+      213: -7797190761883613069
+    second: SoulForce_15
+  - first:
+      213: -8888286661813905580
+    second: SoulForce_16
+  - first:
+      213: 5681446502043806162
+    second: SoulForce_17
+  - first:
+      213: -4880261268344246000
+    second: SoulForce_18
+  - first:
+      213: -8856235119368587776
+    second: SoulForce_19
+  - first:
+      213: 2850907865323717101
+    second: SoulForce_20
+  - first:
+      213: -2102581931381240981
+    second: SoulForce_21
+  - first:
+      213: -888022737890065420
+    second: SoulForce_22
+  - first:
+      213: -1436167080612861712
+    second: SoulForce_23
+  - first:
+      213: -5507489350697321257
+    second: SoulForce_24
+  - first:
+      213: -5801449661348268114
+    second: SoulForce_25
+  - first:
+      213: -1769926784710308158
+    second: SoulForce_26
+  - first:
+      213: -5331066756983060319
+    second: SoulForce_27
+  - first:
+      213: 4647527519137111687
+    second: SoulForce_28
+  - first:
+      213: -1462521257183761351
+    second: SoulForce_29
+  - first:
+      213: -5066401511411975639
+    second: SoulForce_30
+  - first:
+      213: 7630543652786381765
+    second: SoulForce_31
+  - first:
+      213: 8041353865803965498
+    second: SoulForce_32
+  - first:
+      213: -7601906848326758901
+    second: SoulForce_33
+  - first:
+      213: 3103849737380624030
+    second: SoulForce_34
+  - first:
+      213: 5692963931851959281
+    second: SoulForce_35
+  - first:
+      213: 686443612509652405
+    second: SoulForce_36
+  - first:
+      213: 1595584585323900954
+    second: SoulForce_37
+  - first:
+      213: 847975738625839852
+    second: SoulForce_38
+  - first:
+      213: 6691053882129128997
+    second: SoulForce_39
+  - first:
+      213: -3042656430806032885
+    second: SoulForce_40
+  - first:
+      213: -4406581922286110778
+    second: SoulForce_41
+  - first:
+      213: 7806222751033621903
+    second: SoulForce_42
+  - first:
+      213: -6385665045266250777
+    second: SoulForce_43
+  - first:
+      213: 8858197987900788699
+    second: SoulForce_44
+  - first:
+      213: -3444714490185401679
+    second: SoulForce_45
+  - first:
+      213: 1351585964224129121
+    second: SoulForce_46
+  - first:
+      213: -7730871808199091763
+    second: SoulForce_47
+  - first:
+      213: -3975472181251810563
+    second: SoulForce_48
+  - first:
+      213: -47758035124155358
+    second: SoulForce_49
+  - first:
+      213: 4962622508254106094
+    second: SoulForce_50
+  - first:
+      213: -6183080837999984168
+    second: SoulForce_51
+  - first:
+      213: -2566393854199567670
+    second: SoulForce_52
+  - first:
+      213: -4242944146864400610
+    second: SoulForce_53
+  - first:
+      213: 2766870488825393397
+    second: SoulForce_54
+  - first:
+      213: 4300266081647994406
+    second: SoulForce_55
+  - first:
+      213: -1476329713872678417
+    second: SoulForce_56
+  - first:
+      213: -7134127381059127406
+    second: SoulForce_57
+  - first:
+      213: -5690625664112165989
+    second: SoulForce_58
+  - first:
+      213: 1225791173419645339
+    second: SoulForce_59
+  - first:
+      213: -61791458648641114
+    second: SoulForce_60
+  - first:
+      213: -487780910835699250
+    second: SoulForce_61
+  - first:
+      213: -6531993586933487210
+    second: SoulForce_62
+  - first:
+      213: -4273587778734295948
+    second: SoulForce_63
+  - first:
+      213: -2064579650406721733
+    second: SoulForce_64
+  - first:
+      213: 7375589664931262081
+    second: SoulForce_65
+  - first:
+      213: 4034692743398564629
+    second: SoulForce_66
+  - first:
+      213: -4307076985567718004
+    second: SoulForce_67
+  - first:
+      213: -3673257100341752528
+    second: SoulForce_68
+  - first:
+      213: 7672658743996210726
+    second: SoulForce_69
+  - first:
+      213: -533247807455967592
+    second: SoulForce_70
+  - first:
+      213: 1835299624657175887
+    second: SoulForce_71
+  - first:
+      213: -8920815141294062399
+    second: SoulForce_72
+  - first:
+      213: -6612439596699463034
+    second: SoulForce_73
+  - first:
+      213: 1772831094678784980
+    second: SoulForce_74
+  - first:
+      213: -1923637674675628603
+    second: SoulForce_75
+  - first:
+      213: -5311322758404533845
+    second: SoulForce_76
+  - first:
+      213: -2064322118581473329
+    second: SoulForce_77
+  - first:
+      213: -6219192224905764247
+    second: SoulForce_78
+  - first:
+      213: 6230599169462263850
+    second: SoulForce_79
+  - first:
+      213: 3355551454086177788
+    second: SoulForce_80
+  - first:
+      213: 1303278646296603650
+    second: SoulForce_81
+  - first:
+      213: 747041360945921747
+    second: SoulForce_82
+  - first:
+      213: -5028958262453524958
+    second: SoulForce_83
+  - first:
+      213: 1289100198175400239
+    second: SoulForce_84
+  - first:
+      213: 5256605757633306939
+    second: SoulForce_85
+  - first:
+      213: -4395344255274053676
+    second: SoulForce_86
+  - first:
+      213: -6931724789405331841
+    second: SoulForce_87
+  - first:
+      213: -6156345814479299513
+    second: SoulForce_88
+  - first:
+      213: -2871713947568607467
+    second: SoulForce_89
+  - first:
+      213: -7539663107236188240
+    second: SoulForce_90
+  - first:
+      213: -2205278522743639033
+    second: SoulForce_91
+  - first:
+      213: -1926943788295712393
+    second: SoulForce_92
+  - first:
+      213: -5226956868876954362
+    second: SoulForce_93
+  - first:
+      213: -8218953185357375500
+    second: SoulForce_94
+  - first:
+      213: -3198312754337451878
+    second: SoulForce_95
+  - first:
+      213: 1785945353352754678
+    second: SoulForce_96
+  - first:
+      213: -5907649182388898256
+    second: SoulForce_97
+  - first:
+      213: 4020330186236345189
+    second: SoulForce_98
+  - first:
+      213: -4851166976599106794
+    second: SoulForce_99
+  - first:
+      213: -8846338928292515029
+    second: SoulForce_100
+  - first:
+      213: 2049035813862174665
+    second: SoulForce_101
+  - first:
+      213: -2973019977504833085
+    second: SoulForce_102
+  - first:
+      213: 2373899344164180602
+    second: SoulForce_103
+  - first:
+      213: 236608417009412456
+    second: SoulForce_104
+  - first:
+      213: 3410811936004400514
+    second: SoulForce_105
+  - first:
+      213: -9035358122977087791
+    second: SoulForce_106
+  - first:
+      213: 2604808057272332986
+    second: SoulForce_107
+  - first:
+      213: -466481800924665405
+    second: SoulForce_108
+  - first:
+      213: 2311972869561620950
+    second: SoulForce_109
+  - first:
+      213: -1246602357520540735
+    second: SoulForce_110
+  - first:
+      213: 174008783207464779
+    second: SoulForce_111
+  - first:
+      213: 701072691945077474
+    second: SoulForce_112
+  - first:
+      213: 5846663818736727627
+    second: SoulForce_113
+  - first:
+      213: 715299977451009671
+    second: SoulForce_114
+  - first:
+      213: -2130505540633608691
+    second: SoulForce_115
+  - first:
+      213: 4885475069946421908
+    second: SoulForce_116
+  - first:
+      213: -3142915021098259441
+    second: SoulForce_117
+  - first:
+      213: 3717036278937426841
+    second: SoulForce_118
+  - first:
+      213: -1749190895889682434
+    second: SoulForce_119
+  - first:
+      213: -7683116342193609950
+    second: SoulForce_120
+  - first:
+      213: 6720128183682248562
+    second: SoulForce_121
+  - first:
+      213: -2214564357213049858
+    second: SoulForce_122
+  - first:
+      213: -8410642423704484562
+    second: SoulForce_123
+  - first:
+      213: 2748034384326009194
+    second: SoulForce_124
+  - first:
+      213: -8779104430984016845
+    second: SoulForce_125
+  - first:
+      213: -212680926938874659
+    second: SoulForce_126
+  - first:
+      213: 5790208621990695152
+    second: SoulForce_127
+  - first:
+      213: -7906485975596687230
+    second: SoulForce_128
+  - first:
+      213: 5869644664115179646
+    second: SoulForce_129
+  - first:
+      213: 8310283678385411319
+    second: SoulForce_130
+  - first:
+      213: 8948653838815142589
+    second: SoulForce_131
+  - first:
+      213: 2663564924399991184
+    second: SoulForce_132
+  - first:
+      213: -90732264909358681
+    second: SoulForce_133
+  - first:
+      213: 8690795636424352796
+    second: SoulForce_134
+  - first:
+      213: 7607170937145388023
+    second: SoulForce_135
+  - first:
+      213: -1669150708877158685
+    second: SoulForce_136
+  - first:
+      213: 3318322838073894488
+    second: SoulForce_137
+  - first:
+      213: -6958158213409003735
+    second: SoulForce_138
+  - first:
+      213: 2125400424685943658
+    second: SoulForce_139
+  - first:
+      213: 6365253733856463427
+    second: SoulForce_140
+  - first:
+      213: -2884746540711985540
+    second: SoulForce_141
+  - first:
+      213: -605782418634131103
+    second: SoulForce_142
+  - first:
+      213: 8352339037543104612
+    second: SoulForce_143
+  - first:
+      213: -823826044114395825
+    second: SoulForce_144
+  - first:
+      213: -5809679968325313253
+    second: SoulForce_145
+  - first:
+      213: 7152697987174133432
+    second: SoulForce_146
+  - first:
+      213: -3747019830504744108
+    second: SoulForce_147
+  - first:
+      213: 190318409871462193
+    second: SoulForce_148
+  - first:
+      213: -3346172887007670584
+    second: SoulForce_149
+  - first:
+      213: -5702230558067573636
+    second: SoulForce_150
+  - first:
+      213: 3174457134559745941
+    second: SoulForce_151
+  - first:
+      213: 2560475992453741541
+    second: SoulForce_152
+  - first:
+      213: -799774164305109877
+    second: SoulForce_153
+  - first:
+      213: 6213523246808616251
+    second: SoulForce_154
+  - first:
+      213: 8854928044160003036
+    second: SoulForce_155
+  - first:
+      213: -3876741701567907434
+    second: SoulForce_156
+  - first:
+      213: 3297315423089537716
+    second: SoulForce_157
+  - first:
+      213: 1840635419867346150
+    second: SoulForce_158
+  - first:
+      213: 7199363144132217531
+    second: SoulForce_159
+  - first:
+      213: 5731649621471736324
+    second: SoulForce_160
+  - first:
+      213: 6362231724776955950
+    second: SoulForce_161
+  - first:
+      213: 7249950509784941429
+    second: SoulForce_162
+  - first:
+      213: -6668969420166541048
+    second: SoulForce_163
+  - first:
+      213: 3828620878674031394
+    second: SoulForce_164
+  - first:
+      213: 5193905363865740368
+    second: SoulForce_165
+  - first:
+      213: 2844538481618718402
+    second: SoulForce_166
+  - first:
+      213: -5467620312727263208
+    second: SoulForce_167
+  - first:
+      213: 6845232788071956059
+    second: SoulForce_168
+  - first:
+      213: 1324908347330786662
+    second: SoulForce_169
+  - first:
+      213: -8379157803688044753
+    second: SoulForce_170
+  - first:
+      213: -7573258628676536989
+    second: SoulForce_171
+  - first:
+      213: 7241587007070378045
+    second: SoulForce_172
+  - first:
+      213: -5749190856415085147
+    second: SoulForce_173
+  - first:
+      213: -7603089546625496814
+    second: SoulForce_174
+  - first:
+      213: -8281772549549980775
+    second: SoulForce_175
+  - first:
+      213: -8090504427261390704
+    second: SoulForce_176
+  - first:
+      213: -3392126318239644514
+    second: SoulForce_177
+  - first:
+      213: 697079583125640560
+    second: SoulForce_178
+  - first:
+      213: 1646488263224661700
+    second: SoulForce_179
+  - first:
+      213: -6995461514741214412
+    second: SoulForce_180
+  - first:
+      213: 3426840636482120707
+    second: SoulForce_181
+  - first:
+      213: -7621372513645999420
+    second: SoulForce_182
+  - first:
+      213: -82682486316196589
+    second: SoulForce_183
+  - first:
+      213: -8257756828520452055
+    second: SoulForce_184
+  - first:
+      213: 145233611950692268
+    second: SoulForce_185
+  - first:
+      213: 2425358786426322289
+    second: SoulForce_186
+  - first:
+      213: -4436163329566723669
+    second: SoulForce_187
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SoulForce_0
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2bd577f2db15d800800000000000000
+      internalID: 636445515251571501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_1
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83ec18c1b246136b0800000000000000
+      internalID: -5318359548623204808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_2
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23fce38dc757587e0800000000000000
+      internalID: -1763874499981291726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_3
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 980b4157467a36f60800000000000000
+      internalID: 8026443010807214217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_4
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab36a4861a2a834c0800000000000000
+      internalID: -4307514229456739398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_5
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e517030e3eb72690800000000000000
+      internalID: -7626918270380599840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_6
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 642ac2296e7207070800000000000000
+      internalID: 8102019600887882310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84d8125dd443dd1a0800000000000000
+      internalID: -6783207954857226936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_8
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b93724676ba342740800000000000000
+      internalID: 5126286831196992411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_9
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5a24089afb6e1580800000000000000
+      internalID: -8854521093327410595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_10
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f676eff6861e797b0800000000000000
+      internalID: -5217453804613638289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_11
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c36fbe14d2089ff0800000000000000
+      internalID: -29270287505726527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_12
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df283bcbf6b412d80800000000000000
+      internalID: -8277251696850926851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_13
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5c74730b590eb5a0800000000000000
+      internalID: -6503750525371777958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_14
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb70e657ffd405d70800000000000000
+      internalID: 9029803012459988923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_15
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37848f73050dac390800000000000000
+      internalID: -7797190761883613069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4575dbc8f5676a480800000000000000
+      internalID: -8888286661813905580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_17
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d9e4b4fd7d88de40800000000000000
+      internalID: 5681446502043806162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_18
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0117e31bb34d54cb0800000000000000
+      internalID: -4880261268344246000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_19
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00632bec415581580800000000000000
+      internalID: -8856235119368587776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_20
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de1ccf74995709720800000000000000
+      internalID: 2850907865323717101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_21
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6bcdd49fd022d2e0800000000000000
+      internalID: -2102581931381240981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_22
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f3c79b560c1da3f0800000000000000
+      internalID: -888022737890065420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_23
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f8e5f936a5b11ce0800000000000000
+      internalID: -1436167080612861712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_24
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7dc707f8d977193b0800000000000000
+      internalID: -5507489350697321257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea7b609354c1d7fa0800000000000000
+      internalID: -5801449661348268114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_26
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ce84ee77f4ff67e0800000000000000
+      internalID: -1769926784710308158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_27
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a8812c970f3406b0800000000000000
+      internalID: -5331066756983060319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_28
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78e150ea7a55f7040800000000000000
+      internalID: 4647527519137111687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_29
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93caa155aa414bbe0800000000000000
+      internalID: -1462521257183761351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_30
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92a79c61ba680b9b0800000000000000
+      internalID: -5066401511411975639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_31
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c3a17b160325e960800000000000000
+      internalID: 7630543652786381765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_32
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a34a57c6cb0a89f60800000000000000
+      internalID: 8041353865803965498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_33
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0ecfd18ff9908690800000000000000
+      internalID: -7601906848326758901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_34
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e96f2c824e6131b20800000000000000
+      internalID: 3103849737380624030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_35
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fba52d8888710f40800000000000000
+      internalID: 5692963931851959281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_36
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b549f124dcb68900800000000000000
+      internalID: 686443612509652405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_37
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a10f1510ab7a42610800000000000000
+      internalID: 1595584585323900954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_38
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce251f6017d94cb00800000000000000
+      internalID: 847975738625839852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoulForce_39
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52e1e491e066bdc50800000000000000
+      internalID: 6691053882129128997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 69289d3eb733afd48b4069acd7fb621c
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SoulForce_0: 636445515251571501
+      SoulForce_1: -5318359548623204808
+      SoulForce_10: -5217453804613638289
+      SoulForce_11: -29270287505726527
+      SoulForce_12: -8277251696850926851
+      SoulForce_13: -6503750525371777958
+      SoulForce_14: 9029803012459988923
+      SoulForce_15: -7797190761883613069
+      SoulForce_16: -8888286661813905580
+      SoulForce_17: 5681446502043806162
+      SoulForce_18: -4880261268344246000
+      SoulForce_19: -8856235119368587776
+      SoulForce_2: -1763874499981291726
+      SoulForce_20: 2850907865323717101
+      SoulForce_21: -2102581931381240981
+      SoulForce_22: -888022737890065420
+      SoulForce_23: -1436167080612861712
+      SoulForce_24: -5507489350697321257
+      SoulForce_25: -5801449661348268114
+      SoulForce_26: -1769926784710308158
+      SoulForce_27: -5331066756983060319
+      SoulForce_28: 4647527519137111687
+      SoulForce_29: -1462521257183761351
+      SoulForce_3: 8026443010807214217
+      SoulForce_30: -5066401511411975639
+      SoulForce_31: 7630543652786381765
+      SoulForce_32: 8041353865803965498
+      SoulForce_33: -7601906848326758901
+      SoulForce_34: 3103849737380624030
+      SoulForce_35: 5692963931851959281
+      SoulForce_36: 686443612509652405
+      SoulForce_37: 1595584585323900954
+      SoulForce_38: 847975738625839852
+      SoulForce_39: 6691053882129128997
+      SoulForce_4: -4307514229456739398
+      SoulForce_5: -7626918270380599840
+      SoulForce_6: 8102019600887882310
+      SoulForce_7: -6783207954857226936
+      SoulForce_8: 5126286831196992411
+      SoulForce_9: -8854521093327410595
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

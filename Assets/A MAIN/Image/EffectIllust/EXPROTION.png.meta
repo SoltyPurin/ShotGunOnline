@@ -1,0 +1,945 @@
+fileFormatVersion: 2
+guid: 5fdb0f9622cb9aa47b2edf365eb7cc08
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1379846979204232577
+    second: EXPROTION_0
+  - first:
+      213: -6581163320894657876
+    second: EXPROTION_1
+  - first:
+      213: -8486473760678030816
+    second: EXPROTION_2
+  - first:
+      213: -8972797847997614160
+    second: EXPROTION_3
+  - first:
+      213: -897033225476098562
+    second: EXPROTION_4
+  - first:
+      213: 5229649084808226463
+    second: EXPROTION_5
+  - first:
+      213: -5333286485744852373
+    second: EXPROTION_6
+  - first:
+      213: 4981582611945181025
+    second: EXPROTION_7
+  - first:
+      213: -5164757051443527485
+    second: EXPROTION_8
+  - first:
+      213: -9096183016819360475
+    second: EXPROTION_9
+  - first:
+      213: -7458373853296657048
+    second: EXPROTION_10
+  - first:
+      213: -6289019667151414774
+    second: EXPROTION_11
+  - first:
+      213: 4710296539827504211
+    second: EXPROTION_12
+  - first:
+      213: 8368672947634806305
+    second: EXPROTION_13
+  - first:
+      213: -7608431026092827154
+    second: EXPROTION_14
+  - first:
+      213: 738491205877368027
+    second: EXPROTION_15
+  - first:
+      213: 2937906594685424630
+    second: EXPROTION_16
+  - first:
+      213: 4758128967605609582
+    second: EXPROTION_17
+  - first:
+      213: -4842997063061466540
+    second: EXPROTION_18
+  - first:
+      213: 3306661332489996185
+    second: EXPROTION_19
+  - first:
+      213: 6167141114458528678
+    second: EXPROTION_20
+  - first:
+      213: -7572991329634581708
+    second: EXPROTION_21
+  - first:
+      213: -7127015327829593699
+    second: EXPROTION_22
+  - first:
+      213: -4315945864547277768
+    second: EXPROTION_23
+  - first:
+      213: 6382346978673826015
+    second: EXPROTION_24
+  - first:
+      213: 4562052398018830479
+    second: EXPROTION_25
+  - first:
+      213: 6889620088921335687
+    second: EXPROTION_26
+  - first:
+      213: -1001193497216477754
+    second: EXPROTION_27
+  - first:
+      213: -2974433567965587016
+    second: EXPROTION_28
+  - first:
+      213: -3436700768299799816
+    second: EXPROTION_29
+  - first:
+      213: 3886986609376766636
+    second: EXPROTION_30
+  - first:
+      213: -4005359227327199416
+    second: EXPROTION_31
+  - first:
+      213: -2604124115537614562
+    second: EXPROTION_32
+  - first:
+      213: 413492999417336383
+    second: EXPROTION_33
+  - first:
+      213: 8068831394948417407
+    second: EXPROTION_34
+  - first:
+      213: 4479086939018355492
+    second: EXPROTION_35
+  - first:
+      213: 7432562918072464657
+    second: EXPROTION_36
+  - first:
+      213: 6160961940534932573
+    second: EXPROTION_37
+  - first:
+      213: -8247365418209656258
+    second: EXPROTION_38
+  - first:
+      213: 5470107226540841144
+    second: EXPROTION_39
+  - first:
+      213: 8186990840133678844
+    second: EXPROTION_40
+  - first:
+      213: 230378492469697290
+    second: EXPROTION_41
+  - first:
+      213: -6218393210380241871
+    second: EXPROTION_42
+  - first:
+      213: 1795157939162384889
+    second: EXPROTION_43
+  - first:
+      213: 3740889263126710317
+    second: EXPROTION_44
+  - first:
+      213: 2507136415514277724
+    second: EXPROTION_45
+  - first:
+      213: -5844956293824692407
+    second: EXPROTION_46
+  - first:
+      213: -3030398018212753342
+    second: EXPROTION_47
+  - first:
+      213: 1400372171400210744
+    second: EXPROTION_48
+  - first:
+      213: 7896934040544232584
+    second: EXPROTION_49
+  - first:
+      213: -4620109130610628715
+    second: EXPROTION_50
+  - first:
+      213: 9154472250428475288
+    second: EXPROTION_51
+  - first:
+      213: -8777176533782040481
+    second: EXPROTION_52
+  - first:
+      213: -5812069973597506720
+    second: EXPROTION_53
+  - first:
+      213: 611482985025660503
+    second: EXPROTION_54
+  - first:
+      213: -779576474369826380
+    second: EXPROTION_55
+  - first:
+      213: -1781493235597164391
+    second: EXPROTION_56
+  - first:
+      213: 7777375562044796737
+    second: EXPROTION_57
+  - first:
+      213: 8940545632876287740
+    second: EXPROTION_58
+  - first:
+      213: 8140200115903619147
+    second: EXPROTION_59
+  - first:
+      213: -8365569462301458650
+    second: EXPROTION_60
+  - first:
+      213: -6564959494177418921
+    second: EXPROTION_61
+  - first:
+      213: -7341811130647040045
+    second: EXPROTION_62
+  - first:
+      213: 7885032419341866626
+    second: EXPROTION_63
+  - first:
+      213: -8307755804244976058
+    second: EXPROTION_64
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EXPROTION_0
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1853ddf4483362310800000000000000
+      internalID: 1379846979204232577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_1
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caa6e3104d20ba4a0800000000000000
+      internalID: -6581163320894657876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 022dc13f31df93a80800000000000000
+      internalID: -8486473760678030816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b776bca5e73a7380800000000000000
+      internalID: -8972797847997614160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_4
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef536cbb8091d83f0800000000000000
+      internalID: -897033225476098562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_5
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f96e0ff7222739840800000000000000
+      internalID: 5229649084808226463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_6
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6269cbb23c5cf5b0800000000000000
+      internalID: -5333286485744852373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_7
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16f4144fdf2222540800000000000000
+      internalID: 4981582611945181025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_8
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c0c38563d81358b0800000000000000
+      internalID: -5164757051443527485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_9
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52d7a866dbdd3c180800000000000000
+      internalID: -9096183016819360475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86df0302f788e7890800000000000000
+      internalID: -7458373853296657048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_11
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0a9ef1fee9e8b8a0800000000000000
+      internalID: -6289019667151414774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_12
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3548b2b2fb55e5140800000000000000
+      internalID: 4710296539827504211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_13
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12e913de4bf732470800000000000000
+      internalID: 8368672947634806305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_14
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eed1daffa4c696690800000000000000
+      internalID: -7608431026092827154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_15
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd4021cc6d5af3a00800000000000000
+      internalID: 738491205877368027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_16
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f3908f6b7a85c820800000000000000
+      internalID: 2937906594685424630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e64e0ad1615480240800000000000000
+      internalID: 4758128967605609582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_18
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45216f794d73accb0800000000000000
+      internalID: -4842997063061466540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_19
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 997069366fe93ed20800000000000000
+      internalID: 3306661332489996185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_20
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6abd10f2b26169550800000000000000
+      internalID: 6167141114458528678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_21
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4338406528457e690800000000000000
+      internalID: -7572991329634581708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_22
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d91f3f3e151c71d90800000000000000
+      internalID: -7127015327829593699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_23
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 834e7d16a1eaa14c0800000000000000
+      internalID: -4315945864547277768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd8142113c6a29850800000000000000
+      internalID: 6382346978673826015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_25
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f80a1a63c7aaf4f30800000000000000
+      internalID: 4562052398018830479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_26
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7872d85d7f8dc9f50800000000000000
+      internalID: 6889620088921335687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_27
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c51bfe91db0b12f0800000000000000
+      internalID: -1001193497216477754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EXPROTION_28
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b9d96ddd60b8b6d0800000000000000
+      internalID: -2974433567965587016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 3b7def36ef60931469f09b9153715585
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      EXPROTION_0: 1379846979204232577
+      EXPROTION_1: -6581163320894657876
+      EXPROTION_10: -7458373853296657048
+      EXPROTION_11: -6289019667151414774
+      EXPROTION_12: 4710296539827504211
+      EXPROTION_13: 8368672947634806305
+      EXPROTION_14: -7608431026092827154
+      EXPROTION_15: 738491205877368027
+      EXPROTION_16: 2937906594685424630
+      EXPROTION_17: 4758128967605609582
+      EXPROTION_18: -4842997063061466540
+      EXPROTION_19: 3306661332489996185
+      EXPROTION_2: -8486473760678030816
+      EXPROTION_20: 6167141114458528678
+      EXPROTION_21: -7572991329634581708
+      EXPROTION_22: -7127015327829593699
+      EXPROTION_23: -4315945864547277768
+      EXPROTION_24: 6382346978673826015
+      EXPROTION_25: 4562052398018830479
+      EXPROTION_26: 6889620088921335687
+      EXPROTION_27: -1001193497216477754
+      EXPROTION_28: -2974433567965587016
+      EXPROTION_3: -8972797847997614160
+      EXPROTION_4: -897033225476098562
+      EXPROTION_5: 5229649084808226463
+      EXPROTION_6: -5333286485744852373
+      EXPROTION_7: 4981582611945181025
+      EXPROTION_8: -5164757051443527485
+      EXPROTION_9: -9096183016819360475
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Armor
+  - Undefined
+  - EnemyBullet
+  - Bomb
+  - Hole
+  - Enemy
+  - Cliff
+  - Rock
+  - Stone
+  - EffectManager
+  - SEManager
+  - Decoy
+  - Boss
+  - EndManager
+  - UI
+  - Tile
+  - ScoreKeeper
+  - SceneTransitionManager
+  - ExplosionManager
+  - WeekPoint
+  - Slider
+  - MediumArmor
+  - ComboCounter
+  - MirrorBullet
+  - HPSprite
+  - WaveManager
+  - WaveScore
+  - CurrentWave
+  - BossSprite
+  - Wall
+  - RespawnPoint
+  - BGMCon
+  - BossHPGageUI
+  - PopTimeLine
+  - MainCanvas
+  - MainGage
+  - BGMManager
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - TileMap
+  - Water
+  - UI
+  - Enemy
+  - Trail
+  - Player
+  - Fade
+  - Visible
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: TileMap
+    uniqueID: 3962607601
+    locked: 0
+  - name: Trail
+    uniqueID: 3632203825
+    locked: 0
+  - name: Player
+    uniqueID: 1469403321
+    locked: 0
+  - name: Fade
+    uniqueID: 2799173183
+    locked: 0

@@ -1,0 +1,2362 @@
+fileFormatVersion: 2
+guid: 70da6a1debf5597458cca8f584134dae
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5622239028432657621
+    second: GenkiBall_Loop_0
+  - first:
+      213: 4919581218316314981
+    second: GenkiBall_Loop_1
+  - first:
+      213: 418680385878129780
+    second: GenkiBall_Loop_2
+  - first:
+      213: 1487353929719615759
+    second: GenkiBall_Loop_3
+  - first:
+      213: -4530543303435720520
+    second: GenkiBall_Loop_4
+  - first:
+      213: 3281062946783830689
+    second: GenkiBall_Loop_5
+  - first:
+      213: 5413636194126595571
+    second: GenkiBall_Loop_6
+  - first:
+      213: -7105150409943018616
+    second: GenkiBall_Loop_7
+  - first:
+      213: -5843791306096423398
+    second: GenkiBall_Loop_8
+  - first:
+      213: 7405376307488447737
+    second: GenkiBall_Loop_9
+  - first:
+      213: -2790987429216961356
+    second: GenkiBall_Loop_10
+  - first:
+      213: 6189362803124855618
+    second: GenkiBall_Loop_11
+  - first:
+      213: -4030315671790589864
+    second: GenkiBall_Loop_12
+  - first:
+      213: -7881782372751773861
+    second: GenkiBall_Loop_13
+  - first:
+      213: -2351346643136697333
+    second: GenkiBall_Loop_14
+  - first:
+      213: -7882467899944153728
+    second: GenkiBall_Loop_15
+  - first:
+      213: 252029002935295346
+    second: GenkiBall_Loop_16
+  - first:
+      213: -4895932253878795345
+    second: GenkiBall_Loop_17
+  - first:
+      213: 4159465328325588549
+    second: GenkiBall_Loop_18
+  - first:
+      213: -6515063577289615223
+    second: GenkiBall_Loop_19
+  - first:
+      213: 6809336627526399560
+    second: GenkiBall_Loop_20
+  - first:
+      213: 5851372776679352915
+    second: GenkiBall_Loop_21
+  - first:
+      213: -1471468256031890965
+    second: GenkiBall_Loop_22
+  - first:
+      213: -94711648086282291
+    second: GenkiBall_Loop_23
+  - first:
+      213: -2874958329199162122
+    second: GenkiBall_Loop_24
+  - first:
+      213: -4902136114718919085
+    second: GenkiBall_Loop_25
+  - first:
+      213: 873458908033063648
+    second: GenkiBall_Loop_26
+  - first:
+      213: 7961314442154265090
+    second: GenkiBall_Loop_27
+  - first:
+      213: 7436491973468543996
+    second: GenkiBall_Loop_28
+  - first:
+      213: 6065612796929959369
+    second: GenkiBall_Loop_29
+  - first:
+      213: -7442135455868167860
+    second: GenkiBall_Loop_30
+  - first:
+      213: 2806559390660935875
+    second: GenkiBall_Loop_31
+  - first:
+      213: -9013546242974600665
+    second: GenkiBall_Loop_32
+  - first:
+      213: 2656164442751107201
+    second: GenkiBall_Loop_33
+  - first:
+      213: -8928896625939317625
+    second: GenkiBall_Loop_34
+  - first:
+      213: -8705381845829992594
+    second: GenkiBall_Loop_35
+  - first:
+      213: 9062726989365586057
+    second: GenkiBall_Loop_36
+  - first:
+      213: -2838667950585064584
+    second: GenkiBall_Loop_37
+  - first:
+      213: -2902436168007525085
+    second: GenkiBall_Loop_38
+  - first:
+      213: -2242604556108615775
+    second: GenkiBall_Loop_39
+  - first:
+      213: 6288730032098412952
+    second: GenkiBall_Loop_40
+  - first:
+      213: 3265432163635429814
+    second: GenkiBall_Loop_41
+  - first:
+      213: -6139537034414711900
+    second: GenkiBall_Loop_42
+  - first:
+      213: 2369109069660590222
+    second: GenkiBall_Loop_43
+  - first:
+      213: 9053182565232759761
+    second: GenkiBall_Loop_44
+  - first:
+      213: -5199365812737643955
+    second: GenkiBall_Loop_45
+  - first:
+      213: 3510886042466885217
+    second: GenkiBall_Loop_46
+  - first:
+      213: -7151349290822789213
+    second: GenkiBall_Loop_47
+  - first:
+      213: -5784899689482796853
+    second: GenkiBall_Loop_48
+  - first:
+      213: 4801257181174432208
+    second: GenkiBall_Loop_49
+  - first:
+      213: 8092818553791131502
+    second: GenkiBall_Loop_50
+  - first:
+      213: -5422064356330100773
+    second: GenkiBall_Loop_51
+  - first:
+      213: -8172562157354244406
+    second: GenkiBall_Loop_52
+  - first:
+      213: -3897265516824505049
+    second: GenkiBall_Loop_53
+  - first:
+      213: 8069485668006376663
+    second: GenkiBall_Loop_54
+  - first:
+      213: -7445434335924666898
+    second: GenkiBall_Loop_55
+  - first:
+      213: -8780043329330143980
+    second: GenkiBall_Loop_56
+  - first:
+      213: 3696467805152991427
+    second: GenkiBall_Loop_57
+  - first:
+      213: -1025147893905659495
+    second: GenkiBall_Loop_58
+  - first:
+      213: 7765824829467139606
+    second: GenkiBall_Loop_59
+  - first:
+      213: -665276543213866862
+    second: GenkiBall_Loop_60
+  - first:
+      213: -372538394096503000
+    second: GenkiBall_Loop_61
+  - first:
+      213: -6796435121131602922
+    second: GenkiBall_Loop_62
+  - first:
+      213: -3961942938162998402
+    second: GenkiBall_Loop_63
+  - first:
+      213: 1451515178840242961
+    second: GenkiBall_Loop_64
+  - first:
+      213: -7276529954339084275
+    second: GenkiBall_Loop_65
+  - first:
+      213: 5904098778965977056
+    second: GenkiBall_Loop_66
+  - first:
+      213: -7974671981339100798
+    second: GenkiBall_Loop_67
+  - first:
+      213: -5988521083034244422
+    second: GenkiBall_Loop_68
+  - first:
+      213: 5778419613214580986
+    second: GenkiBall_Loop_69
+  - first:
+      213: 287877947550504392
+    second: GenkiBall_Loop_70
+  - first:
+      213: 241235366094804712
+    second: GenkiBall_Loop_71
+  - first:
+      213: 7211679869371861192
+    second: GenkiBall_Loop_72
+  - first:
+      213: 8583493241050388096
+    second: GenkiBall_Loop_73
+  - first:
+      213: 7810409628652316046
+    second: GenkiBall_Loop_74
+  - first:
+      213: -2499529680316319218
+    second: GenkiBall_Loop_75
+  - first:
+      213: 1822391127186698327
+    second: GenkiBall_Loop_76
+  - first:
+      213: -2479714455173640417
+    second: GenkiBall_Loop_77
+  - first:
+      213: 3798894566293622535
+    second: GenkiBall_Loop_78
+  - first:
+      213: 61595085222697319
+    second: GenkiBall_Loop_79
+  - first:
+      213: 2005913433768386521
+    second: GenkiBall_Loop_80
+  - first:
+      213: -1740322308070401633
+    second: GenkiBall_Loop_81
+  - first:
+      213: 4902263200861202750
+    second: GenkiBall_Loop_82
+  - first:
+      213: 2655883476032168632
+    second: GenkiBall_Loop_83
+  - first:
+      213: -7722754217409352501
+    second: GenkiBall_Loop_84
+  - first:
+      213: 5560230800271088186
+    second: GenkiBall_Loop_85
+  - first:
+      213: 4938613147783531933
+    second: GenkiBall_Loop_86
+  - first:
+      213: -9024146707770700568
+    second: GenkiBall_Loop_87
+  - first:
+      213: -7377250197381517744
+    second: GenkiBall_Loop_88
+  - first:
+      213: 2632025720290585861
+    second: GenkiBall_Loop_89
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: GenkiBall_Loop_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dcd014cb94360e40800000000000000
+      internalID: 5622239028432657621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_1
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5696d619d0dd54440800000000000000
+      internalID: 4919581218316314981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_2
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47c70bab7937fc500800000000000000
+      internalID: 418680385878129780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_3
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f01183cc48424a410800000000000000
+      internalID: 1487353929719615759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_4
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b8603f8ed64021c0800000000000000
+      internalID: -4530543303435720520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_5
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a22fb4cd5da88d20800000000000000
+      internalID: 3281062946783830689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_6
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f50d169f69112b40800000000000000
+      internalID: 5413636194126595571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_7
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88310abc85f656d90800000000000000
+      internalID: -7105150409943018616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_8
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1e4b92d4cea6eea0800000000000000
+      internalID: -5843791306096423398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_9
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fc51fb248e25c660800000000000000
+      internalID: 7405376307488447737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bc31fc68bb6449d0800000000000000
+      internalID: -2790987429216961356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_11
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 243e5424da805e550800000000000000
+      internalID: 6189362803124855618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_12
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8586b3200417118c0800000000000000
+      internalID: -4030315671790589864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_13
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5fe13301b84e9290800000000000000
+      internalID: -7881782372751773861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_14
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0ca700afa65e5fd0800000000000000
+      internalID: -2351346643136697333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_15
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08dc8664539db9290800000000000000
+      internalID: -7882467899944153728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_16
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27ddd09fa036f7300800000000000000
+      internalID: 252029002935295346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_17
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa34d2b0e872e0cb0800000000000000
+      internalID: -4895932253878795345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_18
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5467666ada369b930800000000000000
+      internalID: 4159465328325588549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_19
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 988119ad138d595a0800000000000000
+      internalID: -6515063577289615223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84674c7d59f9f7e50800000000000000
+      internalID: 6809336627526399560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_21
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35a2d5ad980443150800000000000000
+      internalID: 5851372776679352915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_22
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be1a4f4da6b449be0800000000000000
+      internalID: -1471468256031890965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_23
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcfa9b302448faef0800000000000000
+      internalID: -94711648086282291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_24
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fc880cb1a81a18d0800000000000000
+      internalID: -2874958329199162122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_25
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 356b0912d2d18fbb0800000000000000
+      internalID: -4902136114718919085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_26
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ea1633cf362f1c00800000000000000
+      internalID: 873458908033063648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_27
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20acac5ed454c7e60800000000000000
+      internalID: 7961314442154265090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_28
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfbd2a5bc0ab33760800000000000000
+      internalID: 7436491973468543996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_29
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c5e21aa3b26d2450800000000000000
+      internalID: 6065612796929959369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4953a6ab3938b890800000000000000
+      internalID: -7442135455868167860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_31
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c0c16165e6e2f620800000000000000
+      internalID: 2806559390660935875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_32
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72231f4a27379e280800000000000000
+      internalID: -9013546242974600665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_33
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 180043bdc779cd420800000000000000
+      internalID: 2656164442751107201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_34
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78cf3b673df261480800000000000000
+      internalID: -8928896625939317625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_35
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6f3b259555403780800000000000000
+      internalID: -8705381845829992594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_36
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9882b713e2645cd70800000000000000
+      internalID: 9062726989365586057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_37
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8735712f9860b98d0800000000000000
+      internalID: -2838667950585064584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_38
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32d5aa6dea978b7d0800000000000000
+      internalID: -2902436168007525085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_39
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1af297db90ba0e0e0800000000000000
+      internalID: -2242604556108615775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8998e8325ae064750800000000000000
+      internalID: 6288730032098412952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_41
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b100a77045215d20800000000000000
+      internalID: 3265432163635429814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_42
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ab1b5a889bfbcaa0800000000000000
+      internalID: -6139537034414711900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_43
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8096439524c0e020800000000000000
+      internalID: 2369109069660590222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_44
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d35577c39d53ad70800000000000000
+      internalID: 9053182565232759761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_45
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4a667a375428d7b0800000000000000
+      internalID: -5199365812737643955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_46
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16e9d10114c29b030800000000000000
+      internalID: 3510886042466885217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_47
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a714cf95bd41cc90800000000000000
+      internalID: -7151349290822789213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_48
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc04c13d168e7bfa0800000000000000
+      internalID: -5784899689482796853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_49
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d10237d7fd71a240800000000000000
+      internalID: 4801257181174432208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_50
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6f296ad8977f4070800000000000000
+      internalID: 8092818553791131502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_51
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd723abf135f0c4b0800000000000000
+      internalID: -5422064356330100773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_52
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac6a91a940a359e80800000000000000
+      internalID: -8172562157354244406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_53
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 725db4a39a12ae9c0800000000000000
+      internalID: -3897265516824505049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_54
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d430a906729cff60800000000000000
+      internalID: 8069485668006376663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_55
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eedb6b84be08ca890800000000000000
+      internalID: -7445434335924666898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_56
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41d1db25c15072680800000000000000
+      internalID: -8780043329330143980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_57
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c8dfc152ed7c4330800000000000000
+      internalID: 3696467805152991427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_58
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99963850c61f5c1f0800000000000000
+      internalID: -1025147893905659495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_59
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61e1c4c8980c5cb60800000000000000
+      internalID: 7765824829467139606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 290765c328674c6f0800000000000000
+      internalID: -665276543213866862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_61
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 827feaaed4a74daf0800000000000000
+      internalID: -372538394096503000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_62
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61c36f134463ea1a0800000000000000
+      internalID: -6796435121131602922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_63
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e735d6693e95409c0800000000000000
+      internalID: -3961942938162998402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_64
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11b3cdc5d51d42410800000000000000
+      internalID: 1451515178840242961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_65
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d08212a2f82940b90800000000000000
+      internalID: -7276529954339084275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_66
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e7a517ee829fe150800000000000000
+      internalID: 5904098778965977056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_67
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 289b508a516445190800000000000000
+      internalID: -7974671981339100798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_68
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aba6ec3bdcf74eca0800000000000000
+      internalID: -5988521083034244422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_69
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af02ec8d502113050800000000000000
+      internalID: 5778419613214580986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_70
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c59a62d77fbef300800000000000000
+      internalID: 287877947550504392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_71
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e6975f894a095300800000000000000
+      internalID: 241235366094804712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_72
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c8cebfc1a8051460800000000000000
+      internalID: 7211679869371861192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_73
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08656cc10a1be1770800000000000000
+      internalID: 8583493241050388096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_74
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e85ac1a0d26246c60800000000000000
+      internalID: 7810409628652316046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_75
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0a3333bff2ef4dd0800000000000000
+      internalID: -2499529680316319218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_76
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75079c1231f6a4910800000000000000
+      internalID: 1822391127186698327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_77
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1f49f257d8469dd0800000000000000
+      internalID: -2479714455173640417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_78
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70fc71b0b7268b430800000000000000
+      internalID: 3798894566293622535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_79
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 769db965764dad000800000000000000
+      internalID: 61595085222697319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_80
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9dfd2f5e3af66db10800000000000000
+      internalID: 2005913433768386521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_81
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9996c8d41229d7e0800000000000000
+      internalID: -1740322308070401633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_82
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e392dca6866580440800000000000000
+      internalID: 4902263200861202750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_83
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b22ab133f79bd420800000000000000
+      internalID: 2655883476032168632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_84
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcc6aa7c4f343d490800000000000000
+      internalID: -7722754217409352501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_85
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3a18571478e92d40800000000000000
+      internalID: 5560230800271088186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_86
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9d06b4fd7a798440800000000000000
+      internalID: 4938613147783531933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_87
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ec015a916ac3c280800000000000000
+      internalID: -9024146707770700568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_88
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05ee4e5280ebe9990800000000000000
+      internalID: -7377250197381517744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GenkiBall_Loop_89
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50dac919275d68420800000000000000
+      internalID: 2632025720290585861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: cf874eb577a7e6849abc15282a6d6f68
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      GenkiBall_Loop_0: 5622239028432657621
+      GenkiBall_Loop_1: 4919581218316314981
+      GenkiBall_Loop_10: -2790987429216961356
+      GenkiBall_Loop_11: 6189362803124855618
+      GenkiBall_Loop_12: -4030315671790589864
+      GenkiBall_Loop_13: -7881782372751773861
+      GenkiBall_Loop_14: -2351346643136697333
+      GenkiBall_Loop_15: -7882467899944153728
+      GenkiBall_Loop_16: 252029002935295346
+      GenkiBall_Loop_17: -4895932253878795345
+      GenkiBall_Loop_18: 4159465328325588549
+      GenkiBall_Loop_19: -6515063577289615223
+      GenkiBall_Loop_2: 418680385878129780
+      GenkiBall_Loop_20: 6809336627526399560
+      GenkiBall_Loop_21: 5851372776679352915
+      GenkiBall_Loop_22: -1471468256031890965
+      GenkiBall_Loop_23: -94711648086282291
+      GenkiBall_Loop_24: -2874958329199162122
+      GenkiBall_Loop_25: -4902136114718919085
+      GenkiBall_Loop_26: 873458908033063648
+      GenkiBall_Loop_27: 7961314442154265090
+      GenkiBall_Loop_28: 7436491973468543996
+      GenkiBall_Loop_29: 6065612796929959369
+      GenkiBall_Loop_3: 1487353929719615759
+      GenkiBall_Loop_30: -7442135455868167860
+      GenkiBall_Loop_31: 2806559390660935875
+      GenkiBall_Loop_32: -9013546242974600665
+      GenkiBall_Loop_33: 2656164442751107201
+      GenkiBall_Loop_34: -8928896625939317625
+      GenkiBall_Loop_35: -8705381845829992594
+      GenkiBall_Loop_36: 9062726989365586057
+      GenkiBall_Loop_37: -2838667950585064584
+      GenkiBall_Loop_38: -2902436168007525085
+      GenkiBall_Loop_39: -2242604556108615775
+      GenkiBall_Loop_4: -4530543303435720520
+      GenkiBall_Loop_40: 6288730032098412952
+      GenkiBall_Loop_41: 3265432163635429814
+      GenkiBall_Loop_42: -6139537034414711900
+      GenkiBall_Loop_43: 2369109069660590222
+      GenkiBall_Loop_44: 9053182565232759761
+      GenkiBall_Loop_45: -5199365812737643955
+      GenkiBall_Loop_46: 3510886042466885217
+      GenkiBall_Loop_47: -7151349290822789213
+      GenkiBall_Loop_48: -5784899689482796853
+      GenkiBall_Loop_49: 4801257181174432208
+      GenkiBall_Loop_5: 3281062946783830689
+      GenkiBall_Loop_50: 8092818553791131502
+      GenkiBall_Loop_51: -5422064356330100773
+      GenkiBall_Loop_52: -8172562157354244406
+      GenkiBall_Loop_53: -3897265516824505049
+      GenkiBall_Loop_54: 8069485668006376663
+      GenkiBall_Loop_55: -7445434335924666898
+      GenkiBall_Loop_56: -8780043329330143980
+      GenkiBall_Loop_57: 3696467805152991427
+      GenkiBall_Loop_58: -1025147893905659495
+      GenkiBall_Loop_59: 7765824829467139606
+      GenkiBall_Loop_6: 5413636194126595571
+      GenkiBall_Loop_60: -665276543213866862
+      GenkiBall_Loop_61: -372538394096503000
+      GenkiBall_Loop_62: -6796435121131602922
+      GenkiBall_Loop_63: -3961942938162998402
+      GenkiBall_Loop_64: 1451515178840242961
+      GenkiBall_Loop_65: -7276529954339084275
+      GenkiBall_Loop_66: 5904098778965977056
+      GenkiBall_Loop_67: -7974671981339100798
+      GenkiBall_Loop_68: -5988521083034244422
+      GenkiBall_Loop_69: 5778419613214580986
+      GenkiBall_Loop_7: -7105150409943018616
+      GenkiBall_Loop_70: 287877947550504392
+      GenkiBall_Loop_71: 241235366094804712
+      GenkiBall_Loop_72: 7211679869371861192
+      GenkiBall_Loop_73: 8583493241050388096
+      GenkiBall_Loop_74: 7810409628652316046
+      GenkiBall_Loop_75: -2499529680316319218
+      GenkiBall_Loop_76: 1822391127186698327
+      GenkiBall_Loop_77: -2479714455173640417
+      GenkiBall_Loop_78: 3798894566293622535
+      GenkiBall_Loop_79: 61595085222697319
+      GenkiBall_Loop_8: -5843791306096423398
+      GenkiBall_Loop_80: 2005913433768386521
+      GenkiBall_Loop_81: -1740322308070401633
+      GenkiBall_Loop_82: 4902263200861202750
+      GenkiBall_Loop_83: 2655883476032168632
+      GenkiBall_Loop_84: -7722754217409352501
+      GenkiBall_Loop_85: 5560230800271088186
+      GenkiBall_Loop_86: 4938613147783531933
+      GenkiBall_Loop_87: -9024146707770700568
+      GenkiBall_Loop_88: -7377250197381517744
+      GenkiBall_Loop_89: 2632025720290585861
+      GenkiBall_Loop_9: 7405376307488447737
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

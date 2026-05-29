@@ -1,0 +1,3033 @@
+fileFormatVersion: 2
+guid: 50683ad9e546dc44bb3e730a75c376d5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -496391484125863274
+    second: Torch_ScaleUp_0
+  - first:
+      213: -2581124000849104482
+    second: Torch_ScaleUp_1
+  - first:
+      213: 2178652505161615667
+    second: Torch_ScaleUp_2
+  - first:
+      213: -8601908076145218979
+    second: Torch_ScaleUp_3
+  - first:
+      213: 5665398207443412056
+    second: Torch_ScaleUp_4
+  - first:
+      213: 4494776800485211380
+    second: Torch_ScaleUp_5
+  - first:
+      213: -8879388968434106813
+    second: Torch_ScaleUp_6
+  - first:
+      213: 862609035172905151
+    second: Torch_ScaleUp_7
+  - first:
+      213: -2494926928011622094
+    second: Torch_ScaleUp_8
+  - first:
+      213: -3741234867571879692
+    second: Torch_ScaleUp_9
+  - first:
+      213: 4862123775170187059
+    second: Torch_ScaleUp_10
+  - first:
+      213: -1682646627431870102
+    second: Torch_ScaleUp_11
+  - first:
+      213: 3241736326122410581
+    second: Torch_ScaleUp_12
+  - first:
+      213: 1216290299594012087
+    second: Torch_ScaleUp_13
+  - first:
+      213: -3280249540050886148
+    second: Torch_ScaleUp_14
+  - first:
+      213: 5447802872817699228
+    second: Torch_ScaleUp_15
+  - first:
+      213: -8573513725759528354
+    second: Torch_ScaleUp_16
+  - first:
+      213: -2006867230788610753
+    second: Torch_ScaleUp_17
+  - first:
+      213: 7543429163963566279
+    second: Torch_ScaleUp_18
+  - first:
+      213: -2048039340635519078
+    second: Torch_ScaleUp_19
+  - first:
+      213: 3590015343027316758
+    second: Torch_ScaleUp_20
+  - first:
+      213: 742940540317719871
+    second: Torch_ScaleUp_21
+  - first:
+      213: -3246681002110148922
+    second: Torch_ScaleUp_22
+  - first:
+      213: -6836856606013150882
+    second: Torch_ScaleUp_23
+  - first:
+      213: -5506296172681266762
+    second: Torch_ScaleUp_24
+  - first:
+      213: -807073440102331811
+    second: Torch_ScaleUp_25
+  - first:
+      213: -8252181887615146100
+    second: Torch_ScaleUp_26
+  - first:
+      213: -7249244020749521349
+    second: Torch_ScaleUp_27
+  - first:
+      213: 8224425872602449741
+    second: Torch_ScaleUp_28
+  - first:
+      213: 1980959412148904934
+    second: Torch_ScaleUp_29
+  - first:
+      213: 6240224604225671210
+    second: Torch_ScaleUp_30
+  - first:
+      213: 2076138070464491337
+    second: Torch_ScaleUp_31
+  - first:
+      213: 3535202917551125380
+    second: Torch_ScaleUp_32
+  - first:
+      213: 7983613972402479989
+    second: Torch_ScaleUp_33
+  - first:
+      213: 873703662691741749
+    second: Torch_ScaleUp_34
+  - first:
+      213: 8771817835024738919
+    second: Torch_ScaleUp_35
+  - first:
+      213: -6104320217174469710
+    second: Torch_ScaleUp_36
+  - first:
+      213: -8703957871380451592
+    second: Torch_ScaleUp_37
+  - first:
+      213: 7724418428352722159
+    second: Torch_ScaleUp_38
+  - first:
+      213: 5668093030360841283
+    second: Torch_ScaleUp_39
+  - first:
+      213: -5801197698060186324
+    second: Torch_ScaleUp_40
+  - first:
+      213: 6916857915071716957
+    second: Torch_ScaleUp_41
+  - first:
+      213: -3412824023123410312
+    second: Torch_ScaleUp_42
+  - first:
+      213: -7330984401711129353
+    second: Torch_ScaleUp_43
+  - first:
+      213: 1196800279928052300
+    second: Torch_ScaleUp_44
+  - first:
+      213: -4225219786525527495
+    second: Torch_ScaleUp_45
+  - first:
+      213: 8515455746395374022
+    second: Torch_ScaleUp_46
+  - first:
+      213: 1566890897744357720
+    second: Torch_ScaleUp_47
+  - first:
+      213: 8544903632419623831
+    second: Torch_ScaleUp_48
+  - first:
+      213: -7701587341999941392
+    second: Torch_ScaleUp_49
+  - first:
+      213: -5700491082618722786
+    second: Torch_ScaleUp_50
+  - first:
+      213: 8061669330490387063
+    second: Torch_ScaleUp_51
+  - first:
+      213: -4195106278871951710
+    second: Torch_ScaleUp_52
+  - first:
+      213: 3255069808921922047
+    second: Torch_ScaleUp_53
+  - first:
+      213: 5556115020716513416
+    second: Torch_ScaleUp_54
+  - first:
+      213: 1579591528437183742
+    second: Torch_ScaleUp_55
+  - first:
+      213: -4629625149701483794
+    second: Torch_ScaleUp_56
+  - first:
+      213: -2442847726399295890
+    second: Torch_ScaleUp_57
+  - first:
+      213: 1726623175806338972
+    second: Torch_ScaleUp_58
+  - first:
+      213: 1704042252185904559
+    second: Torch_ScaleUp_59
+  - first:
+      213: 4252331549276257663
+    second: Torch_ScaleUp_60
+  - first:
+      213: -8525716282293148788
+    second: Torch_ScaleUp_61
+  - first:
+      213: 2591276305504130781
+    second: Torch_ScaleUp_62
+  - first:
+      213: -7540953749378866012
+    second: Torch_ScaleUp_63
+  - first:
+      213: 3871752741757678779
+    second: Torch_ScaleUp_64
+  - first:
+      213: -468848299433305484
+    second: Torch_ScaleUp_65
+  - first:
+      213: -8233681789075672528
+    second: Torch_ScaleUp_66
+  - first:
+      213: 8705571784554966216
+    second: Torch_ScaleUp_67
+  - first:
+      213: -1402687331409467141
+    second: Torch_ScaleUp_68
+  - first:
+      213: -8036230366091267421
+    second: Torch_ScaleUp_69
+  - first:
+      213: 7713602003104246625
+    second: Torch_ScaleUp_70
+  - first:
+      213: -8311040660716692819
+    second: Torch_ScaleUp_71
+  - first:
+      213: 1189659331329678709
+    second: Torch_ScaleUp_72
+  - first:
+      213: -4984809445094376910
+    second: Torch_ScaleUp_73
+  - first:
+      213: 3756248514516006527
+    second: Torch_ScaleUp_74
+  - first:
+      213: 2127749262477576905
+    second: Torch_ScaleUp_75
+  - first:
+      213: -5682747955914695598
+    second: Torch_ScaleUp_76
+  - first:
+      213: 5888910633982018189
+    second: Torch_ScaleUp_77
+  - first:
+      213: -487444946175855701
+    second: Torch_ScaleUp_78
+  - first:
+      213: 5032288416309852285
+    second: Torch_ScaleUp_79
+  - first:
+      213: 3251084561624312929
+    second: Torch_ScaleUp_80
+  - first:
+      213: -802530583887815550
+    second: Torch_ScaleUp_81
+  - first:
+      213: -3832952236325258646
+    second: Torch_ScaleUp_82
+  - first:
+      213: 2656544402794243541
+    second: Torch_ScaleUp_83
+  - first:
+      213: 1911729278117678484
+    second: Torch_ScaleUp_84
+  - first:
+      213: -4749335929700018341
+    second: Torch_ScaleUp_85
+  - first:
+      213: -4112745370024430266
+    second: Torch_ScaleUp_86
+  - first:
+      213: -2340266065603823031
+    second: Torch_ScaleUp_87
+  - first:
+      213: 7851836954888905371
+    second: Torch_ScaleUp_88
+  - first:
+      213: 3516632854292582879
+    second: Torch_ScaleUp_89
+  - first:
+      213: -4632705243062432188
+    second: Torch_ScaleUp_90
+  - first:
+      213: -3422265344403703863
+    second: Torch_ScaleUp_91
+  - first:
+      213: 7915590380771008627
+    second: Torch_ScaleUp_92
+  - first:
+      213: 3014446904505376188
+    second: Torch_ScaleUp_93
+  - first:
+      213: 5393030022075603397
+    second: Torch_ScaleUp_94
+  - first:
+      213: -6163234648011391028
+    second: Torch_ScaleUp_95
+  - first:
+      213: -47260596627178390
+    second: Torch_ScaleUp_96
+  - first:
+      213: 2729596406601443331
+    second: Torch_ScaleUp_97
+  - first:
+      213: -7314741754651093333
+    second: Torch_ScaleUp_98
+  - first:
+      213: -1554066759161107183
+    second: Torch_ScaleUp_99
+  - first:
+      213: -2207534634952299260
+    second: Torch_ScaleUp_100
+  - first:
+      213: 8972211568298699029
+    second: Torch_ScaleUp_101
+  - first:
+      213: -7502197221569799064
+    second: Torch_ScaleUp_102
+  - first:
+      213: -6871108426040272103
+    second: Torch_ScaleUp_103
+  - first:
+      213: -4640924241832747040
+    second: Torch_ScaleUp_104
+  - first:
+      213: -5152008666316209562
+    second: Torch_ScaleUp_105
+  - first:
+      213: 6141649119474226507
+    second: Torch_ScaleUp_106
+  - first:
+      213: 5187214112391665128
+    second: Torch_ScaleUp_107
+  - first:
+      213: 8286887907752685230
+    second: Torch_ScaleUp_108
+  - first:
+      213: 2875185827043352786
+    second: Torch_ScaleUp_109
+  - first:
+      213: -566195737501186963
+    second: Torch_ScaleUp_110
+  - first:
+      213: 7143989314791190097
+    second: Torch_ScaleUp_111
+  - first:
+      213: -8341207467369665655
+    second: Torch_ScaleUp_112
+  - first:
+      213: 2794558939711180657
+    second: Torch_ScaleUp_113
+  - first:
+      213: -7670995958565060489
+    second: Torch_ScaleUp_114
+  - first:
+      213: 140371918440093983
+    second: Torch_ScaleUp_115
+  - first:
+      213: 8769359385066450755
+    second: Torch_ScaleUp_116
+  - first:
+      213: 3825279639575958534
+    second: Torch_ScaleUp_117
+  - first:
+      213: 7619556064966256053
+    second: Torch_ScaleUp_118
+  - first:
+      213: 4908649863487604802
+    second: Torch_ScaleUp_119
+  - first:
+      213: -9039134696756934344
+    second: Torch_ScaleUp_120
+  - first:
+      213: -3886902432895835801
+    second: Torch_ScaleUp_121
+  - first:
+      213: -2896988350992585255
+    second: Torch_ScaleUp_122
+  - first:
+      213: -4132973704324776508
+    second: Torch_ScaleUp_123
+  - first:
+      213: 4244300272290863446
+    second: Torch_ScaleUp_124
+  - first:
+      213: -7449023169801086103
+    second: Torch_ScaleUp_125
+  - first:
+      213: -8553181174830984677
+    second: Torch_ScaleUp_126
+  - first:
+      213: 1067781951765035389
+    second: Torch_ScaleUp_127
+  - first:
+      213: -8423387372363453925
+    second: Torch_ScaleUp_128
+  - first:
+      213: -4271799803447359300
+    second: Torch_ScaleUp_129
+  - first:
+      213: -8267359732725850393
+    second: Torch_ScaleUp_130
+  - first:
+      213: -7343065842529753448
+    second: Torch_ScaleUp_131
+  - first:
+      213: -94805979626402575
+    second: Torch_ScaleUp_132
+  - first:
+      213: 387836779897609071
+    second: Torch_ScaleUp_133
+  - first:
+      213: -4266905040525154510
+    second: Torch_ScaleUp_134
+  - first:
+      213: 4737675627556693033
+    second: Torch_ScaleUp_135
+  - first:
+      213: 8627556513716133310
+    second: Torch_ScaleUp_136
+  - first:
+      213: -339840828504695636
+    second: Torch_ScaleUp_137
+  - first:
+      213: -1051008271418736975
+    second: Torch_ScaleUp_138
+  - first:
+      213: 2285658301650478617
+    second: Torch_ScaleUp_139
+  - first:
+      213: 7222801841551643808
+    second: Torch_ScaleUp_140
+  - first:
+      213: -5670250970651745848
+    second: Torch_ScaleUp_141
+  - first:
+      213: 5982180076290177237
+    second: Torch_ScaleUp_142
+  - first:
+      213: -8408641601047630641
+    second: Torch_ScaleUp_143
+  - first:
+      213: -5118334127433934858
+    second: Torch_ScaleUp_144
+  - first:
+      213: 926484423050472299
+    second: Torch_ScaleUp_145
+  - first:
+      213: -5047144882028110616
+    second: Torch_ScaleUp_146
+  - first:
+      213: -1131947327985735057
+    second: Torch_ScaleUp_147
+  - first:
+      213: 669804619053234184
+    second: Torch_ScaleUp_148
+  - first:
+      213: -2040340298959988084
+    second: Torch_ScaleUp_149
+  - first:
+      213: 7322425204631343540
+    second: Torch_ScaleUp_150
+  - first:
+      213: -1123422135415207105
+    second: Torch_ScaleUp_151
+  - first:
+      213: -5445132026246954157
+    second: Torch_ScaleUp_152
+  - first:
+      213: 1593095036416807017
+    second: Torch_ScaleUp_153
+  - first:
+      213: -1107296163882053833
+    second: Torch_ScaleUp_154
+  - first:
+      213: -3623591197502714643
+    second: Torch_ScaleUp_155
+  - first:
+      213: 4594035047633253662
+    second: Torch_ScaleUp_156
+  - first:
+      213: -4104930932449174340
+    second: Torch_ScaleUp_157
+  - first:
+      213: 5721893573124170222
+    second: Torch_ScaleUp_158
+  - first:
+      213: 8060351062455801058
+    second: Torch_ScaleUp_159
+  - first:
+      213: 3979383214090714398
+    second: Torch_ScaleUp_160
+  - first:
+      213: 9096744631097740587
+    second: Torch_ScaleUp_161
+  - first:
+      213: -5145415160121467372
+    second: Torch_ScaleUp_162
+  - first:
+      213: 638065281574787102
+    second: Torch_ScaleUp_163
+  - first:
+      213: -5253962175839726048
+    second: Torch_ScaleUp_164
+  - first:
+      213: 4344684593583182783
+    second: Torch_ScaleUp_165
+  - first:
+      213: 4179524001963413568
+    second: Torch_ScaleUp_166
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Torch_ScaleUp_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 692262f33967c19f0800000000000000
+      internalID: -496391484125863274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_1
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e91772885610e2cd0800000000000000
+      internalID: -2581124000849104482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_2
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3394c2319e02c3e10800000000000000
+      internalID: 2178652505161615667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_3
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5aeccafd22ef9880800000000000000
+      internalID: -8601908076145218979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_4
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 854acc137a98f9e40800000000000000
+      internalID: 5665398207443412056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_5
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fc76998fa7a06e30800000000000000
+      internalID: 4494776800485211380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_6
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34e76f937c216c480800000000000000
+      internalID: -8879388968434106813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_7
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb00681e85a98fb00800000000000000
+      internalID: 862609035172905151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_8
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2398f4b7d2d306dd0800000000000000
+      internalID: -2494926928011622094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_9
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f09219b5b6741cc0800000000000000
+      internalID: -3741234867571879692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_10
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 1340
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33f000910dbb97340800000000000000
+      internalID: 4862123775170187059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a611a61bec906a8e0800000000000000
+      internalID: -1682646627431870102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_12
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 552910e5306fcfc20800000000000000
+      internalID: 3241736326122410581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_13
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b5fd03559121e010800000000000000
+      internalID: 1216290299594012087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_14
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf1e0ae3c663a72d0800000000000000
+      internalID: -3280249540050886148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_15
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c99c6a069db7a9b40800000000000000
+      internalID: 5447802872817699228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_16
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e52ea2bd0b2c40980800000000000000
+      internalID: -8573513725759528354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_17
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f35197de2ec2624e0800000000000000
+      internalID: -2006867230788610753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_18
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c8ce5a9bd4afa860800000000000000
+      internalID: 7543429163963566279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_19
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9705671217e393e0800000000000000
+      internalID: -2048039340635519078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_20
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 618685b0feb42d130800000000000000
+      internalID: 3590015343027316758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_21
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 1206
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3ddfd23c747f4a00800000000000000
+      internalID: 742940540317719871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_22
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ce173a84d871f2d0800000000000000
+      internalID: -3246681002110148922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_23
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e59ad4ad32b9e11a0800000000000000
+      internalID: -6836856606013150882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_24
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b97d37fdc4b593b0800000000000000
+      internalID: -5506296172681266762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_25
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5a4c077bf2bcc4f0800000000000000
+      internalID: -807073440102331811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_26
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8769ce8b4c5a7d80800000000000000
+      internalID: -8252181887615146100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_27
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3ea915a8f2856b90800000000000000
+      internalID: -7249244020749521349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_28
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d47400a91c7032270800000000000000
+      internalID: 8224425872602449741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_29
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e32a9bf618cd7b10800000000000000
+      internalID: 1980959412148904934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_30
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a201685273bb99650800000000000000
+      internalID: 6240224604225671210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_31
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94f63b2439cefcc10800000000000000
+      internalID: 2076138070464491337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_32
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 1072
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4833f8db2509f0130800000000000000
+      internalID: 3535202917551125380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_33
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57325e0eb9e7bce60800000000000000
+      internalID: 7983613972402479989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_34
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 530f2b52ad4002c00800000000000000
+      internalID: 873703662691741749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_35
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76ae51b88d1cbb970800000000000000
+      internalID: 8771817835024738919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_36
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b39414ca19194ba0800000000000000
+      internalID: -6104320217174469710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_37
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fe27687e64553780800000000000000
+      internalID: -8703957871380451592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_38
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe4f17682a5a23b60800000000000000
+      internalID: 7724418428352722159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_39
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34c768c849c19ae40800000000000000
+      internalID: 5668093030360841283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_40
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2d0f4ffd610e7fa0800000000000000
+      internalID: -5801197698060186324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_41
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5ed2bd60ad9dff50800000000000000
+      internalID: 6916857915071716957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_42
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8724fc402a633a0d0800000000000000
+      internalID: -3412824023123410312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_43
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 938
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fc1412278c134a90800000000000000
+      internalID: -7330984401711129353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_44
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4a13308383eb9010800000000000000
+      internalID: 1196800279928052300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_45
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 932b1368df00d55c0800000000000000
+      internalID: -4225219786525527495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_46
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c1847072e9fc2670800000000000000
+      internalID: 8515455746395374022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_47
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85968d148f6beb510800000000000000
+      internalID: 1566890897744357720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_48
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7931152b498959670800000000000000
+      internalID: 8544903632419623831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_49
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f8d2710e177e1590800000000000000
+      internalID: -7701587341999941392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_50
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e16aa371099c3e0b0800000000000000
+      internalID: -5700491082618722786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_51
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77a6a842b8dc0ef60800000000000000
+      internalID: 8061669330490387063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_52
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a693d4e01df7c5c0800000000000000
+      internalID: -4195106278871951710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_53
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff9c3efbeb45c2d20800000000000000
+      internalID: 3255069808921922047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_54
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 804
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 888150d7c294b1d40800000000000000
+      internalID: 5556115020716513416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_55
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef4f6b64026dbe510800000000000000
+      internalID: 1579591528437183742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_56
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee214d4847440cfb0800000000000000
+      internalID: -4629625149701483794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_57
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6e69938fe2491ed0800000000000000
+      internalID: -2442847726399295890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_58
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c97c4ee51a236f710800000000000000
+      internalID: 1726623175806338972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_59
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa52cc36669f5a710800000000000000
+      internalID: 1704042252185904559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_60
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7d3cc5a301530b30800000000000000
+      internalID: 4252331549276257663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_61
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c83272266329ea980800000000000000
+      internalID: -8525716282293148788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_62
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd6d578121016f320800000000000000
+      internalID: 2591276305504130781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_63
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a46f94c486295790800000000000000
+      internalID: -7540953749378866012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_64
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb47c9eea9a3bb530800000000000000
+      internalID: 3871752741757678779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_65
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 670
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47a5bbaa4f05e79f0800000000000000
+      internalID: -468848299433305484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_66
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 032ba8869061cbd80800000000000000
+      internalID: -8233681789075672528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_67
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ccef09f96760d870800000000000000
+      internalID: 8705571784554966216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_68
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf8e568cd47a88ce0800000000000000
+      internalID: -1402687331409467141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_69
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a23cef4f03997090800000000000000
+      internalID: -8036230366091267421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_70
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16b25c547283c0b60800000000000000
+      internalID: 7713602003104246625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_71
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daa57288d8049ac80800000000000000
+      internalID: -8311040660716692819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_72
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57d52a7dbd4828010800000000000000
+      internalID: 1189659331329678709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_73
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23a3328683662dab0800000000000000
+      internalID: -4984809445094376910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_74
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f76b0db5f10e02430800000000000000
+      internalID: 3756248514516006527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_75
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ca43115ea8478d10800000000000000
+      internalID: 2127749262477576905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_76
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 536
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25c90a3b7d2d221b0800000000000000
+      internalID: -5682747955914695598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_77
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d82c484550d99b150800000000000000
+      internalID: 5888910633982018189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_78
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba3f0af676f3c39f0800000000000000
+      internalID: -487444946175855701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_79
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d78367507a746d540800000000000000
+      internalID: 5032288416309852285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_80
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16caf5e0f2c2e1d20800000000000000
+      internalID: 3251084561624312929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_81
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28cdaf99fa6dcd4f0800000000000000
+      internalID: -802530583887815550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_82
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6a3bc8bf3e9ecac0800000000000000
+      internalID: -3832952236325258646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_83
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d56a923f01fdd420800000000000000
+      internalID: 2656544402794243541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_84
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49d0be056a3d78a10800000000000000
+      internalID: 1911729278117678484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_85
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b571b3f8228f61eb0800000000000000
+      internalID: -4749335929700018341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_86
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 645bf0050e79ce6c0800000000000000
+      internalID: -4112745370024430266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_87
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 402
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94a78cf9964b58fd0800000000000000
+      internalID: -2340266065603823031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_88
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9220721c1457fc60800000000000000
+      internalID: 7851836954888905371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_89
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd1d395f2f69dc030800000000000000
+      internalID: 3516632854292582879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_90
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44e8c26602355bfb0800000000000000
+      internalID: -4632705243062432188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_91
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c7ffab1dcba180d0800000000000000
+      internalID: -3422265344403703863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_92
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 370ea514383d9dd60800000000000000
+      internalID: 7915590380771008627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_93
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbd91590d7775d920800000000000000
+      internalID: 3014446904505376188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_94
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c955d84b34e7da40800000000000000
+      internalID: 5393030022075603397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_95
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccfb6e9edbac77aa0800000000000000
+      internalID: -6163234648011391028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_96
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6cf92edcb8185ff0800000000000000
+      internalID: -47260596627178390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_97
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30869a3487971e520800000000000000
+      internalID: 2729596406601443331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_98
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 268
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba6dd4a1121dc7a90800000000000000
+      internalID: -7314741754651093333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_99
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11da5fe2488de6ae0800000000000000
+      internalID: -1554066759161107183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_100
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40deb4e02f24d51e0800000000000000
+      internalID: -2207534634952299260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_101
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 519281272e2b38c70800000000000000
+      internalID: 8972211568298699029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_102
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86cd8651067d2e790800000000000000
+      internalID: -7502197221569799064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_103
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91b1dac8a4be4a0a0800000000000000
+      internalID: -6871108426040272103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_104
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ef5f00adff189fb0800000000000000
+      internalID: -4640924241832747040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_105
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6620d7c1a636088b0800000000000000
+      internalID: -5152008666316209562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_106
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b451a5595558b3550800000000000000
+      internalID: 6141649119474226507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_107
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e59ffe80cfacf740800000000000000
+      internalID: 5187214112391665128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_108
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eae241375a0f00370800000000000000
+      internalID: 8286887907752685230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch_ScaleUp_109
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 134
+        width: 134
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d0282cb646b6e720800000000000000
+      internalID: 2875185827043352786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: ba835b8c384770141847d2d955bb75a2
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Torch_ScaleUp_0: -496391484125863274
+      Torch_ScaleUp_1: -2581124000849104482
+      Torch_ScaleUp_10: 4862123775170187059
+      Torch_ScaleUp_100: -2207534634952299260
+      Torch_ScaleUp_101: 8972211568298699029
+      Torch_ScaleUp_102: -7502197221569799064
+      Torch_ScaleUp_103: -6871108426040272103
+      Torch_ScaleUp_104: -4640924241832747040
+      Torch_ScaleUp_105: -5152008666316209562
+      Torch_ScaleUp_106: 6141649119474226507
+      Torch_ScaleUp_107: 5187214112391665128
+      Torch_ScaleUp_108: 8286887907752685230
+      Torch_ScaleUp_109: 2875185827043352786
+      Torch_ScaleUp_11: -1682646627431870102
+      Torch_ScaleUp_12: 3241736326122410581
+      Torch_ScaleUp_13: 1216290299594012087
+      Torch_ScaleUp_14: -3280249540050886148
+      Torch_ScaleUp_15: 5447802872817699228
+      Torch_ScaleUp_16: -8573513725759528354
+      Torch_ScaleUp_17: -2006867230788610753
+      Torch_ScaleUp_18: 7543429163963566279
+      Torch_ScaleUp_19: -2048039340635519078
+      Torch_ScaleUp_2: 2178652505161615667
+      Torch_ScaleUp_20: 3590015343027316758
+      Torch_ScaleUp_21: 742940540317719871
+      Torch_ScaleUp_22: -3246681002110148922
+      Torch_ScaleUp_23: -6836856606013150882
+      Torch_ScaleUp_24: -5506296172681266762
+      Torch_ScaleUp_25: -807073440102331811
+      Torch_ScaleUp_26: -8252181887615146100
+      Torch_ScaleUp_27: -7249244020749521349
+      Torch_ScaleUp_28: 8224425872602449741
+      Torch_ScaleUp_29: 1980959412148904934
+      Torch_ScaleUp_3: -8601908076145218979
+      Torch_ScaleUp_30: 6240224604225671210
+      Torch_ScaleUp_31: 2076138070464491337
+      Torch_ScaleUp_32: 3535202917551125380
+      Torch_ScaleUp_33: 7983613972402479989
+      Torch_ScaleUp_34: 873703662691741749
+      Torch_ScaleUp_35: 8771817835024738919
+      Torch_ScaleUp_36: -6104320217174469710
+      Torch_ScaleUp_37: -8703957871380451592
+      Torch_ScaleUp_38: 7724418428352722159
+      Torch_ScaleUp_39: 5668093030360841283
+      Torch_ScaleUp_4: 5665398207443412056
+      Torch_ScaleUp_40: -5801197698060186324
+      Torch_ScaleUp_41: 6916857915071716957
+      Torch_ScaleUp_42: -3412824023123410312
+      Torch_ScaleUp_43: -7330984401711129353
+      Torch_ScaleUp_44: 1196800279928052300
+      Torch_ScaleUp_45: -4225219786525527495
+      Torch_ScaleUp_46: 8515455746395374022
+      Torch_ScaleUp_47: 1566890897744357720
+      Torch_ScaleUp_48: 8544903632419623831
+      Torch_ScaleUp_49: -7701587341999941392
+      Torch_ScaleUp_5: 4494776800485211380
+      Torch_ScaleUp_50: -5700491082618722786
+      Torch_ScaleUp_51: 8061669330490387063
+      Torch_ScaleUp_52: -4195106278871951710
+      Torch_ScaleUp_53: 3255069808921922047
+      Torch_ScaleUp_54: 5556115020716513416
+      Torch_ScaleUp_55: 1579591528437183742
+      Torch_ScaleUp_56: -4629625149701483794
+      Torch_ScaleUp_57: -2442847726399295890
+      Torch_ScaleUp_58: 1726623175806338972
+      Torch_ScaleUp_59: 1704042252185904559
+      Torch_ScaleUp_6: -8879388968434106813
+      Torch_ScaleUp_60: 4252331549276257663
+      Torch_ScaleUp_61: -8525716282293148788
+      Torch_ScaleUp_62: 2591276305504130781
+      Torch_ScaleUp_63: -7540953749378866012
+      Torch_ScaleUp_64: 3871752741757678779
+      Torch_ScaleUp_65: -468848299433305484
+      Torch_ScaleUp_66: -8233681789075672528
+      Torch_ScaleUp_67: 8705571784554966216
+      Torch_ScaleUp_68: -1402687331409467141
+      Torch_ScaleUp_69: -8036230366091267421
+      Torch_ScaleUp_7: 862609035172905151
+      Torch_ScaleUp_70: 7713602003104246625
+      Torch_ScaleUp_71: -8311040660716692819
+      Torch_ScaleUp_72: 1189659331329678709
+      Torch_ScaleUp_73: -4984809445094376910
+      Torch_ScaleUp_74: 3756248514516006527
+      Torch_ScaleUp_75: 2127749262477576905
+      Torch_ScaleUp_76: -5682747955914695598
+      Torch_ScaleUp_77: 5888910633982018189
+      Torch_ScaleUp_78: -487444946175855701
+      Torch_ScaleUp_79: 5032288416309852285
+      Torch_ScaleUp_8: -2494926928011622094
+      Torch_ScaleUp_80: 3251084561624312929
+      Torch_ScaleUp_81: -802530583887815550
+      Torch_ScaleUp_82: -3832952236325258646
+      Torch_ScaleUp_83: 2656544402794243541
+      Torch_ScaleUp_84: 1911729278117678484
+      Torch_ScaleUp_85: -4749335929700018341
+      Torch_ScaleUp_86: -4112745370024430266
+      Torch_ScaleUp_87: -2340266065603823031
+      Torch_ScaleUp_88: 7851836954888905371
+      Torch_ScaleUp_89: 3516632854292582879
+      Torch_ScaleUp_9: -3741234867571879692
+      Torch_ScaleUp_90: -4632705243062432188
+      Torch_ScaleUp_91: -3422265344403703863
+      Torch_ScaleUp_92: 7915590380771008627
+      Torch_ScaleUp_93: 3014446904505376188
+      Torch_ScaleUp_94: 5393030022075603397
+      Torch_ScaleUp_95: -6163234648011391028
+      Torch_ScaleUp_96: -47260596627178390
+      Torch_ScaleUp_97: 2729596406601443331
+      Torch_ScaleUp_98: -7314741754651093333
+      Torch_ScaleUp_99: -1554066759161107183
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,2630 @@
+fileFormatVersion: 2
+guid: 0f6eb62385e12fd4b948eb30a3a8c1be
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -576363066675867421
+    second: CanUltAura_0
+  - first:
+      213: 450056561484433915
+    second: CanUltAura_1
+  - first:
+      213: -7162107460179013467
+    second: CanUltAura_2
+  - first:
+      213: -5380961550851577531
+    second: CanUltAura_3
+  - first:
+      213: 1252153882928396845
+    second: CanUltAura_4
+  - first:
+      213: -5014906877769603212
+    second: CanUltAura_5
+  - first:
+      213: 7475194806520518496
+    second: CanUltAura_6
+  - first:
+      213: -3167848724246205551
+    second: CanUltAura_7
+  - first:
+      213: -4291858300910805326
+    second: CanUltAura_8
+  - first:
+      213: -2882323855629742082
+    second: CanUltAura_9
+  - first:
+      213: 590364429216652666
+    second: CanUltAura_10
+  - first:
+      213: -7303830485881075238
+    second: CanUltAura_11
+  - first:
+      213: -4649988601939582012
+    second: CanUltAura_12
+  - first:
+      213: 8395156927733803755
+    second: CanUltAura_13
+  - first:
+      213: -6159818713003068899
+    second: CanUltAura_14
+  - first:
+      213: 3419027461369195792
+    second: CanUltAura_15
+  - first:
+      213: 2360767815770092805
+    second: CanUltAura_16
+  - first:
+      213: 3425220621015885544
+    second: CanUltAura_17
+  - first:
+      213: -8020940248089198592
+    second: CanUltAura_18
+  - first:
+      213: -5628235591690410361
+    second: CanUltAura_19
+  - first:
+      213: 7146303539119392819
+    second: CanUltAura_20
+  - first:
+      213: -1008604553833731048
+    second: CanUltAura_21
+  - first:
+      213: 6657300306824511857
+    second: CanUltAura_22
+  - first:
+      213: 7515844584212016143
+    second: CanUltAura_23
+  - first:
+      213: -1310485797458080509
+    second: CanUltAura_24
+  - first:
+      213: 8389641833779004815
+    second: CanUltAura_25
+  - first:
+      213: 3563596497289649553
+    second: CanUltAura_26
+  - first:
+      213: 6927371058184288466
+    second: CanUltAura_27
+  - first:
+      213: -8600213347077582535
+    second: CanUltAura_28
+  - first:
+      213: -2990477496647155584
+    second: CanUltAura_29
+  - first:
+      213: -4090069624546072928
+    second: CanUltAura_30
+  - first:
+      213: -9079174736736868777
+    second: CanUltAura_31
+  - first:
+      213: 4178802533150964424
+    second: CanUltAura_32
+  - first:
+      213: -8969827221131860664
+    second: CanUltAura_33
+  - first:
+      213: 2690538539834684730
+    second: CanUltAura_34
+  - first:
+      213: -6419301780218615563
+    second: CanUltAura_35
+  - first:
+      213: -508457443345037708
+    second: CanUltAura_36
+  - first:
+      213: 8772556805923715891
+    second: CanUltAura_37
+  - first:
+      213: -2229974935838976169
+    second: CanUltAura_38
+  - first:
+      213: 7062135425711444735
+    second: CanUltAura_39
+  - first:
+      213: 8616556902211450269
+    second: CanUltAura_40
+  - first:
+      213: 4567859083489831669
+    second: CanUltAura_41
+  - first:
+      213: 7622408044946833002
+    second: CanUltAura_42
+  - first:
+      213: 5082112544961124046
+    second: CanUltAura_43
+  - first:
+      213: -1122602956289230837
+    second: CanUltAura_44
+  - first:
+      213: -6175058265110137091
+    second: CanUltAura_45
+  - first:
+      213: 5221833791387605356
+    second: CanUltAura_46
+  - first:
+      213: -3279562753400114533
+    second: CanUltAura_47
+  - first:
+      213: -9075013631863267343
+    second: CanUltAura_48
+  - first:
+      213: 7827236255740398523
+    second: CanUltAura_49
+  - first:
+      213: -2772961861735603357
+    second: CanUltAura_50
+  - first:
+      213: 9141170932403263061
+    second: CanUltAura_51
+  - first:
+      213: 5248684747915109824
+    second: CanUltAura_52
+  - first:
+      213: 7288617621231294102
+    second: CanUltAura_53
+  - first:
+      213: -4998426311350315870
+    second: CanUltAura_54
+  - first:
+      213: 4676414489727494124
+    second: CanUltAura_55
+  - first:
+      213: 8835906025785413708
+    second: CanUltAura_56
+  - first:
+      213: 3057032911784042312
+    second: CanUltAura_57
+  - first:
+      213: -3693609683158370590
+    second: CanUltAura_58
+  - first:
+      213: 2489955568272910279
+    second: CanUltAura_59
+  - first:
+      213: 8668178311880792094
+    second: CanUltAura_60
+  - first:
+      213: 2895398582785380075
+    second: CanUltAura_61
+  - first:
+      213: 1599632166498070155
+    second: CanUltAura_62
+  - first:
+      213: 5615648905932180723
+    second: CanUltAura_63
+  - first:
+      213: -2450617714717967016
+    second: CanUltAura_64
+  - first:
+      213: 6388821592675759692
+    second: CanUltAura_65
+  - first:
+      213: 5869802688031463338
+    second: CanUltAura_66
+  - first:
+      213: -8379793868929851428
+    second: CanUltAura_67
+  - first:
+      213: 2555104002614186071
+    second: CanUltAura_68
+  - first:
+      213: 6319353692055572217
+    second: CanUltAura_69
+  - first:
+      213: 7833375631866631032
+    second: CanUltAura_70
+  - first:
+      213: -1265442090533077836
+    second: CanUltAura_71
+  - first:
+      213: -5937242649848621173
+    second: CanUltAura_72
+  - first:
+      213: 7680633243624156186
+    second: CanUltAura_73
+  - first:
+      213: 7231979748814635616
+    second: CanUltAura_74
+  - first:
+      213: -3573608973235545995
+    second: CanUltAura_75
+  - first:
+      213: 4183409595484062249
+    second: CanUltAura_76
+  - first:
+      213: 172191416066885313
+    second: CanUltAura_77
+  - first:
+      213: -6550549720904506699
+    second: CanUltAura_78
+  - first:
+      213: -3986440650777988322
+    second: CanUltAura_79
+  - first:
+      213: -8703972034758385035
+    second: CanUltAura_80
+  - first:
+      213: 5010268024168285319
+    second: CanUltAura_81
+  - first:
+      213: -1817203016910225359
+    second: CanUltAura_82
+  - first:
+      213: 1398778868366169280
+    second: CanUltAura_83
+  - first:
+      213: -8243798866050127828
+    second: CanUltAura_84
+  - first:
+      213: 1194409602940479425
+    second: CanUltAura_85
+  - first:
+      213: 1291875630174783540
+    second: CanUltAura_86
+  - first:
+      213: 7526112520107993863
+    second: CanUltAura_87
+  - first:
+      213: 8598355695552431328
+    second: CanUltAura_88
+  - first:
+      213: 1113627312106768973
+    second: CanUltAura_89
+  - first:
+      213: 4646217978758152390
+    second: CanUltAura_90
+  - first:
+      213: -4224560191493939685
+    second: CanUltAura_91
+  - first:
+      213: -720107826291623313
+    second: CanUltAura_92
+  - first:
+      213: 3644677603274625032
+    second: CanUltAura_93
+  - first:
+      213: 798236485803622504
+    second: CanUltAura_94
+  - first:
+      213: 2372047125140057095
+    second: CanUltAura_95
+  - first:
+      213: 6843380200204269190
+    second: CanUltAura_96
+  - first:
+      213: 8103143422430619711
+    second: CanUltAura_97
+  - first:
+      213: -5191694804869295403
+    second: CanUltAura_98
+  - first:
+      213: -2158585349383978915
+    second: CanUltAura_99
+  - first:
+      213: 8231790638631228437
+    second: CanUltAura_100
+  - first:
+      213: -498314072386691762
+    second: CanUltAura_101
+  - first:
+      213: 2250097017558359069
+    second: CanUltAura_102
+  - first:
+      213: 3940867186687000542
+    second: CanUltAura_103
+  - first:
+      213: 7958808441834390478
+    second: CanUltAura_104
+  - first:
+      213: -7567397243069032593
+    second: CanUltAura_105
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CanUltAura_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e0512538d85008f0800000000000000
+      internalID: -576363066675867421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf90d14ee0cee3600800000000000000
+      internalID: 450056561484433915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_2
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a0dad026351b9c90800000000000000
+      internalID: -7162107460179013467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 549e473aafbf255b0800000000000000
+      internalID: -5380961550851577531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_4
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2ab214825b806110800000000000000
+      internalID: 1252153882928396845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_5
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47721e8c3c8776ab0800000000000000
+      internalID: -5014906877769603212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_6
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 067108d321a3db760800000000000000
+      internalID: 7475194806520518496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_7
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19b61298e5a8904d0800000000000000
+      internalID: -3167848724246205551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_8
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2be56e35d914074c0800000000000000
+      internalID: -4291858300910805326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_9
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eff0e8979bdeff7d0800000000000000
+      internalID: -2882323855629742082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7d1c7b0255613800800000000000000
+      internalID: 590364429216652666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_11
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad9c365ded493aa90800000000000000
+      internalID: -7303830485881075238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_12
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c3a6c3d00ce77fb0800000000000000
+      internalID: -4649988601939582012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_13
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beaab3f0fb6918470800000000000000
+      internalID: 8395156927733803755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_14
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d12f5a2448de38aa0800000000000000
+      internalID: -6159818713003068899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_15
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01d67308c53d27f20800000000000000
+      internalID: 3419027461369195792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_16
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 505b62012d123c020800000000000000
+      internalID: 2360767815770092805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_17
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e6aef8d104d88f20800000000000000
+      internalID: 3425220621015885544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_18
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00082045755efa090800000000000000
+      internalID: -8020940248089198592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_19
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 786251d8c8d74e1b0800000000000000
+      internalID: -5628235591690410361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3380452c435cc2360800000000000000
+      internalID: 7146303539119392819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_21
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81c26e98087b002f0800000000000000
+      internalID: -1008604553833731048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_22
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 171cf5f6b5b736c50800000000000000
+      internalID: 6657300306824511857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_23
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0c200524d4ad4860800000000000000
+      internalID: 7515844584212016143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_24
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30d01574c1830dde0800000000000000
+      internalID: -1310485797458080509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_25
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f85872f2ccefd6470800000000000000
+      internalID: 8389641833779004815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_26
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d96cf2220747130800000000000000
+      internalID: 3563596497289649553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_27
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d8756e4647f22060800000000000000
+      internalID: 6927371058184288466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_28
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9311ed6d687e5a880800000000000000
+      internalID: -8600213347077582535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_29
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0800c8f9f80bf76d0800000000000000
+      internalID: -2990477496647155584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a6e05ab8572d37c0800000000000000
+      internalID: -4090069624546072928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_31
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75629133eaa400280800000000000000
+      internalID: -9079174736736868777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_32
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ca37fe73c61ef930800000000000000
+      internalID: 4178802533150964424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_33
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8456ec3aaa5c48380800000000000000
+      internalID: -8969827221131860664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_34
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3538510c86b65520800000000000000
+      internalID: 2690538539834684730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_35
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f86904ba0f0ae6a0800000000000000
+      internalID: -6419301780218615563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_36
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 476040236a891f8f0800000000000000
+      internalID: -508457443345037708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_37
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33bb40d9fe16eb970800000000000000
+      internalID: 8772556805923715891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_38
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7571b4b5c998d01e0800000000000000
+      internalID: -2229974935838976169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_39
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff29b3db0ceb10260800000000000000
+      internalID: 7062135425711444735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d95f04f99d8249770800000000000000
+      internalID: 8616556902211450269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_41
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fae37782ab446f30800000000000000
+      internalID: 4567859083489831669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_42
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6eb22c4bbb38c960800000000000000
+      internalID: 7622408044946833002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_43
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec6d6f6fe6a478640800000000000000
+      internalID: 5082112544961124046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_44
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b08b39e1f86bb60f0800000000000000
+      internalID: -1122602956289230837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_45
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df635c88939cd4aa0800000000000000
+      internalID: -6175058265110137091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_46
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c691ac3ba2ea77840800000000000000
+      internalID: 5221833791387605356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_47
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b92fbf83d07ac72d0800000000000000
+      internalID: -3279562753400114533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_48
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ff56fcee231f0280800000000000000
+      internalID: -9075013631863267343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_49
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbb077477edef9c60800000000000000
+      internalID: 7827236255740398523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_50
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3632b87e0e57489d0800000000000000
+      internalID: -2772961861735603357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_51
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 556d501f786fbde70800000000000000
+      internalID: 9141170932403263061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_52
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c5ad7138f217d840800000000000000
+      internalID: 5248684747915109824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_53
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 696d4291c1f562560800000000000000
+      internalID: 7288617621231294102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_54
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a49ffba0c502aab0800000000000000
+      internalID: -4998426311350315870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_55
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce762b2a336f5e040800000000000000
+      internalID: 4676414489727494124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_56
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c405caf37b17f9a70800000000000000
+      internalID: 8835906025785413708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_57
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84fd0958c33cc6a20800000000000000
+      internalID: 3057032911784042312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_58
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e6f6601099adbcc0800000000000000
+      internalID: -3693609683158370590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_59
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c7a961a5691e8220800000000000000
+      internalID: 2489955568272910279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e185669af3e8b4870800000000000000
+      internalID: 8668178311880792094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_61
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bee871aaba58e2820800000000000000
+      internalID: 2895398582785380075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_62
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8ee76feaf8033610800000000000000
+      internalID: 1599632166498070155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_63
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fc066d4deaceed40800000000000000
+      internalID: 5615648905932180723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_64
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85db4f12c28adfdd0800000000000000
+      internalID: -2450617714717967016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_65
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c46b8cc9367a9a850800000000000000
+      internalID: 6388821592675759692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_66
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa79fb9f17ab57150800000000000000
+      internalID: 5869802688031463338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_67
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdf907fcfddf4bb80800000000000000
+      internalID: -8379793868929851428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_68
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7505ff78d8d857320800000000000000
+      internalID: 2555104002614186071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_69
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fe860993bad2b750800000000000000
+      internalID: 6319353692055572217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_70
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8739c9952adb5bc60800000000000000
+      internalID: 7833375631866631032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_71
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bcb2fd8f1f307ee0800000000000000
+      internalID: -1265442090533077836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_72
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b87597e444daa9da0800000000000000
+      internalID: -5937242649848621173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_73
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1c2648cd37179a60800000000000000
+      internalID: 7680633243624156186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_74
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0624aeec3472d5460800000000000000
+      internalID: 7231979748814635616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_75
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5789528929df76ec0800000000000000
+      internalID: -3573608973235545995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_76
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 922c9c8ccd47e0a30800000000000000
+      internalID: 4183409595484062249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_77
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c6c90c3e2fb36200800000000000000
+      internalID: 172191416066885313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_78
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b2e3f13cb5c715a0800000000000000
+      internalID: -6550549720904506699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_79
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e13733469515da8c0800000000000000
+      internalID: -3986440650777988322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_80
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 572ea4dcc87453780800000000000000
+      internalID: -8703972034758385035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_81
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7848c02f83c088540800000000000000
+      internalID: 5010268024168285319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_82
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1304c4ceb7ff7c6e0800000000000000
+      internalID: -1817203016910225359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_83
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c4d94048f5796310800000000000000
+      internalID: 1398778868366169280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_84
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c28605ddb94289d80800000000000000
+      internalID: -8243798866050127828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_85
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c72593a435639010800000000000000
+      internalID: 1194409602940479425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_86
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4384d8e7a0aade110800000000000000
+      internalID: 1291875630174783540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_87
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70b28a4467f127860800000000000000
+      internalID: 7526112520107993863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_88
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e40cd5f2fe735770800000000000000
+      internalID: 8598355695552431328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_89
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4a0c4ed326647f00800000000000000
+      internalID: 1113627312106768973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_90
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c0c9ec82aeaa7040800000000000000
+      internalID: 4646217978758152390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_91
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1e5fb573e85f55c0800000000000000
+      internalID: -4224560191493939685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_92
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6ab8ed4fb9a106f0800000000000000
+      internalID: -720107826291623313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_93
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 800910848fe749230800000000000000
+      internalID: 3644677603274625032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_94
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 860c417cad7e31b00800000000000000
+      internalID: 798236485803622504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_95
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70ca57cea443be020800000000000000
+      internalID: 2372047125140057095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_96
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 686fd18c80298fe50800000000000000
+      internalID: 6843380200204269190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_97
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f38250aa206247070800000000000000
+      internalID: 8103143422430619711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_98
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d2568de41563f7b0800000000000000
+      internalID: -5191694804869295403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CanUltAura_99
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d500b98bf0a2b02e0800000000000000
+      internalID: -2158585349383978915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 55394b12012504841950bbf9943f4b38
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      CanUltAura_0: -576363066675867421
+      CanUltAura_1: 450056561484433915
+      CanUltAura_10: 590364429216652666
+      CanUltAura_11: -7303830485881075238
+      CanUltAura_12: -4649988601939582012
+      CanUltAura_13: 8395156927733803755
+      CanUltAura_14: -6159818713003068899
+      CanUltAura_15: 3419027461369195792
+      CanUltAura_16: 2360767815770092805
+      CanUltAura_17: 3425220621015885544
+      CanUltAura_18: -8020940248089198592
+      CanUltAura_19: -5628235591690410361
+      CanUltAura_2: -7162107460179013467
+      CanUltAura_20: 7146303539119392819
+      CanUltAura_21: -1008604553833731048
+      CanUltAura_22: 6657300306824511857
+      CanUltAura_23: 7515844584212016143
+      CanUltAura_24: -1310485797458080509
+      CanUltAura_25: 8389641833779004815
+      CanUltAura_26: 3563596497289649553
+      CanUltAura_27: 6927371058184288466
+      CanUltAura_28: -8600213347077582535
+      CanUltAura_29: -2990477496647155584
+      CanUltAura_3: -5380961550851577531
+      CanUltAura_30: -4090069624546072928
+      CanUltAura_31: -9079174736736868777
+      CanUltAura_32: 4178802533150964424
+      CanUltAura_33: -8969827221131860664
+      CanUltAura_34: 2690538539834684730
+      CanUltAura_35: -6419301780218615563
+      CanUltAura_36: -508457443345037708
+      CanUltAura_37: 8772556805923715891
+      CanUltAura_38: -2229974935838976169
+      CanUltAura_39: 7062135425711444735
+      CanUltAura_4: 1252153882928396845
+      CanUltAura_40: 8616556902211450269
+      CanUltAura_41: 4567859083489831669
+      CanUltAura_42: 7622408044946833002
+      CanUltAura_43: 5082112544961124046
+      CanUltAura_44: -1122602956289230837
+      CanUltAura_45: -6175058265110137091
+      CanUltAura_46: 5221833791387605356
+      CanUltAura_47: -3279562753400114533
+      CanUltAura_48: -9075013631863267343
+      CanUltAura_49: 7827236255740398523
+      CanUltAura_5: -5014906877769603212
+      CanUltAura_50: -2772961861735603357
+      CanUltAura_51: 9141170932403263061
+      CanUltAura_52: 5248684747915109824
+      CanUltAura_53: 7288617621231294102
+      CanUltAura_54: -4998426311350315870
+      CanUltAura_55: 4676414489727494124
+      CanUltAura_56: 8835906025785413708
+      CanUltAura_57: 3057032911784042312
+      CanUltAura_58: -3693609683158370590
+      CanUltAura_59: 2489955568272910279
+      CanUltAura_6: 7475194806520518496
+      CanUltAura_60: 8668178311880792094
+      CanUltAura_61: 2895398582785380075
+      CanUltAura_62: 1599632166498070155
+      CanUltAura_63: 5615648905932180723
+      CanUltAura_64: -2450617714717967016
+      CanUltAura_65: 6388821592675759692
+      CanUltAura_66: 5869802688031463338
+      CanUltAura_67: -8379793868929851428
+      CanUltAura_68: 2555104002614186071
+      CanUltAura_69: 6319353692055572217
+      CanUltAura_7: -3167848724246205551
+      CanUltAura_70: 7833375631866631032
+      CanUltAura_71: -1265442090533077836
+      CanUltAura_72: -5937242649848621173
+      CanUltAura_73: 7680633243624156186
+      CanUltAura_74: 7231979748814635616
+      CanUltAura_75: -3573608973235545995
+      CanUltAura_76: 4183409595484062249
+      CanUltAura_77: 172191416066885313
+      CanUltAura_78: -6550549720904506699
+      CanUltAura_79: -3986440650777988322
+      CanUltAura_8: -4291858300910805326
+      CanUltAura_80: -8703972034758385035
+      CanUltAura_81: 5010268024168285319
+      CanUltAura_82: -1817203016910225359
+      CanUltAura_83: 1398778868366169280
+      CanUltAura_84: -8243798866050127828
+      CanUltAura_85: 1194409602940479425
+      CanUltAura_86: 1291875630174783540
+      CanUltAura_87: 7526112520107993863
+      CanUltAura_88: 8598355695552431328
+      CanUltAura_89: 1113627312106768973
+      CanUltAura_9: -2882323855629742082
+      CanUltAura_90: 4646217978758152390
+      CanUltAura_91: -4224560191493939685
+      CanUltAura_92: -720107826291623313
+      CanUltAura_93: 3644677603274625032
+      CanUltAura_94: 798236485803622504
+      CanUltAura_95: 2372047125140057095
+      CanUltAura_96: 6843380200204269190
+      CanUltAura_97: 8103143422430619711
+      CanUltAura_98: -5191694804869295403
+      CanUltAura_99: -2158585349383978915
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

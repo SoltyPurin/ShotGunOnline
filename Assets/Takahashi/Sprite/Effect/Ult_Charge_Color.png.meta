@@ -1,0 +1,1612 @@
+fileFormatVersion: 2
+guid: 650ffd5466b26ed4c8a87a00229485f4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3780568653934388228
+    second: Ult_Charge_Color_0
+  - first:
+      213: -1691670494177701676
+    second: Ult_Charge_Color_1
+  - first:
+      213: -4270576837081926184
+    second: Ult_Charge_Color_2
+  - first:
+      213: -5515107002553366053
+    second: Ult_Charge_Color_3
+  - first:
+      213: -8206274241412601747
+    second: Ult_Charge_Color_4
+  - first:
+      213: 1591152375742279781
+    second: Ult_Charge_Color_5
+  - first:
+      213: 8576499155125595386
+    second: Ult_Charge_Color_6
+  - first:
+      213: 8237346169576816054
+    second: Ult_Charge_Color_7
+  - first:
+      213: -3336554432315714588
+    second: Ult_Charge_Color_8
+  - first:
+      213: 5323110617226487370
+    second: Ult_Charge_Color_9
+  - first:
+      213: 2270169240738582056
+    second: Ult_Charge_Color_10
+  - first:
+      213: -6089416018824189583
+    second: Ult_Charge_Color_11
+  - first:
+      213: -8195835577702991195
+    second: Ult_Charge_Color_12
+  - first:
+      213: 2251903142102103993
+    second: Ult_Charge_Color_13
+  - first:
+      213: 6832798186774988798
+    second: Ult_Charge_Color_14
+  - first:
+      213: -5014668468433142048
+    second: Ult_Charge_Color_15
+  - first:
+      213: -7394590415700697618
+    second: Ult_Charge_Color_16
+  - first:
+      213: -5285727540555629454
+    second: Ult_Charge_Color_17
+  - first:
+      213: -6622459010816579650
+    second: Ult_Charge_Color_18
+  - first:
+      213: 8667905494609639309
+    second: Ult_Charge_Color_19
+  - first:
+      213: 3035332712122669042
+    second: Ult_Charge_Color_20
+  - first:
+      213: 415365514854099217
+    second: Ult_Charge_Color_21
+  - first:
+      213: 3606154996682833157
+    second: Ult_Charge_Color_22
+  - first:
+      213: -3048196603051035399
+    second: Ult_Charge_Color_23
+  - first:
+      213: 5664981164951729797
+    second: Ult_Charge_Color_24
+  - first:
+      213: 3188256666612379587
+    second: Ult_Charge_Color_25
+  - first:
+      213: -4685272920296829604
+    second: Ult_Charge_Color_26
+  - first:
+      213: -289848149607895761
+    second: Ult_Charge_Color_27
+  - first:
+      213: 7326203499348488828
+    second: Ult_Charge_Color_28
+  - first:
+      213: 1078739940423492821
+    second: Ult_Charge_Color_29
+  - first:
+      213: -3394859135868862457
+    second: Ult_Charge_Color_30
+  - first:
+      213: 7312202602369486411
+    second: Ult_Charge_Color_31
+  - first:
+      213: 2793636116484863275
+    second: Ult_Charge_Color_32
+  - first:
+      213: -810785749659370958
+    second: Ult_Charge_Color_33
+  - first:
+      213: 3174630871364656206
+    second: Ult_Charge_Color_34
+  - first:
+      213: -2329663717522703510
+    second: Ult_Charge_Color_35
+  - first:
+      213: 4120758025447090093
+    second: Ult_Charge_Color_36
+  - first:
+      213: 2323705103588997740
+    second: Ult_Charge_Color_37
+  - first:
+      213: 3929319375894389627
+    second: Ult_Charge_Color_38
+  - first:
+      213: 6341805148232870954
+    second: Ult_Charge_Color_39
+  - first:
+      213: -1317180418924508735
+    second: Ult_Charge_Color_40
+  - first:
+      213: -3934549947020969344
+    second: Ult_Charge_Color_41
+  - first:
+      213: -6775984008118813536
+    second: Ult_Charge_Color_42
+  - first:
+      213: 7814795816785613888
+    second: Ult_Charge_Color_43
+  - first:
+      213: 7343150812543928261
+    second: Ult_Charge_Color_44
+  - first:
+      213: 2719724036992451262
+    second: Ult_Charge_Color_45
+  - first:
+      213: -12298684493564690
+    second: Ult_Charge_Color_46
+  - first:
+      213: -1864265955651955590
+    second: Ult_Charge_Color_47
+  - first:
+      213: 6105326098000243150
+    second: Ult_Charge_Color_48
+  - first:
+      213: 2208720898798246946
+    second: Ult_Charge_Color_49
+  - first:
+      213: 1415644917677132792
+    second: Ult_Charge_Color_50
+  - first:
+      213: -931202401038583248
+    second: Ult_Charge_Color_51
+  - first:
+      213: -7598335140761631927
+    second: Ult_Charge_Color_52
+  - first:
+      213: -4924080637263917640
+    second: Ult_Charge_Color_53
+  - first:
+      213: -1282131170559829000
+    second: Ult_Charge_Color_54
+  - first:
+      213: 7747814256696564631
+    second: Ult_Charge_Color_55
+  - first:
+      213: 1633987339768614027
+    second: Ult_Charge_Color_56
+  - first:
+      213: 3674867902340647440
+    second: Ult_Charge_Color_57
+  - first:
+      213: -3714697118012366581
+    second: Ult_Charge_Color_58
+  - first:
+      213: -1450260661101895673
+    second: Ult_Charge_Color_59
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Ult_Charge_Color_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4046cb21927477430800000000000000
+      internalID: 3780568653934388228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d0578df5aaf588e0800000000000000
+      internalID: -1691670494177701676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_2
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d578bf3efcdbb4c0800000000000000
+      internalID: -4270576837081926184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd98986c6676673b0800000000000000
+      internalID: -5515107002553366053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_4
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d68e92f5e057d1e80800000000000000
+      internalID: -8206274241412601747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_5
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56033abc7a8e41610800000000000000
+      internalID: 1591152375742279781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_6
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afce2b59a88d50770800000000000000
+      internalID: 8576499155125595386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_7
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bdfc89a2bee05270800000000000000
+      internalID: 8237346169576816054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e31110fb6d22b1d0800000000000000
+      internalID: -3336554432315714588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_9
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4625ef37ec7fd940800000000000000
+      internalID: 5323110617226487370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_10
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82ecd3685e2418f10800000000000000
+      internalID: 2270169240738582056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_11
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 179296cd46c0e7ba0800000000000000
+      internalID: -6089416018824189583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_12
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5aa318927fa824e80800000000000000
+      internalID: -8195835577702991195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_13
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b7f4950afd504f10800000000000000
+      internalID: 2251903142102103993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_14
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef708a8cfb9f2de50800000000000000
+      internalID: 6832798186774988798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_15
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0eeb0b8c891586ab0800000000000000
+      internalID: -5014668468433142048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eedd6a4f133216990800000000000000
+      internalID: -7394590415700697618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_17
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27cbead8ec255a6b0800000000000000
+      internalID: -5285727540555629454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_18
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb761b0fd9c4814a0800000000000000
+      internalID: -6622459010816579650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_19
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d873dd07f169a4870800000000000000
+      internalID: 8667905494609639309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_20
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f7d131150baf1a20800000000000000
+      internalID: 3035332712122669042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_21
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11963dc2cbca3c500800000000000000
+      internalID: 415365514854099217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_22
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50db74efcd2ab0230800000000000000
+      internalID: 3606154996682833157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_23
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f4379de651a2b5d0800000000000000
+      internalID: -3048196603051035399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 586f93cea5e0e9e40800000000000000
+      internalID: 5664981164951729797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_25
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cfa332db86fe3c20800000000000000
+      internalID: 3188256666612379587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_26
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5d43f54a119afeb0800000000000000
+      internalID: -4685272920296829604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_27
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2d21d3c4a04afbf0800000000000000
+      internalID: -289848149607895761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_28
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c72f3ea4447eba560800000000000000
+      internalID: 7326203499348488828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_29
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d4e7f9a24478fe00800000000000000
+      internalID: 1078739940423492821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_30
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7000c084a9903e0d0800000000000000
+      internalID: -3394859135868862457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_31
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4e8bef66892a7560800000000000000
+      internalID: 7312202602369486411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2538c22f3df4c620800000000000000
+      internalID: 2793636116484863275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_33
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23aba9a08a28fb4f0800000000000000
+      internalID: -810785749659370958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_34
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4cdda425fd8e0c20800000000000000
+      internalID: 3174630871364656206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_35
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6b71f6213f5bafd0800000000000000
+      internalID: -2329663717522703510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_36
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da72d18679fdf2930800000000000000
+      internalID: 4120758025447090093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_37
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6a3f2eea757f3020800000000000000
+      internalID: 2323705103588997740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_38
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b73ae39672fb78630800000000000000
+      internalID: 3929319375894389627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_39
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2ce9279e2e920850800000000000000
+      internalID: 6341805148232870954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c987e0436f68bde0800000000000000
+      internalID: -1317180418924508735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_41
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08a78c85baba569c0800000000000000
+      internalID: -3934549947020969344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_42
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0acb950027ed6f1a0800000000000000
+      internalID: -6775984008118813536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_43
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04417bb046bb37c60800000000000000
+      internalID: 7814795816785613888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_44
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c74dc122cc18e560800000000000000
+      internalID: 7343150812543928261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_45
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb2c6081a966eb520800000000000000
+      internalID: 2719724036992451262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_46
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee47e8f596e44dff0800000000000000
+      internalID: -12298684493564690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_47
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a74d28a9dfbc026e0800000000000000
+      internalID: -1864265955651955590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec9e93d1db97ab450800000000000000
+      internalID: 6105326098000243150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_49
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22cd9d484f3f6ae10800000000000000
+      internalID: 2208720898798246946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_50
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fb8b3e5d8165a310800000000000000
+      internalID: 1415644917677132792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_51
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03aba189954b313f0800000000000000
+      internalID: -931202401038583248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_52
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 943098a727a4d8690800000000000000
+      internalID: -7598335140761631927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_53
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bd4182dfb62aabb0800000000000000
+      internalID: -4924080637263917640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_54
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fb535f4e74f43ee0800000000000000
+      internalID: -1282131170559829000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_55
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79b1b1c4404c58b60800000000000000
+      internalID: 7747814256696564631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8cc46a04d61da610800000000000000
+      internalID: 1633987339768614027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_57
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01acf7b03e0cff230800000000000000
+      internalID: 3674867902340647440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_58
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b01a4b807aeb27cc0800000000000000
+      internalID: -3714697118012366581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_Color_59
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7006c4fcc93afdbe0800000000000000
+      internalID: -1450260661101895673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: fff9d6ccaad85974fab66540f0233c61
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Ult_Charge_Color_0: 3780568653934388228
+      Ult_Charge_Color_1: -1691670494177701676
+      Ult_Charge_Color_10: 2270169240738582056
+      Ult_Charge_Color_11: -6089416018824189583
+      Ult_Charge_Color_12: -8195835577702991195
+      Ult_Charge_Color_13: 2251903142102103993
+      Ult_Charge_Color_14: 6832798186774988798
+      Ult_Charge_Color_15: -5014668468433142048
+      Ult_Charge_Color_16: -7394590415700697618
+      Ult_Charge_Color_17: -5285727540555629454
+      Ult_Charge_Color_18: -6622459010816579650
+      Ult_Charge_Color_19: 8667905494609639309
+      Ult_Charge_Color_2: -4270576837081926184
+      Ult_Charge_Color_20: 3035332712122669042
+      Ult_Charge_Color_21: 415365514854099217
+      Ult_Charge_Color_22: 3606154996682833157
+      Ult_Charge_Color_23: -3048196603051035399
+      Ult_Charge_Color_24: 5664981164951729797
+      Ult_Charge_Color_25: 3188256666612379587
+      Ult_Charge_Color_26: -4685272920296829604
+      Ult_Charge_Color_27: -289848149607895761
+      Ult_Charge_Color_28: 7326203499348488828
+      Ult_Charge_Color_29: 1078739940423492821
+      Ult_Charge_Color_3: -5515107002553366053
+      Ult_Charge_Color_30: -3394859135868862457
+      Ult_Charge_Color_31: 7312202602369486411
+      Ult_Charge_Color_32: 2793636116484863275
+      Ult_Charge_Color_33: -810785749659370958
+      Ult_Charge_Color_34: 3174630871364656206
+      Ult_Charge_Color_35: -2329663717522703510
+      Ult_Charge_Color_36: 4120758025447090093
+      Ult_Charge_Color_37: 2323705103588997740
+      Ult_Charge_Color_38: 3929319375894389627
+      Ult_Charge_Color_39: 6341805148232870954
+      Ult_Charge_Color_4: -8206274241412601747
+      Ult_Charge_Color_40: -1317180418924508735
+      Ult_Charge_Color_41: -3934549947020969344
+      Ult_Charge_Color_42: -6775984008118813536
+      Ult_Charge_Color_43: 7814795816785613888
+      Ult_Charge_Color_44: 7343150812543928261
+      Ult_Charge_Color_45: 2719724036992451262
+      Ult_Charge_Color_46: -12298684493564690
+      Ult_Charge_Color_47: -1864265955651955590
+      Ult_Charge_Color_48: 6105326098000243150
+      Ult_Charge_Color_49: 2208720898798246946
+      Ult_Charge_Color_5: 1591152375742279781
+      Ult_Charge_Color_50: 1415644917677132792
+      Ult_Charge_Color_51: -931202401038583248
+      Ult_Charge_Color_52: -7598335140761631927
+      Ult_Charge_Color_53: -4924080637263917640
+      Ult_Charge_Color_54: -1282131170559829000
+      Ult_Charge_Color_55: 7747814256696564631
+      Ult_Charge_Color_56: 1633987339768614027
+      Ult_Charge_Color_57: 3674867902340647440
+      Ult_Charge_Color_58: -3714697118012366581
+      Ult_Charge_Color_59: -1450260661101895673
+      Ult_Charge_Color_6: 8576499155125595386
+      Ult_Charge_Color_7: 8237346169576816054
+      Ult_Charge_Color_8: -3336554432315714588
+      Ult_Charge_Color_9: 5323110617226487370
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

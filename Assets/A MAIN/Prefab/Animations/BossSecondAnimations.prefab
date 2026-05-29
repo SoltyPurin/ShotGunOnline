@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3419130287802563862
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3730012693575797950}
+  - component: {fileID: 7657844725973427217}
+  m_Layer: 0
+  m_Name: BossSecondAnimations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3730012693575797950
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3419130287802563862}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 19.463348, y: 614.32104, z: 0.3348325}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &7657844725973427217
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3419130287802563862}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 2a4de00ca180a9741b54b0e61a293997, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 2756620683269866282, guid: 124cff12396421c43a7406eadf90c377, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -1764368147827057630, guid: 2a4de00ca180a9741b54b0e61a293997, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2853645703934864136, guid: 2a4de00ca180a9741b54b0e61a293997, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 6139525844128713440, guid: 2a4de00ca180a9741b54b0e61a293997, type: 2}
+    value: {fileID: 0}
+  m_ExposedReferences:
+    m_References: []

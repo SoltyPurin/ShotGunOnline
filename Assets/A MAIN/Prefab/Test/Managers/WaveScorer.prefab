@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7664692419977884460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8105230410120482650}
+  - component: {fileID: 4648398844901905776}
+  - component: {fileID: 2945730754455849690}
+  m_Layer: 0
+  m_Name: WaveScorer
+  m_TagString: WaveScore
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8105230410120482650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664692419977884460}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.41646516, y: 0.9795892, z: 1506.8021}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4648398844901905776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664692419977884460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f045deb2dead1724495bfe1f77334e39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sRankValue: 3
+  _aRankValue: 2
+--- !u!114 &2945730754455849690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664692419977884460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69e67ee5c0482de48b398a5f36d2bc31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _expectedClearTime: 5
+  _damageMultiplication: 0.3
+  _bossExpectedTime: 80
+  _mediumBossExpectedTime: 60
+  _bossTimeSRankRatio: 0.8
+  _bossTimeARankRatio: 1
+  _timeSRankRatio: 0.3
+  _timeARankRatio: 0.6
+  _oneDamageDecExTime: 1

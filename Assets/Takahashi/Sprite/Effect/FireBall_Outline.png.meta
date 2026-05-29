@@ -1,0 +1,2422 @@
+fileFormatVersion: 2
+guid: 6b68588abe3290047a8d2332b0180166
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -288644627593975519
+    second: FireBall_Outline_0
+  - first:
+      213: 6933072008850598478
+    second: FireBall_Outline_1
+  - first:
+      213: 2616103960839753878
+    second: FireBall_Outline_2
+  - first:
+      213: 3884370684662138391
+    second: FireBall_Outline_3
+  - first:
+      213: -6938346850138170367
+    second: FireBall_Outline_4
+  - first:
+      213: -295511038522007969
+    second: FireBall_Outline_5
+  - first:
+      213: 1425570618082258380
+    second: FireBall_Outline_6
+  - first:
+      213: -6653486486227544627
+    second: FireBall_Outline_7
+  - first:
+      213: -8572927412259199359
+    second: FireBall_Outline_8
+  - first:
+      213: 3666285507985064572
+    second: FireBall_Outline_9
+  - first:
+      213: -365215023965925313
+    second: FireBall_Outline_10
+  - first:
+      213: 5512098389394656029
+    second: FireBall_Outline_11
+  - first:
+      213: 1830865856213028070
+    second: FireBall_Outline_12
+  - first:
+      213: -5003255416537962745
+    second: FireBall_Outline_13
+  - first:
+      213: 5254211279107767707
+    second: FireBall_Outline_14
+  - first:
+      213: -7751737144078194305
+    second: FireBall_Outline_15
+  - first:
+      213: 855019285540167653
+    second: FireBall_Outline_16
+  - first:
+      213: -769046878649449759
+    second: FireBall_Outline_17
+  - first:
+      213: -8374832494215854851
+    second: FireBall_Outline_18
+  - first:
+      213: 1840369094539093633
+    second: FireBall_Outline_19
+  - first:
+      213: -2662119598865612635
+    second: FireBall_Outline_20
+  - first:
+      213: -7922072144374761268
+    second: FireBall_Outline_21
+  - first:
+      213: 9077996889508052146
+    second: FireBall_Outline_22
+  - first:
+      213: 118412039947523711
+    second: FireBall_Outline_23
+  - first:
+      213: 3568125863456137434
+    second: FireBall_Outline_24
+  - first:
+      213: -144441705363319697
+    second: FireBall_Outline_25
+  - first:
+      213: 2010951685116415102
+    second: FireBall_Outline_26
+  - first:
+      213: 472741588116855458
+    second: FireBall_Outline_27
+  - first:
+      213: 4330017178342985142
+    second: FireBall_Outline_28
+  - first:
+      213: 7068623008242209131
+    second: FireBall_Outline_29
+  - first:
+      213: 8208502039446018892
+    second: FireBall_Outline_30
+  - first:
+      213: 3873681792853979736
+    second: FireBall_Outline_31
+  - first:
+      213: -5380156422247136281
+    second: FireBall_Outline_32
+  - first:
+      213: 3398750689539463986
+    second: FireBall_Outline_33
+  - first:
+      213: 8176741438130689958
+    second: FireBall_Outline_34
+  - first:
+      213: -4603735505381057204
+    second: FireBall_Outline_35
+  - first:
+      213: -6401988511027628547
+    second: FireBall_Outline_36
+  - first:
+      213: -6964578148006100866
+    second: FireBall_Outline_37
+  - first:
+      213: 8777169706537464774
+    second: FireBall_Outline_38
+  - first:
+      213: -3717465905421243565
+    second: FireBall_Outline_39
+  - first:
+      213: 4096635151382632547
+    second: FireBall_Outline_40
+  - first:
+      213: 7883235674385235234
+    second: FireBall_Outline_41
+  - first:
+      213: -6513269722995351005
+    second: FireBall_Outline_42
+  - first:
+      213: 214304315090664343
+    second: FireBall_Outline_43
+  - first:
+      213: -2354050801305856618
+    second: FireBall_Outline_44
+  - first:
+      213: 2636412264254992049
+    second: FireBall_Outline_45
+  - first:
+      213: -7518840043599068870
+    second: FireBall_Outline_46
+  - first:
+      213: -3320769086270042338
+    second: FireBall_Outline_47
+  - first:
+      213: -8342275898695352908
+    second: FireBall_Outline_48
+  - first:
+      213: -2979739833068541366
+    second: FireBall_Outline_49
+  - first:
+      213: -613073703665954330
+    second: FireBall_Outline_50
+  - first:
+      213: -6557107798570766447
+    second: FireBall_Outline_51
+  - first:
+      213: 6591223513908583946
+    second: FireBall_Outline_52
+  - first:
+      213: -104682555570480218
+    second: FireBall_Outline_53
+  - first:
+      213: 7920855233209573720
+    second: FireBall_Outline_54
+  - first:
+      213: 4823987745172923200
+    second: FireBall_Outline_55
+  - first:
+      213: -1804614178082450910
+    second: FireBall_Outline_56
+  - first:
+      213: 5047010861314648759
+    second: FireBall_Outline_57
+  - first:
+      213: 4764827093112875433
+    second: FireBall_Outline_58
+  - first:
+      213: -2309009125276213275
+    second: FireBall_Outline_59
+  - first:
+      213: 2069303128151532968
+    second: FireBall_Outline_60
+  - first:
+      213: -6606043276109286979
+    second: FireBall_Outline_61
+  - first:
+      213: -1009569568328146831
+    second: FireBall_Outline_62
+  - first:
+      213: -4519384583807246508
+    second: FireBall_Outline_63
+  - first:
+      213: 5007061658897219864
+    second: FireBall_Outline_64
+  - first:
+      213: -3132753205885021451
+    second: FireBall_Outline_65
+  - first:
+      213: 462843236730250064
+    second: FireBall_Outline_66
+  - first:
+      213: -7244802487327575649
+    second: FireBall_Outline_67
+  - first:
+      213: -5675638448879107518
+    second: FireBall_Outline_68
+  - first:
+      213: -1921234728362946598
+    second: FireBall_Outline_69
+  - first:
+      213: -3809386464989749497
+    second: FireBall_Outline_70
+  - first:
+      213: -8407400159624676691
+    second: FireBall_Outline_71
+  - first:
+      213: -6658036288413252917
+    second: FireBall_Outline_72
+  - first:
+      213: -5959550574599299920
+    second: FireBall_Outline_73
+  - first:
+      213: -1239001991470744822
+    second: FireBall_Outline_74
+  - first:
+      213: 5699518716408283714
+    second: FireBall_Outline_75
+  - first:
+      213: -8631950732631191343
+    second: FireBall_Outline_76
+  - first:
+      213: 4594561080880853592
+    second: FireBall_Outline_77
+  - first:
+      213: -2780726958868197612
+    second: FireBall_Outline_78
+  - first:
+      213: -306574733752038235
+    second: FireBall_Outline_79
+  - first:
+      213: -4839875377286540195
+    second: FireBall_Outline_80
+  - first:
+      213: -709554419159970566
+    second: FireBall_Outline_81
+  - first:
+      213: -5739399365246707524
+    second: FireBall_Outline_82
+  - first:
+      213: -7465376976236656615
+    second: FireBall_Outline_83
+  - first:
+      213: -4401052221324007963
+    second: FireBall_Outline_84
+  - first:
+      213: 2651229288231857114
+    second: FireBall_Outline_85
+  - first:
+      213: -3515099138476137905
+    second: FireBall_Outline_86
+  - first:
+      213: -8054378150214954718
+    second: FireBall_Outline_87
+  - first:
+      213: -1353955390580153858
+    second: FireBall_Outline_88
+  - first:
+      213: -4535446882576205564
+    second: FireBall_Outline_89
+  - first:
+      213: -6458150975990417481
+    second: FireBall_Outline_90
+  - first:
+      213: -3309748853544081976
+    second: FireBall_Outline_91
+  - first:
+      213: 4004629051666169430
+    second: FireBall_Outline_92
+  - first:
+      213: 4035377612789611107
+    second: FireBall_Outline_93
+  - first:
+      213: -5352040256729287484
+    second: FireBall_Outline_94
+  - first:
+      213: 589213595455804545
+    second: FireBall_Outline_95
+  - first:
+      213: 1512696678595932253
+    second: FireBall_Outline_96
+  - first:
+      213: 397254121422796591
+    second: FireBall_Outline_97
+  - first:
+      213: 1862498590381762777
+    second: FireBall_Outline_98
+  - first:
+      213: -1722361215705924704
+    second: FireBall_Outline_99
+  - first:
+      213: 1665242224785991344
+    second: FireBall_Outline_100
+  - first:
+      213: -4445273888658017399
+    second: FireBall_Outline_101
+  - first:
+      213: 9042644882062074708
+    second: FireBall_Outline_102
+  - first:
+      213: 5039275577042240358
+    second: FireBall_Outline_103
+  - first:
+      213: -6653866943314567148
+    second: FireBall_Outline_104
+  - first:
+      213: 7085152316375327762
+    second: FireBall_Outline_105
+  - first:
+      213: 7784297101650251175
+    second: FireBall_Outline_106
+  - first:
+      213: 1584172038998401746
+    second: FireBall_Outline_107
+  - first:
+      213: 7323922017131001630
+    second: FireBall_Outline_108
+  - first:
+      213: 86163961222129962
+    second: FireBall_Outline_109
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FireBall_Outline_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 129afe19d378efbf0800000000000000
+      internalID: -288644627593975519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4a6eb15248373060800000000000000
+      internalID: 6933072008850598478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_2
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 690985111b44e4420800000000000000
+      internalID: 2616103960839753878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7164a33be8e08e530800000000000000
+      internalID: 3884370684662138391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_4
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10c501dfc4a06bf90800000000000000
+      internalID: -6938346850138170367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_5
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5e50b1b64226ebf0800000000000000
+      internalID: -295511038522007969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_6
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccde6059ce4a8c310800000000000000
+      internalID: 1425570618082258380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_7
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc59b8eda411aa3a0800000000000000
+      internalID: -6653486486227544627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_8
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 186e41b90f7d60980800000000000000
+      internalID: -8572927412259199359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_9
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 603
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c72cc94ae3341e230800000000000000
+      internalID: 3666285507985064572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3010e5eede7eeaf0800000000000000
+      internalID: -365215023965925313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_11
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1b0fd2e748ee7c40800000000000000
+      internalID: 5512098389394656029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_12
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ec08febbca886910800000000000000
+      internalID: 1830865856213028070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_13
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 707a4b005bdd09ab0800000000000000
+      internalID: -5003255416537962745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_14
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9db1120255bae840800000000000000
+      internalID: 5254211279107767707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_15
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f79a40f432c4c6490800000000000000
+      internalID: -7751737144078194305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_16
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5efdab69283addb00800000000000000
+      internalID: 855019285540167653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_17
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e20a7e30fbc355f0800000000000000
+      internalID: -769046878649449759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_18
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df48dd0e73e96cb80800000000000000
+      internalID: -8374832494215854851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_19
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 536
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1862c97d0fd4a8910800000000000000
+      internalID: 1840369094539093633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a0820054504e0bd0800000000000000
+      internalID: -2662119598865612635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_21
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc8768d8b552f0290800000000000000
+      internalID: -7922072144374761268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_22
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bc7a3fd2168bfd70800000000000000
+      internalID: 9077996889508052146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_23
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f76933a7f1fa4a100800000000000000
+      internalID: 118412039947523711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_24
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad0ef2d6197848130800000000000000
+      internalID: 3568125863456137434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_25
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f645115c807defdf0800000000000000
+      internalID: -144441705363319697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_26
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7c46d337e558eb10800000000000000
+      internalID: 2010951685116415102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_27
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2aa524e38f38f8600800000000000000
+      internalID: 472741588116855458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_28
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bd097aaeaf471c30800000000000000
+      internalID: 4330017178342985142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_29
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b611e61cc2bc81260800000000000000
+      internalID: 7068623008242209131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4bdf374d157ae170800000000000000
+      internalID: 8208502039446018892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_31
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 852b5f3211512c530800000000000000
+      internalID: 3873681792853979736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_32
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e34cef3d38d555b0800000000000000
+      internalID: -5380156422247136281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_33
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23b1d1aaeb9ca2f20800000000000000
+      internalID: 3398750689539463986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_34
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a71ff7040f997170800000000000000
+      internalID: 8176741438130689958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_35
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4d98e113fe3c10c0800000000000000
+      internalID: -4603735505381057204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_36
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df5f0105e519727a0800000000000000
+      internalID: -6401988511027628547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_37
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7006a50319d85f90800000000000000
+      internalID: -6964578148006100866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_38
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c33c7b3855cec970800000000000000
+      internalID: 8777169706537464774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_39
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35badba7478e86cc0800000000000000
+      internalID: -3717465905421243565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3685a8c17fb2ad830800000000000000
+      internalID: 4096635151382632547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_41
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22d3b642411e66d60800000000000000
+      internalID: 7883235674385235234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_42
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3222e8a12b73c95a0800000000000000
+      internalID: -6513269722995351005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_43
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79bffce93ac59f200800000000000000
+      internalID: 214304315090664343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_44
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 695d0fcb44bb45fd0800000000000000
+      internalID: -2354050801305856618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_45
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bee66c6cfa669420800000000000000
+      internalID: 2636412264254992049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_46
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a318b4e11d6b7a790800000000000000
+      internalID: -7518840043599068870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_47
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1f86c73c124ae1d0800000000000000
+      internalID: -3320769086270042338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_48
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bdf5f7f4484a3c80800000000000000
+      internalID: -8342275898695352908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_49
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4a2edeb866d5a6d0800000000000000
+      internalID: -2979739833068541366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_50
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e19bd7f6bced77f0800000000000000
+      internalID: -613073703665954330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_51
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19fee30c2397005a0800000000000000
+      internalID: -6557107798570766447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_52
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e19b53ddab87b50800000000000000
+      internalID: 6591223513908583946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_53
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ab9a0535c71c8ef0800000000000000
+      internalID: -104682555570480218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_54
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85120cc3ed78ced60800000000000000
+      internalID: 7920855233209573720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_55
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 043aedfab4f32f240800000000000000
+      internalID: 4823987745172923200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_56
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22213ce57f8b4f6e0800000000000000
+      internalID: -1804614178082450910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_57
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7baa23e53a59a0640800000000000000
+      internalID: 5047010861314648759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_58
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a9662dfef0102240800000000000000
+      internalID: 4764827093112875433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_59
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ef96c82f60c4ffd0800000000000000
+      internalID: -2309009125276213275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a5a31e3b34a7bc10800000000000000
+      internalID: 2069303128151532968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_61
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db1f5a404ae9254a0800000000000000
+      internalID: -6606043276109286979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_62
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 170a1c793d94df1f0800000000000000
+      internalID: -1009569568328146831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_63
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45fdace6aabe741c0800000000000000
+      internalID: -4519384583807246508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_64
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8110c0bdc08ac7540800000000000000
+      internalID: 5007061658897219864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_65
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f2d14aae893684d0800000000000000
+      internalID: -3132753205885021451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_66
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 053aff7b8795c6600800000000000000
+      internalID: 462843236730250064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_67
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9139fab58a457b90800000000000000
+      internalID: -7244802487327575649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_68
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 242030dc6e41c31b0800000000000000
+      internalID: -5675638448879107518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_69
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adf48c591376655e0800000000000000
+      internalID: -1921234728362946598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_70
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70fda1e6137522bc0800000000000000
+      internalID: -3809386464989749497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_71
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daa3201691ae25b80800000000000000
+      internalID: -8407400159624676691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_72
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc2c77f7547e993a0800000000000000
+      internalID: -6658036288413252917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_73
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc9804d35c6b4da0800000000000000
+      internalID: -5959550574599299920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_74
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0b7266d04e2ecee0800000000000000
+      internalID: -1239001991470744822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_75
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 242c4324312c81f40800000000000000
+      internalID: 5699518716408283714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_76
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d058deea86253880800000000000000
+      internalID: -8631950732631191343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_77
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 852fcb4c5f823cf30800000000000000
+      internalID: 4594561080880853592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_78
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41f0f47509fd869d0800000000000000
+      internalID: -2780726958868197612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_79
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ac899967e3debbf0800000000000000
+      internalID: -306574733752038235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_80
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d541da3bcfe45dcb0800000000000000
+      internalID: -4839875377286540195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_81
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afc4921e3082726f0800000000000000
+      internalID: -709554419159970566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_82
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb81e5a9fae8950b0800000000000000
+      internalID: -5739399365246707524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_83
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 918c8018137a56890800000000000000
+      internalID: -7465376976236656615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_84
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e5e90e82525ce2c0800000000000000
+      internalID: -4401052221324007963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_85
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adbeb27adfe0bc420800000000000000
+      internalID: 2651229288231857114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_86
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4229d415fbd73fc0800000000000000
+      internalID: -3515099138476137905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_87
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22115cd0fb9193090800000000000000
+      internalID: -8054378150214954718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_88
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef1aebeeeb8c53de0800000000000000
+      internalID: -1353955390580153858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireBall_Outline_89
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4097462171bde01c0800000000000000
+      internalID: -4535446882576205564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 9ae1d61b64dbf4a4090737773a33cc0a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      FireBall_Outline_0: -288644627593975519
+      FireBall_Outline_1: 6933072008850598478
+      FireBall_Outline_10: -365215023965925313
+      FireBall_Outline_11: 5512098389394656029
+      FireBall_Outline_12: 1830865856213028070
+      FireBall_Outline_13: -5003255416537962745
+      FireBall_Outline_14: 5254211279107767707
+      FireBall_Outline_15: -7751737144078194305
+      FireBall_Outline_16: 855019285540167653
+      FireBall_Outline_17: -769046878649449759
+      FireBall_Outline_18: -8374832494215854851
+      FireBall_Outline_19: 1840369094539093633
+      FireBall_Outline_2: 2616103960839753878
+      FireBall_Outline_20: -2662119598865612635
+      FireBall_Outline_21: -7922072144374761268
+      FireBall_Outline_22: 9077996889508052146
+      FireBall_Outline_23: 118412039947523711
+      FireBall_Outline_24: 3568125863456137434
+      FireBall_Outline_25: -144441705363319697
+      FireBall_Outline_26: 2010951685116415102
+      FireBall_Outline_27: 472741588116855458
+      FireBall_Outline_28: 4330017178342985142
+      FireBall_Outline_29: 7068623008242209131
+      FireBall_Outline_3: 3884370684662138391
+      FireBall_Outline_30: 8208502039446018892
+      FireBall_Outline_31: 3873681792853979736
+      FireBall_Outline_32: -5380156422247136281
+      FireBall_Outline_33: 3398750689539463986
+      FireBall_Outline_34: 8176741438130689958
+      FireBall_Outline_35: -4603735505381057204
+      FireBall_Outline_36: -6401988511027628547
+      FireBall_Outline_37: -6964578148006100866
+      FireBall_Outline_38: 8777169706537464774
+      FireBall_Outline_39: -3717465905421243565
+      FireBall_Outline_4: -6938346850138170367
+      FireBall_Outline_40: 4096635151382632547
+      FireBall_Outline_41: 7883235674385235234
+      FireBall_Outline_42: -6513269722995351005
+      FireBall_Outline_43: 214304315090664343
+      FireBall_Outline_44: -2354050801305856618
+      FireBall_Outline_45: 2636412264254992049
+      FireBall_Outline_46: -7518840043599068870
+      FireBall_Outline_47: -3320769086270042338
+      FireBall_Outline_48: -8342275898695352908
+      FireBall_Outline_49: -2979739833068541366
+      FireBall_Outline_5: -295511038522007969
+      FireBall_Outline_50: -613073703665954330
+      FireBall_Outline_51: -6557107798570766447
+      FireBall_Outline_52: 6591223513908583946
+      FireBall_Outline_53: -104682555570480218
+      FireBall_Outline_54: 7920855233209573720
+      FireBall_Outline_55: 4823987745172923200
+      FireBall_Outline_56: -1804614178082450910
+      FireBall_Outline_57: 5047010861314648759
+      FireBall_Outline_58: 4764827093112875433
+      FireBall_Outline_59: -2309009125276213275
+      FireBall_Outline_6: 1425570618082258380
+      FireBall_Outline_60: 2069303128151532968
+      FireBall_Outline_61: -6606043276109286979
+      FireBall_Outline_62: -1009569568328146831
+      FireBall_Outline_63: -4519384583807246508
+      FireBall_Outline_64: 5007061658897219864
+      FireBall_Outline_65: -3132753205885021451
+      FireBall_Outline_66: 462843236730250064
+      FireBall_Outline_67: -7244802487327575649
+      FireBall_Outline_68: -5675638448879107518
+      FireBall_Outline_69: -1921234728362946598
+      FireBall_Outline_7: -6653486486227544627
+      FireBall_Outline_70: -3809386464989749497
+      FireBall_Outline_71: -8407400159624676691
+      FireBall_Outline_72: -6658036288413252917
+      FireBall_Outline_73: -5959550574599299920
+      FireBall_Outline_74: -1239001991470744822
+      FireBall_Outline_75: 5699518716408283714
+      FireBall_Outline_76: -8631950732631191343
+      FireBall_Outline_77: 4594561080880853592
+      FireBall_Outline_78: -2780726958868197612
+      FireBall_Outline_79: -306574733752038235
+      FireBall_Outline_8: -8572927412259199359
+      FireBall_Outline_80: -4839875377286540195
+      FireBall_Outline_81: -709554419159970566
+      FireBall_Outline_82: -5739399365246707524
+      FireBall_Outline_83: -7465376976236656615
+      FireBall_Outline_84: -4401052221324007963
+      FireBall_Outline_85: 2651229288231857114
+      FireBall_Outline_86: -3515099138476137905
+      FireBall_Outline_87: -8054378150214954718
+      FireBall_Outline_88: -1353955390580153858
+      FireBall_Outline_89: -4535446882576205564
+      FireBall_Outline_9: 3666285507985064572
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

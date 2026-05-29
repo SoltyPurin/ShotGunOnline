@@ -1,0 +1,1612 @@
+fileFormatVersion: 2
+guid: 1a62d0e644eff0547b377e17c938b2b6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2196400984602838852
+    second: Ult_Charge_ScaleUP_0
+  - first:
+      213: 6344766453932942055
+    second: Ult_Charge_ScaleUP_1
+  - first:
+      213: -7257650282753581733
+    second: Ult_Charge_ScaleUP_2
+  - first:
+      213: -8974781986730350014
+    second: Ult_Charge_ScaleUP_3
+  - first:
+      213: -5666518331666044072
+    second: Ult_Charge_ScaleUP_4
+  - first:
+      213: -2037861628870195114
+    second: Ult_Charge_ScaleUP_5
+  - first:
+      213: -2531194315893363599
+    second: Ult_Charge_ScaleUP_6
+  - first:
+      213: 2230911762617431477
+    second: Ult_Charge_ScaleUP_7
+  - first:
+      213: -8439319792895032746
+    second: Ult_Charge_ScaleUP_8
+  - first:
+      213: 8195073154302284244
+    second: Ult_Charge_ScaleUP_9
+  - first:
+      213: 7789691447533491217
+    second: Ult_Charge_ScaleUP_10
+  - first:
+      213: -8109785319375370204
+    second: Ult_Charge_ScaleUP_11
+  - first:
+      213: 4957598810028014034
+    second: Ult_Charge_ScaleUP_12
+  - first:
+      213: -2907532487008770005
+    second: Ult_Charge_ScaleUP_13
+  - first:
+      213: -8716592453891025937
+    second: Ult_Charge_ScaleUP_14
+  - first:
+      213: -8596450960689459362
+    second: Ult_Charge_ScaleUP_15
+  - first:
+      213: -2204002354943102065
+    second: Ult_Charge_ScaleUP_16
+  - first:
+      213: -5777686688221366585
+    second: Ult_Charge_ScaleUP_17
+  - first:
+      213: -4217072268742731791
+    second: Ult_Charge_ScaleUP_18
+  - first:
+      213: 824774078970846039
+    second: Ult_Charge_ScaleUP_19
+  - first:
+      213: 5600847283035339444
+    second: Ult_Charge_ScaleUP_20
+  - first:
+      213: -6314741702213827900
+    second: Ult_Charge_ScaleUP_21
+  - first:
+      213: 2406906887324054541
+    second: Ult_Charge_ScaleUP_22
+  - first:
+      213: 7549688257812220279
+    second: Ult_Charge_ScaleUP_23
+  - first:
+      213: -7952016025582892968
+    second: Ult_Charge_ScaleUP_24
+  - first:
+      213: 4161867945680833087
+    second: Ult_Charge_ScaleUP_25
+  - first:
+      213: -1045807860245075146
+    second: Ult_Charge_ScaleUP_26
+  - first:
+      213: -8343857080056282992
+    second: Ult_Charge_ScaleUP_27
+  - first:
+      213: -4397530730104599399
+    second: Ult_Charge_ScaleUP_28
+  - first:
+      213: -3517322091275968703
+    second: Ult_Charge_ScaleUP_29
+  - first:
+      213: 7979769197368597546
+    second: Ult_Charge_ScaleUP_30
+  - first:
+      213: 5190888667874761421
+    second: Ult_Charge_ScaleUP_31
+  - first:
+      213: 6196517179987754053
+    second: Ult_Charge_ScaleUP_32
+  - first:
+      213: -4958862974900287136
+    second: Ult_Charge_ScaleUP_33
+  - first:
+      213: -4369956661035538461
+    second: Ult_Charge_ScaleUP_34
+  - first:
+      213: 5844762778923422651
+    second: Ult_Charge_ScaleUP_35
+  - first:
+      213: -8033636928828022827
+    second: Ult_Charge_ScaleUP_36
+  - first:
+      213: 7084937326246350624
+    second: Ult_Charge_ScaleUP_37
+  - first:
+      213: -2645048117538153632
+    second: Ult_Charge_ScaleUP_38
+  - first:
+      213: -1228540807247952587
+    second: Ult_Charge_ScaleUP_39
+  - first:
+      213: -2919505601981293617
+    second: Ult_Charge_ScaleUP_40
+  - first:
+      213: 4461461954305402879
+    second: Ult_Charge_ScaleUP_41
+  - first:
+      213: 6696104101460144590
+    second: Ult_Charge_ScaleUP_42
+  - first:
+      213: -4968654259851642053
+    second: Ult_Charge_ScaleUP_43
+  - first:
+      213: 2349455597042585959
+    second: Ult_Charge_ScaleUP_44
+  - first:
+      213: 1051731001752937515
+    second: Ult_Charge_ScaleUP_45
+  - first:
+      213: -4034418060409239913
+    second: Ult_Charge_ScaleUP_46
+  - first:
+      213: -57358070876110377
+    second: Ult_Charge_ScaleUP_47
+  - first:
+      213: 75627024147353532
+    second: Ult_Charge_ScaleUP_48
+  - first:
+      213: 8696335287277764096
+    second: Ult_Charge_ScaleUP_49
+  - first:
+      213: -5191669325758031112
+    second: Ult_Charge_ScaleUP_50
+  - first:
+      213: -6258277477073659374
+    second: Ult_Charge_ScaleUP_51
+  - first:
+      213: 2472062551998776079
+    second: Ult_Charge_ScaleUP_52
+  - first:
+      213: 1857529630633973493
+    second: Ult_Charge_ScaleUP_53
+  - first:
+      213: 7673730470214680913
+    second: Ult_Charge_ScaleUP_54
+  - first:
+      213: -8398848085546544108
+    second: Ult_Charge_ScaleUP_55
+  - first:
+      213: -1491539839470873745
+    second: Ult_Charge_ScaleUP_56
+  - first:
+      213: -994081296518897215
+    second: Ult_Charge_ScaleUP_57
+  - first:
+      213: 3277465452987313949
+    second: Ult_Charge_ScaleUP_58
+  - first:
+      213: 2403355977476655357
+    second: Ult_Charge_ScaleUP_59
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb8fd6801f0d481e0800000000000000
+      internalID: -2196400984602838852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e2ec7d49732d0850800000000000000
+      internalID: 6344766453932942055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_2
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5d95704585a74b90800000000000000
+      internalID: -7257650282753581733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24aec50655b237380800000000000000
+      internalID: -8974781986730350014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_4
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85b6ecf899b7c51b0800000000000000
+      internalID: -5666518331666044072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_5
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6580bc545af08b3e0800000000000000
+      internalID: -2037861628870195114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_6
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17c20b73e246fdcd0800000000000000
+      internalID: -2531194315893363599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_7
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 469
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b57d00ad6ac5fe10800000000000000
+      internalID: 2230911762617431477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 652819e9c5381ea80800000000000000
+      internalID: -8439319792895032746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_9
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d1178e4d9fbab170800000000000000
+      internalID: 8195073154302284244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_10
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 114d128991b8a1c60800000000000000
+      internalID: 7789691447533491217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_11
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42804f13831447f80800000000000000
+      internalID: -8109785319375370204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_12
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d97e9ae9ddecc440800000000000000
+      internalID: 4957598810028014034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_13
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b282fea9b9e56a7d0800000000000000
+      internalID: -2907532487008770005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_14
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe399fd7851780780800000000000000
+      internalID: -8716592453891025937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_15
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 402
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5f0a0fa56543b880800000000000000
+      internalID: -8596450960689459362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f83fd75198fc961e0800000000000000
+      internalID: -2204002354943102065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_17
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c6ff0d819881dfa0800000000000000
+      internalID: -5777686688221366585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_18
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f750755d13f975c0800000000000000
+      internalID: -4217072268742731791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_19
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75bd10da7af227b00800000000000000
+      internalID: 824774078970846039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_20
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ba788aede43abd40800000000000000
+      internalID: 5600847283035339444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_21
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c20337f0e78d58a0800000000000000
+      internalID: -6314741702213827900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_22
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d04346acf0d076120800000000000000
+      internalID: 2406906887324054541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_23
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 335
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 779c5d37871e5c860800000000000000
+      internalID: 7549688257812220279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8580bea6e83c4a190800000000000000
+      internalID: -7952016025582892968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_25
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3a046898dce1c930800000000000000
+      internalID: 4161867945680833087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_26
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63be7c2ca4b8c71f0800000000000000
+      internalID: -1045807860245075146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_27
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0900e9e713aa43c80800000000000000
+      internalID: -8343857080056282992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_28
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99c404f9915d8f2c0800000000000000
+      internalID: -4397530730104599399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_29
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14f9cdc8136ff2fc0800000000000000
+      internalID: -3517322091275968703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_30
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2c52ce6ec5ddbe60800000000000000
+      internalID: 7979769197368597546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_31
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 268
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dca964dadbdb90840800000000000000
+      internalID: 5190888667874761421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54c76cd6b837ef550800000000000000
+      internalID: 6196517179987754053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_33
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0694b33c5649e2bb0800000000000000
+      internalID: -4958862974900287136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_34
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e7ef1fd19bca53c0800000000000000
+      internalID: -4369956661035538461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_35
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb3d722d7c4cc1150800000000000000
+      internalID: 5844762778923422651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_36
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dfdebaf6c9c28090800000000000000
+      internalID: -8033636928828022827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_37
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02fc1dae5f0c25260800000000000000
+      internalID: 7084937326246350624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_38
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06b925c40c6ea4bd0800000000000000
+      internalID: -2645048117538153632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_39
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 201
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5350ae715a853fee0800000000000000
+      internalID: -1228540807247952587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcb542a8f15db77d0800000000000000
+      internalID: -2919505601981293617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_41
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff72b45720c4aed30800000000000000
+      internalID: 4461461954305402879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_42
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec1719ae3375dec50800000000000000
+      internalID: 6696104101460144590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_43
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3bbfc5964bcb0bb0800000000000000
+      internalID: -4968654259851642053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_44
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 761d645ea61fa9020800000000000000
+      internalID: 2349455597042585959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_45
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b24efb616cf789e00800000000000000
+      internalID: 1051731001752937515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_46
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79603e9362ed208c0800000000000000
+      internalID: -4034418060409239913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_47
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 134
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d18d607329343ff0800000000000000
+      internalID: -57358070876110377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbf09b5b06eac0100800000000000000
+      internalID: 75627024147353532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_49
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00eb2ed5ed69fa870800000000000000
+      internalID: 8696335287277764096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_50
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fa96ee314c73f7b0800000000000000
+      internalID: -5191669325758031112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_51
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21a5239dac12629a0800000000000000
+      internalID: -6258277477073659374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_52
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f03ce622bc78e4220800000000000000
+      internalID: 2472062551998776079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_53
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f653b18b5547c910800000000000000
+      internalID: 1857529630633973493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_54
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 151cc3b94319e7a60800000000000000
+      internalID: 7673730470214680913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_55
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 67
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 414578a4a2c417b80800000000000000
+      internalID: -8398848085546544108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f63def32b6cfc4be0800000000000000
+      internalID: -1491539839470873745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_57
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c1a123e3505432f0800000000000000
+      internalID: -994081296518897215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_58
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1f6ce8f675eb7d20800000000000000
+      internalID: 3277465452987313949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ult_Charge_ScaleUP_59
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 0
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df8ce4a278f6a5120800000000000000
+      internalID: 2403355977476655357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Ult_Charge_ScaleUP_0: -2196400984602838852
+      Ult_Charge_ScaleUP_1: 6344766453932942055
+      Ult_Charge_ScaleUP_10: 7789691447533491217
+      Ult_Charge_ScaleUP_11: -8109785319375370204
+      Ult_Charge_ScaleUP_12: 4957598810028014034
+      Ult_Charge_ScaleUP_13: -2907532487008770005
+      Ult_Charge_ScaleUP_14: -8716592453891025937
+      Ult_Charge_ScaleUP_15: -8596450960689459362
+      Ult_Charge_ScaleUP_16: -2204002354943102065
+      Ult_Charge_ScaleUP_17: -5777686688221366585
+      Ult_Charge_ScaleUP_18: -4217072268742731791
+      Ult_Charge_ScaleUP_19: 824774078970846039
+      Ult_Charge_ScaleUP_2: -7257650282753581733
+      Ult_Charge_ScaleUP_20: 5600847283035339444
+      Ult_Charge_ScaleUP_21: -6314741702213827900
+      Ult_Charge_ScaleUP_22: 2406906887324054541
+      Ult_Charge_ScaleUP_23: 7549688257812220279
+      Ult_Charge_ScaleUP_24: -7952016025582892968
+      Ult_Charge_ScaleUP_25: 4161867945680833087
+      Ult_Charge_ScaleUP_26: -1045807860245075146
+      Ult_Charge_ScaleUP_27: -8343857080056282992
+      Ult_Charge_ScaleUP_28: -4397530730104599399
+      Ult_Charge_ScaleUP_29: -3517322091275968703
+      Ult_Charge_ScaleUP_3: -8974781986730350014
+      Ult_Charge_ScaleUP_30: 7979769197368597546
+      Ult_Charge_ScaleUP_31: 5190888667874761421
+      Ult_Charge_ScaleUP_32: 6196517179987754053
+      Ult_Charge_ScaleUP_33: -4958862974900287136
+      Ult_Charge_ScaleUP_34: -4369956661035538461
+      Ult_Charge_ScaleUP_35: 5844762778923422651
+      Ult_Charge_ScaleUP_36: -8033636928828022827
+      Ult_Charge_ScaleUP_37: 7084937326246350624
+      Ult_Charge_ScaleUP_38: -2645048117538153632
+      Ult_Charge_ScaleUP_39: -1228540807247952587
+      Ult_Charge_ScaleUP_4: -5666518331666044072
+      Ult_Charge_ScaleUP_40: -2919505601981293617
+      Ult_Charge_ScaleUP_41: 4461461954305402879
+      Ult_Charge_ScaleUP_42: 6696104101460144590
+      Ult_Charge_ScaleUP_43: -4968654259851642053
+      Ult_Charge_ScaleUP_44: 2349455597042585959
+      Ult_Charge_ScaleUP_45: 1051731001752937515
+      Ult_Charge_ScaleUP_46: -4034418060409239913
+      Ult_Charge_ScaleUP_47: -57358070876110377
+      Ult_Charge_ScaleUP_48: 75627024147353532
+      Ult_Charge_ScaleUP_49: 8696335287277764096
+      Ult_Charge_ScaleUP_5: -2037861628870195114
+      Ult_Charge_ScaleUP_50: -5191669325758031112
+      Ult_Charge_ScaleUP_51: -6258277477073659374
+      Ult_Charge_ScaleUP_52: 2472062551998776079
+      Ult_Charge_ScaleUP_53: 1857529630633973493
+      Ult_Charge_ScaleUP_54: 7673730470214680913
+      Ult_Charge_ScaleUP_55: -8398848085546544108
+      Ult_Charge_ScaleUP_56: -1491539839470873745
+      Ult_Charge_ScaleUP_57: -994081296518897215
+      Ult_Charge_ScaleUP_58: 3277465452987313949
+      Ult_Charge_ScaleUP_59: 2403355977476655357
+      Ult_Charge_ScaleUP_6: -2531194315893363599
+      Ult_Charge_ScaleUP_7: 2230911762617431477
+      Ult_Charge_ScaleUP_8: -8439319792895032746
+      Ult_Charge_ScaleUP_9: 8195073154302284244
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

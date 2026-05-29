@@ -1,0 +1,862 @@
+fileFormatVersion: 2
+guid: 787621e13f3693b4e9068c59f1f60d57
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 486502905340344736
+    second: Cosmic Man_0
+  - first:
+      213: 620506889106431542
+    second: Cosmic Man_1
+  - first:
+      213: -6752726658681939547
+    second: Cosmic Man_2
+  - first:
+      213: 1213636555830813983
+    second: Cosmic Man_3
+  - first:
+      213: -848720408960586788
+    second: Cosmic Man_4
+  - first:
+      213: 643952619989072290
+    second: Cosmic Man_5
+  - first:
+      213: 7731136952799333183
+    second: Cosmic Man_6
+  - first:
+      213: 7535537130977107470
+    second: Cosmic Man_7
+  - first:
+      213: -7575177474693058202
+    second: Cosmic Man_8
+  - first:
+      213: 2275291959725853352
+    second: Cosmic Man_9
+  - first:
+      213: 8988136499891432576
+    second: Cosmic Man_10
+  - first:
+      213: -2346029031598835488
+    second: Cosmic Man_11
+  - first:
+      213: 8525112041866083698
+    second: Cosmic Man_12
+  - first:
+      213: -2455741732738375771
+    second: Cosmic Man_13
+  - first:
+      213: 3774541450094413845
+    second: Cosmic Man_14
+  - first:
+      213: -6546129740855498034
+    second: Cosmic Man_15
+  - first:
+      213: 928563538270807721
+    second: Cosmic Man_16
+  - first:
+      213: -7731025850882155881
+    second: Cosmic Man_17
+  - first:
+      213: -4641109738509390440
+    second: Cosmic Man_18
+  - first:
+      213: 8754507875242338895
+    second: Cosmic Man_19
+  - first:
+      213: -6571543442899568019
+    second: Cosmic Man_20
+  - first:
+      213: -2836398951200327590
+    second: Cosmic Man_21
+  - first:
+      213: 8928479365715071005
+    second: Cosmic Man_22
+  - first:
+      213: -230270788635455623
+    second: Cosmic Man_23
+  - first:
+      213: -6796300708070480280
+    second: Cosmic Man_24
+  - first:
+      213: -6823437673065391847
+    second: Cosmic Man_25
+  - first:
+      213: -6256012024862993109
+    second: Cosmic Man_26
+  - first:
+      213: -928668119768882964
+    second: Cosmic Man_27
+  - first:
+      213: 191838212829157760
+    second: Cosmic Man_28
+  - first:
+      213: 7918816567525780010
+    second: Cosmic Man_29
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cosmic Man_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 159
+        width: 9
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a9b10790d760c600800000000000000
+      internalID: 486502905340344736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_1
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 159
+        width: 24
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63e1fd16abb7c9800800000000000000
+      internalID: 620506889106431542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_2
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 159
+        width: 24
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a9d3f3a1ee7942a0800000000000000
+      internalID: -6752726658681939547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_3
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 159
+        width: 24
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1569b47404b7d010800000000000000
+      internalID: 1213636555830813983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 159
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdba746e84db834f0800000000000000
+      internalID: -848720408960586788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 127
+        width: 27
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a971aefe77cfe800800000000000000
+      internalID: 643952619989072290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_6
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 127
+        width: 27
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3b0085e8148a4b60800000000000000
+      internalID: 7731136952799333183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_7
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 95
+        width: 28
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0e18ab781b939860800000000000000
+      internalID: 7535537130977107470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_8
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 127
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6613166c8309fd690800000000000000
+      internalID: -7575177474693058202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_9
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 127
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8aa03cb7bf5739f10800000000000000
+      internalID: 2275291959725853352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_10
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 127
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c60c486864cbc70800000000000000
+      internalID: 8988136499891432576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 95
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e83cca860b317fd0800000000000000
+      internalID: -2346029031598835488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_12
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 95
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27d35ddeb384f4670800000000000000
+      internalID: 8525112041866083698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_13
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 63
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5afd608b7e37bedd0800000000000000
+      internalID: -2455741732738375771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_14
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 95
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5188dd2537dd16430800000000000000
+      internalID: 3774541450094413845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_15
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 95
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eca20befea97725a0800000000000000
+      internalID: -6546129740855498034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 63
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a6e20a4e9be2ec00800000000000000
+      internalID: 928563538270807721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_17
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 63
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79a9ec803f0e5b490800000000000000
+      internalID: -7731025850882155881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_18
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 63
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89daa805847779fb0800000000000000
+      internalID: -4641109738509390440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_19
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 65
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4aed2777824e7970800000000000000
+      internalID: 8754507875242338895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_20
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 43
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6a7ce36e003dc4a0800000000000000
+      internalID: -6571543442899568019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_21
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 36
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a58f9688e2613a8d0800000000000000
+      internalID: -2836398951200327590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_22
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 14
+        width: 24
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d101ad19da458eb70800000000000000
+      internalID: 8928479365715071005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_23
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 39
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97f0c3110f9edccf0800000000000000
+      internalID: -230270788635455623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_24
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 38
+        width: 8
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86629bca380bea1a0800000000000000
+      internalID: -6796300708070480280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_25
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 39
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9195be5a6974e41a0800000000000000
+      internalID: -6823437673065391847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_26
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 38
+        width: 8
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b25187b853e2e29a0800000000000000
+      internalID: -6256012024862993109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_27
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 40
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce022fee345bc13f0800000000000000
+      internalID: -928668119768882964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_28
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 41
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 089170296db89a200800000000000000
+      internalID: 191838212829157760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cosmic Man_29
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 12
+        width: 20
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2a2ad466b945ed60800000000000000
+      internalID: 7918816567525780010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Cosmic Man_0: 486502905340344736
+      Cosmic Man_1: 620506889106431542
+      Cosmic Man_10: 8988136499891432576
+      Cosmic Man_11: -2346029031598835488
+      Cosmic Man_12: 8525112041866083698
+      Cosmic Man_13: -2455741732738375771
+      Cosmic Man_14: 3774541450094413845
+      Cosmic Man_15: -6546129740855498034
+      Cosmic Man_16: 928563538270807721
+      Cosmic Man_17: -7731025850882155881
+      Cosmic Man_18: -4641109738509390440
+      Cosmic Man_19: 8754507875242338895
+      Cosmic Man_2: -6752726658681939547
+      Cosmic Man_20: -6571543442899568019
+      Cosmic Man_21: -2836398951200327590
+      Cosmic Man_22: 8928479365715071005
+      Cosmic Man_23: -230270788635455623
+      Cosmic Man_24: -6796300708070480280
+      Cosmic Man_25: -6823437673065391847
+      Cosmic Man_26: -6256012024862993109
+      Cosmic Man_27: -928668119768882964
+      Cosmic Man_28: 191838212829157760
+      Cosmic Man_29: 7918816567525780010
+      Cosmic Man_3: 1213636555830813983
+      Cosmic Man_4: -848720408960586788
+      Cosmic Man_5: 643952619989072290
+      Cosmic Man_6: 7731136952799333183
+      Cosmic Man_7: 7535537130977107470
+      Cosmic Man_8: -7575177474693058202
+      Cosmic Man_9: 2275291959725853352
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

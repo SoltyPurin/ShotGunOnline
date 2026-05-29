@@ -1,0 +1,945 @@
+fileFormatVersion: 2
+guid: b6b1b13669e4eed44a388f058f7e41d1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7106076898120918540
+    second: BAKUHATSU_0
+  - first:
+      213: -4695069600397024442
+    second: BAKUHATSU_1
+  - first:
+      213: 3197762246091642464
+    second: BAKUHATSU_2
+  - first:
+      213: 6773746732738705633
+    second: BAKUHATSU_3
+  - first:
+      213: -5477077486728846119
+    second: BAKUHATSU_4
+  - first:
+      213: 6322904454230643628
+    second: BAKUHATSU_5
+  - first:
+      213: 2520503559629245236
+    second: BAKUHATSU_6
+  - first:
+      213: 817344667831775244
+    second: BAKUHATSU_7
+  - first:
+      213: -8380378064195969480
+    second: BAKUHATSU_8
+  - first:
+      213: 910728477925291315
+    second: BAKUHATSU_9
+  - first:
+      213: 272387099338975333
+    second: BAKUHATSU_10
+  - first:
+      213: 3250486315350942169
+    second: BAKUHATSU_11
+  - first:
+      213: 2660140660225470656
+    second: BAKUHATSU_12
+  - first:
+      213: -8726321989215522115
+    second: BAKUHATSU_13
+  - first:
+      213: 5857642141349312607
+    second: BAKUHATSU_14
+  - first:
+      213: 2211789428070638703
+    second: BAKUHATSU_15
+  - first:
+      213: 2868218530272317318
+    second: BAKUHATSU_16
+  - first:
+      213: 2706226274877285971
+    second: BAKUHATSU_17
+  - first:
+      213: -6672661788070278834
+    second: BAKUHATSU_18
+  - first:
+      213: 692833270724569106
+    second: BAKUHATSU_19
+  - first:
+      213: -8833443992424179531
+    second: BAKUHATSU_20
+  - first:
+      213: -2105379348592282220
+    second: BAKUHATSU_21
+  - first:
+      213: 4728812865742920394
+    second: BAKUHATSU_22
+  - first:
+      213: 7715531150648904407
+    second: BAKUHATSU_23
+  - first:
+      213: -723840133458407262
+    second: BAKUHATSU_24
+  - first:
+      213: 4477798525020146054
+    second: BAKUHATSU_25
+  - first:
+      213: -8719228204945545816
+    second: BAKUHATSU_26
+  - first:
+      213: 5416325163902810985
+    second: BAKUHATSU_27
+  - first:
+      213: -7238920078771884967
+    second: BAKUHATSU_28
+  - first:
+      213: -3285907142217615425
+    second: BAKUHATSU_29
+  - first:
+      213: 3512157889690737947
+    second: BAKUHATSU_30
+  - first:
+      213: -8109637245244891478
+    second: BAKUHATSU_31
+  - first:
+      213: 7449950681935687048
+    second: BAKUHATSU_32
+  - first:
+      213: -2436404049577319266
+    second: BAKUHATSU_33
+  - first:
+      213: 8537698003879844538
+    second: BAKUHATSU_34
+  - first:
+      213: -1429974162510062804
+    second: BAKUHATSU_35
+  - first:
+      213: 3200830129601381016
+    second: BAKUHATSU_36
+  - first:
+      213: -3986803326823198110
+    second: BAKUHATSU_37
+  - first:
+      213: -8119489244155656093
+    second: BAKUHATSU_38
+  - first:
+      213: -6140712611382839499
+    second: BAKUHATSU_39
+  - first:
+      213: 7009868916472363435
+    second: BAKUHATSU_40
+  - first:
+      213: -310675914647488764
+    second: BAKUHATSU_41
+  - first:
+      213: 5863566091786270384
+    second: BAKUHATSU_42
+  - first:
+      213: 1678846603377845510
+    second: BAKUHATSU_43
+  - first:
+      213: 409279517944142635
+    second: BAKUHATSU_44
+  - first:
+      213: 5249109023965358538
+    second: BAKUHATSU_45
+  - first:
+      213: -1713701014466457719
+    second: BAKUHATSU_46
+  - first:
+      213: -3653805835815436284
+    second: BAKUHATSU_47
+  - first:
+      213: 5217262835964390893
+    second: BAKUHATSU_48
+  - first:
+      213: -1070946584561685473
+    second: BAKUHATSU_49
+  - first:
+      213: 1192871764998504478
+    second: BAKUHATSU_50
+  - first:
+      213: 8060720217913470151
+    second: BAKUHATSU_51
+  - first:
+      213: -8924651860313909176
+    second: BAKUHATSU_52
+  - first:
+      213: 3280263003088590492
+    second: BAKUHATSU_53
+  - first:
+      213: -7288183015954675032
+    second: BAKUHATSU_54
+  - first:
+      213: -6934855057215982780
+    second: BAKUHATSU_55
+  - first:
+      213: 6132564749204439566
+    second: BAKUHATSU_56
+  - first:
+      213: 436918939557970428
+    second: BAKUHATSU_57
+  - first:
+      213: 3688165655802859787
+    second: BAKUHATSU_58
+  - first:
+      213: -7859273053966841102
+    second: BAKUHATSU_59
+  - first:
+      213: -382161703768823254
+    second: BAKUHATSU_60
+  - first:
+      213: -6944992909852225779
+    second: BAKUHATSU_61
+  - first:
+      213: -6045970769924439875
+    second: BAKUHATSU_62
+  - first:
+      213: 3608190550882667321
+    second: BAKUHATSU_63
+  - first:
+      213: 1933505277523640441
+    second: BAKUHATSU_64
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BAKUHATSU_0
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c066b1b0a4bdd9260800000000000000
+      internalID: 7106076898120918540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_1
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 643a990f213c7deb0800000000000000
+      internalID: -4695069600397024442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 500
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 066927202dbb06c20800000000000000
+      internalID: 3197762246091642464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e87a5bb3ce210e50800000000000000
+      internalID: 6773746732738705633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_4
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d4ec3c6b038df3b0800000000000000
+      internalID: -5477077486728846119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_5
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca31727d9187fb750800000000000000
+      internalID: 6322904454230643628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_6
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43b0fce12a0aaf220800000000000000
+      internalID: 2520503559629245236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_7
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c003c2915aac75b00800000000000000
+      internalID: 817344667831775244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_8
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83e9f104d8ae2bb80800000000000000
+      internalID: -8380378064195969480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_9
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 400
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 335b195b9be83ac00800000000000000
+      internalID: 910728477925291315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 568af79af96b7c300800000000000000
+      internalID: 272387099338975333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_11
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d1e2cdf41c0c1d20800000000000000
+      internalID: 3250486315350942169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_12
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c0ff4126d7bae420800000000000000
+      internalID: 2660140660225470656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_13
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db2f0258260e5e680800000000000000
+      internalID: -8726321989215522115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_14
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f58fb701e768a4150800000000000000
+      internalID: 5857642141349312607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_15
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f646d1a24cad1be10800000000000000
+      internalID: 2211789428070638703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_16
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 300
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68f031b8e85fdc720800000000000000
+      internalID: 2868218530272317318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 356a3e375727e8520800000000000000
+      internalID: 2706226274877285971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_18
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e498fbff471f563a0800000000000000
+      internalID: -6672661788070278834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_19
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2182c1e50307d9900800000000000000
+      internalID: 692833270724569106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_20
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b89f309d7d496580800000000000000
+      internalID: -8833443992424179531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_21
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 495b6b123a038c2e0800000000000000
+      internalID: -2105379348592282220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_22
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aca57ef3f3e10a140800000000000000
+      internalID: 4728812865742920394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_23
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 200
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7da83efe3b2131b60800000000000000
+      internalID: 7715531150648904407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a05a03db3764f5f0800000000000000
+      internalID: -723840133458407262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_25
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 689089bb806542e30800000000000000
+      internalID: 4477798525020146054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_26
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a567a0e4241ff680800000000000000
+      internalID: -8719228204945545816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_27
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96bbf662a07aa2b40800000000000000
+      internalID: 5416325163902810985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BAKUHATSU_28
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95ceb53ba803a8b90800000000000000
+      internalID: -7238920078771884967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: fdf1f15089395a4418e836d6290570a7
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      BAKUHATSU_0: 7106076898120918540
+      BAKUHATSU_1: -4695069600397024442
+      BAKUHATSU_10: 272387099338975333
+      BAKUHATSU_11: 3250486315350942169
+      BAKUHATSU_12: 2660140660225470656
+      BAKUHATSU_13: -8726321989215522115
+      BAKUHATSU_14: 5857642141349312607
+      BAKUHATSU_15: 2211789428070638703
+      BAKUHATSU_16: 2868218530272317318
+      BAKUHATSU_17: 2706226274877285971
+      BAKUHATSU_18: -6672661788070278834
+      BAKUHATSU_19: 692833270724569106
+      BAKUHATSU_2: 3197762246091642464
+      BAKUHATSU_20: -8833443992424179531
+      BAKUHATSU_21: -2105379348592282220
+      BAKUHATSU_22: 4728812865742920394
+      BAKUHATSU_23: 7715531150648904407
+      BAKUHATSU_24: -723840133458407262
+      BAKUHATSU_25: 4477798525020146054
+      BAKUHATSU_26: -8719228204945545816
+      BAKUHATSU_27: 5416325163902810985
+      BAKUHATSU_28: -7238920078771884967
+      BAKUHATSU_3: 6773746732738705633
+      BAKUHATSU_4: -5477077486728846119
+      BAKUHATSU_5: 6322904454230643628
+      BAKUHATSU_6: 2520503559629245236
+      BAKUHATSU_7: 817344667831775244
+      BAKUHATSU_8: -8380378064195969480
+      BAKUHATSU_9: 910728477925291315
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

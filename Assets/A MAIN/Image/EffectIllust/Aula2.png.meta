@@ -1,0 +1,365 @@
+fileFormatVersion: 2
+guid: 083b7d0c8433f17458b09baef0f4ebf0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7216313495267317170
+    second: PNG3_0
+  - first:
+      213: -6708602655724628259
+    second: PNG3_1
+  - first:
+      213: 643712529535933028
+    second: PNG3_2
+  - first:
+      213: -1896621909520421344
+    second: PNG3_3
+  - first:
+      213: -3354621313741968885
+    second: PNG3_4
+  - first:
+      213: 4087008040196767545
+    second: PNG3_5
+  - first:
+      213: -5570851216057373043
+    second: PNG3_6
+  - first:
+      213: 5128471764489693683
+    second: PNG3_7
+  - first:
+      213: -3168717251088729556
+    second: PNG3_8
+  - first:
+      213: -8021684025445609208
+    second: PNG3_9
+  - first:
+      213: -2940697150071233404
+    second: PNG3_10
+  - first:
+      213: -645974274041862195
+    second: PNG3_11
+  - first:
+      213: -6661602944152353330
+    second: PNG3_12
+  - first:
+      213: -840798227507480121
+    second: PNG3_13
+  - first:
+      213: 8780576555528959060
+    second: PNG3_14
+  - first:
+      213: -6205522850829892403
+    second: PNG3_15
+  - first:
+      213: 1542698936123956836
+    second: PNG3_16
+  - first:
+      213: -3739360654425160194
+    second: PNG3_17
+  - first:
+      213: 2040465293384911897
+    second: PNG3_18
+  - first:
+      213: -3561681605702902185
+    second: PNG3_19
+  - first:
+      213: -756801157934308183
+    second: PNG3_20
+  - first:
+      213: -4578094601547447680
+    second: PNG3_21
+  - first:
+      213: -5809423924926506395
+    second: PNG3_22
+  - first:
+      213: 7639943901016441973
+    second: PNG3_23
+  - first:
+      213: -5961562140911688538
+    second: PNG3_24
+  - first:
+      213: 2913886906252670724
+    second: PNG3_25
+  - first:
+      213: 5170481118699781545
+    second: PNG3_26
+  - first:
+      213: -627413386545571478
+    second: PNG3_27
+  - first:
+      213: 4183224269126033694
+    second: PNG3_28
+  - first:
+      213: 1336439740473196391
+    second: PNG3_29
+  - first:
+      213: -7296554919042738324
+    second: PNG3_30
+  - first:
+      213: 3688898902464236350
+    second: PNG3_31
+  - first:
+      213: -5852620861977564569
+    second: PNG3_32
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Aula2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 458
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ab27568df8ae1046a214427871879db
+      internalID: -594612932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Aula2_1
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 458
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc64f4ed396f74443a9409450ddf199c
+      internalID: 461230576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Aula2_2
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 458
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ec770d850967b549a8a589e2aa2d6e0
+      internalID: -1800620830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Aula2_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 229
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f0dd2e8b68fc6d4ca92aaaa8f90326d
+      internalID: 1729970017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Aula2_4
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 229
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d70acff2ea7c3f4dae720099168f217
+      internalID: -404622869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Aula2_5
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 229
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a21367b28fc8df4fa8e7449a6909ffb
+      internalID: -283298594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Aula2_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1d95931f73d5a9439a9eecf01b0761d
+      internalID: 1957730178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 9861be1635fb39442812778e9050eddc
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Aula2_0: -594612932
+      Aula2_1: 461230576
+      Aula2_2: -1800620830
+      Aula2_3: 1729970017
+      Aula2_4: -404622869
+      Aula2_5: -283298594
+      Aula2_6: 1957730178
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
