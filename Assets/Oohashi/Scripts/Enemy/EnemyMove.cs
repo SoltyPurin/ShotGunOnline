@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public enum EnemyState
@@ -63,9 +64,6 @@ public class EnemyMove : MonoBehaviour
     public virtual void Start()
     {
         //�v���C���[�̃I�u�W�F�N�g��T�����đ��
-        _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
-        _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
-        _target = _playerObject.transform;
         _agent = GetComponent<NavMesh2DAgent>(); //agent��NavMeshAgent2D���擾
         _rigidBody = GetComponent<Rigidbody2D>();
     }
@@ -79,8 +77,31 @@ public class EnemyMove : MonoBehaviour
     {
         _enemyState = EnemyState.roadKill;
     }
+
+    private void FindPlayer()
+    {
+        // ネットワーク上の全プレイヤーオブジェクトを探す
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
+        {
+            NetworkObject netObj = p.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsLocalPlayer)
+            {
+                _playerObject = players[0];
+                _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
+                _target = _playerObject.transform;
+                break;
+            }
+        }
+
+    }
     private void FixedUpdate()
     {
+        if (_playerObject == null)
+        {
+            FindPlayer();
+            return;
+        }
         _cantMove = _enemyState == EnemyState.knockback || _enemyState == EnemyState.fall || _enemyState == EnemyState.Wait;
         if (_cantMove) //�m�b�N�o�b�N���܂��͗������͈ړ����Ȃ��悤�ɂ���
         {

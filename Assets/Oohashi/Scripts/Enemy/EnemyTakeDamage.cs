@@ -48,11 +48,27 @@ public class EnemyTakeDamage : MonoBehaviour
     public virtual void Start()
     {
         JsonSaver.Instance.LoadAllConfigs();
-        _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
-        _coinKeep = _playerObject.GetComponent<SoulKeep>();
         GameObject seManager = GameObject.FindWithTag("SEManager");
         _playTheSEManager = seManager.GetComponent<SEManager>();
         _coinControl = GetComponent<PlayerCoinDrop>();
+    }
+
+    protected void AssurePlayerReference()
+    {
+        if (_playerObject != null && _coinKeep != null) return; // すでに取得済みなら何もしない
+
+        // シーン内の全プレイヤーから「自分自身（ローカルプレイヤー）」を探す
+        GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYERTAGNAME);
+        foreach (GameObject p in players)
+        {
+            var netObj = p.GetComponent<Unity.Netcode.NetworkObject>();
+            if (netObj != null && netObj.IsLocalPlayer)
+            {
+                _playerObject = p;
+                _coinKeep = p.GetComponent<SoulKeep>();
+                break;
+            }
+        }
     }
     /// <summary>
     /// ダメージを喰らったときのメソッド、ウルトと通常で挙動が変わる

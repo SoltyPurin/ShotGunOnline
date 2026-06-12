@@ -222,6 +222,11 @@ public class InputPlayerShot : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(_bulletPool == null)
+        {
+            _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
+            return;
+        }
         //チャージ時間が0以上でチャージ中でない場合
         if (_chargeTime > 0 && !_isCharge)
         {

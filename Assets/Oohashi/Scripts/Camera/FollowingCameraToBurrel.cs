@@ -49,29 +49,46 @@ public class FollowingCameraToBurrel : MonoBehaviour
     private void OnEnable()
     {
         _camera = GetComponent<Camera>();
-        if (!_player)
-        {
-            NetworkManager.Singleton.OnServerStarted += GetPlayer;
-        }
-        _playerState = _player.GetComponent<PlayerStateManager>();
     }
-    private void OnDisable()
-    {
-        if (NetworkManager.Singleton != null)
-        {
-            NetworkManager.Singleton.OnServerStarted -= GetPlayer;
-        }
-    }
-
     private void GetPlayer()
     {
-        Debug.Log("サーバー開始");
-        _player = GameObject.FindWithTag("Player");
-        _playerState = _player.GetComponent<PlayerStateManager>();
-        _burrel = _player.transform.Find("GunBurrel").gameObject;
+        // ネットワーク上の全プレイヤーオブジェクトを探す
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject p in players)
+        {
+            NetworkObject netObj = p.GetComponent<NetworkObject>();
+            // マルチプレイの場合、自分自身のキャラクター（LocalPlayer）のみをカメラの追従対象にする
+            if (netObj != null && netObj.IsLocalPlayer)
+            {
+                _player = p;
+                Debug.Log("ローカルプレイヤーのカメラターゲットへの登録に成功しました");
+                _playerState = _player.GetComponent<PlayerStateManager>();
+                break;
+            }
+        }
     }
     private void FixedUpdate()
     {
+        if (_player == null)
+        {
+            GetPlayer();
+            return; // 見つかるまでは以降のカメラ移動処理をスキップ
+        }
+
+        // 2. プレイヤーは見つかったが、コンポーネントのキャッシュがまだなら取得する
+        if (_playerState == null)
+        {
+            _playerState = _player.GetComponent<PlayerStateManager>();
+        }
+
+        // 3. 銃銃身（Burrel）がなければ探す
+        if (!_burrel)
+        {
+            Transform burrelTransform = _player.transform.Find("GunBurrel");
+            if (burrelTransform != null) _burrel = burrelTransform.gameObject;
+            return;
+        }
         if (_playerState.PlayerState == PlayerState.Movie)
         {
             return;

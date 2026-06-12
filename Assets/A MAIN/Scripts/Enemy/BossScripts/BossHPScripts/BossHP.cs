@@ -199,6 +199,10 @@ public class BossHP : EnemyTakeDamage
 
     public override IEnumerator DeathProtocol(float chargeTime)
     {
+        if(_coinKeep == null)
+        {
+            AssurePlayerReference();
+        }
         float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
         yield return new WaitForSeconds(timeLeftUntilDeath);
         _playTheSEManager.PlayBossDeathSound();

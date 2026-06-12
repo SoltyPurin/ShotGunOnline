@@ -14,28 +14,43 @@ public class PlayerHP : MonoBehaviour
     private InputPlayerShot _inputShot = default;
 
     private readonly string TITLE = "Title";
-    private void OnEnable()
-    {
-        
-    }
-    private void OnDisable()
-    {
-        
-    }
     private void Start()
     {
-        _playerObject = GameObject.FindWithTag("Player");
         if (!_playerObject)
         {
-
+            //NetworkManager.Singleton.OnServerStarted += 
         }
-        _playerMove = _playerObject.GetComponent<PlayerMove>();
-        _inputShot = _playerObject.GetComponent<InputPlayerShot>();
-        _hpValue = SaveHardOptionSetting._heartValue;
+    }
+
+    private void GetPlayerProtocol()
+    {
+        // ネットワーク上の全プレイヤーオブジェクトを探す
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
+        {
+            NetworkObject netObj = p.GetComponent<NetworkObject>();
+            // マルチプレイの場合、自分自身のキャラクター（LocalPlayer）のみをカメラの追従対象にする
+            if (netObj != null && netObj.IsLocalPlayer)
+            {
+                _playerObject = GameObject.FindWithTag("Player");
+                _playerMove = _playerObject.GetComponent<PlayerMove>();
+                _inputShot = _playerObject.GetComponent<InputPlayerShot>();
+                _hpValue = SaveHardOptionSetting._heartValue;
+
+                break;
+            }
+        }
+
+
     }
     public void TakeDamage()
     {
-        if(SceneManager.GetActiveScene().name == "HPHonpen")
+        if (_playerObject == null) 
+        {
+            GetPlayerProtocol();
+            return;
+        }
+        if (SceneManager.GetActiveScene().name == "HPHonpen")
         {
             Debug.Log("被弾");
             _hpValue--;

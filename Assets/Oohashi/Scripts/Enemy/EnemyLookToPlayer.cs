@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -37,14 +38,31 @@ public class EnemyLookToPlayer : MonoBehaviour
 
     public void EnemyLook()
     {
-        float direction = (_player.transform.position.x - this.transform.position.x);
-        if (direction > 0)
+        if (_player == null)
         {
-            TurnRight();
+            // シーン内の全プレイヤーから「自分自身（ローカルプレイヤー）」を探す
+            GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYER);
+            foreach (GameObject p in players)
+            {
+                NetworkObject netObj = p.GetComponent<Unity.Netcode.NetworkObject>();
+                if (netObj != null && netObj.IsLocalPlayer)
+                {
+                    _player = p;
+                    break;
+                }
+            }
+            return;
         }
-        else
         {
-            TurnLeft();
+            float direction = (_player.transform.position.x - this.transform.position.x);
+            if (direction > 0)
+            {
+                TurnRight();
+            }
+            else
+            {
+                TurnLeft();
+            }
         }
     }
     public void BossLook()

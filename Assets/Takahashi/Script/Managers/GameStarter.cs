@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -19,14 +20,32 @@ public class GameStarter : MonoBehaviour
     [SerializeField, Header("タイムライン")]
     private PlayableDirector _playerDirector = default;
 
-    private void Start()
+    private void GetPlayer()
     {
-        //ゲーム開始時プレイヤーを動かなくし、UIを非表示にする。
-        _playerStateManager.MovieState();
-        _canvas.SetActive(false);
+        // ネットワーク上の全プレイヤーオブジェクトを探す
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
+        {
+            NetworkObject netObj = p.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsLocalPlayer)
+            {
+                _playerStateManager.MovieState();
+                _canvas.SetActive(false);
+
+                break;
+            }
+        }
 
     }
 
+    private void FixedUpdate()
+    {
+        if (_playerStateManager == null)
+        {
+            GetPlayer();
+            return;
+        }
+    }
     /// <summary>
     /// TimeLine内で実行するメソッド、ムービー終了時ウェーブを開始する。
     /// </summary>
