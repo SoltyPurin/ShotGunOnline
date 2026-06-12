@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 public class PlayerHP : MonoBehaviour
 {
@@ -12,11 +13,22 @@ public class PlayerHP : MonoBehaviour
 
     private InputPlayerShot _inputShot = default;
 
-    private readonly string TITLE = "Title";    
-
+    private readonly string TITLE = "Title";
+    private void OnEnable()
+    {
+        
+    }
+    private void OnDisable()
+    {
+        
+    }
     private void Start()
     {
         _playerObject = GameObject.FindWithTag("Player");
+        if (!_playerObject)
+        {
+
+        }
         _playerMove = _playerObject.GetComponent<PlayerMove>();
         _inputShot = _playerObject.GetComponent<InputPlayerShot>();
         _hpValue = SaveHardOptionSetting._heartValue;

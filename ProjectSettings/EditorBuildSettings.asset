@@ -22,9 +22,11 @@ EditorBuildSettings:
     guid: d2d5960f6e3a5554a87d848eec82643c
   - enabled: 1
     path: Assets/A MAIN/Scenes/HPHonpen.unity
-    guid: 16ea95a41fda44d499ef1796799604af
+    guid: 0fe6c2f21bd5050459650595284247d2
   - enabled: 1
     path: Assets/A MAIN/Scenes/Cushion.unity
     guid: 81962e3e3e14ea24faf81739a8ec1153
+  - enabled: 1
+    path: Assets/NetWork/Test/NetworkHonpen.unity
+    guid: 370def5f028fc2a4990f5843272c8e04
   m_configObjects: {}
-  m_UseUCBPForAssetBundles: 0

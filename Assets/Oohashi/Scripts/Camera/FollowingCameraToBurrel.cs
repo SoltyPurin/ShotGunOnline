@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Unity.Netcode;
 
 public class FollowingCameraToBurrel : MonoBehaviour
 {
@@ -44,15 +44,39 @@ public class FollowingCameraToBurrel : MonoBehaviour
     {
         set { _isMidiumBoss= value; }
     }
+
     #endregion
-    private void Start()
+    private void OnEnable()
     {
         _camera = GetComponent<Camera>();
+        if (!_player)
+        {
+            NetworkManager.Singleton.OnServerStarted += GetPlayer;
+        }
         _playerState = _player.GetComponent<PlayerStateManager>();
+    }
+    private void OnDisable()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnServerStarted -= GetPlayer;
+        }
+    }
+
+    private void GetPlayer()
+    {
+        Debug.Log("サーバー開始");
+        _player = GameObject.FindWithTag("Player");
+        _playerState = _player.GetComponent<PlayerStateManager>();
+        _burrel = _player.transform.Find("GunBurrel").gameObject;
     }
     private void FixedUpdate()
     {
         if (_playerState.PlayerState == PlayerState.Movie)
+        {
+            return;
+        }
+        if (!_burrel)
         {
             return;
         }
