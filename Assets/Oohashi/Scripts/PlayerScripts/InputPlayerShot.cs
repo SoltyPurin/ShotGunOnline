@@ -119,6 +119,10 @@ public class InputPlayerShot : MonoBehaviour
     private void Start()
     {
         _criticalGraceTime += MAXCHARGEVALUE;
+        if(_bloom == null)
+        {
+            _bloom = GameObject.Find("PostManager").GetComponent<BloomScript>();
+        }
     }
 
     public void DeathMethod()
@@ -128,7 +132,6 @@ public class InputPlayerShot : MonoBehaviour
 
     //ウルト射撃後またチャージアニメを表示する時に使用するもの
     private bool _showUltCharge = false;
-
 
     private void Update()
     {

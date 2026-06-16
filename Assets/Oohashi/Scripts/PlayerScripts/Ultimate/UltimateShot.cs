@@ -38,6 +38,15 @@ public class UltimateShot : MonoBehaviour
     // 前方90度以内だけ
     private float _maxAngle = 90;
 
+    private void Start()
+    {
+        if(_shake == null && _ultBloom == null)
+        {
+            _shake = GameObject.FindWithTag("MainCamera").GetComponent<ScreenVibration>();
+            _ultBloom = GameObject.Find("PostManager").GetComponent<BloomScript>();
+        }
+    }
+
     /// <summary>
     /// ウルトの範囲内にいる敵を確認及びそれに対してアクションを起こすメソッド
     /// </summary>

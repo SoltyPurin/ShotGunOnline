@@ -87,7 +87,7 @@ public class ScoreData : MonoBehaviour
     private void Start()
     {
         _enemyCountAndCreateTime = GetComponent<EnemyCountAndCreateTime>();
-        _scoreUIManager = FindFirstObjectByType<ScoreUIManager>();
+        _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();
         _waveManager = GameObject.FindWithTag(WAVEMANAGER).GetComponent<WaveManager>();
         _scoreList = new int[_waveManager.WaveList.Count];
         _scoreCharList = new string[_waveManager.WaveList.Count];

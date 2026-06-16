@@ -30,7 +30,7 @@ public class RealTimeScoreCircle : MonoBehaviour
     [SerializeField, Header("è„Ç™ÇËïù")]
     private float _rankGage = 1;
 
-    private bool progress;
+    private bool progress = false;
 
     public Action OnFinish;
 
@@ -53,9 +53,8 @@ public class RealTimeScoreCircle : MonoBehaviour
         _initTimeRank = 3;
         _rankState = RankState.S;
         CancelTimer();
-        StartTimer();
+        //StartTimer();
     }
-
 
     private void FixedUpdate()
     {

@@ -26,6 +26,11 @@ public class DamageEffect : MonoBehaviour
 
     public void PlayAnim()
     {
+        if(_player == null)
+        {
+            _player = GameObject.FindWithTag(PLAYER);
+            _parent = transform.parent.gameObject;
+        }
         Vector3 point = _parent.transform.position;
         Vector3 axis = Vector3.forward;
 

@@ -29,16 +29,14 @@ public class SoulKeep : MonoBehaviour
 
     private bool _isVstockMax = false;
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.R))
-    //    {
-    //        AdditionCoin();
-    //    }
-    //}
 
-
-
+    private void Start()
+    {
+        if(_soulMeter == null)
+        {
+            _soulMeter = GameObject.Find("Soul_Bottle").GetComponent<SoulMeter>();
+        }
+    }
 
 
     public void AdditionCoin()

@@ -110,6 +110,13 @@ public class PlayerDamageKnockBack : MonoBehaviour
         _seManager = GameObject.FindWithTag(SEMANAGERTAGNAME).GetComponent<SEManager>();
         _hpSprite = GameObject.FindWithTag(HPSPRITETAGNAME).GetComponent<HPSprite>();
         _knockBack = GetComponent<PlayerKnockBack>();
+        //オンライン版だとインスペクターに登録できないためここで探索
+        if (_damageVignette == null && _soulMeter == null && _scoreCircle == null)
+        {
+            _soulMeter = GameObject.Find("Soul_Bottle").GetComponent<SoulMeter>();
+            _damageVignette = GameObject.Find("PostManager").GetComponent<DamageVignett>();
+            _scoreCircle = GameObject.Find("RankGage").GetComponent<RealTimeScoreCircle>();
+        }
         GameObject score = GameObject.FindWithTag(SCOREDATA);
         _trenble = GetComponent<PlayerTrenble>();
         if(score != null)

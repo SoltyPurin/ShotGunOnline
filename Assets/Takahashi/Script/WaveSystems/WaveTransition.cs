@@ -249,6 +249,18 @@ public class WaveTransition : MonoBehaviour
     /// </summary>
     private void FadeOutStage()
     {
+        if(_playerMove == null)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                _playerMove = player.GetComponent<PlayerMove>();
+            }
+            else
+            {
+                return;
+            }
+        }
         if(_intervalTimer <= 0.0f)
         {
             _fadeAnimator.SetTrigger("Max");

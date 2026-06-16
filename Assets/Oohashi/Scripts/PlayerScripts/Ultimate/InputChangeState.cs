@@ -72,6 +72,14 @@ public class InputChangeState : MonoBehaviour
         }
 
         _pause = GameObject.Find("PauseVision").GetComponent<InputPause>();
+        //ネットワーク版だとインスペクターから設定できないためここで取得
+        if(_toNormal == null && _toUlt == null)
+        {
+            _toNormal = GameObject.Find("ToNormal");
+            _toUlt = GameObject.Find("ToUlt");
+            _toNormalAnim = _toNormal.GetComponentInChildren<Animator>();
+            _toUltAnim = _toUlt.GetComponentInChildren<Animator>();
+        }
     }
 
     private void Update()

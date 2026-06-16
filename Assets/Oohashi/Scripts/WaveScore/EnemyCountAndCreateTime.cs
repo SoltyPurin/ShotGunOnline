@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Netcode;
 using UnityEngine;
 
 public class EnemyCountAndCreateTime : MonoBehaviour
@@ -88,29 +89,6 @@ public class EnemyCountAndCreateTime : MonoBehaviour
     private readonly string RANK_GAGE = "RankGage";
     #endregion
 
-    //private void Start()
-    //{
-    //    _scoreData = ScoreData._scoreData;
-    //    if (_scoreData == null)
-    //    {
-    //        Debug.LogError("スコアデータ取得失敗（ビルド時）！");
-    //    }
-    //    _realTimeCircle = GameObject.Find(RANK_GAGE).GetComponent<RealTimeScoreCircle>();
-    //    _playerDamage = GameObject.FindWithTag(PLAYER_TAG).GetComponent<PlayerDamageKnockBack>();
-    //    _scoreData = GetComponent<ScoreData>(); 
-    //    if(_realTimeCircle == null)
-    //    {
-    //        Debug.Log("サークルが取得できてません！");
-    //    }
-    //    if(_playerDamage == null)
-    //    {
-    //        Debug.Log("プレイヤーの被弾スクリプトが取得できてません！");
-    //    }
-    //    if(_scoreData == null)
-    //    {
-    //        Debug.Log("スコアデータを取得できてません！");
-    //    }
-    //}
 
     public void EnemyCount(int count,int difficulty, Wave.WaveEnemyType type)
     {
@@ -172,6 +150,7 @@ public class EnemyCountAndCreateTime : MonoBehaviour
         }
     }
 
+
     public void TimerStart()
     {
         _canCountTimer = true;
@@ -184,6 +163,36 @@ public class EnemyCountAndCreateTime : MonoBehaviour
 
     public void Calculator()
     {
+        // --- プレイヤーを安全に自動取得する処理を追加 ---
+        if (_playerDamage == null)
+        {
+            // シーン内のすべてのプレイヤーオブジェクトを探す
+            GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYER_TAG);
+            foreach (GameObject p in players)
+            {
+                NetworkObject netObj = p.GetComponent<Unity.Netcode.NetworkObject>();
+                // 自分が操作しているローカルプレイヤーのコンポーネントを一本釣りする
+                if (netObj != null && netObj.IsLocalPlayer)
+                {
+                    _playerDamage = p.GetComponent<PlayerDamageKnockBack>();
+                    break;
+                }
+            }
+        }
+
+        // 保険のガード：もしそれでもプレイヤーやスコアデータが見つからなければエラーを防ぐためにスキップ
+        if (_playerDamage == null)
+        {
+            Debug.LogWarning("現在のシーンに操作可能なローカルプレイヤー(PlayerDamageKnockBack)が見つからないため、スコア計算をスキップしました。");
+            _initWaveTime = 0;
+            return;
+        }
+        if (_scoreData == null)
+        {
+            Debug.LogError("ScoreData スクリプトへの参照がありません。インスペクターを確認してください。");
+            _initWaveTime = 0;
+            return;
+        }
         if (_initWaveTime <= _sRankTime)
         {
             _timeRank = SRANK;
