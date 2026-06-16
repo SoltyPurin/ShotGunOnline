@@ -72,7 +72,19 @@ public class ComboCounter : MonoBehaviour
         {
             return; //ウェーブ移行中は全ての動作を停止するため早期リターン
         }
+        if(_playerMove == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                _playerMove = player.GetComponent<PlayerMove>();
+            }
+            else
+            {
+                return;
+            }
 
+        }
         if (_isContinuation/* && _waveManager.CanTransition*/)
         {
             _comboLimitTime -= Time.fixedDeltaTime;
@@ -96,6 +108,7 @@ public class ComboCounter : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// ボーナス時間と効果量を計算する
     /// </summary>

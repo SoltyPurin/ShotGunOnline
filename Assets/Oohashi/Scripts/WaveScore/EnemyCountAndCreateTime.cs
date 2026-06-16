@@ -72,6 +72,8 @@ public class EnemyCountAndCreateTime : MonoBehaviour
     //時間のランクを入れる
     private int _timeRank = 0;
 
+    private GameObject _player;
+
     #endregion
 
     #region ゲッター変数
@@ -144,12 +146,21 @@ public class EnemyCountAndCreateTime : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_canCountTimer)
+        FindPlayerAndTimerStart();
+        if (_canCountTimer &&  _player != null)
         {
             _initWaveTime += Time.fixedDeltaTime;
         }
     }
 
+    private void FindPlayerAndTimerStart()
+    {
+        _player = GameObject.FindWithTag("Player");
+        if(_player != null )
+        {
+            _realTimeCircle.StartTimer();
+        }
+    }
 
     public void TimerStart()
     {
