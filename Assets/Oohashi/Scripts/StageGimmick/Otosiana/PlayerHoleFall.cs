@@ -69,7 +69,10 @@ public class PlayerHoleFall : EntityFall
 
         _rigidbody2D.simulated = false;
         _fadeAnimator.SetTrigger("FadeOut");
-        _seManager.PlayDropSound();
+        if(_seManager != null)
+        {
+            _seManager.PlayDropSound();
+        }
         _knockBack.Fall();
         _damageKnockBack.Fall();
         _animator.SetTrigger(FALLTRIGGER);

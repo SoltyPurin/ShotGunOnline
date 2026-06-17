@@ -78,6 +78,7 @@ public class ComboCounter : MonoBehaviour
             if (player != null)
             {
                 _playerMove = player.GetComponent<PlayerMove>();
+                _inputPlayerShot = player.GetComponent<InputPlayerShot>();
             }
             else
             {
