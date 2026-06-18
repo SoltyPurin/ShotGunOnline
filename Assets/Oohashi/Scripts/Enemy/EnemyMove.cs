@@ -72,7 +72,7 @@ public class EnemyMove : MonoBehaviour
         _enemyState = EnemyState.roadKill;
     }
 
-    private void FindPlayer()
+    protected void FindPlayer()
     {
         // ネットワーク上の全プレイヤーオブジェクトを探す
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");

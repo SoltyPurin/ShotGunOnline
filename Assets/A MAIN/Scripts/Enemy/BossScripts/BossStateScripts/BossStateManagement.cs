@@ -116,6 +116,11 @@ public class BossStateManagement : EnemyMove
     }
     public void FixedUpdate()
     {
+        if (_playerObject == null)
+        {
+            FindPlayer();
+            return;
+        }
 
         _enemyToPlayerDistance = Vector2.Distance(_playerObject.transform.position,
            this.transform.position);
