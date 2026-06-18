@@ -35,8 +35,20 @@ public class PlayerRespawn : MonoBehaviour
     public void Respawn()
     {
         Vector2 respawnPoint = _respawnPoints[_currentRespawnIndex].transform.position;
-        _playerObject.transform.position = respawnPoint;
-        FollowingCameraToBurrel follow = _camera.GetComponent<FollowingCameraToBurrel>();
+
+        if (_playerObject == null)
+        {
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject p in players)
+            {
+                p.transform.position = respawnPoint;
+            }
+        }
+        else
+        {
+            _playerObject.transform.position = respawnPoint;
+        }
+            FollowingCameraToBurrel follow = _camera.GetComponent<FollowingCameraToBurrel>();
         follow.MovieMove(respawnPoint);
     }
 }

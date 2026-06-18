@@ -48,6 +48,10 @@ public class PlayerHoleFall : EntityFall
     private IEnumerator MoveToRespawnPoint()
     {
         transform.SetParent(null);
+        if(_respawn == null)
+        {
+            _respawn = GameObject.FindWithTag("RespawnPoint").GetComponent<PlayerRespawn>();
+        }
         yield return new WaitForSeconds(2.2f);
         _rigidbody2D.simulated = true;
         _fadeAnimator.SetTrigger("FadeIn");

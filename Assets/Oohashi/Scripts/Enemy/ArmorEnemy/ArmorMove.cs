@@ -77,6 +77,7 @@ public class ArmorMove : EnemyMove
     public override void Start()
     {
         base.Start();
+        _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         GameObject seManagerObject = GameObject.FindWithTag("SEManager");
         _seManager = seManagerObject.GetComponent<SEManager>();
         _originBackSpeed = _backSpeed;

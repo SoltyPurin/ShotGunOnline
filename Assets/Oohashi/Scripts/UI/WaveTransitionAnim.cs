@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class WaveTransitionAnim : MonoBehaviour
@@ -92,6 +93,10 @@ public class WaveTransitionAnim : MonoBehaviour
         {
             return;
         }
+        if(_stateManager == null)
+        {
+            _stateManager = GameObject.FindWithTag("Player").GetComponent<PlayerStateManager>();
+        }
         _stateManager.MovieState();
 
         _runningRoutine = StartCoroutine(TriggerReset(newIndex));
@@ -153,7 +158,48 @@ public class WaveTransitionAnim : MonoBehaviour
     private IEnumerator PlayerCanMove()
     {
         yield return new WaitForSeconds(2.5f);
-        _stateManager.NormalState();
-        _inputChangeState.ToNormalAnimation();
+        //オンライン版
+        if (_stateManager == null || _inputChangeState == null)
+        {
+            Debug.Log("マルチプレイ");
+            PlayerStateManager[] states = FindObjectsByType<PlayerStateManager>();
+            InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
+            foreach(PlayerStateManager state in states)
+            {
+                if(state == null)
+                {
+                    continue;
+                }
+                if (state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
+                {
+                    if (netObj.IsLocalPlayer)
+                    {
+                        state.NormalState();
+                        break; 
+                    }
+                }
+            }
+            foreach(InputChangeState state in inputStates)
+            {
+                if(state == null)
+                {
+                    continue ;
+                }
+                if(state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
+                {
+                    if (netObj.IsLocalPlayer)
+                    {
+                        state.ToNormalAnimation();
+                        break;
+                    }
+                }
+            }
+        }
+        else //ソロプレイ版
+        {
+            Debug.Log("ソロプレイ");
+            _stateManager.NormalState();
+            _inputChangeState.ToNormalAnimation();
+        }
     }
 }

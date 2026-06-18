@@ -39,6 +39,10 @@ public class KeepDistanceMove : EnemyMove
     public override void Start()
     {
         base.Start();
+        if(_playerObject == null)
+        {
+            _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
+        }
         _direction = (_playerObject.transform.position - transform.position).normalized;
 
         GameObject seManagerObject = GameObject.FindWithTag("SEManager");
@@ -49,6 +53,8 @@ public class KeepDistanceMove : EnemyMove
     {
         if(_target == null)
         {
+            Debug.Log("ターゲットがいません");
+            _target = _playerObject.transform;
             return;
         }
         float distance = Vector2.Distance(_playerObject.transform.position, this.transform.position);

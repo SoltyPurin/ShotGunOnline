@@ -14,14 +14,9 @@ public enum EnemyState
 
 public class EnemyMove : MonoBehaviour
 {
-    //�����m�肵�Ă���G�F�������߂Â��Ă���G�ƒe�������Ă���G
-    //�݂�Ȉړ����x�͒x�߁A�e�������Ă���G�́A�v���C���[�ƈ��̋��������ێ����悤�Ƃ���B
 
-    //�ϐ��̓C���X�y�N�^�[���珑�������邽�߂����Ďq�I�u�W�F�N�g�ł͋L�q���Ȃ�
-
-    protected GameObject _playerObject = default; //�v���C���[�̃I�u�W�F�N�g�p�̕ϐ�
-    protected  readonly string PLAYERTAGNAME = "Player";//�v���C���[�̃^�O�̖��O�̕ϐ�
-    //�v���C���[���W������Transform
+    protected GameObject _playerObject = default;
+    protected  readonly string PLAYERTAGNAME = "Player";
     protected Transform _target = default;
     protected NavMesh2DAgent _agent; //NavMeshAgent2D���g�p���邽�߂̕ϐ�
     private PlayerStateManager _playerStateManager;
@@ -63,7 +58,6 @@ public class EnemyMove : MonoBehaviour
 
     public virtual void Start()
     {
-        //�v���C���[�̃I�u�W�F�N�g��T�����đ��
         _agent = GetComponent<NavMesh2DAgent>(); //agent��NavMeshAgent2D���擾
         _rigidBody = GetComponent<Rigidbody2D>();
     }
@@ -87,7 +81,7 @@ public class EnemyMove : MonoBehaviour
             NetworkObject netObj = p.GetComponent<NetworkObject>();
             if (netObj != null && netObj.IsLocalPlayer)
             {
-                _playerObject = players[0];
+                _playerObject = p;
                 _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
                 _target = _playerObject.transform;
                 break;

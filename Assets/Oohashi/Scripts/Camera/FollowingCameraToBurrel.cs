@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 public class FollowingCameraToBurrel : MonoBehaviour
 {
-    #region •Ï”ŒQ
+    #region å¤‰æ•°
     [SerializeField] private GameObject _burrel = default;
     [SerializeField] private GameObject _player = default;
     private GameObject _boss = default;
@@ -52,17 +52,16 @@ public class FollowingCameraToBurrel : MonoBehaviour
     }
     private void GetPlayer()
     {
-        // ƒlƒbƒgƒ[ƒNã‚Ì‘SƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚ğ’T‚·
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¦‹å½“ãŸã‚‰ãªã‹ã£ãŸã‚‰æ¢ç´¢
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (GameObject p in players)
         {
             NetworkObject netObj = p.GetComponent<NetworkObject>();
-            // ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ìê‡A©•ª©g‚ÌƒLƒƒƒ‰ƒNƒ^[iLocalPlayerj‚Ì‚İ‚ğƒJƒƒ‰‚Ì’Ç]‘ÎÛ‚É‚·‚é
+            // ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å¯¾å¿œã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå±…ãŸã‚‰ä»£å…¥
             if (netObj != null && netObj.IsLocalPlayer)
             {
                 _player = p;
-                Debug.Log("ƒ[ƒJƒ‹ƒvƒŒƒCƒ„[‚ÌƒJƒƒ‰ƒ^[ƒQƒbƒg‚Ö‚Ì“o˜^‚É¬Œ÷‚µ‚Ü‚µ‚½");
                 _playerState = _player.GetComponent<PlayerStateManager>();
                 break;
             }
@@ -73,19 +72,17 @@ public class FollowingCameraToBurrel : MonoBehaviour
         if (_player == null)
         {
             GetPlayer();
-            return; // Œ©‚Â‚©‚é‚Ü‚Å‚ÍˆÈ~‚ÌƒJƒƒ‰ˆÚ“®ˆ—‚ğƒXƒLƒbƒv
+            return; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã„ãªã„æ™‚ã¯æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³
         }
 
-        // 2. ƒvƒŒƒCƒ„[‚ÍŒ©‚Â‚©‚Á‚½‚ªAƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌƒLƒƒƒbƒVƒ…‚ª‚Ü‚¾‚È‚çæ“¾‚·‚é
         if (_playerState == null)
         {
             _playerState = _player.GetComponent<PlayerStateManager>();
         }
 
-        // 3. eegiBurrelj‚ª‚È‚¯‚ê‚Î’T‚·
         if (!_burrel)
         {
-            Transform burrelTransform = _player.transform.Find("GunBurrel");
+            Transform burrelTransform = _player.transform.Find("Burrel/GunBurrel");
             if (burrelTransform != null) _burrel = burrelTransform.gameObject;
             return;
         }
@@ -104,7 +101,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             {
                 return;
             }
-            //ƒJƒƒ‰‚ÌƒY[ƒ€‚ğ•Ï‚¦‚é
+            //ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ÌƒYï¿½[ï¿½ï¿½ï¿½ï¿½Ï‚ï¿½ï¿½ï¿½
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _movieSize, Time.deltaTime * _zoomSpeed);
 
             Vector3 targetPosition = _boss.transform.position;
@@ -127,7 +124,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
         }
-        else if (_isBossWave && !_isMovie)//’†ƒ{ƒX‚Í‚±‚êQl‚É‚µ‚Ä‚Ë
+        else if (_isBossWave && !_isMovie)//ï¿½ï¿½ï¿½{ï¿½Xï¿½Í‚ï¿½ï¿½ï¿½Qï¿½lï¿½É‚ï¿½ï¿½Ä‚ï¿½
         {
 
             if (_boss == null)
@@ -135,13 +132,13 @@ public class FollowingCameraToBurrel : MonoBehaviour
                 _boss = GameObject.FindGameObjectWithTag("BossSprite");
             }
 
-            //ƒJƒƒ‰‚Ì’†S‚ğPlayer‚ÆBoss‚Ì^‚ñ’†‚ÉŒÅ’è
+            //ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ì’ï¿½ï¿½Sï¿½ï¿½Playerï¿½ï¿½Bossï¿½Ì^ï¿½ñ’†‚ÉŒÅ’ï¿½
             Vector3 targetPosition = (_player.transform.position + _boss.transform.position) / 2f;
             targetPosition.z = transform.position.z;
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
-            //Player‚Æ‚Ì‹——£‚É‚æ‚Á‚ÄƒJƒƒ‰‚ÌƒY[ƒ€‚ğ•Ï‚¦‚é
+            //Playerï¿½Æ‚Ì‹ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ÄƒJï¿½ï¿½ï¿½ï¿½ï¿½ÌƒYï¿½[ï¿½ï¿½ï¿½ï¿½Ï‚ï¿½ï¿½ï¿½
             float distance = Vector3.Distance(_player.transform.position, _boss.transform.position);
             float targetSize = Mathf.Clamp(distance * _zoomFactor, _minSize, _maxSize);
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, targetSize, Time.deltaTime * _zoomSpeed);
@@ -152,19 +149,20 @@ public class FollowingCameraToBurrel : MonoBehaviour
             {
                 _midiumBoss = GameObject.FindWithTag("MediumArmor");
             }
-            //ƒJƒƒ‰‚Ì’†S‚ğPlayer‚ÆBoss‚Ì^‚ñ’†‚ÉŒÅ’è
+            //ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ì’ï¿½ï¿½Sï¿½ï¿½Playerï¿½ï¿½Bossï¿½Ì^ï¿½ñ’†‚ÉŒÅ’ï¿½
             Vector3 targetPosition = (_player.transform.position + _midiumBoss.transform.position) / 2f;
             targetPosition.z = transform.position.z;
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
-            //Player‚Æ‚Ì‹——£‚É‚æ‚Á‚ÄƒJƒƒ‰‚ÌƒY[ƒ€‚ğ•Ï‚¦‚é
+            //Playerï¿½Æ‚Ì‹ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ÄƒJï¿½ï¿½ï¿½ï¿½ï¿½ÌƒYï¿½[ï¿½ï¿½ï¿½ï¿½Ï‚ï¿½ï¿½ï¿½
             float distance = Vector3.Distance(_player.transform.position, _midiumBoss.transform.position);
             float targetSize = Mathf.Clamp(distance * _zoomFactor, _minSize, _maxSize);
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, targetSize, Time.deltaTime * _zoomSpeed);
         }
         else
         {
+            Debug.Log("ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Êíï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Çï¿½");
             Vector3 targetPosition = _burrel.transform.position;
             targetPosition.z = transform.position.z;
 
