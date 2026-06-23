@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : Unity.Netcode.NetworkBehaviour
 {
     //生存してるかどうか
     private bool _isAlive = true;
@@ -48,6 +48,9 @@ public class PlayerMove : MonoBehaviour
         set { _saveDirection = value; } 
     }
 
+    private Vector2 _moveDirection;
+    private Vector2 _input;
+
     //フェード中かどうかを判断する
     private bool _isFadeing = false;
     public bool IsFadeing
@@ -86,42 +89,58 @@ public class PlayerMove : MonoBehaviour
         bool cantMoveState = isStateFall || isStateKnockBack || isStateDamageKnockBack || isStateMovie;
         if (cantMoveState)
         {
-            return ; //落下中は操作不可能にするため早期リターン
-        }
-        if (_inputPlayerShot.IsPushShotButton)
-        {
-            CalcMoveMultiplier(_inputPlayerShot.ChargeValue);
-        }
-        else
-        {
-            _chargeMoveMultiplier = 1;
+            return; //落下中は操作不可能にするため早期リターン
         }
         //フェード中は移動させない
-        if(_isFadeing)
+        if (_isFadeing)
         {
             return;
         }
-        Move();//移動のメソッド呼び出し
-    }
 
+        if (this.IsOwner)
+        {
+
+            if (_inputPlayerShot.IsPushShotButton)
+            {
+                CalcMoveMultiplier(_inputPlayerShot.ChargeValue);
+            }
+            else
+            {
+                _chargeMoveMultiplier = 1;
+            }
+
+            if (_gamePad == null)
+            {
+                return;
+            }
+            //左スティック取得
+            Vector2 input = _gamePad.leftStick.ReadValue();
+            //Vector3型に変換
+            SetMoveInputServerRpc(input.x, input.y);
+
+        }
+        if(this.IsServer)
+        {
+            Move();//移動のメソッド呼び出し
+        }
+
+    }
+    [Unity.Netcode.ServerRpc]
+    private void SetMoveInputServerRpc(float x,float y)
+    {
+        //左スティック取得
+        _input = new Vector2(x, y);
+        //Vector3型に変換
+        this._moveDirection = new Vector3(x, y);
+
+    }
 
     private void Move()
     {
-        if(_gamePad == null)
-        {
-            return;
-        }
-        //左スティック取得
-        Vector2 input = _gamePad.leftStick.ReadValue();
-        //Vector3型に変換
-        Vector2 moveDirection = new Vector3(input.x, input.y);
-        float limit = Mathf.Clamp(_playerMoveSpeed * _chargeMoveMultiplier,
-                                  _playerMoveSpeed, _playerMoveSpeedMaxLimit);
-
 
         ////ベロシティを移動方向*スピードで直接変更
-        Vector2 targetVelocity = moveDirection * _playerMoveSpeed * _chargeMoveMultiplier;
-        if(moveDirection != Vector2.zero)
+        Vector2 targetVelocity = _moveDirection * _playerMoveSpeed * _chargeMoveMultiplier;
+        if(_moveDirection != Vector2.zero)
         {
             _saveDirection = _rigidbody.linearVelocity;
         }
@@ -130,7 +149,7 @@ public class PlayerMove : MonoBehaviour
         {
             float t = Time.fixedDeltaTime * _inertiaStrangth;
             _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity, targetVelocity,t);
-            if(moveDirection == Vector2.zero)
+            if(_moveDirection == Vector2.zero)
             {
                 _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity,_saveDirection,t);
             }
@@ -140,10 +159,10 @@ public class PlayerMove : MonoBehaviour
             _rigidbody.linearVelocity = targetVelocity;
         }
 
-        if (input.x != 0 || input.y != 0)
+        if (_input.x != 0 || _input.y != 0)
         {
             _playerKnockBack.IsInputLeftStick = true;
-            _playerAnimation.Run(Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
+            _playerAnimation.Run(Mathf.Max(Mathf.Abs(_input.x), Mathf.Abs(_input.y)));
             _canPlayWait = true;
         }
         else

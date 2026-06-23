@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class PlayerAiming : MonoBehaviour
+public class PlayerAiming : Unity.Netcode.NetworkBehaviour
 {
     [SerializeField, Header("減算中かどうかを取得する")]
     private InputPlayerShot _inputShot = default;
@@ -53,7 +53,10 @@ public class PlayerAiming : MonoBehaviour
         {
             return;
         }
-        InputAiming(); //エイムのメソッド呼び出し
+        if (this.IsOwner)
+        {
+            InputAiming(); //エイムのメソッド呼び出し
+        }
     }
 
     private void InputAiming()
@@ -62,34 +65,107 @@ public class PlayerAiming : MonoBehaviour
         {
             return;
         }
-        //右スティックの値を代入
-        _rightStickInput = _gamePad.rightStick.ReadValue();
-        //右スティックの入力値がゼロチェック値よりでかければ実行
+        Vector2 input = _gamePad.rightStick.ReadValue();
+        SetAimInputServerRpc(input);
+        _rightStickInput = input;
+
+        //Vector2 input = _gamePad.rightStick.ReadValue();
+
+        //SetAimInputServerRpc(input.x, input.y);
     }
 
+    [Unity.Netcode.ServerRpc]
+    private void SetAimInputServerRpc(Vector2 input)
+    {
+        _rightStickInput = input;
+    }
     private void FixedUpdate()
     {
-        if (_rightStickInput.sqrMagnitude > 0.04f) // ゼロチェック（小さい揺れ無視）
+        //if (this.IsServer)
+        //{
+        //    if (_rightStickInput.sqrMagnitude > 0.04f) // ゼロチェック（小さい揺れ無視）
+        //    {
+        //        Quaternion pRotate = _playerObject.transform.rotation;
+        //        //右スティックのベクトルを角度に変換する
+        //        float angle = Mathf.Atan2(_rightStickInput.y, _rightStickInput.x) * Mathf.Rad2Deg;
+        //        //オイラー角をクオータニオンに変換する
+        //        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+        //        //Lerpで線形補正を行い滑らかに回転させる
+        //        _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
+        //        //方向変数に右スティックの入力値を正規化して代入
+        //        _direction = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
+        //        //前の見てる方向に現在の見てる方向を代入するs
+        //        _prevDirection = _direction;
+        //        ////射撃方向の設定
+        //        //_shape.NotShootTimeDirection = _direction;
+        //    }
+        //}
+        //    if (this.IsServer)
+        //    {
+        //        // サーバー（ホスト）側：入力からダイレクトに計算した最新の方向をゲージに適用
+        //        if (_rightStickInput.sqrMagnitude > 0.04f)
+        //        {
+        //            _shape.NotShootTimeDirection = _direction;
+        //        }
+        //        else
+        //        {
+        //            _shape.NotShootTimeDirection = _prevDirection;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // クライアント側：サーバーから NetworkTransform 経由で同期されて回っている「実際の体の回転」を基準に、
+        //        // エイム範囲の向きをリアルタイムに自動追従させる
+        //        // （2Dゲームの場合、現在のオブジェクトが向いている正面方向は transform.right で1発で取得できます）
+        //        if (_playerObject != null && _shape != null)
+        //        {
+        //            _shape.NotShootTimeDirection = _playerObject.transform.right;
+        //        }
+        //    }
+        // 【1】物理的な体のトランスフォーム（回転）は、サーバー側でのみ責任を持って計算・決定する
+        if (this.IsServer)
         {
-            Quaternion pRotate = _playerObject.transform.rotation;
-            //右スティックのベクトルを角度に変換する
-            float angle = Mathf.Atan2(_rightStickInput.y, _rightStickInput.x) * Mathf.Rad2Deg;
-            //オイラー角をクオータニオンに変換する
-            Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-            //Lerpで線形補正を行い滑らかに回転させる
-            _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
-            //方向変数に右スティックの入力値を正規化して代入
-            _direction = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
-            //前の見てる方向に現在の見てる方向を代入するs
-            _prevDirection = _direction;
-            //射撃方向の設定
-            _shape.NotShootTimeDirection = _direction;
+            if (_rightStickInput.sqrMagnitude > 0.04f) // ゼロチェック（小さい揺れ無視）
+            {
+                Quaternion pRotate = _playerObject.transform.rotation;
+                //右スティックのベクトルを角度に変換する
+                float angle = Mathf.Atan2(_rightStickInput.y, _rightStickInput.x) * Mathf.Rad2Deg;
+                //オイラー角をクオータニオンに変換する
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+                //Lerpで線形補正を行い滑らかに回転させる
+                _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
+                //方向変数に右スティックの入力値を正規化して代入
+                _direction = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
+                //前の見てる方向に現在の見てる方向を代入する
+                _prevDirection = _direction;
+            }
+        }
+
+        // 修正②：エイム範囲（見た目の演出）の更新は、「IsServer（サーバーか）」ではなく、
+        // 「IsOwner（自分が操作しているか）」で条件分岐させる！
+        if (this.IsOwner)
+        {
+            // ＝ 自分が操作しているプレイヤーの画面（ホストの自キャラ、クライアントの自キャラ）
+            // サーバーの往復通信（ラグ）を一切待たずに、手元のスティック入力からダイレクトに計算して「遅延ゼロ」で即座に動かす！
+            if (_rightStickInput.sqrMagnitude > 0.04f)
+            {
+                _direction = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
+                _shape.NotShootTimeDirection = _direction;
+                _prevDirection = _direction;
+            }
+            else
+            {
+                _shape.NotShootTimeDirection = _prevDirection;
+            }
         }
         else
         {
-            //なにも入力してないときは前回の方向を設定
-            _shape.NotShootTimeDirection = _prevDirection;
+            // ＝ 自分以外のプレイヤー（他人の画面から見たあなたのキャラ、またはその逆）
+            // ネットワーク経由で同期されて回っている「実際の体の回転」を基準に、自動追従させる
+            if (_playerObject != null && _shape != null)
+            {
+                _shape.NotShootTimeDirection = _playerObject.transform.right;
+            }
         }
-
     }
 }

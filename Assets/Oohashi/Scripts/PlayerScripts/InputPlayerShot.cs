@@ -8,7 +8,7 @@ public enum ShootState
     OverHeat//オーバーヒート
 }
 
-public class InputPlayerShot : MonoBehaviour
+public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 {
     [SerializeField,Header("狙ってる方向のスクリプト")]
     private PlayerAiming _playerAiming = default;
@@ -147,14 +147,20 @@ public class InputPlayerShot : MonoBehaviour
         {
             return;
         }
-            PadShot();
+        if (this.IsOwner)
+        {
+            //右トリガーから値を取得
+            _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
+        }
 
+        if (this.IsServer)
+        {
+            PadShot();
+        }
     }
 
     private void PadShot()
     {
-        //右トリガーから値を取得
-        _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
         bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
         switch (_stateManager.PlayerState)
         {
