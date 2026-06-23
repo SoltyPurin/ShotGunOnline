@@ -1,9 +1,10 @@
 using UnityEngine;
+using Unity.Netcode;
 
 /// <summary>
 /// プレイヤースプライトを、右スティックの入力によって変更する用のクラス
 /// </summary>
-public class SpriteDirection : MonoBehaviour
+public class SpriteDirection : Unity.Netcode.NetworkBehaviour
 {
     //右向きか、左向きかを保存するenum
     private enum Direction
@@ -57,6 +58,15 @@ public class SpriteDirection : MonoBehaviour
 
     private void FixedUpdate()
     {
+        SpriteTurnThink();
+    }
+
+    private void SpriteTurnThink()
+    {
+        if(_playerAiming == null)
+        {
+            return;
+        }
         //エイム方向を取得
         float direction = _playerAiming.Direction.x;
         float verticalDirection = _playerAiming.Direction.y;
@@ -76,14 +86,15 @@ public class SpriteDirection : MonoBehaviour
 
         //エイム方向が現在と反対を向いた時のみスプライトを反転する。
 
-        if(direction < 0)
+        if (direction < 0)
         {
             TurnFrontLeft(isFront);
         }
-        else if(direction >0)
+        else if (direction > 0)
         {
             TurnFrontRight(isFront);
         }
+
 
     }
 

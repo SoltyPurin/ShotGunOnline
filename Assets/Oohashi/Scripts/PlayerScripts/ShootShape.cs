@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class ShootShape : MonoBehaviour
+public class ShootShape : Unity.Netcode.NetworkBehaviour
 {
 
     [SerializeField, Header("ショットガンのオブジェクト")]
@@ -91,8 +91,7 @@ public class ShootShape : MonoBehaviour
         {
             return; //ウルト状態だったら処理しない
         }
-
-        Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _gunBurrel.transform.right);
+        Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _notShootTimeDirection);
 
         float blueValue = Mathf.Lerp(MAXBLUEVALUE, 0, _overHeat.ComplementValue);
         float greenValue = Mathf.Lerp(MAXGREENVALUE, 0, _overHeat.ComplementValue);
@@ -178,10 +177,13 @@ public class ShootShape : MonoBehaviour
 
     }
 
+
     public void UltShape(Vector3 direction)
     {
         //プレイヤーの向いてる方に回転
-        Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _gunBurrel.transform.right);
+        Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _notShootTimeDirection);
+
+        //Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _gunBurrel.transform.right);
 
         _lenderer.startWidth = 0.1f;//線の幅
         _lenderer.endWidth = 0.1f;//線の幅

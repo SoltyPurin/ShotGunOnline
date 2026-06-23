@@ -101,7 +101,6 @@ public class FollowingCameraToBurrel : MonoBehaviour
             {
                 return;
             }
-            //�J�����̃Y�[����ς���
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _movieSize, Time.deltaTime * _zoomSpeed);
 
             Vector3 targetPosition = _boss.transform.position;
@@ -124,7 +123,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
         }
-        else if (_isBossWave && !_isMovie)//���{�X�͂���Q�l�ɂ��Ă�
+        else if (_isBossWave && !_isMovie)//ボスのウェーブであればボスにカメラを合わせる
         {
 
             if (_boss == null)
@@ -132,13 +131,13 @@ public class FollowingCameraToBurrel : MonoBehaviour
                 _boss = GameObject.FindGameObjectWithTag("BossSprite");
             }
 
-            //�J�����̒��S��Player��Boss�̐^�񒆂ɌŒ�
+            //ボスとプレイヤーの中心点を探す
             Vector3 targetPosition = (_player.transform.position + _boss.transform.position) / 2f;
             targetPosition.z = transform.position.z;
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
-            //Player�Ƃ̋����ɂ���ăJ�����̃Y�[����ς���
+            //ボスとプレイヤーとの距離に応じてカメラの描画の大きさを変える
             float distance = Vector3.Distance(_player.transform.position, _boss.transform.position);
             float targetSize = Mathf.Clamp(distance * _zoomFactor, _minSize, _maxSize);
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, targetSize, Time.deltaTime * _zoomSpeed);
@@ -149,20 +148,19 @@ public class FollowingCameraToBurrel : MonoBehaviour
             {
                 _midiumBoss = GameObject.FindWithTag("MediumArmor");
             }
-            //�J�����̒��S��Player��Boss�̐^�񒆂ɌŒ�
+            //ボスとプレイヤーの中心点を探す
             Vector3 targetPosition = (_player.transform.position + _midiumBoss.transform.position) / 2f;
             targetPosition.z = transform.position.z;
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
-            //Player�Ƃ̋����ɂ���ăJ�����̃Y�[����ς���
+            //ボスとプレイヤーとの距離に応じてカメラの描画の大きさを変える
             float distance = Vector3.Distance(_player.transform.position, _midiumBoss.transform.position);
             float targetSize = Mathf.Clamp(distance * _zoomFactor, _minSize, _maxSize);
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, targetSize, Time.deltaTime * _zoomSpeed);
         }
         else
         {
-            Debug.Log("�J�����ʏ펞�v���C���[�ǐ�");
             Vector3 targetPosition = _burrel.transform.position;
             targetPosition.z = transform.position.z;
 

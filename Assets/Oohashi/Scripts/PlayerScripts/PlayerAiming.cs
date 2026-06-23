@@ -1,171 +1,91 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class PlayerAiming : Unity.Netcode.NetworkBehaviour
+
+//本当にごめんなさいここはあまりに元が難解すぎたためAIフルバーストで記述しました。
+public class PlayerAiming : NetworkBehaviour
 {
+    // エイムの方向ベクトルを同期するネットワーク変数を定義
+    // (Ownerが書き込み可能、全員が読み込み可能に設定)
+    private NetworkVariable<Vector3> _netAimDirection = new NetworkVariable<Vector3>(
+        Vector3.right,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
+    public Vector3 Direction
+    {
+        get { return _netAimDirection.Value; } //directionを取得できるようにする
+    }
+
+
     [SerializeField, Header("減算中かどうかを取得する")]
     private InputPlayerShot _inputShot = default;
-    //右スティックの入力値を代入するための変数
+
     private Vector2 _rightStickInput;
-    //ゲームパッドの変数
     private Gamepad _gamePad;
+
     [Header("プレイヤーのオブジェクト取得")]
     [SerializeField] private GameObject _playerObject = default;
     [SerializeField, Header("Lerpの補正値")]
     private float _correctionValue = 1f;
-    //方向を代入する変数
-    private Vector3 _direction = default;
 
-    public Vector3 Direction
-    {
-        get { return _direction; } //directionを取得できるようにする
-    }
     [Header("撃ってないときの向いてる方向表示")]
     [SerializeField] private ShootShape _shape = default;
-    //前見てた方向を保存
-    private Vector3 _prevDirection = default;
 
-    private PlayerStateManager _state;
+    private Vector3 _prevDirection = Vector3.right;
 
 
     private void Awake()
     {
-        //コントローラーが接続されてなければ早期リターン
-        if(Gamepad.current == null || _playerObject == null) 
-        {
-            return;
-        }
-        _gamePad = Gamepad.current;//ゲームパッド型の変数に現在のコントローラーを代入
-        //2つの変数に最初の方向を設定
-        _direction = Vector3.right; 
-        _prevDirection = Vector3.right;
-        _state = GetComponent<PlayerStateManager>();
+        if (Gamepad.current == null || _playerObject == null) return;
+        _gamePad = Gamepad.current;
     }
-
-
 
     private void Update()
     {
-        if(_state.PlayerState == PlayerState.Movie)
-        {
-            return;
-        }
-        if (!_inputShot.IsAlive)
-        {
-            return;
-        }
+        // 入力の取得は「自分が操作している時(Owner)」だけ行う
         if (this.IsOwner)
         {
-            InputAiming(); //エイムのメソッド呼び出し
+            InputAiming();
         }
     }
 
     private void InputAiming()
     {
-        if(_gamePad == null)
-        {
-            return;
-        }
-        Vector2 input = _gamePad.rightStick.ReadValue();
-        SetAimInputServerRpc(input);
-        _rightStickInput = input;
-
-        //Vector2 input = _gamePad.rightStick.ReadValue();
-
-        //SetAimInputServerRpc(input.x, input.y);
+        if (_gamePad == null) return;
+        _rightStickInput = _gamePad.rightStick.ReadValue();
     }
 
-    [Unity.Netcode.ServerRpc]
-    private void SetAimInputServerRpc(Vector2 input)
-    {
-        _rightStickInput = input;
-    }
     private void FixedUpdate()
     {
-        //if (this.IsServer)
-        //{
-        //    if (_rightStickInput.sqrMagnitude > 0.04f) // ゼロチェック（小さい揺れ無視）
-        //    {
-        //        Quaternion pRotate = _playerObject.transform.rotation;
-        //        //右スティックのベクトルを角度に変換する
-        //        float angle = Mathf.Atan2(_rightStickInput.y, _rightStickInput.x) * Mathf.Rad2Deg;
-        //        //オイラー角をクオータニオンに変換する
-        //        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-        //        //Lerpで線形補正を行い滑らかに回転させる
-        //        _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
-        //        //方向変数に右スティックの入力値を正規化して代入
-        //        _direction = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
-        //        //前の見てる方向に現在の見てる方向を代入するs
-        //        _prevDirection = _direction;
-        //        ////射撃方向の設定
-        //        //_shape.NotShootTimeDirection = _direction;
-        //    }
-        //}
-        //    if (this.IsServer)
-        //    {
-        //        // サーバー（ホスト）側：入力からダイレクトに計算した最新の方向をゲージに適用
-        //        if (_rightStickInput.sqrMagnitude > 0.04f)
-        //        {
-        //            _shape.NotShootTimeDirection = _direction;
-        //        }
-        //        else
-        //        {
-        //            _shape.NotShootTimeDirection = _prevDirection;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // クライアント側：サーバーから NetworkTransform 経由で同期されて回っている「実際の体の回転」を基準に、
-        //        // エイム範囲の向きをリアルタイムに自動追従させる
-        //        // （2Dゲームの場合、現在のオブジェクトが向いている正面方向は transform.right で1発で取得できます）
-        //        if (_playerObject != null && _shape != null)
-        //        {
-        //            _shape.NotShootTimeDirection = _playerObject.transform.right;
-        //        }
-        //    }
-        // 【1】物理的な体のトランスフォーム（回転）は、サーバー側でのみ責任を持って計算・決定する
-        if (this.IsServer)
-        {
-            if (_rightStickInput.sqrMagnitude > 0.04f) // ゼロチェック（小さい揺れ無視）
-            {
-                Quaternion pRotate = _playerObject.transform.rotation;
-                //右スティックのベクトルを角度に変換する
-                float angle = Mathf.Atan2(_rightStickInput.y, _rightStickInput.x) * Mathf.Rad2Deg;
-                //オイラー角をクオータニオンに変換する
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-                //Lerpで線形補正を行い滑らかに回転させる
-                _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
-                //方向変数に右スティックの入力値を正規化して代入
-                _direction = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
-                //前の見てる方向に現在の見てる方向を代入する
-                _prevDirection = _direction;
-            }
-        }
-
-        // 修正②：エイム範囲（見た目の演出）の更新は、「IsServer（サーバーか）」ではなく、
-        // 「IsOwner（自分が操作しているか）」で条件分岐させる！
+        // 自分が操作しているキャラ（Owner）の場合の処理
         if (this.IsOwner)
         {
-            // ＝ 自分が操作しているプレイヤーの画面（ホストの自キャラ、クライアントの自キャラ）
-            // サーバーの往復通信（ラグ）を一切待たずに、手元のスティック入力からダイレクトに計算して「遅延ゼロ」で即座に動かす！
             if (_rightStickInput.sqrMagnitude > 0.04f)
             {
-                _direction = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
-                _shape.NotShootTimeDirection = _direction;
-                _prevDirection = _direction;
+                _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
             }
-            else
-            {
-                _shape.NotShootTimeDirection = _prevDirection;
-            }
+
+            // ネットワーク変数に現在の方向を書き込む（これで自動的にホスト・クライアント全員に同期される）
+            _netAimDirection.Value = _prevDirection;
         }
-        else
+
+        // 【ホスト・クライアント全員が共通で実行する】処理
+        // 同期されて届いた「エイム方向」のデータを使って、各画面のローカルで体とエイム範囲を動かす
+        Vector3 currentAimDir = _netAimDirection.Value;
+
+        if (currentAimDir.sqrMagnitude > 0.001f)
         {
-            // ＝ 自分以外のプレイヤー（他人の画面から見たあなたのキャラ、またはその逆）
-            // ネットワーク経由で同期されて回っている「実際の体の回転」を基準に、自動追従させる
-            if (_playerObject != null && _shape != null)
-            {
-                _shape.NotShootTimeDirection = _playerObject.transform.right;
-            }
+            // 体（グラフィック）の回転処理
+            Quaternion pRotate = _playerObject.transform.rotation;
+            float angle = Mathf.Atan2(currentAimDir.y, currentAimDir.x) * Mathf.Rad2Deg;
+            Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+            // Lerpで滑らかに回転（他人の画面でもカクつかずに綺麗に回ります）
+            _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
+
+            // エイム範囲（見た目の演出）の更新
+            // （全員が同じデータを受け取っているので、複雑なelse分岐や逆算が不要になります）
+            _shape.NotShootTimeDirection = currentAimDir;
         }
     }
 }
