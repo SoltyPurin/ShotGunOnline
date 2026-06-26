@@ -60,22 +60,10 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
     private float _width = default;
 
     private Vector3 _leftTop = default;
-    public Vector3 LeftTop
-    {
-        get { return _leftTop; }
-    }
 
     private Vector3 _rightTop = default;
-    public Vector3 RightTop
-    {
-        get { return _rightTop; }
-    }
 
     private Vector3 _bottom = default;
-    public Vector3 Bottom
-    {
-        get { return _bottom; }
-    }
 
 
 
@@ -87,11 +75,14 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
 
     private void Update()
     {
+        //if (this.IsOwner)
+        //{
 
         if(_playerState.PlayerState == PlayerState.Ultimate)
         {
             return; //ウルト状態だったら処理しない
         }
+        _shootRange.CalcChargeAngle(_playerShot.ChargeValue);
         Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _notShootTimeDirection);
 
         float blueValue = Mathf.Lerp(MAXBLUEVALUE, 0, _overHeat.ComplementValue);
@@ -176,7 +167,9 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
 
         _meshFilter.sharedMesh = _innerMesh;
 
+    //}
     }
+
 
 
     public void UltShape(Vector3 direction)
