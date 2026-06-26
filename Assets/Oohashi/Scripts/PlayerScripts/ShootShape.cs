@@ -87,6 +87,7 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
 
     private void Update()
     {
+
         if(_playerState.PlayerState == PlayerState.Ultimate)
         {
             return; //ウルト状態だったら処理しない

@@ -147,10 +147,6 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         {
             return;
         }
-        if (!this.IsOwner)
-        {
-            return;
-        }
             //右トリガーから値を取得
             _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
 
@@ -159,21 +155,26 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private void PadShot()
     {
+    if (this.IsOwner)
+    {
+
         bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
-        switch (_stateManager.PlayerState)
+        bool isRbPressed = Gamepad.current.rightShoulder.isPressed;
+            switch (_stateManager.PlayerState)
         {
             case PlayerState.Normal:
-                _isPushShootButton = (isrightTriggerInput || Input.GetButton(FIREBUTTONNAME)) && !_isDecChargeTime /*&& _shootState == ShootState.CanShoot*/;
+                _isPushShootButton = (isrightTriggerInput || isRbPressed && !_isDecChargeTime) ;
                 break;
 
             case PlayerState.Ultimate:
-                _isPushShootButton = (isrightTriggerInput || Input.GetButtonDown(FIREBUTTONNAME));
+                _isPushShootButton = (isrightTriggerInput || isRbPressed);
                 break;
 
             case PlayerState.Fall:
                 break;
         }
-        //入力が0.9以上であれば実行判定に移す
+            //入力が0.9以上であれば実行判定に移す
+        }
 
     }
 
@@ -229,6 +230,10 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (!this.IsOwner)
+        {
+            return;
+        }
         if(_bulletPool == null)
         {
             _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
@@ -264,7 +269,6 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                         _shootRange.CalcChargeAngle(_chargeTime);
                         //クリティカル判定のメソッド
                         CriticalMethod();
-                        _shootRange.StartCharge();
 
                 }
                 //撃つボタンを離して、なおかつ現在チャージ中でなく落下中でなかったら解放可能
