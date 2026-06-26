@@ -23,7 +23,7 @@ public class TutorialManger : MonoBehaviour
         get { return _state; }
     }
 
-    [SerializeField, Header("ƒXƒe[ƒg•Ï‰»‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField, Header("ã‚¹ãƒ†ãƒ¼ãƒˆå¤‰åŒ–ã¾ã§ã®æ™‚é–“")]
     private float _transitionTime = 2.0f;
 
     private GameObject _shootDecoy = default;
@@ -37,8 +37,8 @@ public class TutorialManger : MonoBehaviour
     private bool _isInputRightStick = false;
     private readonly string DECOYENEMYTAGNAME = "Decoy";
     private readonly string ENEMYTAGNAME = "Enemy";
-    private bool _hasFoundChargeEnemy = false; // ˆê“x‚Å‚à“G‚ğŒ©‚Â‚¯‚½‚©H
-    private bool _hasFoundUltEnemy = false; // ˆê“x‚Å‚àƒEƒ‹ƒg‚ğ‚Ô‚¿‚Ü‚ê‚é“G‚ğŒ©‚Â‚¯‚½‚©
+    private bool _hasFoundChargeEnemy = false; // ä¸€åº¦ã§ã‚‚æ•µã‚’è¦‹ã¤ã‘ãŸã‹ï¼Ÿ
+    private bool _hasFoundUltEnemy = false; // ä¸€åº¦ã§ã‚‚ã‚¦ãƒ«ãƒˆã‚’ã¶ã¡è¾¼ã¾ã‚Œã‚‹æ•µã‚’è¦‹ã¤ã‘ãŸã‹
     private void Start()
     {
         if(Gamepad.current != null)
@@ -51,11 +51,6 @@ public class TutorialManger : MonoBehaviour
     }
     private void Update()
     {
-
-        if (_gamepad == null)
-        {
-            return;
-        }
         switch (_state)
         {
             case TutorialState.Shoot:
@@ -67,7 +62,11 @@ public class TutorialManger : MonoBehaviour
                 }
                 Slider stickSliderValue = GameObject.Find("Slider").GetComponent<Slider>();
                 stickSliderValue.maxValue = INPUTLIMITTIME;
-                if (_gamepad.rightStick.ReadValue() != Vector2.zero)
+
+                bool rightStickInput = _gamepad != null && _gamepad.rightStick.ReadValue() != Vector2.zero;
+                bool mouseInput = Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f;
+
+                if (rightStickInput || mouseInput)
                 {
                     _isInputRightStick = true;
                 }
@@ -95,7 +94,22 @@ public class TutorialManger : MonoBehaviour
                 check = GameObject.Find("Check");
                 stickSliderValue = GameObject.FindGameObjectWithTag("Slider").GetComponent<Slider>();
                 stickSliderValue.maxValue = INPUTLIMITTIME;
-                if (_gamepad.leftStick.ReadValue() != Vector2.zero)
+
+                bool leftStickInput = _gamepad != null && _gamepad.leftStick.ReadValue() != Vector2.zero;
+                bool keyboardInput = false;
+                if (Keyboard.current != null)
+                {
+                    keyboardInput = Keyboard.current.wKey.isPressed || Keyboard.current.sKey.isPressed ||
+                                    Keyboard.current.aKey.isPressed || Keyboard.current.dKey.isPressed ||
+                                    Keyboard.current.upArrowKey.isPressed || Keyboard.current.downArrowKey.isPressed ||
+                                    Keyboard.current.leftArrowKey.isPressed || Keyboard.current.rightArrowKey.isPressed;
+                }
+                else
+                {
+                    keyboardInput = Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0;
+                }
+
+                if (leftStickInput || keyboardInput)
                 {
                     _isInputLeftStick = true;
                 }
@@ -119,11 +133,11 @@ public class TutorialManger : MonoBehaviour
                 GameObject chargeEnemy = GameObject.FindWithTag(ENEMYTAGNAME);
                 if (chargeEnemy != null)
                 {
-                    _hasFoundChargeEnemy = true; // ˆê“x‚Å‚àŒ©‚Â‚¯‚½
+                    _hasFoundChargeEnemy = true; // ä¸€åº¦ã§ã‚‚è¦‹ã¤ã‘ãŸ
                 }
                 else if (_hasFoundChargeEnemy)
                 {
-                    _state = TutorialState.Ultimate; // ˆê“xŒ©‚Â‚¯‚½Œã‚Énull‚É‚È‚Á‚½“|‚³‚ê‚½
+                    _state = TutorialState.Ultimate; // ä¸€åº¦è¦‹ã¤ã‘ãŸå¾Œã«nullã«ãªã£ãŸï¼å€’ã•ã‚ŒãŸ
                 }
                 break;
 

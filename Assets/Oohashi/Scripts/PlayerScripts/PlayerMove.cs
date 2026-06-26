@@ -62,11 +62,10 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
     private void Start()
     {
-        if(Gamepad.current == null)//コントローラーがない場合はリターン
+        if (Gamepad.current != null)
         {
-            return;
+            _gamePad = Gamepad.current;//現在のコントローラーを代入
         }
-        _gamePad = Gamepad.current;//現在のコントローラーを代入
         _originPlayerMoveSpeed = _playerMoveSpeed;
     }
 
@@ -109,12 +108,37 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
                 _chargeMoveMultiplier = 1;
             }
 
-            if (_gamePad == null)
+            Vector2 input = Vector2.zero;
+            if (_gamePad != null)
             {
-                return;
+                input = _gamePad.leftStick.ReadValue();
             }
-            //左スティック取得
-            Vector2 input = _gamePad.leftStick.ReadValue();
+
+            // コントローラーの入力がない場合、キーボード入力を取得する
+            if (input.sqrMagnitude < 0.01f)
+            {
+                float x = 0;
+                float y = 0;
+                if (Keyboard.current != null)
+                {
+                    if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) y += 1f;
+                    if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) y -= 1f;
+                    if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) x -= 1f;
+                    if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) x += 1f;
+                }
+                else
+                {
+                    x = Input.GetAxisRaw("Horizontal");
+                    y = Input.GetAxisRaw("Vertical");
+                }
+                input = new Vector2(x, y);
+                // 斜め移動で速くならないように正規化する（キーボード入力のみ）
+                if (input.sqrMagnitude > 1f)
+                {
+                    input.Normalize();
+                }
+            }
+
             //Vector3型に変換
             SetMoveInputServerRpc(input.x, input.y);
 

@@ -4,16 +4,16 @@ using UnityEngine.InputSystem;
 
 public class ControllerVibelation : MonoBehaviour
 {
-    //ƒŒƒoƒuƒ‹‚Ì’l‚ğ•Û‘¶‚·‚éƒXƒNƒŠƒvƒg
+    //ãƒ¬ãƒãƒ–ãƒ«ã®å€¤ã‚’ä¿å­˜ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
     private float _vibeValue = default;
-    //ƒpƒbƒh‚ğ•Û‘¶‚·‚é•Ï”
+    //ãƒ‘ãƒƒãƒ‰ã‚’ä¿å­˜ã™ã‚‹å¤‰æ•°
     private Gamepad _gamepad = default;
 
     private void Start()
     {
         if(Gamepad.current == null)
         {
-            //ƒpƒbƒh‚ªÚ‘±‚³‚ê‚Ä‚È‚©‚Á‚½‚çƒŠƒ^[ƒ“
+            //ãƒ‘ãƒƒãƒ‰ãŒæ¥ç¶šã•ã‚Œã¦ãªã‹ã£ãŸã‚‰ãƒªã‚¿ãƒ¼ãƒ³
             return;
         }
         _gamepad = Gamepad.current;
@@ -21,34 +21,37 @@ public class ControllerVibelation : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŒƒoƒuƒ‹‚·‚éƒƒ\ƒbƒh
+    /// ãƒã‚¤ãƒ–ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
     public void ViblationPortocol(float chargeTime)
     {
-        //1ˆÈ“à‚É’l‚ğû‚ß‚é‚½‚ß2‚ÅŠ„‚é
+        if (_gamepad == null) return;
+        //1ä»¥å†…ã®å€¤ã«è¾¼ã‚ã‚‹ãŸã‚2ã§å‰²ã‚‹
         _vibeValue = chargeTime / 2;
-        //1ˆÈ“à‚Éû‚ß‚½’l‚ÅƒŒƒoƒuƒ‹
+        //1ä»¥å†…ã®å€¤ã§ãƒ¢ãƒ¼ã‚¿ãƒã‚¤ãƒ–
         _gamepad.SetMotorSpeeds(_vibeValue, _vibeValue);
-        //ƒ‚[ƒ^[’â~‚ÌƒRƒ‹[ƒ`ƒ“ŒÄ‚Ño‚µ
+        //ãƒ¢ãƒ¼ã‚¿ã‚¹ãƒˆãƒƒãƒ—ã®ã‚³ãƒ¼ãƒãƒ³å‘¼ã³å‡ºã—
         StartCoroutine(ViblationStop());
     }
     /// <summary>
-    /// ƒŒƒoƒuƒ‹‚ğ~‚ß‚éƒRƒ‹[ƒ`ƒ“
+    /// ãƒã‚¤ãƒ–æ­¢ã‚ã‚‹ã‚³ãƒ¼ãƒãƒ³
     /// </summary>
-    /// <returns>0.3•b‘Ò‚Á‚Ä‚©‚ç’â~</returns>
+    /// <returns>0.3ç§’å¾…ã£ã¦ã‹ã‚‰åœæ­¢</returns>
     private IEnumerator ViblationStop()
     {
+        if (_gamepad == null) yield break;
         yield return new WaitForSeconds(0.3f);
         _gamepad.SetMotorSpeeds(0, 0);
     }
     /// <summary>
-    /// ƒEƒ‹ƒg‚ÌƒŒƒoƒuƒ‹‚ÌƒRƒ‹[ƒ`ƒ“AŠe•b”‘Ò‹@‚µ‚ÄÀs
+    /// ã‚¦ãƒ«ãƒˆã®ãƒã‚¤ãƒ–ã®ã‚³ãƒ¼ãƒãƒ³ã€å„å¾…æ©Ÿæ™‚é–“çµŒã¦å®Ÿè¡Œ
     /// </summary>
-    /// <returns>¶‰E‚Å‚í‚¯‚ÄƒŒƒoƒuƒ‹</returns>
+    /// <returns>æ’ƒã¡ã‚ã‘ã¦ãƒã‚¤ãƒ–</returns>
     public IEnumerator UltVibeProtocol()
     {
-        yield return null; // 1ƒtƒŒ[ƒ€‚¾‚¯‘Ò‚Á‚Ä‚©‚ç
+        if (_gamepad == null) yield break;
+        yield return null; // 1ãƒ•ãƒ¬å¾…ã¤
         _gamepad.SetMotorSpeeds(1f,1f);
         yield return new WaitForSeconds(0.1f);
         _gamepad.SetMotorSpeeds(1, 0f);
@@ -60,9 +63,9 @@ public class ControllerVibelation : MonoBehaviour
         _gamepad.SetMotorSpeeds(0, 0);
     }
     /// <summary>
-    /// ƒRƒ“ƒgƒ[ƒ‰[‚ÌƒŒƒoƒuƒ‹‚Ì¶‰E‚ğŒˆ‚ß‚é
+    /// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®ãƒã‚¤ãƒ–ã®å·¦å³æ±ºã‚ã‚‹
     /// </summary>
-    /// <param name="collisionEnemyPos">‚Ô‚Â‚©‚Á‚Ä‚«‚½“G‚ÌƒIƒuƒWƒFƒNƒg</param>
+    /// <param name="collisionEnemyPos">ã¶ã¤ã‹ã£ã¦ã‚‹æ•µã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
     public void ViblartionSettingLeftAndRight(Vector2 collisionEnemyPos)
     {
         float enemyPosX = collisionEnemyPos.x;
@@ -79,13 +82,14 @@ public class ControllerVibelation : MonoBehaviour
         }
     }
     /// <summary>
-    /// —^‚¦‚ç‚ê‚½•û‚Ìƒ‚[ƒ^[‚ğ‹N“®‚µ‚ÄƒŒƒoƒuƒ‹
+    /// ä¸ãˆã‚‰ã‚ŒãŸã®ãƒ¢ãƒ¼ã‚¿ãƒ¼å›ã—ã¦ãƒã‚¤ãƒ–
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
     /// <returns></returns>
     private IEnumerator DamageVibeProtocol(float left, float right)
     {
+        if (_gamepad == null) yield break;
         _gamepad.SetMotorSpeeds(left, right);
         yield return new WaitForSeconds(0.5f);
         _gamepad.SetMotorSpeeds(0, 0);

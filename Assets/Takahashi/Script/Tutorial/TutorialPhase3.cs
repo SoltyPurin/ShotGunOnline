@@ -4,27 +4,27 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 class Phase3UIs
 {
-    #region [•Ï”]
-    [Header("ƒLƒƒƒ“ƒoƒX")]
-    [SerializeField, Tooltip("ƒƒCƒ“ƒLƒƒƒ“ƒoƒX")]
+    #region [å¤‰æ•°]
+    [Header("ã‚­ãƒ£ãƒ³ãƒã‚¹")]
+    [SerializeField, Tooltip("ãƒ¡ã‚¤ãƒ³ã‚­ãƒ£ãƒ³ãƒã‚¹")]
     private GameObject _mainCanvas = default;
-    [SerializeField, Tooltip("ƒLƒƒƒ“ƒoƒX")]
+    [SerializeField, Tooltip("ã‚­ãƒ£ãƒ³ãƒã‚¹")]
     private GameObject _phase3Canvas = default;
-    [SerializeField, Tooltip("ƒƒCƒ“ƒLƒƒƒ“ƒoƒX‚ÌƒAƒjƒ[ƒ^[")]
+    [SerializeField, Tooltip("ãƒ¡ã‚¤ãƒ³ã‚­ãƒ£ãƒ³ãƒã‚¹ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     private Animator _canvasAnimator = default;
 
     [Header("UI")]
-    [SerializeField, Tooltip("Ÿ‚Ö‚Ìƒ{ƒbƒNƒX")]
+    [SerializeField, Tooltip("æ¬¡ã¸ã®ãƒœãƒƒã‚¯ã‚¹")]
     private GameObject _nextBox = default;
-    [SerializeField, Tooltip("ğŒ‚É‚æ‚Á‚ÄoŒ»‚·‚éƒ{ƒbƒNƒX")]
+    [SerializeField, Tooltip("æ¡ä»¶ã«ã‚ˆã£ã¦å‡ºç¾ã™ã‚‹ãƒœãƒƒã‚¯ã‚¹")]
     private GameObject _prevBox = default;
-    [SerializeField, Tooltip("ƒeƒLƒXƒg")]
+    [SerializeField, Tooltip("ãƒ†ã‚­ã‚¹ãƒˆ")]
     private GameObject _text = default;
-    [SerializeField, Tooltip("Ÿ‚ÌƒeƒLƒXƒg")]
+    [SerializeField, Tooltip("æ¬¡ã®ãƒ†ã‚­ã‚¹ãƒˆ")]
     private GameObject _nextText = default;
     #endregion
 
-    #region [ƒvƒƒpƒeƒB]
+    #region [ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£]
     public GameObject MainCanvas => _mainCanvas;
     public GameObject Phase3Canvas => _phase3Canvas;
     public Animator CanvasAnimator => _canvasAnimator;
@@ -48,20 +48,20 @@ public class TutorialPhase3 : TutorialCountUpper
     }
     private Phase3State _state = Phase3State.Wait;
 
-    #region y•Ï”z
-    [SerializeField, Header("UIiƒLƒƒƒ“ƒoƒX‚È‚Çj")]
+    #region ã€å¤‰æ•°ã€‘
+    [SerializeField, Header("UIï¼ˆã‚­ãƒ£ãƒ³ãƒã‚¹ãªã©ï¼‰")]
     private Phase3UIs UIs;
 
-    [SerializeField, Header("ƒtƒF[ƒY3‚ÌƒfƒRƒC")]
+    [SerializeField, Header("ãƒ•ã‚§ãƒ¼ã‚º3ã®ãƒ‡ã‚³ã‚¤")]
     private GameObject _phase3Decoy = default;
 
-    [SerializeField, Header("‘Ò‚ÂŠÔ")]
+    [SerializeField, Header("å¾…ã¤æ™‚é–“")]
     private float _waitTime = 2;
 
-    [SerializeField, Header("“G‚Ì”")]
+    [SerializeField, Header("æ•µã®æ•°")]
     private int _enemyCount = 0;
 
-    //Šeíprivate•Ï”
+    //å„ç¨®privateå¤‰æ•°
     private bool _isNext = false;
     private bool _prevText = false;
     private bool _endTutorial = false;
@@ -77,22 +77,19 @@ public class TutorialPhase3 : TutorialCountUpper
 
     private void Start()
     {
-        //ƒRƒ“ƒgƒ[ƒ‰[‚ª‚È‚¢ê‡‚ÍƒŠƒ^[ƒ“
-        if (Gamepad.current == null)
+        if (Gamepad.current != null)
         {
-            return;
+            _gamePad = Gamepad.current;
         }
-
-        _gamePad = Gamepad.current;
 
         GameObject player = GameObject.FindWithTag("Player");
 
-        //ƒvƒŒƒCƒ„[‚©‚çŠeíƒXƒNƒŠƒvƒg‚ğæ“¾
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰å„ç¨®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å–å¾—
         _soulKeep = player.GetComponent<SoulKeep>();
         _playerStateManager = player.GetComponent<PlayerStateManager>();
         _inputPause = GameObject.Find("PauseVision").GetComponent<InputPause>();
 
-        //Šeí•Ï”‚ğ‰Šú‰»
+        //å„ç¨®å¤‰æ•°ã‚’åˆæœŸåŒ–
         _timer = 0;
         _isNext = false;
         _endTutorial = false;
@@ -100,15 +97,14 @@ public class TutorialPhase3 : TutorialCountUpper
     }
 
     /// <summary>
-    /// –ˆƒtƒŒ[ƒ€Às‚³‚ê‚éƒƒ\ƒbƒh
-    /// ¦Update‚È‚Ì‚Í“r’†‚ÅTimeScale‚ğ0‚É‚·‚é‚½‚ß
+    /// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å®Ÿè¡Œã•ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// â€»Updateãªã®ã¯é€”ä¸­ã§TimeScaleã‚’0ã«ã™ã‚‹ãŸã‚
     /// </summary>
     private void Update()
     {
-        if(_gamePad == null)
+        if(_gamePad == null && Gamepad.current != null)
         {
             _gamePad = Gamepad.current;
-            return;
         }
 
         switch (_state)
@@ -131,10 +127,10 @@ public class TutorialPhase3 : TutorialCountUpper
 
             case Phase3State.First:
 
-                //ƒ`ƒ…[ƒgƒŠƒAƒ‹•\¦‚©‚çŸ‚ÉˆÚs‰Â”\‚Ü‚Å‚ÌŠÔ‘Ò‚Â
+                //ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«è¡¨ç¤ºã‹ã‚‰æ¬¡ã«ç§»è¡Œå¯èƒ½ã¾ã§ã®æ™‚é–“å¾…ã¤
                 BoxActiveTimer();
 
-                //Ÿ‚ÉˆÚs‰Â”\‚©‚ÂA‚`ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½AŸ‚Ìƒ`ƒ…[ƒgƒŠƒAƒ‹‚ÉˆÚs‚·‚éB
+                //æ¬¡ã«ç§»è¡Œå¯èƒ½ã‹ã¤ã€ï¼¡ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã€æ¬¡ã®ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã«ç§»è¡Œã™ã‚‹ã€‚
                 if (_isNext 
                         && PushtoLorA()
                         && !_inputPause.IsPauseing)
@@ -165,10 +161,10 @@ public class TutorialPhase3 : TutorialCountUpper
 
             case Phase3State.Second:
 
-                //ƒ`ƒ…[ƒgƒŠƒAƒ‹•\¦‚©‚çŸ‚ÉˆÚs‰Â”\‚Ü‚Å‚ÌŠÔ‘Ò‚Â
+                //ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«è¡¨ç¤ºã‹ã‚‰æ¬¡ã«ç§»è¡Œå¯èƒ½ã¾ã§ã®æ™‚é–“å¾…ã¤
                 BoxActiveTimer();
 
-                //Ÿ‚ÉˆÚs‰Â”\‚©‚ÂA‚`ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½Aƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğŒ³‚É–ß‚µˆÚ“®‰Â”\‚É‚·‚éB
+                //æ¬¡ã«ç§»è¡Œå¯èƒ½ã‹ã¤ã€ï¼¡ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã€ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’å…ƒã«æˆ»ã—ç§»å‹•å¯èƒ½ã«ã™ã‚‹ã€‚
                 if (_isNext 
                         && PushtoLorA()
                         && !_inputPause.IsPauseing)
@@ -184,7 +180,7 @@ public class TutorialPhase3 : TutorialCountUpper
 
                 break;
 
-            //Lƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚¢‚È‚¢Ò—p
+            //Lãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ã„ãªã„è€…ç”¨
             case Phase3State.Third:
 
                 break;
@@ -197,10 +193,10 @@ public class TutorialPhase3 : TutorialCountUpper
         }
     }
 
-    //------------yƒƒ\ƒbƒhz------------
+    //------------ã€ãƒ¡ã‚½ãƒƒãƒ‰ã€‘------------
 
     /// <summary>
-    /// ƒtƒF[ƒY‚ğŠJn‚·‚é‚½‚ß‚Ìƒƒ\ƒbƒh
+    /// ãƒ•ã‚§ãƒ¼ã‚ºã‚’é–‹å§‹ã™ã‚‹ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void PhaseStart()
     {
@@ -208,11 +204,11 @@ public class TutorialPhase3 : TutorialCountUpper
     }
 
     /// <summary>
-    /// ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒeƒLƒXƒg•\¦‚©‚çŸ‚ÉˆÚs‚·‚é‚Ü‚Å‚Ì‘Ò‹@ŠÔ‚ğŠÇ—‚·‚éƒƒ\ƒbƒh
+    /// ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ãƒ†ã‚­ã‚¹ãƒˆè¡¨ç¤ºã‹ã‚‰æ¬¡ã«ç§»è¡Œã™ã‚‹ã¾ã§ã®å¾…æ©Ÿæ™‚é–“ã‚’ç®¡ç†ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void BoxActiveTimer()
     {
-        //‚à‚µw’è‚Ì•b”Œo‚Á‚½‚çAŸ‚ÉˆÚs‰Â”\‚É‚µ‚ÄƒŠƒ^[ƒ“‚·‚éB
+        //ã‚‚ã—æŒ‡å®šã®ç§’æ•°çµŒã£ãŸã‚‰ã€æ¬¡ã«ç§»è¡Œå¯èƒ½ã«ã—ã¦ãƒªã‚¿ãƒ¼ãƒ³ã™ã‚‹ã€‚
         if (_timer >= _waitTime)
         {
             _isNext = true;
@@ -230,7 +226,7 @@ public class TutorialPhase3 : TutorialCountUpper
             return;
         }
 
-        //ƒ^ƒCƒ}[‚Éƒ^ƒCƒ€ƒXƒP[ƒ‹‚Ì‰e‹¿‚ğó‚¯‚È‚¢DeltaTime‚ğ‰ÁZ
+        //ã‚¿ã‚¤ãƒãƒ¼ã«ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã®å½±éŸ¿ã‚’å—ã‘ãªã„DeltaTimeã‚’åŠ ç®—
         _timer += Time.unscaledDeltaTime;
     }
 
@@ -243,15 +239,15 @@ public class TutorialPhase3 : TutorialCountUpper
     }
 
     /// <summary>
-    /// ƒtƒF[ƒY“à‚Ì‘S‚Ä‚Ì“G‚ğ“|‚³‚¹‚éƒ`ƒ…[ƒgƒŠƒAƒ‹—pƒƒ\ƒbƒh
-    /// “G‘¤‚©‚çŒÄ‚Ño‚·B
+    /// ãƒ•ã‚§ãƒ¼ã‚ºå†…ã®å…¨ã¦ã®æ•µã‚’å€’ã•ã›ã‚‹ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
+    /// æ•µå´ã‹ã‚‰å‘¼ã³å‡ºã™ã€‚
     /// </summary>
     public override void CountDown()
     {
-        //ƒJƒEƒ“ƒ^[‚Ì’l‚ğƒ}ƒCƒiƒX‚·‚éB
+        //ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®å€¤ã‚’ãƒã‚¤ãƒŠã‚¹ã™ã‚‹ã€‚
         _counter--;
 
-        //‚à‚µ“G‚ª0ˆÈ‰º‚É‚È‚Á‚½‚çAŸ‚ÉˆÚs‰Â”\‚É‚·‚éB
+        //ã‚‚ã—æ•µãŒ0ä»¥ä¸‹ã«ãªã£ãŸã‚‰ã€æ¬¡ã«ç§»è¡Œå¯èƒ½ã«ã™ã‚‹ã€‚
         if (_counter <= 0)
         {
             _endTutorial = true;
@@ -261,14 +257,26 @@ public class TutorialPhase3 : TutorialCountUpper
 
     private bool PushtoLorA()
     {
-        float leftTriggerValue = Gamepad.current.leftTrigger.ReadValue();
-        bool isLeftTriggerInput = leftTriggerValue >= LEFT_TRIGGER_INPUT_VALUE;
+        float leftTriggerValue = 0f;
+        bool isLeftTriggerInput = false;
+        if (_gamePad != null)
+        {
+            leftTriggerValue = _gamePad.leftTrigger.ReadValue();
+            isLeftTriggerInput = leftTriggerValue >= LEFT_TRIGGER_INPUT_VALUE;
+        }
 
-        if (!_prevText && Gamepad.current.aButton.wasPressedThisFrame)
+        bool isAPressed = _gamePad != null && _gamePad.aButton.wasPressedThisFrame;
+        bool isKeyboardNext = Keyboard.current != null && (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame);
+        bool isMouseNext = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+        bool nextPressed = isAPressed || isKeyboardNext || isMouseNext || Input.anyKeyDown;
+
+        bool isKeyboardUltInput = Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
+
+        if (!_prevText && nextPressed)
         {
             return true;
         }
-        else if (_prevText && Input.GetButtonDown(USE_ULTIMATE_BUTTON) || isLeftTriggerInput)
+        else if (_prevText && (Input.GetButtonDown(USE_ULTIMATE_BUTTON) || isLeftTriggerInput || isKeyboardUltInput))
         {
             return true;
         }
@@ -277,9 +285,9 @@ public class TutorialPhase3 : TutorialCountUpper
     }
 
     /// <summary>
-    /// ƒtƒF[ƒY‚ğI—¹‚³‚¹‚ç‚ê‚é‚©‚Ç‚¤‚©‚ğŠÇ—‚·‚éƒƒ\ƒbƒh
+    /// ãƒ•ã‚§ãƒ¼ã‚ºã‚’çµ‚äº†ã•ã›ã‚‰ã‚Œã‚‹ã‹ã©ã†ã‹ã‚’ç®¡ç†ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <returns>ƒtƒF[ƒYI—¹‰Â”\‚È‚çtrue</returns>
+    /// <returns>ãƒ•ã‚§ãƒ¼ã‚ºçµ‚äº†å¯èƒ½ãªã‚‰true</returns>
     public bool EndPhase()
     {
         if (_phase3Decoy != null)
