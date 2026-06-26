@@ -147,16 +147,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         {
             return;
         }
-        if (this.IsOwner)
+        if (!this.IsOwner)
         {
+            return;
+        }
             //右トリガーから値を取得
             _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
-        }
 
-        if (this.IsServer)
-        {
             PadShot();
-        }
     }
 
     private void PadShot()
@@ -181,21 +179,21 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private void Charge()
     {
-        _initChargeTime += Time.deltaTime * _bonusMultiplier;
-        if (_canCriticalShoot)
-        {
-            _chargeTime = _criticalPower;
-        }
-        else
-        {
-            //チャージ時間に加算
-            _chargeTime += Time.deltaTime * _bonusMultiplier;
-            //チャージ時間は最大2秒なのでその中に収まるようにする
-            _chargeTime = Mathf.Clamp(_chargeTime, 0, MAXCHARGEVALUE);
-            //チャージしてる判定にする
-            _isCharge = true;
+            _initChargeTime += Time.deltaTime * _bonusMultiplier;
+            if (_canCriticalShoot)
+            {
+                _chargeTime = _criticalPower;
+            }
+            else
+            {
+                //チャージ時間に加算
+                _chargeTime += Time.deltaTime * _bonusMultiplier;
+                //チャージ時間は最大2秒なのでその中に収まるようにする
+                _chargeTime = Mathf.Clamp(_chargeTime, 0, MAXCHARGEVALUE);
+                //チャージしてる判定にする
+                _isCharge = true;
 
-        }
+            }
     }
 
 
@@ -236,6 +234,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
             return;
         }
+
         //チャージ時間が0以上でチャージ中でない場合
         if (_chargeTime > 0 && !_isCharge)
         {
@@ -259,13 +258,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                         _seScript.PlayDryFire();
                         return;
                     }
-                    //当たり判定の計算メソッドを実行
-                    _shootRange.CalcChargeAngle(_chargeTime);
-                    //クリティカル判定のメソッド
-                    CriticalMethod();
-                    //チャージするメソッド
-                    Charge();
-                    _shootRange.StartCharge();
+                        //チャージするメソッド
+                        Charge();
+                        //当たり判定の計算メソッドを実行
+                        _shootRange.CalcChargeAngle(_chargeTime);
+                        //クリティカル判定のメソッド
+                        CriticalMethod();
+                        _shootRange.StartCharge();
+
                 }
                 //撃つボタンを離して、なおかつ現在チャージ中でなく落下中でなかったら解放可能
                 else if (!_isPushShootButton && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
