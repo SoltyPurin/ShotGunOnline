@@ -12,7 +12,7 @@ public enum EnemyState
     Wait
 }
 
-public class EnemyMove : MonoBehaviour
+public class EnemyMove : Unity.Netcode.NetworkBehaviour
 {
 
     protected GameObject _playerObject = default;
@@ -101,7 +101,10 @@ public class EnemyMove : MonoBehaviour
         {
             return;
         }
-        Moving();//�ړ��̃��\�b�h�Ăяo��
+        if (this.IsServer)
+        {
+            Moving();//�ړ��̃��\�b�h�Ăяo��
+        }
     }
 
     public virtual void Moving()
