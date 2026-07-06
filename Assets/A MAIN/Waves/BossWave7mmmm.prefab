@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4644690288074949861}
   - component: {fileID: 6830500197335345985}
+  - component: {fileID: -8624968036832083132}
   m_Layer: 0
   m_Name: BossWave7mmmm
   m_TagString: Untagged
@@ -82,6 +83,31 @@ MonoBehaviour:
   _difficulty: 3
   _autoTransition: 1
   _waveStartText: 
+--- !u!114 &-8624968036832083132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132050679272189914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &7022225276004184689
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +143,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &7489367087293057305
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -132,6 +159,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -153,9 +185,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -165,7 +199,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!70 &4506499323436970644
 CapsuleCollider2D:
@@ -251,6 +284,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArmorEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5015676984042077547, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1429860585
+      objectReference: {fileID: 0}
     - target: {fileID: 6766987364499549645, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9
@@ -320,6 +357,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4644690288074949861}
     m_Modifications:
+    - target: {fileID: -7109468111117232100, guid: 937520ba7fa6acb45bb35c6833671480, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 298997146
+      objectReference: {fileID: 0}
     - target: {fileID: 1203712252126980731, guid: 937520ba7fa6acb45bb35c6833671480, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17
@@ -397,6 +438,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4644690288074949861}
     m_Modifications:
+    - target: {fileID: -5169489231772872588, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2293923684
+      objectReference: {fileID: 0}
     - target: {fileID: 1492867991441486744, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15.511574
@@ -474,6 +519,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4644690288074949861}
     m_Modifications:
+    - target: {fileID: -1325550192902517136, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 891420165
+      objectReference: {fileID: 0}
     - target: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
       propertyPath: m_Name
       value: Bomb (1)
@@ -697,6 +746,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4644690288074949861}
     m_Modifications:
+    - target: {fileID: -5169489231772872588, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1613470526
+      objectReference: {fileID: 0}
     - target: {fileID: 1492867991441486744, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.072857
@@ -774,6 +827,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4644690288074949861}
     m_Modifications:
+    - target: {fileID: -5169489231772872588, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2596093339
+      objectReference: {fileID: 0}
     - target: {fileID: 1492867991441486744, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.2
@@ -923,6 +980,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4517113842697549388, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1066567188
+      objectReference: {fileID: 0}
     - target: {fileID: 5664278761013691538, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
       propertyPath: _bossMove
       value: 
@@ -975,6 +1036,14 @@ PrefabInstance:
       propertyPath: m_AngularDrag
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8104424340517015094, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+      propertyPath: m_LinearDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8104424340517015094, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+      propertyPath: m_AngularDamping
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1009,6 +1078,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4644690288074949861}
     m_Modifications:
+    - target: {fileID: -1325550192902517136, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3121535562
+      objectReference: {fileID: 0}
     - target: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
       propertyPath: m_Name
       value: Bomb

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5030616004506873733}
   - component: {fileID: 3896925289570339866}
   - component: {fileID: 998155527148574301}
+  - component: {fileID: -6402475651796809658}
   m_Layer: 0
   m_Name: MakinoLabWave8
   m_TagString: Untagged
@@ -70,6 +71,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wave: {fileID: 4047231182250988058}
+--- !u!114 &-6402475651796809658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634467166805199453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &819628863705227571
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,6 +927,10 @@ PrefabInstance:
       propertyPath: m_Events.m_Events.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 5376468261992086446}
+    - target: {fileID: 4517113842697549388, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2627297374
+      objectReference: {fileID: 0}
     - target: {fileID: 4525818852662893039, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
       propertyPath: m_Events.m_Events.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

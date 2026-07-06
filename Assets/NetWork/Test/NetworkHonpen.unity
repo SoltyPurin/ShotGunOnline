@@ -5430,6 +5430,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8902293328927993480}
+  - component: {fileID: 8902293328927993483}
   - component: {fileID: 8902293328927993482}
   - component: {fileID: 8902293328927993481}
   m_Layer: 0
@@ -5672,6 +5673,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8955623146422157152, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4594957696161856866}
+    - targetCorrespondingSourceObject: {fileID: 8955623146422157152, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4594957696161856867}
   m_SourcePrefab: {fileID: 100100000, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
 --- !u!95 &2854139368256601659
 Animator:
@@ -6030,6 +6034,31 @@ MonoBehaviour:
   - {fileID: 1409814927}
   - {fileID: 1636970278}
   _waveText: {fileID: 1112404807}
+--- !u!114 &4594957696161856867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175026818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3506205515
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!4 &4612131248773404343
 Transform:
   m_ObjectHideFlags: 0
@@ -6625,7 +6654,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2f3e65871fcd2c4abfae690dc52d6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetWorkGameStarter
+  ShowTopMostFoldoutHeaderGroup: 1
   _waveManager: {fileID: 340755583}
+--- !u!114 &8902293328927993483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409077307270537602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 452224799
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -27,7 +27,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         get { return _moveSpeed; }
     }
     [SerializeField, Header("�v���C���[�Ǝ�鋗���A���b�N�I���ȊO���ς��Ă��Ӗ��Ȃ�")]
-    protected float _keepDistance = 0;//�v���C���[�Ǝ�鋗��
+    protected float _keepDistance = 0;
     //�ړ��s�\�̃t���O
     protected bool _cantMove = false;
     //���݂̃X�e�[�g
@@ -93,17 +93,22 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     {
         if (_playerObject == null)
         {
+            Debug.Log("プレイヤーが見当たらない");
             FindPlayer();
             return;
         }
         _cantMove = _enemyState == EnemyState.knockback || _enemyState == EnemyState.fall || _enemyState == EnemyState.Wait;
-        if (_cantMove) //�m�b�N�o�b�N���܂��͗������͈ړ����Ȃ��悤�ɂ���
+        if (_cantMove) 
         {
             return;
         }
         if (this.IsServer)
         {
-            Moving();//�ړ��̃��\�b�h�Ăяo��
+            Moving();
+        }
+        else
+        {
+            Debug.Log("IsServerがfalse");
         }
     }
 
@@ -115,7 +120,6 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         }
         if(_isFloating)
         {
-            Debug.Log("��������b�I");
             float t = Time.fixedDeltaTime * _inertiaStrangth;
             _rigidBody.linearVelocity = Vector2.Lerp(_rigidBody.linearVelocity,_saveDirection, t);
 

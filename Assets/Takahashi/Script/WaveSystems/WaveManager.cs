@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
 /// ウェーブを管理するクラス
 /// </summary>
-public class WaveManager : MonoBehaviour
+public class WaveManager : Unity.Netcode.NetworkBehaviour
 {
     #region 【Enum】
     public enum WaveType
@@ -157,27 +158,48 @@ public class WaveManager : MonoBehaviour
     /// <param name="index">index番目のウェーブを複製しcloneListに格納する。</param>
     public void StartWave(int index)
     {
+        Debug.Log("ウェーブ開始を呼び出し");
+        if (!IsServer)
+        {
+            return;
+        }
+        Debug.Log("ウェーブスタート");
+        Wave cloneWave = Instantiate(_waveList[_waveIndex]);
+        //Listにウェーブプレハブをコピーし追加
+        _cloneList.Add((Wave)Instantiate(cloneWave));
+        //_cloneList.Add((Wave)Instantiate(_waveList[index]));
+        if (cloneWave.GetComponent<NetworkObject>() != null)
+        {
+            cloneWave.GetComponent<NetworkObject>().Spawn();
+        }
+        StartWaveClientRpc(index);
+
+
+    }
+    /// <summary>
+    /// ネットワーク対応のウェーブスタート処理
+    /// </summary>
+    /// <param name="index"></param>
+    [ClientRpc]
+    private void StartWaveClientRpc(int index)
+    {
         if (!_startWave)
         {
             _startWave = true;
         }
 
-        if(_waveType != WaveType.Tutorial)
+        if (_waveType != WaveType.Tutorial)
         {
             _uiManager.SetFirstEnemyCounter(_waveList[_waveIndex].ObjList.Count);
             _uiManager.ReMoveRank();
         }
-
-        //Listにウェーブプレハブをコピーし追加
-        _cloneList.Add((Wave)Instantiate(_waveList[index]));
-
         //ウェーブのオート遷移が有効なら演出を出す。
         if (_waveList[_waveIndex].AutoTransition)
         {
             StartWaveProduction(index);
         }
-    }
 
+    }
     /// <summary>
     /// ウェーブ開始時の演出を出す用メソッド
     /// </summary>

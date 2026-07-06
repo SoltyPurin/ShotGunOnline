@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -267,6 +268,17 @@ public class Wave : MonoBehaviour
             {
                 _objList[_nowObj]._waveObj.gameObject.SetActive(true);
                 _objList[_nowObj]._waveObj.PopAnim();
+                if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsServer)
+                {
+                    // 敵オブジェクトから NetworkObject コンポーネントを取得
+                    NetworkObject netObj = _objList[_nowObj]._waveObj.GetComponent<Unity.Netcode.NetworkObject>();
+
+                    // まだネットワークにスポーンしていなければ、手動でスポーンさせる
+                    if (netObj != null && !netObj.IsSpawned)
+                    {
+                        netObj.Spawn();
+                    }
+                }
             }
 
             //次の敵へ移動

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 854861134478962062}
   - component: {fileID: 8040145471762432446}
+  - component: {fileID: -8145155927886013566}
   m_Layer: 0
   m_Name: TestWave1mmmm
   m_TagString: Untagged
@@ -98,6 +99,31 @@ MonoBehaviour:
   _difficulty: 3
   _autoTransition: 1
   _waveStartText: ' '
+--- !u!114 &-8145155927886013566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998071966400159044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &8323167358284565216
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +176,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3550248036
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -231,6 +261,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FatSlow (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3389345464606807759, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4193331713
+      objectReference: {fileID: 0}
     - target: {fileID: 5905855407838745011, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20.46
@@ -304,6 +338,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2366637857
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -385,6 +423,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FatSlow
       objectReference: {fileID: 0}
+    - target: {fileID: 3389345464606807759, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 783629817
+      objectReference: {fileID: 0}
     - target: {fileID: 5905855407838745011, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.449282
@@ -458,6 +500,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 22055860
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -535,6 +581,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3349100862
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -612,6 +662,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1818772066
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -689,6 +743,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2642175935
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -766,6 +824,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 279462459
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -843,6 +905,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1620598279
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -920,6 +986,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1487849992
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -997,6 +1067,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1857724083
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1074,6 +1148,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3631217233
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1151,6 +1229,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4153737779
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1228,6 +1310,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 854861134478962062}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1905841362
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
