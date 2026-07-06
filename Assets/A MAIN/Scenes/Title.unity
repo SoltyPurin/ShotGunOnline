@@ -275,7 +275,7 @@ MonoBehaviour:
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
-    m_HighlightedTrigger: Choice3
+    m_HighlightedTrigger: Choice4
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
@@ -2765,7 +2765,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 925232670}
+    m_SelectOnDown: {fileID: 736172921}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
@@ -3819,7 +3819,7 @@ Animator:
   m_GameObject: {fileID: 736172916}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f7e6f5f519c8a3a418a6b62b17fd3093, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4b5b406a220860649af504d2feecb629, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3872,7 +3872,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 479971958}
     m_SelectOnDown: {fileID: 925232670}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -3892,7 +3892,7 @@ MonoBehaviour:
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
-    m_HighlightedTrigger: Choice1
+    m_HighlightedTrigger: Choice2
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
@@ -3903,7 +3903,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 431470537}
         m_TargetAssemblyTypeName: TitleButtonManager, Assembly-CSharp
-        m_MethodName: GameStartMovie
+        m_MethodName: LaunchMultiplayerMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4534,7 +4534,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 479971958}
+    m_SelectOnUp: {fileID: 736172921}
     m_SelectOnDown: {fileID: 26413710}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -4554,7 +4554,7 @@ MonoBehaviour:
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
-    m_HighlightedTrigger: Choice2
+    m_HighlightedTrigger: Choice3
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
@@ -7127,7 +7127,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12, y: -102}
+  m_AnchoredPosition: {x: -3, y: -102}
   m_SizeDelta: {x: 540.432, y: 101.33099}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1443829702
@@ -7813,6 +7813,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3170725994633896652, guid: 3fc8f93bf43f1604d920e3e5033c26bf, type: 3}
   m_PrefabInstance: {fileID: 6161419795961807865}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1514883965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1514883967}
+  - component: {fileID: 1514883966}
+  m_Layer: 0
+  m_Name: DebugTitleButtonSelected
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1514883966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514883965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4c284ba46573544fab0c51d634f84c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TitleButtonSelected
+--- !u!4 &1514883967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514883965}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1357.2952, y: 460.9732, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1516529160
 GameObject:
   m_ObjectHideFlags: 0
@@ -8363,7 +8407,7 @@ MonoBehaviour:
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
-    m_HighlightedTrigger: Choice4
+    m_HighlightedTrigger: Choice5
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
@@ -9678,7 +9722,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 0c39d8c452b4afe41ab684843834fc97, type: 3}
-    m_FontSize: 150
+    m_FontSize: 128
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
@@ -10435,3 +10479,4 @@ SceneRoots:
   - {fileID: 989588245}
   - {fileID: 651832914}
   - {fileID: 8211390465491999376}
+  - {fileID: 1514883967}

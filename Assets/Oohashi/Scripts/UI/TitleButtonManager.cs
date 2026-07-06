@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,43 +6,43 @@ using UnityEngine.Playables;
 
 public class TitleButtonManager : MonoBehaviour
 {
-    [SerializeField, Header("ƒ^ƒCƒgƒ‹‰æ–Ê‚©‚çˆÚ“®‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‹ã‚‰ç§»å‹•ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private MoveScene _moveScene = default;
 
-    [SerializeField, Header("Å‰‚Ìƒ{ƒ^ƒ“’B‚ğŠÇ—‚·‚éƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("æœ€åˆã®ãƒœã‚¿ãƒ³é”ã‚’ç®¡ç†ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _firstButtons = default;
 
-    [SerializeField, Header("BGMŠÇ—ƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("BGMç®¡ç†ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private BGMControl_Ver2 _bgmControll = default;
 
-    [SerializeField, Header("ƒIƒvƒVƒ‡ƒ“‚Ìƒ{ƒ^ƒ“’B‚ğŠÇ—‚µ‚Ä‚éƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®ãƒœã‚¿ãƒ³é”ã‚’ç®¡ç†ã—ã¦ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _optionButtons = default;
 
-    [SerializeField, Header("ƒIƒvƒVƒ‡ƒ“‰æ–Ê‚ÅÅ‰‚É‘I‘ğ‚³‚ê‚éƒ{ƒ^ƒ“")]
+    [SerializeField, Header("ã‚ªãƒ—ã‚·ãƒ§ãƒ³ç”»é¢ã§æœ€åˆã«é¸æŠã•ã‚Œã‚‹ãƒœã‚¿ãƒ³")]
     private GameObject _optionFirstSelectButton = default;
 
-    [SerializeField,Header("Å‰‚Ì‰æ–Ê‚ÅÅ‰‚É‘I‘ğ‚³‚ê‚éƒ{ƒ^ƒ“")]
+    [SerializeField,Header("æœ€åˆã®ç”»é¢ã§æœ€åˆã«é¸æŠã•ã‚Œã‚‹ãƒœã‚¿ãƒ³")]
     private GameObject _firstTitleSelectButton = default;
 
-    [SerializeField,Header("–{“–‚ÉƒQ[ƒ€‚ğI—¹‚·‚é‚©‘I‘ğ‚·‚éƒ{ƒ^ƒ“")]
+    [SerializeField,Header("æœ¬å½“ã«ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã™ã‚‹ã‹é¸æŠã™ã‚‹ãƒœã‚¿ãƒ³")]
     private GameObject _reallyExitButtons = default;
 
-    [SerializeField,Header("ƒQ[ƒ€I—¹‚ğNo‚Æ‚¢‚¤ƒ{ƒ^ƒ“")]
+    [SerializeField,Header("ã‚²ãƒ¼ãƒ çµ‚äº†ã‚’Noã¨ã„ã†ãƒœã‚¿ãƒ³")]
     private GameObject _noExitButton = default;
 
-    [SerializeField,Header("ƒn[ƒhƒ‚[ƒh‚ÌƒIƒvƒVƒ‡ƒ“ƒ{ƒ^ƒ“ŒQ")]
+    [SerializeField,Header("ãƒãƒ¼ãƒ‰ãƒ¢ãƒ¼ãƒ‰ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãƒœã‚¿ãƒ³ç¾¤")]
     private GameObject _hardOptions = default;
 
-    [SerializeField,Header("ƒn[ƒhƒIƒvƒVƒ‡ƒ“‚ÅÅ‰‚É‘I‘ğ‚³‚ê‚éƒ{ƒ^ƒ“")]
+    [SerializeField,Header("ãƒãƒ¼ãƒ‰ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§æœ€åˆã«é¸æŠã•ã‚Œã‚‹ãƒœã‚¿ãƒ³")]
     private GameObject _hardFirstSelectButton =default;
 
-    [SerializeField, Header("ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌƒAƒjƒ[ƒ^[")]
+    [SerializeField, Header("ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     private Animator _spotLightAnim = default;
 
-    [SerializeField, Header("ƒLƒƒƒ“ƒoƒX‚ÌƒOƒ‹[ƒv")]
+    [SerializeField, Header("ã‚­ãƒ£ãƒ³ãƒã‚¹ã®ã‚°ãƒ«ãƒ¼ãƒ—")]
     private CanvasGroup _canvasGroup = default;
 
-    [SerializeField, Header("ƒ^ƒCƒ€ƒ‰ƒCƒ“")]
+    [SerializeField, Header("ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³")]
     private PlayableDirector _playableDirector = default;
 
     private void Start()
@@ -61,6 +61,12 @@ public class TitleButtonManager : MonoBehaviour
         _canvasGroup.blocksRaycasts = false;
         _playableDirector.Play();
         _bgmControll.BGMFade_Out(1, 0);
+    }
+
+    public void LaunchMultiplayerMode()
+    {
+        // TODO: ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ç”¨ã®ã‚·ãƒ¼ãƒ³é·ç§»ã€ã¾ãŸã¯UIã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+        Debug.Log("Pressed the multiplayer button!");
     }
 
     public void OpenOption()
