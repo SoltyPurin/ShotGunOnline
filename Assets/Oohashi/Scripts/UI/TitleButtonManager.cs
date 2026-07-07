@@ -66,7 +66,12 @@ public class TitleButtonManager : MonoBehaviour
     public void LaunchMultiplayerMode()
     {
         // TODO: マルチプレイ用のシーン遷移、またはUIのセットアップ
-        Debug.Log("Pressed the multiplayer button!");
+
+        _canvasGroup.interactable = false;
+        _canvasGroup.blocksRaycasts = false;
+        _playableDirector.Play();
+        _bgmControll.BGMFade_Out(1, 0);
+        _moveScene.SetMultiplayerLobbyScene();
     }
 
     public void OpenOption()
