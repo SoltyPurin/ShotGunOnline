@@ -60,6 +60,11 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     {
         _agent = GetComponent<NavMesh2DAgent>(); //agent��NavMeshAgent2D���擾
         _rigidBody = GetComponent<Rigidbody2D>();
+
+        if (!IsServer && _agent != null)
+        {
+            _agent.enabled = false;
+        }
     }
 
     public void ChangeFloat(bool value)
@@ -91,6 +96,10 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     }
     private void FixedUpdate()
     {
+        if (!IsServer)
+        {
+            return;
+        }
         if (_playerObject == null)
         {
             Debug.Log("プレイヤーが見当たらない");
@@ -102,18 +111,19 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         {
             return;
         }
-        if (this.IsServer)
-        {
+        //if (this.IsServer)
+        //{
             Moving();
-        }
-        else
-        {
-            Debug.Log("IsServerがfalse");
-        }
+        //}
+        //else
+        //{
+        //    Debug.Log("IsServerがfalse");
+        //}
     }
 
     public virtual void Moving()
     {
+        Debug.Log("敵動く");
         if(_target == null)
         {
             return;

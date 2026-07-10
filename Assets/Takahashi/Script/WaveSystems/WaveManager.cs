@@ -166,12 +166,14 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         Debug.Log("ウェーブスタート");
         Wave cloneWave = Instantiate(_waveList[_waveIndex]);
         //Listにウェーブプレハブをコピーし追加
-        _cloneList.Add((Wave)Instantiate(cloneWave));
+        _cloneList.Add(cloneWave);
+
         //_cloneList.Add((Wave)Instantiate(_waveList[index]));
         if (cloneWave.GetComponent<NetworkObject>() != null)
         {
             cloneWave.GetComponent<NetworkObject>().Spawn();
         }
+
         StartWaveClientRpc(index);
 
 

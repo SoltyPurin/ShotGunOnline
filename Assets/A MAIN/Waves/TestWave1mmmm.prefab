@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b18f95ad80cc24eb361c444aa8ce50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _waveType: 0
   _gimmickList:
   - _generateFrame: 0
@@ -111,14 +112,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 0
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 3104043082
+  InScenePlacedSourceGlobalObjectIdHash: 282955943
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -228,7 +229,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -309,7 +313,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3389345464606807759, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
+    - {fileID: 4011224005243139496, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
+    - {fileID: 5449603101197151984, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -390,7 +397,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (10)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -471,7 +481,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3389345464606807759, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
+    - {fileID: 4011224005243139496, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
+    - {fileID: 5449603101197151984, guid: f5aee0f3721db734b9683d46a7f33df6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -552,7 +565,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (11)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -633,7 +649,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (9)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -714,7 +733,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (7)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -795,7 +817,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (6)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -876,7 +901,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -957,7 +985,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (12)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1038,7 +1069,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1119,7 +1153,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (4)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1200,7 +1237,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (5)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1281,7 +1321,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1362,7 +1405,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slow (8)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -2263144391160236694, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+    - {fileID: -3339229209471878638, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
