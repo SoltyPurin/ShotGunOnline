@@ -1,8 +1,9 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class EnemyKnockBack : MonoBehaviour
+public class EnemyKnockBack : NetworkBehaviour
 {
     #region 変数
     [SerializeField,Header("敵の移動スクリプト")]
@@ -41,7 +42,12 @@ public class EnemyKnockBack : MonoBehaviour
     {
         _trenble = GetComponent<TrenbleEnemy>();
     }
-
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestKnockBackServerRpc(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
+    {
+        // サーバー上でノックバックの方向と力を計算・適用する
+        SetDirectionAndForce(playerPos, chargeTime, isCrit, isUlt);
+    }
 
     /// <summary>
     /// 吹き飛ぶ方向と加える力を設定するメソッド
@@ -50,52 +56,58 @@ public class EnemyKnockBack : MonoBehaviour
     /// <param name="chargeTime">チャージ時間</param>
     /// <param name="isCrit">クリティカル攻撃</param>
     /// <param name="isUlt">ウルト</param>
-    public virtual void SetDirectionAndForce(Vector2 playerPos,float chargeTime,bool isCrit,bool isUlt)
+    public virtual void SetDirectionAndForce(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
     {
-        _blowAwayDirection = ((playerPos - (Vector2)this.transform.position) * -1).normalized;
-        //チャージ時間の乗を求める
-        _powValue = Mathf.Pow(chargeTime, _forceMultiplier);
-        //最低6からpowValueまでの間で線形補正を行い、チャージ値ごとの吹き飛ばしをなめらかに
-        //敵のノックバックは初速最速で瞬間的に最高速度から抵抗に負けて減速するみたいなシステムにする
-        //長距離飛ぶわけではないけど沢山飛ぶわけではない
-        //3つプレイヤーに気づかせることでプレイヤーは面白いと感じる
-        //最後まで気づかれないのは絶対ダメ
-        _force = Mathf.Lerp(_minForce, _powValue, 0.5f);
-
-        if (_trenble != null)
+        if (IsServer)
         {
-            if (isCrit)
-            {
-                StartCoroutine(HitStop(_force,_critStiffnessTime));
-                _force = 0;
-                _enemyMove.EnemyState = EnemyState.knockback;
-                _trenble.TrenbleProtocol(_critStiffnessTime);
-            }else if (isUlt)
-            {
-                StartCoroutine(HitStop(_force,_ultStiffnessTime));
-                _force = 0;
-                _enemyMove.EnemyState = EnemyState.knockback;
-                _trenble.TrenbleProtocol(_ultStiffnessTime);
-            }
-            else if(!isCrit && !isUlt)
-            {
-                _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
-                _canKnockBack = true;
-            }
-        }
+            _blowAwayDirection = ((playerPos - (Vector2)this.transform.position) * -1).normalized;
+            //チャージ時間の乗を求める
+            _powValue = Mathf.Pow(chargeTime, _forceMultiplier);
+            //最低6からpowValueまでの間で線形補正を行い、チャージ値ごとの吹き飛ばしをなめらかに
+            //敵のノックバックは初速最速で瞬間的に最高速度から抵抗に負けて減速するみたいなシステムにする
+            //長距離飛ぶわけではないけど沢山飛ぶわけではない
+            //3つプレイヤーに気づかせることでプレイヤーは面白いと感じる
+            //最後まで気づかれないのは絶対ダメ
+            _force = Mathf.Lerp(_minForce, _powValue, 0.5f);
 
-        DamageEffect damageEffect = GetComponentInChildren<DamageEffect>();
-        if (damageEffect != null)
-        {
-            damageEffect.PlayAnim();
+            if (_trenble != null)
+            {
+                if (isCrit)
+                {
+                    StartCoroutine(HitStop(_force, _critStiffnessTime));
+                    _force = 0;
+                    _enemyMove.EnemyState = EnemyState.knockback;
+                    _trenble.TrenbleProtocol(_critStiffnessTime);
+                }
+                else if (isUlt)
+                {
+                    StartCoroutine(HitStop(_force, _ultStiffnessTime));
+                    _force = 0;
+                    _enemyMove.EnemyState = EnemyState.knockback;
+                    _trenble.TrenbleProtocol(_ultStiffnessTime);
+                }
+                else if (!isCrit && !isUlt)
+                {
+                    _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
+                    _canKnockBack = true;
+                }
+            }
+
+            DamageEffect damageEffect = GetComponentInChildren<DamageEffect>();
+            if (damageEffect != null)
+            {
+                damageEffect.PlayAnim();
+            }
         }
     }
-
-    public IEnumerator HitStop(float force,float waitTime)
+    public IEnumerator HitStop(float force, float waitTime)
     {
-        yield return new WaitForSecondsRealtime(waitTime);
-        _force = force;
-        _canKnockBack = true;
+        if (IsServer)
+        {
+            yield return new WaitForSecondsRealtime(waitTime);
+            _force = force;
+            _canKnockBack = true;
+        }
     }
 
     public void SetWarpDirection(Vector2 direction)
@@ -105,12 +117,15 @@ public class EnemyKnockBack : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //ノックバック中だったら処理しない
-        if (!_canKnockBack)
+        if (IsServer)
         {
-            return;
+            //ノックバック中だったら処理しない
+            if (!_canKnockBack)
+            {
+                return;
+            }
+            KnockBackMethod();
         }
-        KnockBackMethod();
     }
     /// <summary>
     /// 落下したときに力をゼロにして落とし穴を超えないようにする

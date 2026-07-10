@@ -6,7 +6,7 @@ using UnityEngine;
 /// 1つのウェーブに出現するオブジェクトを管理するクラスで、オブジェクトと出現タイミングを設定できる。
 /// 使う際には空オブジェクトにこれをアタッチし、子オブジェクトに敵を配置、その敵をリストに追加しよう。
 /// </summary>
-public class Wave : Unity.Netcode.NetworkBehaviour
+public class Wave : NetworkBehaviour
 {
     #region 【Structs】
 
@@ -245,7 +245,7 @@ public class Wave : Unity.Netcode.NetworkBehaviour
     }
 
     /// <summary>
-    /// 敵の有効化用メソッド
+    /// 敵の有効化用メソッド、同じ座標にネットワーク対応の敵を出現させて元の敵を削除
     /// </summary>
     private void ObjSetTrue()
     {
@@ -264,12 +264,16 @@ public class Wave : Unity.Netcode.NetworkBehaviour
         // generateFrame以上の時間が経ったらオブジェクトを有効化
         while (_objFrame >= _objList[_nowObj]._generateFrame)
         {
-            // サーバー（ホスト）のタイマーが来たら、本物のネットワークプレハブにすり替えてSpawnする
-            if (IsServer)
-            {
-                WaveObj waveChildEnemy = _objList[_nowObj]._waveObj;
+            WaveObj waveChildEnemy = _objList[_nowObj]._waveObj;
 
-                if (waveChildEnemy != null)
+            if (waveChildEnemy != null)
+            {
+                // 【重要】ホスト・クライアント共通で、配置されていたダミーの敵を非表示にする
+                // これによりクライアント側で動かないダミーの影が残るのを防ぎます
+                waveChildEnemy.gameObject.SetActive(false);
+
+                // サーバー（ホスト）のタイマーが来たら、本物のネットワークプレハブにすり替えてSpawnする
+                if (IsServer)
                 {
                     // 1. 配置されている子供の敵の名前（"Slow"など）を取得
                     string targetPrefabName = waveChildEnemy.name.Replace("(Clone)", "").Trim();
@@ -278,35 +282,26 @@ public class Wave : Unity.Netcode.NetworkBehaviour
                     // 2. ネットワークマネージャーの登録リストから、名前が一致する「本物のプレハブ」を探す
                     if (Unity.Netcode.NetworkManager.Singleton != null)
                     {
-                        // 【1段目のループ】登録されている「プレハブリストの箱（NetworkPrefabsList）」を1個ずつ取り出す
-                        foreach (var prefabList in Unity.Netcode.NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
+                        // 【1段目のループ】登録されている「プレハブリストの箱」を1個ずつ取り出す
+                        foreach (Unity.Netcode.NetworkPrefabsList prefabList in Unity.Netcode.NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
                         {
                             // 【2段目のループ】箱の中にある「個々のプレハブデータ」をさらに1個ずつ取り出す
-                            // これにより、ようやく目的の「.Prefab」にアクセスできるようになります
-                            foreach (var networkPrefab in prefabList.PrefabList)
+                            foreach (Unity.Netcode.NetworkPrefab networkPrefab in prefabList.PrefabList)
                             {
                                 if (networkPrefab.Prefab != null && networkPrefab.Prefab.name == targetPrefabName)
                                 {
-                                    prefabToSpawn = networkPrefab.Prefab; // ここでGameObjectの代入に成功します！
+                                    prefabToSpawn = networkPrefab.Prefab;
                                     break;
-                                }
-                                else
-                                {
-                                    Debug.Log("代入失敗");
                                 }
                             }
 
-                            // すでに見つかっていれば、外側のループも抜ける
                             if (prefabToSpawn != null)
                             {
                                 break;
                             }
                         }
                     }
-                    else
-                    {
-                        Debug.Log("本物がない");
-                    }
+
                     // 3. 本物のプレハブが見つかったら、ダミーと同じ位置に生成してSpawn！
                     if (prefabToSpawn != null)
                     {
@@ -330,7 +325,7 @@ public class Wave : Unity.Netcode.NetworkBehaviour
                         {
                             newWaveObj.PopAnim();
 
-                            // 既存のリストの参照を、新しく生まれた本物の敵に差し替える（これで敵死亡カウント等も正常に動きます）
+                            // 既存のリストの参照を、新しく生まれた本物の敵に差し替える
                             _objList[_nowObj] = new ObjData
                             {
                                 _generateFrame = _objList[_nowObj]._generateFrame,
@@ -339,7 +334,7 @@ public class Wave : Unity.Netcode.NetworkBehaviour
                         }
                     }
 
-                    // 4. 元々Waveの中にいた、ネットワーク権利のないダミーの敵は消去
+                    // 4. 元々Waveの中にいたダミーの敵をサーバー上で消去
                     Destroy(waveChildEnemy.gameObject);
                 }
             }
@@ -352,47 +347,6 @@ public class Wave : Unity.Netcode.NetworkBehaviour
                 break;
             }
         }
-        ////敵が存在しないならウェーブ終了可能、ステートを変更し早期リターン
-        //if( _objList.Count <= 0)
-        //{
-        //    _waveEnd = true;
-        //    _nowState = Transition.End;
-        //    return;
-        //}
-
-        ////タイマーを加算
-        //_objFrame++;
-
-        ////generateFrame以上の時間が経ったらオブジェクトを有効化
-        //while(_objFrame >= _objList[_nowObj]._generateFrame)
-        //{
-        //    //リスト内に敵が存在するなら出現させる。
-        //    if (_objList[_nowObj]._waveObj != null)
-        //    {
-        //        ActivateEnemyObject(_nowObj);
-        //        if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsServer)
-        //        {
-        //            ActivateEnemyClientRpc(_nowObj);
-        //            // 敵オブジェクトから NetworkObject コンポーネントを取得
-        //            NetworkObject netObj = _objList[_nowObj]._waveObj.GetComponent<Unity.Netcode.NetworkObject>();
-
-        //            // まだネットワークにスポーンしていなければ、手動でスポーンさせる
-        //            if (netObj != null && !netObj.IsSpawned)
-        //            {
-        //                netObj.transform.SetParent(null);
-        //                netObj.Spawn();
-        //            }
-        //        }
-        //    }
-
-        //    //次の敵へ移動
-        //    NextObj();
-
-        //    if (_nowState != Transition.Enemy)
-        //    {
-        //        break;
-        //    }
-        //}
     }
     /// <summary>
     /// 次有効化するギミックの位置に遷移するメソッド
