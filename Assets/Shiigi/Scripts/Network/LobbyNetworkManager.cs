@@ -2,6 +2,8 @@
 
 public class LobbyNetworkManager : MonoBehaviour
 {
+    [SerializeField] private int _maxPlayerNum = 4;
+
     /// <summary>
     /// LAN上のネットワークルームを検索する
     /// </summary>
