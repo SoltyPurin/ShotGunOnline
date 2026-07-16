@@ -136,8 +136,13 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         }
         else
         {
-            _agent.destination = _target.position; //agent�̖ړI�n��target�̍��W�ɂ���
+            if (_agent != null && _agent.isActiveAndEnabled)
+            {
+                _agent.destination = _target.position;
+            }
             _saveDirection = (_target.position - transform.position) * _moveSpeed;
+            //_agent.destination = _target.position; //agent�̖ړI�n��target�̍��W�ɂ���
+            //_saveDirection = (_target.position - transform.position) * _moveSpeed;
         }
 
     }

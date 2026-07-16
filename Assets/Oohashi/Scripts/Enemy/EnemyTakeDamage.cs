@@ -197,7 +197,11 @@ public class EnemyTakeDamage : NetworkBehaviour
                 _coinControl.CoinDrop(1);
 
                 //滅殺
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
+                if (NetworkObject != null && NetworkObject.IsSpawned)
+                {
+                    NetworkObject.Despawn(true);
+                }
             }
         }
     }
@@ -228,7 +232,15 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// <returns></returns>
     public virtual IEnumerator DeathProtocol(float chargeTime)
     {
-            if (!this.gameObject.scene.isLoaded)
+
+        if (!this.gameObject.scene.isLoaded)
+        {
+            yield break;
+        }
+
+        // 安全対策：サーバー（ホスト）以外は処理を中断
+        if (!IsServer) yield break;
+        if (!this.gameObject.scene.isLoaded)
             {
                 yield break;
             }
@@ -243,9 +255,12 @@ public class EnemyTakeDamage : NetworkBehaviour
             _playTheSEManager.PlayMoneyDropSound();
             Instantiate(_deathObject, transform.position, Quaternion.identity);
             _coinControl.CoinDrop(1);
-
-            Destroy(this.gameObject);
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
         }
+        //Destroy(this.gameObject);
+    }
 
     /// <summary>
     /// 岩に接触したときのメソッド、惨たらしい轢殺
@@ -264,7 +279,11 @@ public class EnemyTakeDamage : NetworkBehaviour
             _playTheSEManager.PlayRoadKill();
             Instantiate(_deathObject, transform.position, Quaternion.identity);
             _coinControl.CoinDrop(1);
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
+            if (NetworkObject != null && NetworkObject.IsSpawned)
+            {
+                NetworkObject.Despawn(true);
+            }
         }
     }
 }

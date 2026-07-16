@@ -58,8 +58,8 @@ public class EnemyKnockBack : NetworkBehaviour
     /// <param name="isUlt">ウルト</param>
     public virtual void SetDirectionAndForce(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
     {
-        if (IsServer)
-        {
+        //if (IsServer)
+        //{
             _blowAwayDirection = ((playerPos - (Vector2)this.transform.position) * -1).normalized;
             //チャージ時間の乗を求める
             _powValue = Mathf.Pow(chargeTime, _forceMultiplier);
@@ -98,7 +98,7 @@ public class EnemyKnockBack : NetworkBehaviour
             {
                 damageEffect.PlayAnim();
             }
-        }
+        //}
     }
     public IEnumerator HitStop(float force, float waitTime)
     {

@@ -168,10 +168,25 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         //Listにウェーブプレハブをコピーし追加
         _cloneList.Add(cloneWave);
 
+        foreach (Wave.ObjData enemyData in cloneWave.ObjList)
+        {
+            if (enemyData._waveObj != null)
+            {
+                enemyData._waveObj.gameObject.SetActive(true);
+            }
+        }
         //_cloneList.Add((Wave)Instantiate(_waveList[index]));
         if (cloneWave.GetComponent<NetworkObject>() != null)
         {
             cloneWave.GetComponent<NetworkObject>().Spawn();
+        }
+
+        foreach (Wave.ObjData enemyData in cloneWave.ObjList)
+        {
+            if (enemyData._waveObj != null)
+            {
+                enemyData._waveObj.gameObject.SetActive(false);
+            }
         }
 
         StartWaveClientRpc(index);
