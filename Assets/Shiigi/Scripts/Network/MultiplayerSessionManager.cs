@@ -137,7 +137,7 @@ public class MultiplayerSessionManager : MonoBehaviour
     /// </summary>
     /// <param name="targetRoom"></param>
     /// <returns></returns>
-    public async UniTask<bool> JoinRoomSessionAsync(ISession targetRoom)
+    public async UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom)
     {
         if (!IsInitialized)
         {
