@@ -30,7 +30,14 @@ public class MultiplayerSessionManager : MonoBehaviour
 
     private async void Start()
     {
-        await InitializeMultiplayerServicesAsync();
+        try
+        {
+            await InitializeMultiplayerServicesAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"UnityServicesの初期化に失敗: {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -85,7 +92,7 @@ public class MultiplayerSessionManager : MonoBehaviour
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
             return true;
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Debug.Log($"ルーム作成失敗: {ex.Message}");
             return false;

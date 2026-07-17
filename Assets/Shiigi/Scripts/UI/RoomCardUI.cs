@@ -1,12 +1,12 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 
 public class RoomCardUI : MonoBehaviour
 {
-    [Header("ƒeƒLƒXƒg")] 
+    [Header("ãƒ†ã‚­ã‚¹ãƒˆ")] 
     [SerializeField] private Text _roomNameText;
     [SerializeField] private Text _playerCountText;
 
-    [Header("ƒ{ƒ^ƒ“")]
+    [Header("ãƒœã‚¿ãƒ³")]
     [SerializeField] private Button _joinButton;
 }
