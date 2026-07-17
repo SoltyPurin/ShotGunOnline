@@ -32,6 +32,10 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         _enemyTakeDamage.FallDamage();
         if (this.gameObject.activeInHierarchy)
         {
+            if(_returnPointTransform == null)
+            {
+                _returnPointTransform = GameObject.Find("BossReturnPoint");
+            }
             StartCoroutine(HoleFallMethod());
             transform.rotation = Quaternion.identity;
         }

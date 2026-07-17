@@ -2183,71 +2183,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 856460218}
   m_CullTransparentMesh: 1
---- !u!1001 &884698807
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -6402475651796809658, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 3462424688
-      objectReference: {fileID: 0}
-    - target: {fileID: 634467166805199453, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_Name
-      value: MakinoLabWave8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1635483904838890897, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 2200433626
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -5.93714
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 659.1128
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030616004506873733, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7e6f608cb22a388479d71bb7d9008db0, type: 3}
 --- !u!1 &913912267 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 254134187990706144, guid: 194ca10c546db1343b318d43b72e4ed6, type: 3}
@@ -6111,7 +6046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3506205515
+  GlobalObjectIdHash: 1601328242
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -6733,7 +6668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 452224799
+  GlobalObjectIdHash: 2683196857
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -6770,4 +6705,3 @@ SceneRoots:
   - {fileID: 1954252459}
   - {fileID: 2044123991}
   - {fileID: 76350759}
-  - {fileID: 884698807}

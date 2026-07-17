@@ -31,12 +31,24 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     //�ړ��s�\�̃t���O
     protected bool _cantMove = false;
     //���݂̃X�e�[�g
-    protected EnemyState _enemyState = EnemyState.move;
+    //protected EnemyState _enemyState = EnemyState.move;
     public EnemyState EnemyState
     {
-        get { return _enemyState; }
-        set { _enemyState = value; }//���EnemyTakeDamage���p�������X�N���v�g�B���珑�������Ă�
+        get { return _enemyState.Value; }
+        set {
+            if (IsServer) // サーバー側でのみ書き込みを許可する安全対策
+            {
+                _enemyState.Value = value;
+            }
+        }
+        //set { _enemyState.Value = value; }//���EnemyTakeDamage���p�������X�N���v�g�B���珑�������Ă�
     }
+
+    protected NetworkVariable<EnemyState> _enemyState = new NetworkVariable<EnemyState>(
+        EnemyState.move,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server // 書き込みはサーバーのみ
+    );
     //����������
     protected Vector2 _direction = default;
     public Vector2 Direction
@@ -74,7 +86,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
 
     public void RoadKill()
     {
-        _enemyState = EnemyState.roadKill;
+        _enemyState.Value = EnemyState.roadKill;
     }
 
     protected void FindPlayer()
@@ -106,7 +118,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
             FindPlayer();
             return;
         }
-        _cantMove = _enemyState == EnemyState.knockback || _enemyState == EnemyState.fall || _enemyState == EnemyState.Wait;
+        _cantMove = _enemyState.Value == EnemyState.knockback || _enemyState.Value == EnemyState.fall || _enemyState.Value == EnemyState.Wait;
         if (_cantMove) 
         {
             return;

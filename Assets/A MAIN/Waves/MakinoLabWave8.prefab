@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b18f95ad80cc24eb361c444aa8ce50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _waveType: 1
   _gimmickList: []
   _objList:
@@ -83,14 +84,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 0
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 3928939001
+  InScenePlacedSourceGlobalObjectIdHash: 4247936913
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -736,7 +737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2558861594236702000
 Transform:
   m_ObjectHideFlags: 0
@@ -929,7 +930,15 @@ PrefabInstance:
       objectReference: {fileID: 5376468261992086446}
     - target: {fileID: 4517113842697549388, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2627297374
+      value: 2098329809
+      objectReference: {fileID: 0}
+    - target: {fileID: 4517113842697549388, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4517113842697549388, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 4247936913
       objectReference: {fileID: 0}
     - target: {fileID: 4525818852662893039, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
       propertyPath: m_Events.m_Events.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Target

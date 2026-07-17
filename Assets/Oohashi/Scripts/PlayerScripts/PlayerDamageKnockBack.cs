@@ -142,6 +142,9 @@ public class PlayerDamageKnockBack : MonoBehaviour
         else if (collision.gameObject.CompareTag("Rock"))
         {
             return;
+        }else if (collision.gameObject.CompareTag("Player"))
+        {
+            return;
         }
         else if (collision.gameObject.CompareTag(MIRRORBULLETTAGNAME))
         {
@@ -165,11 +168,11 @@ public class PlayerDamageKnockBack : MonoBehaviour
         {
             GameObject armor = collision.gameObject;
             ArmorMove armorMove = armor.GetComponent<ArmorMove>();
-            if(armorMove.InitState == ArmorState.Rush)
+            if (armorMove.InitState == ArmorState.Rush)
             {
                 //‚Ô‚Â‚©‚Á‚Ä‚«‚½•ûŒü‚ð‘ã“ü
                 _contactNormal = collision.contacts[0].normal;
-                StartCoroutine(HitStop(collision,_contactNormal));
+                StartCoroutine(HitStop(collision, _contactNormal));
             }
             else
             {

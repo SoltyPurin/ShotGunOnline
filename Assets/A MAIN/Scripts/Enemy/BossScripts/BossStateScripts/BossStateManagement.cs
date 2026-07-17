@@ -116,6 +116,7 @@ public class BossStateManagement : EnemyMove
     }
     public void FixedUpdate()
     {
+        if (!IsServer) return;
         if (_playerObject == null)
         {
             FindPlayer();

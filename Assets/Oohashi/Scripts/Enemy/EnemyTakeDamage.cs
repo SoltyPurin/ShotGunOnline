@@ -85,6 +85,21 @@ public class EnemyTakeDamage : NetworkBehaviour
             }
         }
     }
+
+    [ClientRpc]
+    private void PlayDamageEffectsClientRpc()
+    {
+        // サーバーからこの命令が届いたら、ホスト・クライアント全員の画面でエフェクトを再生する
+        if (_damageAnimator != null)
+        {
+            _damageAnimator.SetTrigger("Damage");
+        }
+
+        if (_damageMaterial != null)
+        {
+            _damageMaterial.Damage();
+        }
+    }
     /// <summary>
     /// ダメージを喰らったときのメソッド、ウルトと通常で挙動が変わる
     /// </summary>
@@ -96,9 +111,10 @@ public class EnemyTakeDamage : NetworkBehaviour
         {
 
             //ダメージのアニメーション再生
-            _damageAnimator.SetTrigger("Damage");
-            _damageMaterial.Damage();
-
+            PlayDamageEffectsClientRpc();
+            //_damageAnimator.SetTrigger("Damage");
+            //_damageMaterial.Damage();
+            _enemyMove.EnemyState = EnemyState.knockback;
             //プレイヤーのステートがウルトの時に実行
             if (state == PlayerState.Ultimate)
             {
