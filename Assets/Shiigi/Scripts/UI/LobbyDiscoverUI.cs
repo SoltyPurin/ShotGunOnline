@@ -40,7 +40,7 @@ public class LobbyDiscoverUI : MonoBehaviour
 
         foreach (var session in sessions)
         {
-            RoomCardUI card = Instantiate(_roomCardPrefab, _roomListContainer);
+            var card = Instantiate(_roomCardPrefab, _roomListContainer);
             card.Setup(session);
 
             // カード個別の参加ボタンイベントを中継して公開
