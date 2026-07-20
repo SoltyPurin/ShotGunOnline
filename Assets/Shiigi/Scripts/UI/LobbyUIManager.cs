@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 
@@ -7,8 +7,10 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private LobbyDiscoverUI _discoverUI;
     [SerializeField] private CreateRoomDialogUI _createRoomDialogUI;
     [SerializeField] private ConfirmDialogUI _confirmDialogUI; // 汎用の確認用
+    [SerializeField] private LobbyRoomUI _roomUI;
 
     private MultiplayerSessionManager _sessionManager;
+    private LobbyUIState _currentState;
 
     private void Start()
     {
@@ -19,7 +21,18 @@ public class LobbyUIManager : MonoBehaviour
         _discoverUI.OnCreateRoomRequested += OpenCreateRoomDialog;
         _discoverUI.OnJoinRoomRequested += JoinRoom;
 
+        // ルームUIのイベントを購読
+        _roomUI.OnLeaveRequested += LeaveRoom;
+        _roomUI.OnReadyToggleRequested += ToggleReadyState;
+        _roomUI.OnStartGameRequested += StartGame;
+
+        // セッション更新イベントを購読
+        _sessionManager.OnSessionChanged += UpdateRoomUI;
+
         _createRoomDialogUI.gameObject.SetActive(false);
+
+        // 初期状態に遷移
+        TransitionTo(LobbyUIState.Discover);
     }
 
     private void OnDestroy()
@@ -30,6 +43,40 @@ public class LobbyUIManager : MonoBehaviour
             _discoverUI.OnRefreshRequested -= RefreshRoomList;
             _discoverUI.OnCreateRoomRequested -= OpenCreateRoomDialog;
             _discoverUI.OnJoinRoomRequested -= JoinRoom;
+        }
+
+        if (_roomUI != null)
+        {
+            _roomUI.OnLeaveRequested -= LeaveRoom;
+            _roomUI.OnReadyToggleRequested -= ToggleReadyState;
+            _roomUI.OnStartGameRequested -= StartGame;
+        }
+
+        if (_sessionManager != null)
+        {
+            _sessionManager.OnSessionChanged -= UpdateRoomUI;
+        }
+    }
+
+    /// <summary>
+    /// UIの状態を遷移させ、表示・非表示を制御する
+    /// </summary>
+    private void TransitionTo(LobbyUIState state)
+    {
+        _currentState = state;
+
+        // 状態ごとのパネル表示切り替え
+        _discoverUI.gameObject.SetActive(state == LobbyUIState.Discover);
+        _roomUI.gameObject.SetActive(state == LobbyUIState.InRoom);
+
+        // Connectingステートの場合はローディング表示を出す
+        if (state == LobbyUIState.Connecting)
+        {
+            _discoverUI.SetLoadingState(true);
+        }
+        else
+        {
+            _discoverUI.SetLoadingState(false);
         }
     }
 
@@ -67,24 +114,25 @@ public class LobbyUIManager : MonoBehaviour
         }
 
         // 決定されたらセッション作成処理実行
-        _discoverUI.SetLoadingState(true);
+        TransitionTo(LobbyUIState.Connecting);
         try
         {
             var success = await _sessionManager.CreateRoomSessionAsync(result.RoomName, result.MaxPlayers);
             if (success)
             {
                 Debug.Log("ルーム作成に成功しました。");
-                // TODO: ルーム画面UIへ遷移するなどの処理を行う
+                TransitionTo(LobbyUIState.InRoom);
+                UpdateRoomUI();
             }
             else
             {
+                TransitionTo(LobbyUIState.Discover);
                 await _confirmDialogUI.ShowAsync("ルームの作成に失敗しました。");
             }
         }
-        finally
+        catch
         {
-            _discoverUI.SetLoadingState(false);
-            RefreshRoomList(); // リストを最新にする
+            TransitionTo(LobbyUIState.Discover);
         }
     }
 
@@ -93,14 +141,84 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void JoinRoom(ISessionInfo sessionInfo)
     {
-        _discoverUI.SetLoadingState(true);
+        TransitionTo(LobbyUIState.Connecting);
         try
         {
-            await _sessionManager.JoinRoomSessionAsync(sessionInfo);
+            var success = await _sessionManager.JoinRoomSessionAsync(sessionInfo);
+            if (success)
+            {
+                Debug.Log("ルーム参加に成功しました。");
+                TransitionTo(LobbyUIState.InRoom);
+                UpdateRoomUI();
+            }
+            else
+            {
+                TransitionTo(LobbyUIState.Discover);
+                await _confirmDialogUI.ShowAsync("ルームへの参加に失敗しました。");
+            }
         }
-        finally
+        catch
         {
-            _discoverUI.SetLoadingState(false);
+            TransitionTo(LobbyUIState.Discover);
         }
+    }
+
+    /// <summary>
+    /// ルーム退出処理
+    /// </summary>
+    private async void LeaveRoom()
+    {
+        TransitionTo(LobbyUIState.Connecting);
+        try
+        {
+            await _sessionManager.LeaveRoomSessionAsync();
+            TransitionTo(LobbyUIState.Discover);
+            RefreshRoomList(); // リストを最新にする
+        }
+        catch
+        {
+            TransitionTo(LobbyUIState.Discover);
+        }
+    }
+
+    /// <summary>
+    /// ルーム画面の描画を更新する
+    /// </summary>
+    private void UpdateRoomUI()
+    {
+        if (_currentState == LobbyUIState.InRoom && _sessionManager.CurrentSession != null)
+        {
+            _roomUI.Refresh(_sessionManager.CurrentSession);
+        }
+    }
+
+    /// <summary>
+    /// 準備完了状態のトグル切り替え
+    /// </summary>
+    private async void ToggleReadyState()
+    {
+        var session = _sessionManager.CurrentSession;
+        if (session == null || session.CurrentPlayer == null) return;
+
+        // 現在の準備状況を取得
+        bool isReady = false;
+        if (session.CurrentPlayer.Properties != null && 
+            session.CurrentPlayer.Properties.TryGetValue("IsReady", out var prop))
+        {
+            isReady = prop.Value == "true";
+        }
+
+        // 反転させて送信
+        bool nextReadyState = !isReady;
+        await _sessionManager.SetReadyStatusAsync(nextReadyState);
+    }
+
+    /// <summary>
+    /// ホストがゲームを開始する処理
+    /// </summary>
+    private void StartGame()
+    {
+        Debug.Log("ゲームを開始");
+        // TODO: ゲーム開始時の処理（NGO等のシーン遷移など）
     }
 }

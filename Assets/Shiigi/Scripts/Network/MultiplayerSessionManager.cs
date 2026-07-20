@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Unity.Services.Authentication;
@@ -11,6 +11,8 @@ public class MultiplayerSessionManager : MonoBehaviour
     public static MultiplayerSessionManager Instance { get; private set; }
 
     private ISession _currentSession;
+    public ISession CurrentSession => _currentSession;
+    public event Action OnSessionChanged;
 
     public bool IsInitialized { get; private set; }
 
@@ -90,6 +92,7 @@ public class MultiplayerSessionManager : MonoBehaviour
             };
 
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
+            _currentSession.Changed += HandleSessionChanged;
             return true;
         }
         catch (Exception ex)
@@ -149,6 +152,7 @@ public class MultiplayerSessionManager : MonoBehaviour
         {
             Debug.Log($"ルームに参加中: {targetRoom.Name} (ID: {targetRoom.Id})");
             _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id);
+            _currentSession.Changed += HandleSessionChanged;
 
             Debug.Log($"ルームに参加成功: {_currentSession.Name}");
             return true;
@@ -172,6 +176,7 @@ public class MultiplayerSessionManager : MonoBehaviour
         {
             Debug.Log("ルームから退出中...");
 
+            _currentSession.Changed -= HandleSessionChanged;
             await _currentSession.LeaveAsync();
             _currentSession = null;
 
@@ -180,6 +185,40 @@ public class MultiplayerSessionManager : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError($"ルーム退出時にエラーが発生しました: {ex.Message}");
+        }
+    }
+
+    private void HandleSessionChanged()
+    {
+        OnSessionChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// 準備完了ステータスを更新する
+    /// </summary>
+    public async UniTask SetReadyStatusAsync(bool isReady)
+    {
+        if (_currentSession == null || _currentSession.CurrentPlayer == null)
+        {
+            Debug.LogError("セッションまたはプレイヤーが存在しません");
+            return;
+        }
+
+        try
+        {
+            var value = isReady ? "true" : "false";
+            var properties = new Dictionary<string, PlayerProperty>
+            {
+                { "IsReady", new PlayerProperty(value, VisibilityPropertyOptions.Member) }
+            };
+
+            _currentSession.CurrentPlayer.SetProperties(properties);
+            await _currentSession.SaveCurrentPlayerDataAsync();
+            Debug.Log($"準備完了状態を {isReady} に更新しました");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"準備状態の更新に失敗しました: {ex.Message}");
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +20,8 @@ public class CreateRoomDialogUI : MonoBehaviour
     [SerializeField] private Button _confirmCreateButton;
     [SerializeField] private Button _cancelDialogButton;
 
+    [SerializeField] private List<int> _maxPlayersOptions = new() { 2, 3, 4 };
+
     private UniTaskCompletionSource<CreateRoomResult> _utcs;
 
     /// <summary>
@@ -30,6 +34,9 @@ public class CreateRoomDialogUI : MonoBehaviour
 
         // UI初期化
         _roomNameInputField.text = "";
+
+        // ドロップダウン
+        SetMaxPlayersDropdownOptions();
         _maxPlayersDropDown.value = 0;
 
         // イベントの多重登録を防ぐため、一度クリアして再アタッチ
@@ -61,18 +68,26 @@ public class CreateRoomDialogUI : MonoBehaviour
     }
 
     /// <summary>
+    /// 最大人数ドロップダウンの選択肢を設定する
+    /// </summary>
+    private void SetMaxPlayersDropdownOptions()
+    {
+        _maxPlayersDropDown.ClearOptions();
+
+        // ドロップダウンの選択肢を最大人数リストから作成
+        var options = _maxPlayersOptions.Select(maxPlayers => maxPlayers.ToString()).ToList();
+        _maxPlayersDropDown.AddOptions(options);
+    }
+    
+    /// <summary>
     /// ドロップダウンの項目に合わせて人数を返す
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
     private int GetMaxPlayersFromDropdown(int index)
     {
-        return index switch
-        {
-            0 => 2,
-            1 => 3,
-            2 => 4,
-            _ => 4
-        };
+        return _maxPlayersOptions[index];
     }
+
+    
 }
