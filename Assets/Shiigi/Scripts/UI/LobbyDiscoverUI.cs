@@ -7,15 +7,17 @@ using UnityEngine.UI;
 
 public class LobbyDiscoverUI : MonoBehaviour
 {
-    [Header("マッチング用ボタン")] [SerializeField] private Button _refreshButton;
+    [Header("マッチング用ボタン")][SerializeField] private Button _refreshButton;
     [SerializeField] private Button _createRoomButton;
 
-    [Header("ルーム用コンテナ")] [SerializeField] private Transform _roomListContainer;
+    [Header("ルーム用コンテナ")][SerializeField] private Transform _roomListContainer;
 
-    [Header("ルーム用カードUIプレハブ")] [SerializeField]
+    [Header("ルーム用カードUIプレハブ")]
+    [SerializeField]
     private RoomCardUI _roomCardPrefab;
 
-    [Header("ローディング表示用オブジェクト")] [SerializeField]
+    [Header("ローディング表示用オブジェクト")]
+    [SerializeField]
     private GameObject _loadingOverlay;
 
     // Presenterが購読するためのイベント群
@@ -60,6 +62,12 @@ public class LobbyDiscoverUI : MonoBehaviour
         {
             card.OnJoinRequested -= HandleJoinRequest;
             Destroy(card.gameObject);
+        }
+
+        // カードコンテナの子オブジェクトをクリア
+        for (var i = 0; i < _roomListContainer.childCount; i++)
+        {
+            Destroy(_roomListContainer.GetChild(i).gameObject);
         }
 
         _spawnedCards.Clear();

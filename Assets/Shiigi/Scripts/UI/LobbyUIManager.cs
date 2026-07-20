@@ -19,8 +19,7 @@ public class LobbyUIManager : MonoBehaviour
         _discoverUI.OnCreateRoomRequested += OpenCreateRoomDialog;
         _discoverUI.OnJoinRoomRequested += JoinRoom;
 
-        // 初回ロード
-        RefreshRoomList();
+        _createRoomDialogUI.gameObject.SetActive(false);
     }
 
     private void OnDestroy()

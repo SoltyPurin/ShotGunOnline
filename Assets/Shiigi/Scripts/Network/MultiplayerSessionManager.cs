@@ -123,7 +123,7 @@ public class MultiplayerSessionManager : MonoBehaviour
 
             QuerySessionsResults queryResponse = await MultiplayerService.Instance.QuerySessionsAsync(queryOptions);
             Debug.Log($"ルーム検索完了: {queryResponse.Sessions.Count}");
-            return (List<ISessionInfo>)queryResponse.Sessions;
+            return new List<ISessionInfo>(queryResponse.Sessions);
         }
         catch (Exception ex)
         {
