@@ -16,10 +16,6 @@ public class LobbyDiscoverUI : MonoBehaviour
     [SerializeField]
     private RoomCardUI _roomCardPrefab;
 
-    [Header("ローディング表示用オブジェクト")]
-    [SerializeField]
-    private GameObject _loadingOverlay;
-
     // Presenterが購読するためのイベント群
     public event Action OnRefreshRequested;
     public event Action OnCreateRoomRequested;
@@ -71,19 +67,5 @@ public class LobbyDiscoverUI : MonoBehaviour
         }
 
         _spawnedCards.Clear();
-    }
-
-    /// <summary>
-    /// 通信中のUI非活性化・ローディング表示制御
-    /// </summary>
-    public void SetLoadingState(bool isLoading)
-    {
-        if (_loadingOverlay != null)
-        {
-            _loadingOverlay.SetActive(isLoading);
-        }
-
-        _refreshButton.interactable = !isLoading;
-        _createRoomButton.interactable = !isLoading;
     }
 }

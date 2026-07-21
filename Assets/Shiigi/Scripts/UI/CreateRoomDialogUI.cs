@@ -20,7 +20,7 @@ public class CreateRoomDialogUI : MonoBehaviour
     [SerializeField] private Button _confirmCreateButton;
     [SerializeField] private Button _cancelDialogButton;
 
-    [SerializeField] private List<int> _maxPlayersOptions = new() { 2, 3, 4 };
+    [SerializeField][Range(2,4)] private List<int> _maxPlayersOptions = new() { 2, 3, 4 };
 
     private UniTaskCompletionSource<CreateRoomResult> _utcs;
 

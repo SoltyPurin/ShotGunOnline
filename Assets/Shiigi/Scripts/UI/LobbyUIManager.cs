@@ -9,6 +9,10 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private ConfirmDialogUI _confirmDialogUI; // 汎用の確認用
     [SerializeField] private LobbyRoomUI _roomUI;
 
+    [Header("ローディング表示用オブジェクト")]
+    [SerializeField]
+    private LoadingOverlayController _loadingOverlay;
+
     private MultiplayerSessionManager _sessionManager;
     private LobbyUIState _currentState;
 
@@ -72,11 +76,11 @@ public class LobbyUIManager : MonoBehaviour
         // Connectingステートの場合はローディング表示を出す
         if (state == LobbyUIState.Connecting)
         {
-            _discoverUI.SetLoadingState(true);
+            _loadingOverlay.SetLoadingState(true, "ルームに参加中...");
         }
         else
         {
-            _discoverUI.SetLoadingState(false);
+            _loadingOverlay.SetLoadingState(false);
         }
     }
 
@@ -85,7 +89,7 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void RefreshRoomList()
     {
-        _discoverUI.SetLoadingState(true);
+        _loadingOverlay.SetLoadingState(true, "ルーム更新中...");
         try
         {
             var sessions = await _sessionManager.SearchRoomSessionsAsync();
@@ -93,7 +97,7 @@ public class LobbyUIManager : MonoBehaviour
         }
         finally
         {
-            _discoverUI.SetLoadingState(false);
+            _loadingOverlay.SetLoadingState(false);
         }
     }
 
@@ -201,7 +205,7 @@ public class LobbyUIManager : MonoBehaviour
         if (session == null || session.CurrentPlayer == null) return;
 
         // 現在の準備状況を取得
-        bool isReady = false;
+        var isReady = false;
         if (session.CurrentPlayer.Properties != null && 
             session.CurrentPlayer.Properties.TryGetValue("IsReady", out var prop))
         {
@@ -209,7 +213,7 @@ public class LobbyUIManager : MonoBehaviour
         }
 
         // 反転させて送信
-        bool nextReadyState = !isReady;
+        var nextReadyState = !isReady;
         await _sessionManager.SetReadyStatusAsync(nextReadyState);
     }
 
