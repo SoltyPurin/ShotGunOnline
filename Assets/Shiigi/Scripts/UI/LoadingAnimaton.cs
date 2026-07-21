@@ -7,7 +7,7 @@ public class LoadingAnimation : MonoBehaviour
     private const float DURATION = 1f;
 
     /// <summary>
-    /// コピペ！: https://game-ui.net/?p=51
+    /// コピペ！: https://game-ui.net/?p=51#toc2
     /// </summary>
     void Start()
     {

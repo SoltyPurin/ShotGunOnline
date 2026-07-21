@@ -21,7 +21,7 @@ public class LobbyDiscoverUI : MonoBehaviour
     public event Action OnCreateRoomRequested;
     public event Action<ISessionInfo> OnJoinRoomRequested;
 
-    private readonly List<RoomCardUI> _spawnedCards = new List<RoomCardUI>();
+    private readonly List<RoomCardUI> _spawnedCards = new();
 
     private void Awake()
     {

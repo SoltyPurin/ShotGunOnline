@@ -915,6 +915,7 @@ GameObject:
   - component: {fileID: 170949388}
   - component: {fileID: 170949387}
   - component: {fileID: 170949386}
+  - component: {fileID: 170949389}
   m_Layer: 5
   m_Name: Button_Ready
   m_TagString: Untagged
@@ -1024,6 +1025,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170949384}
   m_CullTransparentMesh: 1
+--- !u!114 &170949389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170949384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a2b59fbeb3cce408feca85c5d19d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonCooldown
+  _cooldownTime: 1
 --- !u!1 &178927730
 GameObject:
   m_ObjectHideFlags: 0
@@ -2684,6 +2698,7 @@ GameObject:
   - component: {fileID: 381461103}
   - component: {fileID: 381461102}
   - component: {fileID: 381461101}
+  - component: {fileID: 381461104}
   m_Layer: 5
   m_Name: Button_RefreshRoom
   m_TagString: Untagged
@@ -2793,6 +2808,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 381461099}
   m_CullTransparentMesh: 1
+--- !u!114 &381461104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381461099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a2b59fbeb3cce408feca85c5d19d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonCooldown
+  _cooldownTime: 1
 --- !u!1 &400483392
 GameObject:
   m_ObjectHideFlags: 0

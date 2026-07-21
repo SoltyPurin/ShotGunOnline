@@ -76,7 +76,7 @@ public class LobbyUIManager : MonoBehaviour
         // Connectingステートの場合はローディング表示を出す
         if (state == LobbyUIState.Connecting)
         {
-            _loadingOverlay.SetLoadingState(true, "ルームに参加中...");
+            _loadingOverlay.SetLoadingState(true, "通信中...");
         }
         else
         {
@@ -89,7 +89,7 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void RefreshRoomList()
     {
-        _loadingOverlay.SetLoadingState(true, "ルーム更新中...");
+        _loadingOverlay.SetLoadingState(true, "更新中...");
         try
         {
             var sessions = await _sessionManager.SearchRoomSessionsAsync();
