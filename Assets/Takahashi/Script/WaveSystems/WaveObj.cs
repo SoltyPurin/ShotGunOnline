@@ -30,5 +30,9 @@ public class WaveObj : NetworkBehaviour
         {
             _enemySpawnAnim.StartAnim();
         }
+        else
+        {
+            _enemySpawnAnim = GetComponent<EnemySpawnAnim>();
+        }
     }
 }

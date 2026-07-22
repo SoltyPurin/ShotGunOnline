@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5030616004506873733}
+  - component: {fileID: -6402475651796809658}
   - component: {fileID: 3896925289570339866}
   - component: {fileID: 998155527148574301}
-  - component: {fileID: -6402475651796809658}
   m_Layer: 0
   m_Name: MakinoLabWave8
   m_TagString: Untagged
@@ -38,6 +38,31 @@ Transform:
   - {fileID: 972532510286869138}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6402475651796809658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634467166805199453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3560014400
+  InScenePlacedSourceGlobalObjectIdHash: 4247936913
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &3896925289570339866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,31 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wave: {fileID: 4047231182250988058}
---- !u!114 &-6402475651796809658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 634467166805199453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3928939001
-  InScenePlacedSourceGlobalObjectIdHash: 4247936913
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!1 &819628863705227571
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +350,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8152309791283570667
 Transform:
   m_ObjectHideFlags: 0
@@ -930,7 +930,7 @@ PrefabInstance:
       objectReference: {fileID: 5376468261992086446}
     - target: {fileID: 4517113842697549388, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2098329809
+      value: 3594912490
       objectReference: {fileID: 0}
     - target: {fileID: 4517113842697549388, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -952,6 +952,10 @@ PrefabInstance:
       propertyPath: m_Events.m_Events.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 5376468261992086446}
+    - target: {fileID: 5236341858051466352, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+      propertyPath: _enemySpawnAnim
+      value: 
+      objectReference: {fileID: 2363596335503254817}
     - target: {fileID: 5385514659766852675, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
       propertyPath: _secondSpeed
       value: 25
@@ -1035,6 +1039,17 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 3681224584380171270, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
   m_PrefabInstance: {fileID: 2882977664639353821}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2363596335503254817 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 634808198399846140, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}
+  m_PrefabInstance: {fileID: 2882977664639353821}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2624792903860400981}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2624792903860400981 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 896013826991222920, guid: cbec9f209e2bef64ebf14b13e17878fd, type: 3}

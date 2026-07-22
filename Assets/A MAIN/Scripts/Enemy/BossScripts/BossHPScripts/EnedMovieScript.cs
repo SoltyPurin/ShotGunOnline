@@ -51,8 +51,10 @@ public class EnedMovieScript : MonoBehaviour
             _stateManagement.enabled = false;
         }
 
-        // šy’Ç‰Áz“¯Šú‚Æ•¨—‚ğˆêƒIƒt‚É‚·‚é
+        // y’Ç‰Áz“¯Šú‚Æ•¨—‚ğˆêƒIƒt‚É‚·‚é
         DisableBossNetworkAndPhysics();
+        _cameraMove.IsMovie = true;
+        _cameraMove.IsBossWave = false;
     }
 
     public void PopEndReset()
@@ -61,7 +63,7 @@ public class EnedMovieScript : MonoBehaviour
         _stateManagement.enabled = true;
         _cameraMove.IsMovie = false;
         _playerMove.enabled = true;
-
+        _cameraMove.IsBossWave = true;
         EnableBossNetworkAndPhysics();
     }
 

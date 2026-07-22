@@ -384,8 +384,6 @@ public class PlayerDamageKnockBack : MonoBehaviour
             //吹き飛びが0以下になったら実行
             if (_force <= 0)
             {
-                Debug.Log(_oldState);
-
                 _playerAnim.Wait();
                 //力を最初のやつにリセット
                 _force = _originForce;
