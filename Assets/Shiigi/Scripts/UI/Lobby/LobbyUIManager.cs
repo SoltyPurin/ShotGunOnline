@@ -110,11 +110,19 @@ public class LobbyUIManager : MonoBehaviour
         var result = await _createRoomDialogUI.ShowAsync();
 
         if (result.IsCanceled) return;
+
         // 簡単な入力バリデーション
-        if (string.IsNullOrWhiteSpace(result.RoomName))
+        while (string.IsNullOrWhiteSpace(result.RoomName))
         {
-            await _confirmDialogUI.ShowAsync("ルーム名を入力してください。");
-            return;
+            if (await _confirmDialogUI.ShowAsync("ルーム名を正しく入力してください"))
+            {
+                result = await _createRoomDialogUI.ShowAsync();
+                if (result.IsCanceled) return;
+            }
+            else
+            {
+                return;
+            }
         }
 
         // 決定されたらセッション作成処理実行
@@ -124,7 +132,6 @@ public class LobbyUIManager : MonoBehaviour
             var success = await _sessionManager.CreateRoomSessionAsync(result.RoomName, result.MaxPlayers);
             if (success)
             {
-                Debug.Log("ルーム作成に成功しました。");
                 TransitionTo(LobbyUIState.InRoom);
                 UpdateRoomUI();
             }
@@ -151,7 +158,6 @@ public class LobbyUIManager : MonoBehaviour
             var success = await _sessionManager.JoinRoomSessionAsync(sessionInfo);
             if (success)
             {
-                Debug.Log("ルーム参加に成功しました。");
                 TransitionTo(LobbyUIState.InRoom);
                 UpdateRoomUI();
             }
@@ -172,6 +178,9 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void LeaveRoom()
     {
+        // 確認ダイアログを表示して、ユーザーがキャンセルした場合は処理を中断
+        if (!await _confirmDialogUI.ShowAsync("退出しますか？")) return;
+
         TransitionTo(LobbyUIState.Connecting);
         try
         {

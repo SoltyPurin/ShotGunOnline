@@ -50,13 +50,9 @@ public class MultiplayerSessionManager : MonoBehaviour
     {
         try
         {
-            Debug.Log("Unity Services初期化中...");
             await UnityServices.InitializeAsync();
-
-            Debug.Log("Authentication (匿名サインイン)...");
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-            Debug.Log($"サインイン成功: プレイヤーID = {AuthenticationService.Instance.PlayerId}");
             IsInitialized = true;
         }
         catch (Exception ex)
@@ -71,7 +67,7 @@ public class MultiplayerSessionManager : MonoBehaviour
     /// <param name="roomName"></param>
     /// <param name="maxPlayers"></param>
     /// <returns></returns>
-    public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers = 4)
+    public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers)
     {
         if (!IsInitialized)
         {
@@ -81,8 +77,6 @@ public class MultiplayerSessionManager : MonoBehaviour
 
         try
         {
-            Debug.Log($"ルーム作成開始: {roomName} (最大 {maxPlayers} 人)");
-
             // オプション作成
             var options = new SessionOptions
             {
@@ -116,8 +110,6 @@ public class MultiplayerSessionManager : MonoBehaviour
 
         try
         {
-            Debug.Log("ルーム検索中...");
-
             // 検索条件作成
             var queryOptions = new QuerySessionsOptions
             {
@@ -125,7 +117,6 @@ public class MultiplayerSessionManager : MonoBehaviour
             };
 
             QuerySessionsResults queryResponse = await MultiplayerService.Instance.QuerySessionsAsync(queryOptions);
-            Debug.Log($"ルーム検索完了: {queryResponse.Sessions.Count} 件ヒット");
             return new List<ISessionInfo>(queryResponse.Sessions);
         }
         catch (Exception ex)
@@ -150,11 +141,9 @@ public class MultiplayerSessionManager : MonoBehaviour
 
         try
         {
-            Debug.Log($"ルームに参加中: {targetRoom.Name} (ID: {targetRoom.Id})");
             _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id);
             _currentSession.Changed += HandleSessionChanged;
 
-            Debug.Log($"ルームに参加成功: {_currentSession.Name}");
             return true;
         }
         catch (Exception ex)
@@ -174,13 +163,9 @@ public class MultiplayerSessionManager : MonoBehaviour
 
         try
         {
-            Debug.Log("ルームから退出中...");
-
             _currentSession.Changed -= HandleSessionChanged;
             await _currentSession.LeaveAsync();
             _currentSession = null;
-
-            Debug.Log("ルームから正常に退出しました");
         }
         catch (Exception ex)
         {
@@ -214,7 +199,6 @@ public class MultiplayerSessionManager : MonoBehaviour
 
             _currentSession.CurrentPlayer.SetProperties(properties);
             await _currentSession.SaveCurrentPlayerDataAsync();
-            Debug.Log($"準備完了状態を {isReady} に更新しました");
         }
         catch (Exception ex)
         {

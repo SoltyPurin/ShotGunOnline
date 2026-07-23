@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Unity.Services.Lobbies;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 // ダイアログから返却される結果のデータ
@@ -20,7 +21,7 @@ public class CreateRoomDialogUI : MonoBehaviour
     [SerializeField] private Button _confirmCreateButton;
     [SerializeField] private Button _cancelDialogButton;
 
-    [SerializeField][Range(2,4)] private List<int> _maxPlayersOptions = new() { 2, 3, 4 };
+    [SerializeField][Range(2,8)] private List<int> _maxPlayerOptions = new() { 2, 3, 4 };
 
     private UniTaskCompletionSource<CreateRoomResult> _utcs;
 
@@ -75,7 +76,7 @@ public class CreateRoomDialogUI : MonoBehaviour
         _maxPlayersDropDown.ClearOptions();
 
         // ドロップダウンの選択肢を最大人数リストから作成
-        var options = _maxPlayersOptions.Select(maxPlayers => maxPlayers.ToString()).ToList();
+        var options = _maxPlayerOptions.Select(maxPlayers => maxPlayers.ToString()).ToList();
         _maxPlayersDropDown.AddOptions(options);
     }
     
@@ -86,8 +87,6 @@ public class CreateRoomDialogUI : MonoBehaviour
     /// <returns></returns>
     private int GetMaxPlayersFromDropdown(int index)
     {
-        return _maxPlayersOptions[index];
+        return _maxPlayerOptions[index];
     }
-
-    
 }
