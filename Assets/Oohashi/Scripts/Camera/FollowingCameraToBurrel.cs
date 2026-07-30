@@ -108,21 +108,21 @@ public class FollowingCameraToBurrel : MonoBehaviour
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
         }
-        else if (_isMovie)
-        {
-            _boss = GameObject.FindGameObjectWithTag("BossSprite");
+        //else if (_isMovie)
+        //{
+        //    _boss = GameObject.FindGameObjectWithTag("BossSprite");
 
-            if (_boss == null)
-            {
-                return;
-            }
+        //    if (_boss == null)
+        //    {
+        //        return;
+        //    }
 
-            Vector3 targetPosition = _boss.transform.position;
-            targetPosition.z = transform.position.z;
+        //    Vector3 targetPosition = _boss.transform.position;
+        //    targetPosition.z = transform.position.z;
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
+        //    transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
-        }
+        //}
         else if (_isBossWave && !_isMovie)//ボスのウェーブであればボスにカメラを合わせる
         {
 

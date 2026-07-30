@@ -158,7 +158,6 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     /// <param name="index">index番目のウェーブを複製しcloneListに格納する。</param>
     public void StartWave(int index)
     {
-        Debug.Log("ウェーブ開始を呼び出し");
         if (!IsServer)
         {
             return;

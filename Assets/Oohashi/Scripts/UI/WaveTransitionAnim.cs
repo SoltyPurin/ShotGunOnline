@@ -161,7 +161,6 @@ public class WaveTransitionAnim : MonoBehaviour
         //オンライン版
         if (_stateManager == null || _inputChangeState == null)
         {
-            Debug.Log("マルチプレイ");
             PlayerStateManager[] states = FindObjectsByType<PlayerStateManager>();
             InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
             foreach(PlayerStateManager state in states)

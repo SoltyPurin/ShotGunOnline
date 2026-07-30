@@ -1,5 +1,6 @@
-using UnityEngine;
+using Unity.Netcode;
 using Unity.Netcode.Components;
+using UnityEngine;
 
 public class EnedMovieScript : MonoBehaviour
 {
@@ -33,10 +34,36 @@ public class EnedMovieScript : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.FindWithTag(PLAYERTAGNAME);
-        _coinKeep = _player.GetComponent<SoulKeep>();
-        _playerMove = _player.GetComponent<PlayerMove>();
-        _playerMove.enabled = false;
+
+        //_player = GameObject.FindWithTag(PLAYERTAGNAME);
+        //_coinKeep = _player.GetComponent<SoulKeep>();
+        //_playerMove = _player.GetComponent<PlayerMove>();
+        //_playerMove.enabled = false;
+        bool isOnline = NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
+
+        if (isOnline)
+        {
+            // --- 【オンライン時】自分のローカルプレイヤーを確実に取得 ---
+            GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYERTAGNAME);
+            foreach (GameObject p in players)
+            {
+                NetworkObject netObj = p.GetComponent<NetworkObject>();
+                if (netObj != null && netObj.IsLocalPlayer)
+                {
+                    _player = p;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // --- 【オフライン時】従来の方式で取得 ---
+            _player = GameObject.FindWithTag(PLAYERTAGNAME);
+            _coinKeep = _player.GetComponent<SoulKeep>();
+            _playerMove = _player.GetComponent<PlayerMove>();
+            _playerMove.enabled = false;
+        }
+
 
         _mainCanvas = GameObject.FindGameObjectWithTag("MainCanvas");
         _canvasAnime = _mainCanvas.GetComponent<Animator>();
@@ -106,7 +133,10 @@ public class EnedMovieScript : MonoBehaviour
     public void EnemyDelete()
     {
         _cameraMove.IsBossWave = false;
-        _coinKeep.AdditionCoin();
+        if (_coinKeep)
+        {
+            _coinKeep.AdditionCoin();
+        }
 
         _enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in _enemyObjects)

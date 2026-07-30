@@ -135,7 +135,6 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
 
     public virtual void Moving()
     {
-        Debug.Log("敵動く");
         if(_target == null)
         {
             return;

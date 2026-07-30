@@ -182,10 +182,6 @@ public class Wave : NetworkBehaviour
             {
                 _waveManager.SetChangeCount(_prevEnemyCount);
             }
-            else
-            {
-                Debug.LogWarning("WaveManager がシーン内に見つからないため、カウントを送信できません。");
-            }
         }
         
     }
@@ -319,7 +315,6 @@ public class Wave : NetworkBehaviour
                         netObj.transform.SetParent(null); // 親子関係を切る
                         netObj.Spawn();
                         whileCount++;
-                        Debug.Log(whileCount + "回スポーンさせた");
                     }
 
                     // 生成された本物の敵の出現アニメーションを再生

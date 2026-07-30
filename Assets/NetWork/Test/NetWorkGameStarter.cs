@@ -41,11 +41,9 @@ public class NetWorkGameStarter : Unity.Netcode.NetworkBehaviour
 
         int conectingCount = NetworkManager.Singleton.ConnectedClientsList.Count;
 
-        Debug.Log("Œ»İÚ‘±‚µ‚Ä‚él”‚Í" + conectingCount);
 
         if(conectingCount >= 2)
         {
-            Debug.Log("l”‚ª‘«‚è‚Ü‚µ‚½");
             _waveManager.StartWave(0);
             _isGameStarted = true;
         }

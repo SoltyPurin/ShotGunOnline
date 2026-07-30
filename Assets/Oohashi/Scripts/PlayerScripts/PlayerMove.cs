@@ -85,11 +85,12 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         bool isStateFall = _playerStateManger.PlayerState == PlayerState.Fall;
         bool isStateKnockBack = _playerStateManger.PlayerState == PlayerState.KnockBack;
         bool isStateDamageKnockBack = _playerStateManger.PlayerState == PlayerState.DamageKnockBack;
-        bool isStateMovie = _playerStateManger.PlayerState == PlayerState.Movie;
-        bool cantMoveState = isStateFall || isStateKnockBack || isStateDamageKnockBack || isStateMovie;
+        //bool isStateMovie = _playerStateManger.PlayerState == PlayerState.Movie;
+        bool cantMoveState = isStateFall || isStateKnockBack || isStateDamageKnockBack/* || isStateMovie*/;
+
         if (cantMoveState)
         {
-            return; //落下中は操作不可能にするため早期リターン
+            return;
         }
         //フェード中は移動させない
         if (_isFadeing)
@@ -111,6 +112,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
             if (_gamePad == null)
             {
+                Debug.Log("ゲームパッド消失");
                 return;
             }
             //左スティック取得
@@ -119,8 +121,9 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             SetMoveInputServerRpc(input.x, input.y);
 
         }
-        if(this.IsServer)
+        if (this.IsServer)
         {
+            Debug.Log($"Host Rigidbody BodyType: {_rigidbody.bodyType}, MoveDir: {_moveDirection}");
             Move();//移動のメソッド呼び出し
         }
 
