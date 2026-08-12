@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5148643399998201332, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5148643399998201332, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       propertyPath: m_LocalPosition.y
@@ -65,13 +65,337 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7818330625537861996, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7843129269454985061}
+    - targetCorrespondingSourceObject: {fileID: 1352574616777809253, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7848662483795459245}
+    - targetCorrespondingSourceObject: {fileID: 8610572031926460511, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 362818030692166854}
+    - targetCorrespondingSourceObject: {fileID: 3217341497461414544, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1226228160968541146}
+    - targetCorrespondingSourceObject: {fileID: 4321757205769193734, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4485261077887412082}
+    - targetCorrespondingSourceObject: {fileID: 546441012702957589, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 750865364354010134}
+    - targetCorrespondingSourceObject: {fileID: 8788839917851495257, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6649661703732449818}
+    - targetCorrespondingSourceObject: {fileID: 2547204531440771183, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6458237643722060917}
     - targetCorrespondingSourceObject: {fileID: 6933217705799788426, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3903106726610509151}
+    - targetCorrespondingSourceObject: {fileID: 5684981561012519079, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5899120637339700452}
+    - targetCorrespondingSourceObject: {fileID: 4640919611238155214, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8976823528000469324}
+    - targetCorrespondingSourceObject: {fileID: 3228262883572648457, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4873667009395110638}
   m_SourcePrefab: {fileID: 100100000, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+--- !u!95 &738508258631914734 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 153867301247437113, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1119224854676573634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 546441012702957589, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &750865364354010134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119224854676573634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 5152203010658327152}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
+--- !u!95 &1896816949028501814 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1319494015159952609, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1934400860366045362 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1352574616777809253, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7848662483795459245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934400860366045362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 2777189776862157137}
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -572773157
+    DestinationState: 1533177906
+    TransitionDuration: 0.25
+    TriggerNameHash: 1533177906
+    TransitionIndex: 1
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Pop
+      NameHash: 563999222
+      Synchronize: 1
+      ParameterType: 9
+    - name: Fall
+      NameHash: 1533177906
+      Synchronize: 1
+      ParameterType: 9
+    - name: Run_Right
+      NameHash: -882523587
+      Synchronize: 1
+      ParameterType: 4
+    - name: Run_Left
+      NameHash: -1076005596
+      Synchronize: 1
+      ParameterType: 4
+  AnimatorParametersExpanded: 0
+--- !u!1 &2646809451878401863 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3217341497461414544, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1226228160968541146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2646809451878401863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 9001914649456373498}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Flash
+      NameHash: 1846505479
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!1 &2652628817347696606 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3228262883572648457, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4873667009395110638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2652628817347696606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 4421611232443875126}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Trigger
+      NameHash: -707381567
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!95 &2777189776862157137 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3357327164614853766, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3117736832308002232 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2547204531440771183, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6458237643722060917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3117736832308002232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 5534593311287361324}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Get
+      NameHash: -982095728
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!1 &3739367990484784337 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4321757205769193734, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4485261077887412082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739367990484784337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 8628633738887841544}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
+--- !u!95 &4421611232443875126 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3837532915573842657, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5113851378352545136 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5684981561012519079, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5899120637339700452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5113851378352545136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 1896816949028501814}
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1388814594
+    DestinationState: -1169592700
+    TransitionDuration: 0
+    TriggerNameHash: 198270979
+    TransitionIndex: 0
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Charge
+      NameHash: 1388814594
+      Synchronize: 1
+      ParameterType: 9
+    - name: MAX
+      NameHash: 198270979
+      Synchronize: 1
+      ParameterType: 9
+    - name: Wait
+      NameHash: -572773157
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!95 &5152203010658327152 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5736844239428945831, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5222710931303882265 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4640919611238155214, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8976823528000469324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5222710931303882265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 7103370507312494087}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
+--- !u!95 &5534593311287361324 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4959522487543882491, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5723714225622810659 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5148643399998201332, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5831960031276909760 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6409282630140631319, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &7103370507312494087 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7676717551569382352, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
   m_PrefabInstance: {fileID: 584641290513440215}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &7250050344265823419 stripped
@@ -91,7 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 947464419
+  GlobalObjectIdHash: 3680968636
   InScenePlacedSourceGlobalObjectIdHash: 1109276146
   DeferredDespawnTick: 0
   Ownership: 1
@@ -201,6 +525,78 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!1 &8207013660038239886 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8788839917851495257, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6649661703732449818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8207013660038239886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 738508258631914734}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Start
+      NameHash: 1589148299
+      Synchronize: 1
+      ParameterType: 9
+    - name: Wait
+      NameHash: -572773157
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!95 &8628633738887841544 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9196913993515014879, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &9001914649456373498 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8426280575646511917, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9179450410949655944 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8610572031926460511, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &362818030692166854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9179450410949655944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 5831960031276909760}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Flash
+      NameHash: 1846505479
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
 --- !u!1001 &2646808289968765977
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -268,10 +664,88 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1377093735207844977, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2047582009961365093}
+    - targetCorrespondingSourceObject: {fileID: 1154785465331901410, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 449315557950035573}
   m_SourcePrefab: {fileID: 100100000, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
+--- !u!95 &628234834827090010 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3174099154825684035, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
+  m_PrefabInstance: {fileID: 2646808289968765977}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2257873128072479615 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4318610886862094182, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
   m_PrefabInstance: {fileID: 2646808289968765977}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3800410671926075387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1154785465331901410, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
+  m_PrefabInstance: {fileID: 2646808289968765977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &449315557950035573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3800410671926075387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 3902303406431828066}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Flash
+      NameHash: 1846505479
+      Synchronize: 1
+      ParameterType: 9
+    - name: Wait
+      NameHash: -572773157
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!95 &3902303406431828066 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1341120890146899067, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
+  m_PrefabInstance: {fileID: 2646808289968765977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4010228322207203432 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1377093735207844977, guid: b96d0a25ac64bad49b9876fbfb45080f, type: 3}
+  m_PrefabInstance: {fileID: 2646808289968765977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2047582009961365093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010228322207203432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 628234834827090010}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Flash
+      NameHash: 1846505479
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0

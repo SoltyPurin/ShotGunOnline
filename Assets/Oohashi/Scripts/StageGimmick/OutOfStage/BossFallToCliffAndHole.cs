@@ -34,7 +34,7 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         {
             if(_returnPointTransform == null)
             {
-                _returnPointTransform = GameObject.Find("BossReturnPoint");
+                _returnPointTransform = GameObject.Find("SpawonPoint2");
             }
             StartCoroutine(HoleFallMethod());
             transform.rotation = Quaternion.identity;
@@ -51,10 +51,11 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     /// <returns></returns>
     public IEnumerator HoleFallMethod()
     {
-        Animator retAnim = _returnPointTransform.GetComponent<Animator>();
-        retAnim.SetTrigger(RETURNPOINT);
+        //Animator retAnim = _returnPointTransform.GetComponent<Animator>();
+        //retAnim.SetTrigger(RETURNPOINT);
         yield return new WaitForSeconds(2f);
         this.transform.position = _returnPointTransform.transform.position;
+        Debug.Log("ボスリターン");
         if (_returnAnim != null)
         {
             _returnAnim.SetTrigger(RETURNFALL);

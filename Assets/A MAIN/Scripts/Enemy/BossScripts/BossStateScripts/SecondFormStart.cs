@@ -25,13 +25,21 @@ public class SecondFormStart : MonoBehaviour
     private float _secondSpeed = 15.0f;
 
     #endregion
+
+    private void Update()
+    {
+        _bossSprite.enabled = true;
+    }
     public void ToBESecondForm()
     {
         _bossSprite.color = _secondColor;
         _bossHP._isInvincible = true;
         _animeManager.ResetAllTriggers();
-        _stateManagement.enabled = false;
-        _secondEffect.SetActive(true);
+        //_stateManagement.enabled = false;
+        if(_secondEffect != null)
+        {
+            _secondEffect.SetActive(true);
+        }
         _agent._moveSpeed = _secondSpeed;
 
     }

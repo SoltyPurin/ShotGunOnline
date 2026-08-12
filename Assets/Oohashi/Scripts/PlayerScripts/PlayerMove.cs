@@ -123,7 +123,6 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         }
         if (this.IsServer)
         {
-            Debug.Log($"Host Rigidbody BodyType: {_rigidbody.bodyType}, MoveDir: {_moveDirection}");
             Move();//移動のメソッド呼び出し
         }
 

@@ -162,10 +162,9 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         {
             return;
         }
-        Debug.Log("ウェーブスタート");
         Wave cloneWave = Instantiate(_waveList[_waveIndex]);
-        //Listにウェーブプレハブをコピーし追加
-        _cloneList.Add(cloneWave);
+            _cloneList.Add(cloneWave);
+
 
         foreach (Wave.ObjData enemyData in cloneWave.ObjList)
         {
@@ -184,6 +183,10 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         {
             if (enemyData._waveObj != null)
             {
+                if (enemyData._waveObj.CompareTag("Boss"))
+                {
+                    continue;
+                }
                 enemyData._waveObj.gameObject.SetActive(false);
             }
         }
