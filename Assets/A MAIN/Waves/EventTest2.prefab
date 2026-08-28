@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9147626339813542742}
   - component: {fileID: 2352948565609527624}
+  - component: {fileID: 8054895139504512984}
   m_Layer: 0
   m_Name: EventTest2
   m_TagString: Untagged
@@ -176,6 +177,31 @@ MonoBehaviour:
   _difficulty: 3
   _autoTransition: 0
   _waveStartText: 
+--- !u!114 &8054895139504512984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8757355361304518805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1001 &493028439394269100
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -184,6 +210,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: -1325550192902517136, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 313645818
+      objectReference: {fileID: 0}
     - target: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
       propertyPath: m_Name
       value: Bomb
@@ -261,6 +291,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: -1325550192902517136, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2857642487
+      objectReference: {fileID: 0}
     - target: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
       propertyPath: m_Name
       value: Bomb (1)
@@ -338,6 +372,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: -1325550192902517136, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3073007546
+      objectReference: {fileID: 0}
     - target: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
       propertyPath: m_Name
       value: Bomb (3)
@@ -423,6 +461,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArmorEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5015676984042077547, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 45068128
+      objectReference: {fileID: 0}
     - target: {fileID: 6766987364499549645, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18
@@ -492,6 +534,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1660102554
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -569,6 +615,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: -1325550192902517136, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4179487273
+      objectReference: {fileID: 0}
     - target: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
       propertyPath: m_Name
       value: Bomb (2)
@@ -646,6 +696,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 93535728
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -731,6 +785,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArmorEnemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5015676984042077547, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1663324848
+      objectReference: {fileID: 0}
     - target: {fileID: 6766987364499549645, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -800,6 +858,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: -5169489231772872588, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3693041706
+      objectReference: {fileID: 0}
     - target: {fileID: 1492867991441486744, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.5
@@ -877,6 +939,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3006184896
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -962,6 +1028,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArmorEnemy (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5015676984042077547, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 593752536
+      objectReference: {fileID: 0}
     - target: {fileID: 6766987364499549645, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1039,6 +1109,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArmorEnemy (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5015676984042077547, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3603051049
+      objectReference: {fileID: 0}
     - target: {fileID: 6766987364499549645, guid: 8c576324a2d8dad4696765c69d7c75cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: -18
@@ -1108,6 +1182,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: 3562255637817752412, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4276216223
+      objectReference: {fileID: 0}
     - target: {fileID: 4743631826345816206, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1185,6 +1263,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9147626339813542742}
     m_Modifications:
+    - target: {fileID: -5169489231772872588, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1352250930
+      objectReference: {fileID: 0}
     - target: {fileID: 1492867991441486744, guid: e662486bc77fbe64b93f75c9dd98e9f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -17.5

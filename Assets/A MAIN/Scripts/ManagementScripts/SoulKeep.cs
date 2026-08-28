@@ -58,7 +58,6 @@ public class SoulKeep : MonoBehaviour
         }
         if (_vStock >= 3)
         {
-            Debug.Log("ç≈ëÂ");
             _soulMeter.SetCount(10);
             _useFullSoul = 0;
             _isVstockMax = true;
@@ -78,7 +77,6 @@ public class SoulKeep : MonoBehaviour
 
     public void ReduceCoin()
     {
-        Debug.Log("îÌíe");
         _useFullSoul = 0;
         _soulMeter.SetCount(_useFullSoul);
         _soulMeter.ResetMeter() ;

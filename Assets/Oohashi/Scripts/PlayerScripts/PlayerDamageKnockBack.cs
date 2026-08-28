@@ -142,6 +142,9 @@ public class PlayerDamageKnockBack : MonoBehaviour
         else if (collision.gameObject.CompareTag("Rock"))
         {
             return;
+        }else if (collision.gameObject.CompareTag("Player"))
+        {
+            return;
         }
         else if (collision.gameObject.CompareTag(MIRRORBULLETTAGNAME))
         {
@@ -165,11 +168,11 @@ public class PlayerDamageKnockBack : MonoBehaviour
         {
             GameObject armor = collision.gameObject;
             ArmorMove armorMove = armor.GetComponent<ArmorMove>();
-            if(armorMove.InitState == ArmorState.Rush)
+            if (armorMove.InitState == ArmorState.Rush)
             {
                 //ぶつかってきた方向を代入
                 _contactNormal = collision.contacts[0].normal;
-                StartCoroutine(HitStop(collision,_contactNormal));
+                StartCoroutine(HitStop(collision, _contactNormal));
             }
             else
             {
@@ -381,8 +384,6 @@ public class PlayerDamageKnockBack : MonoBehaviour
             //吹き飛びが0以下になったら実行
             if (_force <= 0)
             {
-                Debug.Log(_oldState);
-
                 _playerAnim.Wait();
                 //力を最初のやつにリセット
                 _force = _originForce;

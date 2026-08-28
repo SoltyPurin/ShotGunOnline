@@ -27,16 +27,28 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         get { return _moveSpeed; }
     }
     [SerializeField, Header("�v���C���[�Ǝ�鋗���A���b�N�I���ȊO���ς��Ă��Ӗ��Ȃ�")]
-    protected float _keepDistance = 0;//�v���C���[�Ǝ�鋗��
+    protected float _keepDistance = 0;
     //�ړ��s�\�̃t���O
     protected bool _cantMove = false;
     //���݂̃X�e�[�g
-    protected EnemyState _enemyState = EnemyState.move;
+    //protected EnemyState _enemyState = EnemyState.move;
     public EnemyState EnemyState
     {
-        get { return _enemyState; }
-        set { _enemyState = value; }//���EnemyTakeDamage���p�������X�N���v�g�B���珑�������Ă�
+        get { return _enemyState.Value; }
+        set {
+            if (IsServer) // サーバー側でのみ書き込みを許可する安全対策
+            {
+                _enemyState.Value = value;
+            }
+        }
+        //set { _enemyState.Value = value; }//���EnemyTakeDamage���p�������X�N���v�g�B���珑�������Ă�
     }
+
+    protected NetworkVariable<EnemyState> _enemyState = new NetworkVariable<EnemyState>(
+        EnemyState.move,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server // 書き込みはサーバーのみ
+    );
     //����������
     protected Vector2 _direction = default;
     public Vector2 Direction
@@ -60,6 +72,11 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     {
         _agent = GetComponent<NavMesh2DAgent>(); //agent��NavMeshAgent2D���擾
         _rigidBody = GetComponent<Rigidbody2D>();
+
+        if (!IsServer && _agent != null)
+        {
+            _agent.enabled = false;
+        }
     }
 
     public void ChangeFloat(bool value)
@@ -69,7 +86,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
 
     public void RoadKill()
     {
-        _enemyState = EnemyState.roadKill;
+        _enemyState.Value = EnemyState.roadKill;
     }
 
     protected void FindPlayer()
@@ -91,20 +108,29 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     }
     private void FixedUpdate()
     {
+        if (!IsServer)
+        {
+            return;
+        }
         if (_playerObject == null)
         {
+            Debug.Log("プレイヤーが見当たらない");
             FindPlayer();
             return;
         }
-        _cantMove = _enemyState == EnemyState.knockback || _enemyState == EnemyState.fall || _enemyState == EnemyState.Wait;
-        if (_cantMove) //�m�b�N�o�b�N���܂��͗������͈ړ����Ȃ��悤�ɂ���
+        _cantMove = _enemyState.Value == EnemyState.knockback || _enemyState.Value == EnemyState.fall || _enemyState.Value == EnemyState.Wait;
+        if (_cantMove) 
         {
             return;
         }
-        if (this.IsServer)
-        {
-            Moving();//�ړ��̃��\�b�h�Ăяo��
-        }
+        //if (this.IsServer)
+        //{
+            Moving();
+        //}
+        //else
+        //{
+        //    Debug.Log("IsServerがfalse");
+        //}
     }
 
     public virtual void Moving()
@@ -115,15 +141,19 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         }
         if(_isFloating)
         {
-            Debug.Log("��������b�I");
             float t = Time.fixedDeltaTime * _inertiaStrangth;
             _rigidBody.linearVelocity = Vector2.Lerp(_rigidBody.linearVelocity,_saveDirection, t);
 
         }
         else
         {
-            _agent.destination = _target.position; //agent�̖ړI�n��target�̍��W�ɂ���
+            if (_agent != null && _agent.isActiveAndEnabled)
+            {
+                _agent.destination = _target.position;
+            }
             _saveDirection = (_target.position - transform.position) * _moveSpeed;
+            //_agent.destination = _target.position; //agent�̖ړI�n��target�̍��W�ɂ���
+            //_saveDirection = (_target.position - transform.position) * _moveSpeed;
         }
 
     }

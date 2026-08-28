@@ -53,7 +53,6 @@ public class KeepDistanceMove : EnemyMove
     {
         if(_target == null)
         {
-            Debug.Log("ターゲットがいません");
             _target = _playerObject.transform;
             return;
         }

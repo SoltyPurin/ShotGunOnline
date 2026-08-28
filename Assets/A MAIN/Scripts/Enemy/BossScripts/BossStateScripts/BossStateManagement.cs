@@ -81,7 +81,7 @@ public class BossStateManagement : EnemyMove
         Cooldown,//攻撃後の後隙
         Drop //落下中
     }
-    internal BossState _currentState = BossState.Stop;
+    [SerializeField]public BossState _currentState = BossState.Approach;
     public BossState CurrentState
     {
         get { return _currentState; }
@@ -116,6 +116,7 @@ public class BossStateManagement : EnemyMove
     }
     public void FixedUpdate()
     {
+        if (!IsServer) return;
         if (_playerObject == null)
         {
             FindPlayer();
@@ -140,7 +141,12 @@ public class BossStateManagement : EnemyMove
             _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         }
     }
-
+    private void OnDisable()
+    {
+        // enabled が false になった瞬間の呼び出し元（スタックトレース）をログに出力する
+        Debug.Log($"[{gameObject.name}] の {GetType().Name} が無効化されました！\n" +
+                  $"呼び出し元一覧:\n{System.Environment.StackTrace}");
+    }
     protected void BossStateChange()
     {
 
