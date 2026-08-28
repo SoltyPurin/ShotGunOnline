@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -7,18 +7,18 @@ using UnityEngine.UI;
 
 public class SoulMeter : MonoBehaviour
 {
-    [SerializeField, Header("ƒ\ƒEƒ‹‚Ì‰t‘Ì‚ÌƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ã‚½ã‚¦ãƒ«ã®æ¶²ä½“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _soulObject = default;
     private RectTransform _soulRect = default;
-    [SerializeField, Header("‰t‘Ì‚Ìã‚ª‚è•")]
+    [SerializeField, Header("æ¶²ä½“ã®ä¸ŠãŒã‚Šå¹…")]
     private int _soulUpValue = 1;
-    [SerializeField, Header("‰t‘Ì‚Ì”­ŒõƒCƒ[ƒW‚ÌƒAƒjƒ[ƒ^")]
+    [SerializeField, Header("æ¶²ä½“ã®ç™ºå…‰ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿")]
     private Animator _soulFlashAnimator = default;
 
-    [SerializeField, Header("ƒ\ƒEƒ‹æ“¾‚ÌƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("ã‚½ã‚¦ãƒ«å–å¾—æ™‚ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private Animator _getSoulEffect = default;
 
-    [Header("ƒ\ƒEƒ‹MAX‚ÌUI‚ÆƒGƒtƒFƒNƒg")]
+    [Header("ã‚½ã‚¦ãƒ«MAXæ™‚ã®UIã¨ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     [SerializeField] private GameObject _soulMaxUI = default;
     [SerializeField] private GameObject _soulMaxEffect = default;
 
@@ -80,9 +80,9 @@ public class SoulMeter : MonoBehaviour
 
     }
     /// <summary>
-    /// ƒ[ƒ^[‚ğã‚°‚éƒƒ\ƒbƒh
+    /// ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’ä¸Šã’ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="count">Œ»İ‚ÌŠ—Lƒ\ƒEƒ‹‚ğ“n‚·</param>
+    /// <param name="count">ç¾åœ¨ã®æ‰€æœ‰ã‚½ã‚¦ãƒ«ã‚’æ¸¡ã™</param>
     public void AddMeter(int count)
     {
         _maxCeil = _soulFirstPos + count * _upValue;
@@ -92,7 +92,7 @@ public class SoulMeter : MonoBehaviour
 
 
     /// <summary>
-    /// ƒ[ƒ^[‚ğƒŠƒZƒbƒg‚·‚é
+    /// ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     /// </summary>
     public void ResetMeter()
     {
@@ -118,28 +118,28 @@ public class SoulMeter : MonoBehaviour
 
 
 
-    //[SerializeField, Header("ƒ{ƒgƒ‹‘O–Ê‚Ì”­ŒõƒCƒ[ƒW")]
+    //[SerializeField, Header("ãƒœãƒˆãƒ«å‰é¢ã®ç™ºå…‰ã‚¤ãƒ¡ãƒ¼ã‚¸")]
     //private GameObject _bottleFlash = default;
 
-    //[SerializeField, Header("ƒ{ƒgƒ‹ƒ}ƒbƒNƒX‚Ì”­ŒõƒCƒ[ƒW")]
+    //[SerializeField, Header("ãƒœãƒˆãƒ«ãƒãƒƒã‚¯ã‚¹æ™‚ã®ç™ºå…‰ã‚¤ãƒ¡ãƒ¼ã‚¸")]
     //private GameObject _bottleMax = default;
 
-    //[SerializeField, Header("ƒEƒ‹ƒg‚ª‚È‚¢ó‘Ô‚ÌŒ©‚½–Ú")]
+    //[SerializeField, Header("ã‚¦ãƒ«ãƒˆãŒãªã„çŠ¶æ…‹ã®è¦‹ãŸç›®")]
     //private Sprite _unAssignSoulImage = default;
 
-    //[SerializeField,Header("ƒEƒ‹ƒg‚ª’™‚Ü‚Á‚½‚ÌŒ©‚½–Ú")]
+    //[SerializeField,Header("ã‚¦ãƒ«ãƒˆãŒè²¯ã¾ã£ãŸæ™‚ã®è¦‹ãŸç›®")]
     //private Sprite _assignSoulImage = default;
 
-    //[SerializeField, Header("Šƒ\ƒEƒ‹•\¦ƒeƒLƒXƒg")]
+    //[SerializeField, Header("æ‰€æŒã‚½ã‚¦ãƒ«è¡¨ç¤ºãƒ†ã‚­ã‚¹ãƒˆ")]
     //private Text _soulCountText = default;
 
-    //[SerializeField,Header("Vstock‚ÌƒŠƒXƒg")]
+    //[SerializeField,Header("Vstockã®ãƒªã‚¹ãƒˆ")]
     //private List<Image> _vstockList = new List<Image>();
 
-    //[SerializeField,Header("Vstock‚Ì”­ŒõƒAƒjƒ[ƒ^")]
+    //[SerializeField,Header("Vstockã®ç™ºå…‰ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿")]
     //private List<GameObject> _vstockFlash = new List<GameObject>();
 
-    ////Œ»İƒAƒNƒeƒBƒu‚É‚È‚Á‚Ä‚éVƒXƒgƒbƒN‚ÌƒCƒ“ƒfƒbƒNƒX
+    ////ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã£ã¦ã‚‹Vã‚¹ãƒˆãƒƒã‚¯ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
     ////private int _initActiveVstockIndex = 0;
 
 
@@ -149,16 +149,16 @@ public class SoulMeter : MonoBehaviour
 
     //private readonly string PLAYER_TAGNAME = "Player";
 
-    ////ƒXƒgƒbƒN‚Ì“§–¾“x•ÏX—p•Ï”
+    ////ã‚¹ãƒˆãƒƒã‚¯ã®é€æ˜åº¦å¤‰æ›´ç”¨å¤‰æ•°
     //private readonly Color _activeColor = new Color(1f, 1f, 1f, 1f);
     //private readonly Color _hideColor = new Color(1f, 1f, 1f, 0.2f);
 
 
 
     ///// <summary>
-    ///// vƒXƒgƒbƒN‚ğŒõ‚ç‚¹‚éA‚à‚µ2‚ÂŒõ‚Á‚Ä‚½‚ç•r‚Ì’†g‚ğƒ}ƒbƒNƒX‚É‚·‚é
+    ///// vã‚¹ãƒˆãƒƒã‚¯ã‚’å…‰ã‚‰ã›ã‚‹ã€ã‚‚ã—2ã¤å…‰ã£ã¦ãŸã‚‰ç“¶ã®ä¸­èº«ã‚’ãƒãƒƒã‚¯ã‚¹ã«ã™ã‚‹
     ///// </summary>
-    ///// <param name="value">vƒXƒgƒbƒN‚Ì”</param>
+    ///// <param name="value">vã‚¹ãƒˆãƒƒã‚¯ã®æ•°</param>
     //public void ActiveVStock(int value)
     //{
     //    for (int i = 0; i < _vstockList.Count; i++)
@@ -185,7 +185,7 @@ public class SoulMeter : MonoBehaviour
 
 
     ///// <summary>
-    ///// vƒXƒgƒbƒN‚ğÁ”ï‚·‚éA‚à‚µ•r‚Ì’†g‚ªƒ}ƒbƒNƒX‚¾‚Á‚½‚çæ‚É‚»‚Á‚¿‚©‚çÁ”ï‚·‚é
+    ///// vã‚¹ãƒˆãƒƒã‚¯ã‚’æ¶ˆè²»ã™ã‚‹ã€ã‚‚ã—ç“¶ã®ä¸­èº«ãŒãƒãƒƒã‚¯ã‚¹ã ã£ãŸã‚‰å…ˆã«ãã£ã¡ã‹ã‚‰æ¶ˆè²»ã™ã‚‹
     ///// </summary>
     //public void DeActiveVStock()
     //{
@@ -193,7 +193,7 @@ public class SoulMeter : MonoBehaviour
     //    if (_initActiveVstockIndex < 0)
     //    {
     //        _initActiveVstockIndex = 0;
-    //        Debug.LogWarning("VƒXƒgƒbƒN‚ª‚à‚¤‘¶İ‚µ‚Ü‚¹‚ñI");
+    //        Debug.LogWarning("Vã‚¹ãƒˆãƒƒã‚¯ãŒã‚‚ã†å­˜åœ¨ã—ã¾ã›ã‚“ï¼");
     //        return;
     //    }
 
@@ -224,7 +224,7 @@ public class SoulMeter : MonoBehaviour
     //        _vstockFlash[i].SetActive(isActive);
     //    }
 
-    //    // •r‚Ì‰t‘Ìˆ—‚È‚Ç‚à•K—v‚É‰‚¶‚Ä‚±‚±‚Å’²®
+    //    // ç“¶ã®æ¶²ä½“å‡¦ç†ãªã©ã‚‚å¿…è¦ã«å¿œã˜ã¦ã“ã“ã§èª¿æ•´
     //    if (vstock >= _vstockList.Count)
     //    {
     //        _bottleMax.SetActive(true);
@@ -237,9 +237,9 @@ public class SoulMeter : MonoBehaviour
 
 
     ///// <summary>
-    ///// ƒ[ƒ^[‚ÌƒJƒEƒ“ƒgƒeƒLƒXƒg‚ğİ’è‚·‚éƒƒ\ƒbƒh
+    ///// ãƒ¡ãƒ¼ã‚¿ãƒ¼ã®ã‚«ã‚¦ãƒ³ãƒˆãƒ†ã‚­ã‚¹ãƒˆã‚’è¨­å®šã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     ///// </summary>
-    ///// <param name="count">Œ»İŠ‚µ‚Ä‚¢‚éƒ\ƒEƒ‹”</param>
+    ///// <param name="count">ç¾åœ¨æ‰€æŒã—ã¦ã„ã‚‹ã‚½ã‚¦ãƒ«æ•°</param>
     //public void SetCount(int count)
     //{
     //    _soulCountText.text = count.ToString();
