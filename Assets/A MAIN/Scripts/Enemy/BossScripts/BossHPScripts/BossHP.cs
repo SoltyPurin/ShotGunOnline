@@ -245,7 +245,10 @@ public class BossHP : EnemyTakeDamage
     {
         DeactivateBoss();
         _collider.isTrigger = true;
-        _deathTimeline.SetActive(true);
+        if (_deathTimeline != null)
+        {
+            _deathTimeline.SetActive(true);
+        }
         _shadow.SetActive(false);
     }
 }

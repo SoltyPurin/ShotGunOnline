@@ -1,68 +1,68 @@
-using NUnit.Framework.Constraints;
+ï»¿using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerDamageKnockBack : MonoBehaviour
 {
-    #region •Ï”
+    #region å¤‰æ•°
     private Vector2 _contactNormal = default;
 
-    [Header("‚«”ò‚Ô—Í")]
+    [Header("å¹ãé£›ã¶åŠ›")]
     [SerializeField] private float _force = 2;
 
-    [SerializeField, Header("‚‚¿‚É“ËŒ‚‚³‚ê‚½‚Æ‚«‚Ì‚«”ò‚Ñ")]
+    [SerializeField, Header("ç›¾æŒã¡ã«çªæ’ƒã•ã‚ŒãŸã¨ãã®å¹ãé£›ã³")]
     private float _armorRushForce = 5;
-    [SerializeField, Header("‚‚¿‚É“ËŒ‚‚³‚ê‚½‚ÌƒqƒbƒgƒXƒgƒbƒv")]
+    [SerializeField, Header("ç›¾æŒã¡ã«çªæ’ƒã•ã‚ŒãŸæ™‚ã®ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—")]
     private float _armorHitStopTime = 0.2f;
 
-    [SerializeField, Header("ƒ{ƒX‚Ìƒ~ƒ‰[ƒoƒŒƒbƒg‚ª“–‚½‚Á‚½‚Æ‚«‚Ì‚«”ò‚Ñ")]
+    [SerializeField, Header("ãƒœã‚¹ã®ãƒŸãƒ©ãƒ¼ãƒãƒ¬ãƒƒãƒˆãŒå½“ãŸã£ãŸã¨ãã®å¹ãé£›ã³")]
     private float _bossMirrorBulletForce = 3;
-    [SerializeField, Header("ƒ{ƒX‚Ì•KE‹ZƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ãƒœã‚¹ã®å¿…æ®ºæŠ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _bossMirrorBullet;
 
-    [SerializeField, Header("ƒXƒe[ƒg‚ğæ“¾")]
+    [SerializeField, Header("ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å–å¾—")]
     private PlayerStateManager _playerState = default;
-    [SerializeField,Header("ƒŒƒoƒuƒ‹‚ÌƒXƒNƒŠƒvƒg")] 
+    [SerializeField,Header("ãƒ¬ãƒãƒ–ãƒ«ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")] 
     private ControllerVibelation _viblration = default;
-    [SerializeField,Header("ƒRƒCƒ“‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ã‚³ã‚¤ãƒ³ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private SoulKeep _soulKeep = default;
-    [SerializeField,Header("ƒ[ƒ^[‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ãƒ¡ãƒ¼ã‚¿ãƒ¼ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private SoulMeter _soulMeter = default;
-    [SerializeField, Header("ƒXƒe[ƒgƒ`ƒFƒ“ƒW‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚§ãƒ³ã‚¸ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private InputChangeState _inputChangeState = default;
 
-    [SerializeField, Header("ƒRƒ‰ƒCƒ_[“o˜^")]
+    [SerializeField, Header("ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ç™»éŒ²")]
     private CircleCollider2D _collider = default;
-    [SerializeField, Header("ƒ_ƒ[ƒWƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private DamageVignett _damageVignette = default;
-    [SerializeField, Header("–³“GŠÔ")]
+    [SerializeField, Header("ç„¡æ•µæ™‚é–“")]
     private float _invincibleTime = 0.5f;
     private ScoreData _scoreData = default;
 
-    [SerializeField, Header("ƒvƒŒƒCƒ„[‚ÌƒAƒjƒŠÇ—")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¢ãƒ‹ãƒ¡ç®¡ç†")]
     private PlayerAnimation _playerAnim = default;
 
-    [SerializeField, Header("ƒ_ƒ[ƒW‚ğH‚ç‚Á‚½‚Æ‚«‚É—‚Æ‚·ƒRƒCƒ“")]
+    [SerializeField, Header("ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’é£Ÿã‚‰ã£ãŸã¨ãã«è½ã¨ã™ã‚³ã‚¤ãƒ³")]
     private GameObject _dropCoinObject = default;
 
-    [SerializeField,Header("•\‚ÌŒ©‚½–Ú")]
+    [SerializeField,Header("è¡¨ã®è¦‹ãŸç›®")]
     private SpriteRenderer _frontPlayerSprite = default;
 
-    [SerializeField,Header("— ‚ÌŒ©‚½–Ú")]
+    [SerializeField,Header("è£ã®è¦‹ãŸç›®")]
     private SpriteRenderer _backPlayerSprite = default;
 
-    [SerializeField,Header("ƒXƒvƒ‰ƒCƒg‚Ì•\— ‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è¡¨è£ã‚’ç®¡ç†ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private SpriteDirection _spriteDirection = default;
 
-    //”í’e‰ñ”
+    //è¢«å¼¾å›æ•°
     private int _damageCount = 0;
     public int DamageCount
     {
         get { return _damageCount; }
     }
 
-    //–³“GŠÔ’†‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+    //ç„¡æ•µæ™‚é–“ä¸­ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
     private bool _isInvincible = false;
     public bool IsInvincible
     {
@@ -71,17 +71,17 @@ public class PlayerDamageKnockBack : MonoBehaviour
 
     private bool _isShowingSprite = true;
 
-    private float _originForce = default;//‚«”ò‚Ô—Í‚ğ•Û‘¶‚·‚é
+    private float _originForce = default;//å¹ãé£›ã¶åŠ›ã‚’ä¿å­˜ã™ã‚‹
 
-    private bool _isKnockBacking = false; //ƒmƒbƒNƒoƒbƒN’†‚©‚ğŠm”F‚·‚é
-                                          //HP‚ÌƒXƒvƒ‰ƒCƒg
+    private bool _isKnockBacking = false; //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­ã‹ã‚’ç¢ºèªã™ã‚‹
+                                          //HPã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
     private HPSprite _hpSprite = default;
-    //Œø‰Ê‰¹‚ÌƒXƒNƒŠƒvƒg
+    //åŠ¹æœéŸ³ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
     private SEManager _seManager = default;
-    //‘O‚ÌƒXƒe[ƒg‚ğ•Û‘¶
+    //å‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ä¿å­˜
     private PlayerState _oldState = default;
 
-    [SerializeField,Header("ƒŠƒAƒ‹ƒ^ƒCƒ€‚ÅƒXƒRƒA‚ğ•\¦‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ ã§ã‚¹ã‚³ã‚¢ã‚’è¡¨ç¤ºã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private RealTimeScoreCircle _scoreCircle = default;
 
     private PlayerTrenble _trenble = default;
@@ -89,16 +89,16 @@ public class PlayerDamageKnockBack : MonoBehaviour
     private PlayerKnockBack _knockBack = default;
     #endregion
 
-    #region ’è”
+    #region å®šæ•°
 
-    private readonly string ENEMYBULLETTAGNAME = "EnemyBullet";//“G‚Ìƒ^ƒO‚Ì–¼‘O
-    private readonly string FALLHOLETAGNAME = "Hole"; //—‚Æ‚µŒŠ‚Ìƒ^ƒO
-    private readonly string SEMANAGERTAGNAME = "SEManager";//SEManager‚Ìƒ^ƒO‚Ì–¼‘O
-    private readonly string STONETAGNAME = "Stone";//Šâ‚Ìƒ^ƒO‚Ì–¼‘O
-    private readonly string BOMBTAGNAME = "Bomb";//”š’e‚Ìƒ^ƒO‚Ì–¼‘O
-    private readonly string MIRRORBULLETTAGNAME = "MirrorBullet"; //”½Ë’e‚Ìƒ^ƒO‚Ì–¼‘O
-    private readonly string MEDIUMARMORTAGNAME = "MediumArmor";//’†ƒ{ƒX‚Ìƒ^ƒO‚Ì–¼‘O
-    private readonly string HPSPRITETAGNAME = "HPSprite"; //HP‚ÌƒXƒvƒ‰ƒCƒgŠÇ—‚·‚éƒ^ƒO‚Ì–¼‘O
+    private readonly string ENEMYBULLETTAGNAME = "EnemyBullet";//æ•µã®ã‚¿ã‚°ã®åå‰
+    private readonly string FALLHOLETAGNAME = "Hole"; //è½ã¨ã—ç©´ã®ã‚¿ã‚°
+    private readonly string SEMANAGERTAGNAME = "SEManager";//SEManagerã®ã‚¿ã‚°ã®åå‰
+    private readonly string STONETAGNAME = "Stone";//å²©ã®ã‚¿ã‚°ã®åå‰
+    private readonly string BOMBTAGNAME = "Bomb";//çˆ†å¼¾ã®ã‚¿ã‚°ã®åå‰
+    private readonly string MIRRORBULLETTAGNAME = "MirrorBullet"; //åå°„å¼¾ã®ã‚¿ã‚°ã®åå‰
+    private readonly string MEDIUMARMORTAGNAME = "MediumArmor";//ä¸­ãƒœã‚¹ã®ã‚¿ã‚°ã®åå‰
+    private readonly string HPSPRITETAGNAME = "HPSprite"; //HPã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç®¡ç†ã™ã‚‹ã‚¿ã‚°ã®åå‰
     private readonly string SCOREDATA = "WaveScore";
     private readonly string WALL_TAG_NAME = "Wall";
     #endregion
@@ -106,11 +106,11 @@ public class PlayerDamageKnockBack : MonoBehaviour
 
     private void Start()
     {
-        //ƒ^ƒO‚Å’T‚µ‚Ä“o˜^
+        //ã‚¿ã‚°ã§æ¢ã—ã¦ç™»éŒ²
         _seManager = GameObject.FindWithTag(SEMANAGERTAGNAME).GetComponent<SEManager>();
         _hpSprite = GameObject.FindWithTag(HPSPRITETAGNAME).GetComponent<HPSprite>();
         _knockBack = GetComponent<PlayerKnockBack>();
-        //ƒIƒ“ƒ‰ƒCƒ“”Å‚¾‚ÆƒCƒ“ƒXƒyƒNƒ^[‚É“o˜^‚Å‚«‚È‚¢‚½‚ß‚±‚±‚Å’Tõ
+        //ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ç‰ˆã ã¨ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼ã«ç™»éŒ²ã§ããªã„ãŸã‚ã“ã“ã§æ¢ç´¢
         if (_damageVignette == null && _soulMeter == null && _scoreCircle == null)
         {
             _soulMeter = GameObject.Find("Soul_Bottle").GetComponent<SoulMeter>();
@@ -123,7 +123,7 @@ public class PlayerDamageKnockBack : MonoBehaviour
         {
             _scoreData = score.GetComponent<ScoreData>();
         }
-        _originForce = _force; //Å‰‚Ìforce‚ğ•Û‘¶
+        _originForce = _force; //æœ€åˆã®forceã‚’ä¿å­˜
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -142,53 +142,56 @@ public class PlayerDamageKnockBack : MonoBehaviour
         else if (collision.gameObject.CompareTag("Rock"))
         {
             return;
+        }else if (collision.gameObject.CompareTag("Player"))
+        {
+            return;
         }
         else if (collision.gameObject.CompareTag(MIRRORBULLETTAGNAME))
         {
-            //‚«”ò‚Ô•ûŒü‚Ìƒƒ\ƒbƒhŒÄ‚Ño‚µ
+            //å¹ãé£›ã¶æ–¹å‘ã®ãƒ¡ã‚½ãƒƒãƒ‰å‘¼ã³å‡ºã—
             SetDirection(_contactNormal, _bossMirrorBulletForce, collision.gameObject);
-            //ƒ_ƒ[ƒW‚ÌƒŒƒoƒuƒ‹‚ğİ’è
+            //ãƒ€ãƒ¡ãƒ¼ã‚¸ã®ãƒ¬ãƒãƒ–ãƒ«ã‚’è¨­å®š
             _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
-            //‚Ô‚Â‚©‚Á‚Ä‚«‚½e’e‚ğíœ
+            //ã¶ã¤ã‹ã£ã¦ããŸéŠƒå¼¾ã‚’å‰Šé™¤
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag(ENEMYBULLETTAGNAME))
         {
-            //‚«”ò‚Ô•ûŒü‚Ìƒƒ\ƒbƒhŒÄ‚Ño‚µ
+            //å¹ãé£›ã¶æ–¹å‘ã®ãƒ¡ã‚½ãƒƒãƒ‰å‘¼ã³å‡ºã—
             SetDirection(_contactNormal, _force, collision.gameObject);
-            //ƒ_ƒ[ƒW‚ÌƒŒƒoƒuƒ‹‚ğİ’è
+            //ãƒ€ãƒ¡ãƒ¼ã‚¸ã®ãƒ¬ãƒãƒ–ãƒ«ã‚’è¨­å®š
             _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
-            //‚Ô‚Â‚©‚Á‚Ä‚«‚½e’e‚ğíœ
+            //ã¶ã¤ã‹ã£ã¦ããŸéŠƒå¼¾ã‚’å‰Šé™¤
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag(MEDIUMARMORTAGNAME))
         {
             GameObject armor = collision.gameObject;
             ArmorMove armorMove = armor.GetComponent<ArmorMove>();
-            if(armorMove.InitState == ArmorState.Rush)
+            if (armorMove.InitState == ArmorState.Rush)
             {
-                //‚Ô‚Â‚©‚Á‚Ä‚«‚½•ûŒü‚ğ‘ã“ü
+                //ã¶ã¤ã‹ã£ã¦ããŸæ–¹å‘ã‚’ä»£å…¥
                 _contactNormal = collision.contacts[0].normal;
-                StartCoroutine(HitStop(collision,_contactNormal));
+                StartCoroutine(HitStop(collision, _contactNormal));
             }
             else
             {
-                //‚Ô‚Â‚©‚Á‚Ä‚«‚½•ûŒü‚ğ‘ã“ü
+                //ã¶ã¤ã‹ã£ã¦ããŸæ–¹å‘ã‚’ä»£å…¥
                 _contactNormal = collision.contacts[0].normal;
-                //‚«”ò‚Ô•ûŒü‚Ìƒƒ\ƒbƒhŒÄ‚Ño‚µ
+                //å¹ãé£›ã¶æ–¹å‘ã®ãƒ¡ã‚½ãƒƒãƒ‰å‘¼ã³å‡ºã—
                 SetDirection(_contactNormal, _force, collision.gameObject);
-                //ƒ_ƒ[ƒW‚ÌƒŒƒoƒuƒ‹‚ğİ’è
+                //ãƒ€ãƒ¡ãƒ¼ã‚¸ã®ãƒ¬ãƒãƒ–ãƒ«ã‚’è¨­å®š
                 _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
 
             }
         }
         else
         {
-            //‚Ô‚Â‚©‚Á‚Ä‚«‚½•ûŒü‚ğ‘ã“ü
+            //ã¶ã¤ã‹ã£ã¦ããŸæ–¹å‘ã‚’ä»£å…¥
             _contactNormal = collision.contacts[0].normal;
-            //‚«”ò‚Ô•ûŒü‚Ìƒƒ\ƒbƒhŒÄ‚Ño‚µ
+            //å¹ãé£›ã¶æ–¹å‘ã®ãƒ¡ã‚½ãƒƒãƒ‰å‘¼ã³å‡ºã—
             SetDirection(_contactNormal, _force, collision.gameObject);
-            //ƒ_ƒ[ƒW‚ÌƒŒƒoƒuƒ‹‚ğİ’è
+            //ãƒ€ãƒ¡ãƒ¼ã‚¸ã®ãƒ¬ãƒãƒ–ãƒ«ã‚’è¨­å®š
             _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
         }
     }
@@ -197,22 +200,22 @@ public class PlayerDamageKnockBack : MonoBehaviour
     {
         _trenble.RushTrenble();
         yield return new WaitForSecondsRealtime(_armorHitStopTime);
-        //‚«”ò‚Ô•ûŒü‚Ìƒƒ\ƒbƒhŒÄ‚Ño‚µ
+        //å¹ãé£›ã¶æ–¹å‘ã®ãƒ¡ã‚½ãƒƒãƒ‰å‘¼ã³å‡ºã—
         SetDirection(direction, _armorRushForce, collision.gameObject);
-        //ƒ_ƒ[ƒW‚ÌƒŒƒoƒuƒ‹‚ğİ’è
+        //ãƒ€ãƒ¡ãƒ¼ã‚¸ã®ãƒ¬ãƒãƒ–ãƒ«ã‚’è¨­å®š
         _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
 
     }
 
     /// <summary>
-    /// ƒ_ƒ[ƒW‰‰o‚ÌƒRƒ‹[ƒ`ƒ“
+    /// ãƒ€ãƒ¡ãƒ¼ã‚¸æ¼”å‡ºã®ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
-    /// <returns>–³“GŠÔ‘Ò‚Á‚Ä‚©‚ç–³“G‰ğœ</returns>
+    /// <returns>ç„¡æ•µæ™‚é–“å¾…ã£ã¦ã‹ã‚‰ç„¡æ•µè§£é™¤</returns>
     public IEnumerator DamagePerformance()
     {
         _damageCount++;
         _knockBack.TakeDamage();
-        // ‹à‚ğ—‚Æ‚·‰¹‚Æƒ_ƒ[ƒW‰¹‚ğÄ¶
+        // é‡‘ã‚’è½ã¨ã™éŸ³ã¨ãƒ€ãƒ¡ãƒ¼ã‚¸éŸ³ã‚’å†ç”Ÿ
         _seManager.PlayMoneyDropSound();
         _seManager.PlayEnemyDamageSound();
 
@@ -226,7 +229,7 @@ public class PlayerDamageKnockBack : MonoBehaviour
 
         _trenble.DamageTrenble();
 
-        // ƒRƒCƒ“‚Ìî•ñæ“¾
+        // ã‚³ã‚¤ãƒ³ã®æƒ…å ±å–å¾—
         int soul = _soulKeep.UseFullSoul;
         int stock = _soulKeep.VStock;
 
@@ -234,19 +237,19 @@ public class PlayerDamageKnockBack : MonoBehaviour
 
         if (soul == 0 && stock > 0)
         {
-            // ƒXƒgƒbƒNƒyƒiƒ‹ƒeƒB‚Æ‚µ‚Ä10ŒÂƒhƒƒbƒv
+            // ã‚¹ãƒˆãƒƒã‚¯ãƒšãƒŠãƒ«ãƒ†ã‚£ã¨ã—ã¦10å€‹ãƒ‰ãƒ­ãƒƒãƒ—
             dropCoinCount = 10;
             _soulKeep.ReduceVStock();
 
         }
         else
         {
-            // ’Êíƒhƒƒbƒv
+            // é€šå¸¸ãƒ‰ãƒ­ãƒƒãƒ—
             dropCoinCount = soul;
-            // ƒRƒCƒ“‚ğŒ¸‚ç‚·
+            // ã‚³ã‚¤ãƒ³ã‚’æ¸›ã‚‰ã™
             _soulKeep.ReduceCoin();
         }
-        // ƒRƒCƒ“‚ğƒhƒƒbƒv
+        // ã‚³ã‚¤ãƒ³ã‚’ãƒ‰ãƒ­ãƒƒãƒ—
         for (int i = 0; i < dropCoinCount; i++)
         {
             GameObject coin = Instantiate(_dropCoinObject, transform.position, Quaternion.identity);
@@ -259,7 +262,7 @@ public class PlayerDamageKnockBack : MonoBehaviour
         }
 
         yield return new WaitForSecondsRealtime(_invincibleTime);
-        //–³“G‰ğœ
+        //ç„¡æ•µè§£é™¤
         _isInvincible = false;
         this.gameObject.layer = 8;
         switch (_spriteDirection.IsFront)
@@ -275,7 +278,7 @@ public class PlayerDamageKnockBack : MonoBehaviour
 
     }
     /// <summary>
-    /// •Ç‚É‚Ô‚Â‚©‚Á‚½‚É—Í‚ğ0‚É‚·‚é
+    /// å£ã«ã¶ã¤ã‹ã£ãŸæ™‚ã«åŠ›ã‚’0ã«ã™ã‚‹
     /// </summary>
     public void CollisionWall()
     {
@@ -283,7 +286,7 @@ public class PlayerDamageKnockBack : MonoBehaviour
     }
 
     /// <summary>
-    /// ”í’e‰ñ”‚ğƒŠƒZƒbƒg
+    /// è¢«å¼¾å›æ•°ã‚’ãƒªã‚»ãƒƒãƒˆ
     /// </summary>
     public void ResetDamageCount()
     {
@@ -296,57 +299,57 @@ public class PlayerDamageKnockBack : MonoBehaviour
     }
 
     /// <summary>
-    /// ”š”­‚ÅƒmƒbƒNƒoƒbƒN‚·‚éƒXƒNƒŠƒvƒg
+    /// çˆ†ç™ºã§ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
     /// </summary>
-    /// <param name="direction">‚«”ò‚Ô•ûŒü</param>
-    /// <param name="power">‚«”ò‚Ô—Í</param>
+    /// <param name="direction">å¹ãé£›ã¶æ–¹å‘</param>
+    /// <param name="power">å¹ãé£›ã¶åŠ›</param>
     public void SetDirection(Vector3 direction, float power, GameObject collision)
     {
-        //–³“GŠÔ’†‚ÍÀs‚µ‚È‚¢
+        //ç„¡æ•µæ™‚é–“ä¸­ã¯å®Ÿè¡Œã—ãªã„
         if (_isInvincible)
         {
             return;
         }
-        //–³“G”»’è‚Ìƒtƒ‰ƒO‚ğON
+        //ç„¡æ•µåˆ¤å®šã®ãƒ•ãƒ©ã‚°ã‚’ON
         _isInvincible = true;
         this.gameObject.layer = 10;  
-        //ƒ_ƒ[ƒW‚Ì‰‰oƒRƒ‹[ƒ`ƒ“ŒÄ‚Ño‚µ
+        //ãƒ€ãƒ¡ãƒ¼ã‚¸ã®æ¼”å‡ºã‚³ãƒ«ãƒ¼ãƒãƒ³å‘¼ã³å‡ºã—
         StartCoroutine(DamagePerformance());
 
-        //ƒmƒbƒNƒoƒbƒN’†‚Å‚È‚¯‚ê‚Îˆ—
+        //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­ã§ãªã‘ã‚Œã°å‡¦ç†
         if (!_isKnockBacking)
         {
-            //‘O‚ÌƒXƒe[ƒg‚ğ•Û‘¶
+            //å‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ä¿å­˜
             _oldState = _playerState.PlayerState;
-            //ƒmƒbƒNƒoƒbƒN‚Ìƒtƒ‰ƒO‚ğON
+            //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ãƒ•ãƒ©ã‚°ã‚’ON
             _isKnockBacking = true;
-            //ƒ`ƒƒ[ƒWŠÔ‚Ìæ‚ğ‹‚ß‚é
+            //ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã®ä¹—ã‚’æ±‚ã‚ã‚‹
             float powValue = Mathf.Pow(power, 5f);
-            //Å’á1‚©‚çpowValue‚Ü‚Å‚ÌŠÔ‚ÅüŒ`•â³‚ğs‚¢Aƒ`ƒƒ[ƒW’l‚²‚Æ‚Ì‚«”ò‚Î‚µ‚ğ‚È‚ß‚ç‚©‚É
+            //æœ€ä½1ã‹ã‚‰powValueã¾ã§ã®é–“ã§ç·šå½¢è£œæ­£ã‚’è¡Œã„ã€ãƒãƒ£ãƒ¼ã‚¸å€¤ã”ã¨ã®å¹ãé£›ã°ã—ã‚’ãªã‚ã‚‰ã‹ã«
             _force = Mathf.Lerp(3, powValue, 0.5f);
             _contactNormal = direction;
             _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
-            //Œ©‚Ä‚é•ûŒü‚Æ”½‘Î•ûŒü‚É—Í‚ğ‰Á‚¦‚é
+            //è¦‹ã¦ã‚‹æ–¹å‘ã¨åå¯¾æ–¹å‘ã«åŠ›ã‚’åŠ ãˆã‚‹
         }
         else
         {
-            //‘O‚ÌƒXƒe[ƒg‚ğ•Û‘¶
+            //å‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ä¿å­˜
             _oldState = _playerState.PlayerState;
-            //ƒmƒbƒNƒoƒbƒN‚Ìƒtƒ‰ƒO‚ğON
+            //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ãƒ•ãƒ©ã‚°ã‚’ON
             _isKnockBacking = true;
-            //æZ‚µ‚È‚¢‚æ‚¤‚É‹­§“I‚É1‚Ì—Í‚ğ—^‚¦‚é
+            //ä¹—ç®—ã—ãªã„ã‚ˆã†ã«å¼·åˆ¶çš„ã«1ã®åŠ›ã‚’ä¸ãˆã‚‹
             _force = 1;
-            //ƒ‰ƒ“ƒ_ƒ€‚È•ûŒü‚ğ¶¬
+            //ãƒ©ãƒ³ãƒ€ãƒ ãªæ–¹å‘ã‚’ç”Ÿæˆ
             Vector2 randomOffset = Random.insideUnitCircle.normalized * 0.2f;
-            //Ÿ‚É‚«”ò‚Ô•ûŒü‚ğİ’è
+            //æ¬¡ã«å¹ãé£›ã¶æ–¹å‘ã‚’è¨­å®š
             Vector2 newDirection = ((Vector2)direction + randomOffset).normalized;
-            //‘ã“ü
+            //ä»£å…¥
             _contactNormal = newDirection;
         }
     }
 
     /// <summary>
-    /// —‰º’†‚É‚«”ò‚Î‚È‚¢‚æ‚¤‚É—Í‚ğƒŠƒZƒbƒg
+    /// è½ä¸‹ä¸­ã«å¹ãé£›ã°ãªã„ã‚ˆã†ã«åŠ›ã‚’ãƒªã‚»ãƒƒãƒˆ
     /// </summary>
     public void Fall()
     {
@@ -354,7 +357,7 @@ public class PlayerDamageKnockBack : MonoBehaviour
     }
 
     /// <summary>
-    /// ‚«”ò‚Ñ‚Ì—Í‚ğƒŠƒZƒbƒg‚µ‚ÄŒ³‚Ì’l‚É–ß‚·
+    /// å¹ãé£›ã³ã®åŠ›ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¦å…ƒã®å€¤ã«æˆ»ã™
     /// </summary>
     public void ResetForce()
     {
@@ -363,50 +366,48 @@ public class PlayerDamageKnockBack : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //—‰º’†‚Íˆ—‚ğs‚í‚È‚¢
+        //è½ä¸‹ä¸­ã¯å‡¦ç†ã‚’è¡Œã‚ãªã„
         if (_playerState.PlayerState == PlayerState.Fall)
         {
             return;
         }
-        //ƒmƒbƒNƒoƒbƒN’†‚¾‚Á‚½‚çˆ—
+        //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­ã ã£ãŸã‚‰å‡¦ç†
         if (_isKnockBacking)
         {
             _playerAnim.KnockBack();
-            //‚«”ò‚Ñ•ûŒü‚ÉˆÚ“®‚³‚¹‚é
+            //å¹ãé£›ã³æ–¹å‘ã«ç§»å‹•ã•ã›ã‚‹
             transform.position += (Vector3)_contactNormal * _force * Time.fixedDeltaTime;
-            //ƒXƒe[ƒg‚ğƒ_ƒ[ƒWƒmƒbƒNƒoƒbƒN‚É‚·‚é
+            //ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã«ã™ã‚‹
             _playerState.DamageKnockBackState();
-            //‚«”ò‚Ñ—Í‚ğŒ¸Z
+            //å¹ãé£›ã³åŠ›ã‚’æ¸›ç®—
             _force -= 0.5f;
-            //‚«”ò‚Ñ‚ª0ˆÈ‰º‚É‚È‚Á‚½‚çÀs
+            //å¹ãé£›ã³ãŒ0ä»¥ä¸‹ã«ãªã£ãŸã‚‰å®Ÿè¡Œ
             if (_force <= 0)
             {
-                Debug.Log(_oldState);
-
                 _playerAnim.Wait();
-                //—Í‚ğÅ‰‚Ì‚â‚Â‚ÉƒŠƒZƒbƒg
+                //åŠ›ã‚’æœ€åˆã®ã‚„ã¤ã«ãƒªã‚»ãƒƒãƒˆ
                 _force = _originForce;
-                //ƒmƒbƒNƒoƒbƒN‚Ìƒtƒ‰ƒO‚ğOFF‚É‚·‚é
+                //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ãƒ•ãƒ©ã‚°ã‚’OFFã«ã™ã‚‹
                 _isKnockBacking = false;
-                //‘O‚ÌƒXƒe[ƒg‚ªƒEƒ‹ƒg‚¾‚Á‚½ê‡Às
+                //å‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆãŒã‚¦ãƒ«ãƒˆã ã£ãŸå ´åˆå®Ÿè¡Œ
                 if (_oldState == PlayerState.Ultimate)
                 {
-                    //Š—L‚µ‚Ä‚éƒRƒCƒ“‚ªƒEƒ‹ƒg‚Ì•K—v–‡”‚ğ‰º‰ñ‚Á‚Ä‚é‚©‚Ç‚¤‚©Šm”F
+                    //æ‰€æœ‰ã—ã¦ã‚‹ã‚³ã‚¤ãƒ³ãŒã‚¦ãƒ«ãƒˆã®å¿…è¦æšæ•°ã‚’ä¸‹å›ã£ã¦ã‚‹ã‹ã©ã†ã‹ç¢ºèª
                     if (_soulKeep.VStock <= 0)
                     {
-                        //ƒXƒe[ƒg‚ğƒm[ƒ}ƒ‹‚É•ÏX
+                        //ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ãƒãƒ¼ãƒãƒ«ã«å¤‰æ›´
                         _playerState.NormalState();
                         _inputChangeState.ToNormalAnimation();
                     }
                     else
                     {
-                        //ƒEƒ‹ƒg‚ğŒp‘±
+                        //ã‚¦ãƒ«ãƒˆã‚’ç¶™ç¶š
                         _playerState.UltimateState();
                     }
                 }
                 else
                 {
-                    //‘O‚ÌƒXƒe[ƒg‚ªƒEƒ‹ƒgˆÈŠO‚¾‚Á‚½‚çƒXƒe[ƒg‚ğƒm[ƒ}ƒ‹Œp‘±
+                    //å‰ã®ã‚¹ãƒ†ãƒ¼ãƒˆãŒã‚¦ãƒ«ãƒˆä»¥å¤–ã ã£ãŸã‚‰ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ãƒãƒ¼ãƒãƒ«ç¶™ç¶š
                     _playerState.NormalState();
                     _inputChangeState.ToNormalAnimation();
                 }

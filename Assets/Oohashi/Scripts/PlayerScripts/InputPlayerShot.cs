@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -65,11 +66,15 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     {
         get { return _canDecChargeValue; }
     }
-
-    private float _chargeTime = 0.0f;//チャージしてる時間
+    public NetworkVariable<float> _chargeTime = new NetworkVariable<float>(
+        0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
+    //private float _chargeTime = 0.0f;//チャージしてる時間
     public float ChargeValue
     {
-        get { return _chargeTime; }
+        get { return _chargeTime.Value; }
     }
     //制限されない現在のチャージ時間を測定
     private float _initChargeTime = 0.0f;
@@ -147,55 +152,54 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         {
             return;
         }
-        if (this.IsOwner)
-        {
             //右トリガーから値を取得
             _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
-        }
 
-        if (this.IsServer)
-        {
             PadShot();
-        }
     }
 
     private void PadShot()
     {
+    if (this.IsOwner)
+    {
+
         bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
-        switch (_stateManager.PlayerState)
+        bool isRbPressed = Gamepad.current.rightShoulder.isPressed;
+            switch (_stateManager.PlayerState)
         {
             case PlayerState.Normal:
-                _isPushShootButton = (isrightTriggerInput || Input.GetButton(FIREBUTTONNAME)) && !_isDecChargeTime /*&& _shootState == ShootState.CanShoot*/;
+                _isPushShootButton = (isrightTriggerInput || isRbPressed && !_isDecChargeTime) ;
                 break;
 
             case PlayerState.Ultimate:
-                _isPushShootButton = (isrightTriggerInput || Input.GetButtonDown(FIREBUTTONNAME));
+                _isPushShootButton = (isrightTriggerInput || isRbPressed);
                 break;
 
             case PlayerState.Fall:
                 break;
         }
-        //入力が0.9以上であれば実行判定に移す
+            //入力が0.9以上であれば実行判定に移す
+        }
 
     }
 
     private void Charge()
     {
-        _initChargeTime += Time.deltaTime * _bonusMultiplier;
-        if (_canCriticalShoot)
-        {
-            _chargeTime = _criticalPower;
-        }
-        else
-        {
-            //チャージ時間に加算
-            _chargeTime += Time.deltaTime * _bonusMultiplier;
-            //チャージ時間は最大2秒なのでその中に収まるようにする
-            _chargeTime = Mathf.Clamp(_chargeTime, 0, MAXCHARGEVALUE);
-            //チャージしてる判定にする
-            _isCharge = true;
+            _initChargeTime += Time.deltaTime * _bonusMultiplier;
+            if (_canCriticalShoot)
+            {
+                _chargeTime.Value = _criticalPower;
+            }
+            else
+            {
+                //チャージ時間に加算
+                _chargeTime.Value += Time.deltaTime * _bonusMultiplier;
+                //チャージ時間は最大2秒なのでその中に収まるようにする
+                _chargeTime.Value = Mathf.Clamp(_chargeTime.Value, 0, MAXCHARGEVALUE);
+                //チャージしてる判定にする
+                _isCharge = true;
 
-        }
+            }
     }
 
 
@@ -231,13 +235,18 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (!this.IsOwner)
+        {
+            return;
+        }
         if(_bulletPool == null)
         {
             _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
             return;
         }
+
         //チャージ時間が0以上でチャージ中でない場合
-        if (_chargeTime > 0 && !_isCharge)
+        if (_chargeTime.Value > 0 && !_isCharge)
         {
             ChargeTimeDecrease();
             _isDecChargeTime = true; //チャージ減算中のboolをtrueに
@@ -259,13 +268,13 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                         _seScript.PlayDryFire();
                         return;
                     }
-                    //当たり判定の計算メソッドを実行
-                    _shootRange.CalcChargeAngle(_chargeTime);
-                    //クリティカル判定のメソッド
-                    CriticalMethod();
-                    //チャージするメソッド
-                    Charge();
-                    _shootRange.StartCharge();
+                        //チャージするメソッド
+                        Charge();
+                        //当たり判定の計算メソッドを実行
+                        _shootRange.CalcChargeAngle(_chargeTime.Value);
+                        //クリティカル判定のメソッド
+                        CriticalMethod();
+
                 }
                 //撃つボタンを離して、なおかつ現在チャージ中でなく落下中でなかったら解放可能
                 else if (!_isPushShootButton && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
@@ -285,19 +294,19 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                         _hitstop.CriticalHitStopMethod();
                         _bloom.UseCritical();
                         //当たり判定上の敵にダメージを与えるメソッドを実行
-                        _shootRange.ShotgunHitCheck(_chargeTime,true);
+                        _shootRange.ShotgunHitCheck(_chargeTime.Value,true);
                     }
                     else
                     {
-                        _shootRange.ShotgunHitCheck(_chargeTime,false   );
-                        _knockBackScriput.SetDirection(_playerAiming.Direction, _chargeTime);
+                        _shootRange.ShotgunHitCheck(_chargeTime.Value,false   );
+                        _knockBackScriput.SetDirection(_playerAiming.Direction, _chargeTime.Value);
                     }
                     //レバブルにチャージ時間を渡して震えさせるメソッドを実行
-                    _vibe.ViblationPortocol(_chargeTime);
+                    _vibe.ViblationPortocol(_chargeTime.Value);
                     //マズルフラッシュのアニメーション再生メソッドを実行
                     _muzzleFlashAnimation.PlayTheMuzzleFlash();
                     //銃弾(当たり判定無し)の表示
-                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, _chargeTime);
+                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, _chargeTime.Value);
                 }
                 break;
 
@@ -343,7 +352,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     /// </summary>
     private void ChargeTimeDecrease()
     {
-        _chargeTime -= Time.fixedDeltaTime *1.5f;
+        _chargeTime.Value -= Time.fixedDeltaTime *1.5f;
     }
 
     /// <summary>

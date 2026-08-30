@@ -93,16 +93,6 @@ public class ShootRange : MonoBehaviour
         _viewMaxAngle = _maxAngle;
     }
 
-    public void StartCharge()
-    {
-        //if (!_canCharge)
-        //{
-        //    return;
-        //}
-        //_chargeStartTime = Time.time;
-        //_canCharge = false;
-    }
-
     /// <summary>
     /// 最大射角及び射程距離を計算するメソッド
     /// </summary>
@@ -134,12 +124,6 @@ public class ShootRange : MonoBehaviour
             float elapsed = Time.time - _swingStartTime;
 
             _viewMaxAngle = _minAngle + Mathf.PingPong(elapsed * _swingTime, _swingWidth);
-            //_viewMaxAngle = _minAngle + Mathf.PingPong(Time.time * _swingTime, _swingWidth);
-            //2秒以上だったら最低角度をピンポンで大きくしたり小さくしたりする
-            //_minAngle += Mathf.PingPong(Time.time * _swingTime, _swingWidth);
-            //_maxAngle = _minAngle + Mathf.PingPong(_chargeStartTime * _swingTime, _swingWidth); 
-            //_viewMaxAngle = _minAngle;
-            //halfAngleRad = Mathf.Deg2Rad * (_minAngle / 2);
         }
         //半分の角度の値を度からラジアンに変換して渡す
         //当たり判定の横幅を設定
@@ -234,7 +218,8 @@ public class ShootRange : MonoBehaviour
         SetKnockBackStone stoneBlowAway = hitObject.GetComponent<SetKnockBackStone>();
         if (stoneBlowAway != null)
         {
-            stoneBlowAway.SetDirectionAndForce((Vector2)transform.position, chargeTime,false,false);
+            //stoneBlowAway.SetDirectionAndForce((Vector2)transform.position, chargeTime,false,false);
+            stoneBlowAway.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, false, false);
         }
     }
     /// <summary>
@@ -248,8 +233,11 @@ public class ShootRange : MonoBehaviour
         BossKnockBack knockback = hitObject.GetComponent<BossKnockBack>();
         if (knockback != null)
         {
-            knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, false, false);
-            bossHP.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+            //knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, false, false);
+            //bossHP.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+
+            knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, false, false);
+            bossHP.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
         }
     }
     /// <summary>
@@ -264,8 +252,12 @@ public class ShootRange : MonoBehaviour
         ArmorTakeDamage armorTakeDamage = hitObject.GetComponent<ArmorTakeDamage>();
         if (armorKnockback != null)
         {
-            armorKnockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, PlayerState.Normal,isCritical,false);
-            armorTakeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+            //armorKnockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, PlayerState.Normal,isCritical,false);
+            //armorTakeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+
+            armorKnockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isCritical, false);
+            armorTakeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
+
         }
     }
 
@@ -280,8 +272,11 @@ public class ShootRange : MonoBehaviour
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
         if (knockback != null)
         {
-            knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime,isSpecial,false);
-            takeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+
+            knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isSpecial, false);
+            takeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
+            //knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime,isSpecial,false);
+            //takeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
         }
     }
 

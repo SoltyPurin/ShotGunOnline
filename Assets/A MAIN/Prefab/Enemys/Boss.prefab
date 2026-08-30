@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3260744371818818653}
+  - component: {fileID: 4517113842697549388}
   - component: {fileID: 1443986990884562278}
   - component: {fileID: 5385514659766852675}
   - component: {fileID: 5664278761013691538}
@@ -31,6 +32,8 @@ GameObject:
   - component: {fileID: 8104424340517015094}
   - component: {fileID: 1541806618305281365}
   - component: {fileID: 2474157595412469175}
+  - component: {fileID: -3929704095953251194}
+  - component: {fileID: -6449568535450904417}
   m_Layer: 6
   m_Name: Boss
   m_TagString: Boss
@@ -59,6 +62,31 @@ Transform:
   - {fileID: 8614020592409993774}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4517113842697549388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896013826991222920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3371291297
+  InScenePlacedSourceGlobalObjectIdHash: 2864902951
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &1443986990884562278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,20 +94,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896013826991222920}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6ff68c6732202f42900b151208dfffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _moveSpeed: 5
   _keepDistance: 0
   _inertiaStrangth: 4
   _bossAnimator: {fileID: 2752926525503953099}
   _needApproachDistance: 9
   _actionCoolTime: 1
-  _jumpAtackDistance: 7
+  _attackDistance: 7
+  _jumpAttackDistance: 7
   _jumpWeight: 4
   _punchWeight: 6
+  _canAttackTimes: 0
+  _currentState: 0
 --- !u!114 &5385514659766852675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +130,7 @@ MonoBehaviour:
   _bossHP: {fileID: 5664278761013691538}
   _bossSprite: {fileID: 9041773520295559204}
   _animeManager: {fileID: 3258470081741133015}
+  _secondSpeed: 15
 --- !u!114 &5664278761013691538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee7d7f4dbae72e14cbf3efd3a171a8b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyHP: 500
+  ShowTopMostFoldoutHeaderGroup: 1
   _damageMultiplier: 500
   _minDamage: 200
   _explosionMultiplier: 500
@@ -150,7 +183,6 @@ MonoBehaviour:
   - {fileID: 6475060805928063372, guid: 937520ba7fa6acb45bb35c6833671480, type: 3}
   - {fileID: 7256754549358920131, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
   _enemyPopPos: 5
-  _enemyPopTime: 5
 --- !u!114 &1951691338035842005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,8 +218,6 @@ MonoBehaviour:
   _kaisin: {fileID: 2588671215058059769}
   _stateManagement: {fileID: 1443986990884562278}
   _agent: {fileID: 642626608985822722}
-  _attenuationRate: 0.91
-  _punchSpeed: 70
 --- !u!114 &3258470081741133015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,6 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16791523663a1304abc5c08865a0a9bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyMove: {fileID: 1443986990884562278}
   _critStiffnessTime: 0.3
   _ultStiffnessTime: 0.5
@@ -255,11 +286,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896013826991222920}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1e1365c95c720d438b6bd9f95d5e04b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyMove: {fileID: 1443986990884562278}
   _critStiffnessTime: 0.3
   _ultStiffnessTime: 0.5
@@ -273,7 +305,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896013826991222920}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
   m_Name: 
@@ -333,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec17062087d9f4e45bf3ec0e52c0ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySpawnAnim: {fileID: 0}
 --- !u!114 &642626608985822722
 MonoBehaviour:
@@ -346,6 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 082ac80cfb81880419ab6502534b8754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _moveSpeed: 10
   _stoppingDistance: 0
 --- !u!114 &-4684870887539929373
@@ -410,7 +444,7 @@ CircleCollider2D:
   m_Radius: 3.0917795
 --- !u!50 &8104424340517015094
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -421,8 +455,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -468,6 +502,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2070275301819873927, guid: ec828f60d44aba348964cd42b8408008, type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -553,6 +588,69 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3929704095953251194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896013826991222920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!114 &-6449568535450904417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896013826991222920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkRigidbody2D
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
 --- !u!1 &1895828143457320218
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,6 +685,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3336235225683744380
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -602,6 +701,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -623,9 +727,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.34117648}
   m_FlipX: 0
@@ -635,7 +741,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1912156772893483337
 GameObject:
@@ -648,6 +753,7 @@ GameObject:
   - component: {fileID: 8780277872402020311}
   - component: {fileID: 3288765638726778936}
   - component: {fileID: 5385504464020250953}
+  - component: {fileID: 5076583061705950722}
   m_Layer: 0
   m_Name: SecondAula (2)
   m_TagString: Untagged
@@ -694,6 +800,7 @@ Animator:
   m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &5385504464020250953
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -709,6 +816,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -730,9 +842,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -594612932, guid: 083b7d0c8433f17458b09baef0f4ebf0, type: 3}
   m_Color: {r: 0.7830189, g: 0.010341718, b: 0.010341718, a: 1}
   m_FlipX: 0
@@ -742,8 +856,27 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5076583061705950722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912156772893483337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 3288765638726778936}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
 --- !u!1 &1991681381894418910
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,6 +958,7 @@ GameObject:
   - component: {fileID: 5431098809528654282}
   - component: {fileID: 8994824760185223296}
   - component: {fileID: 2333821008831355912}
+  - component: {fileID: 5613575282328031832}
   m_Layer: 0
   m_Name: DustFromJumpAttack
   m_TagString: Untagged
@@ -849,6 +983,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5431098809528654282
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -864,6 +999,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -885,9 +1025,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 7ccf046a526e2234aa0563738cb93fdf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -897,7 +1039,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &8994824760185223296
 Animator:
@@ -934,6 +1075,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isJumpDust: 1
+--- !u!114 &5613575282328031832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2884795811750620419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 8994824760185223296}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
 --- !u!1 &3144455058963434899
 GameObject:
   m_ObjectHideFlags: 0
@@ -944,6 +1105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2547453913202969159}
   - component: {fileID: 8899052208987868348}
+  - component: {fileID: 2288604285624949850}
   m_Layer: 6
   m_Name: Main
   m_TagString: Untagged
@@ -989,6 +1151,30 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2288604285624949850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3144455058963434899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 8899052208987868348}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Spawn
+      NameHash: 1372578019
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
 --- !u!1 &4821837709953174212
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,6 +1185,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4223007508848733377}
   - component: {fileID: 2077104853518978923}
+  - component: {fileID: 2769509983633492271}
   m_Layer: 6
   m_Name: SpriteMaterialManager
   m_TagString: Untagged
@@ -1044,6 +1231,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2769509983633492271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4821837709953174212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 2077104853518978923}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
 --- !u!1 &5119598869106311996
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,6 +1262,7 @@ GameObject:
   - component: {fileID: 6073697316532560033}
   - component: {fileID: 3837733939572568088}
   - component: {fileID: 6213929450474029607}
+  - component: {fileID: 4788364952129349705}
   m_Layer: 0
   m_Name: SecondAula
   m_TagString: Untagged
@@ -1101,6 +1309,7 @@ Animator:
   m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &6213929450474029607
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1116,6 +1325,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1137,9 +1351,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -594612932, guid: 083b7d0c8433f17458b09baef0f4ebf0, type: 3}
   m_Color: {r: 0.5754717, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -1149,8 +1365,27 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4788364952129349705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5119598869106311996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 3837733939572568088}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
 --- !u!1 &5372191958188824440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1162,6 +1397,7 @@ GameObject:
   - component: {fileID: 4470798152369595184}
   - component: {fileID: 5926496064639028269}
   - component: {fileID: 3663778663665680832}
+  - component: {fileID: 2718115904145829328}
   m_Layer: 6
   m_Name: SpawnPoint
   m_TagString: Untagged
@@ -1186,6 +1422,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5926496064639028269
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1201,6 +1438,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1222,9 +1464,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 1225137096, guid: 7c7bb357e95103846b52d17dbc1b1beb, type: 3}
   m_Color: {r: 1, g: 0.19339621, b: 0.19339621, a: 0.8862745}
   m_FlipX: 0
@@ -1234,7 +1478,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &3663778663665680832
 Animator:
@@ -1258,6 +1501,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2718115904145829328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5372191958188824440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 3663778663665680832}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Spawn
+      NameHash: 1372578019
+      Synchronize: 1
+      ParameterType: 9
+    - name: Wait
+      NameHash: -572773157
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
 --- !u!1 &5419467288907341210
 GameObject:
   m_ObjectHideFlags: 0
@@ -1275,6 +1546,7 @@ GameObject:
   - component: {fileID: 4831732766042087874}
   - component: {fileID: 2697460654164385791}
   - component: {fileID: 8587264259570551082}
+  - component: {fileID: 1269876956176921208}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: BossSprite
@@ -1291,7 +1563,7 @@ Transform:
   m_GameObject: {fileID: 5419467288907341210}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.05000019, y: 36.900024, z: 0}
+  m_LocalPosition: {x: 0.05000019, y: 3.2, z: 0}
   m_LocalScale: {x: 7.8655725, y: 7.8655725, z: 7.8655725}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1300,6 +1572,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9041773520295559204
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1315,6 +1588,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1336,10 +1614,12 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 9
-  m_Sprite: {fileID: 21300000, guid: f2fbc59ee6c4a1247a181a6b3d460a65, type: 3}
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: 4a7670b7c27d72f4a913bd48611e6377, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1348,7 +1628,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &2752926525503953099
 Animator:
@@ -1545,6 +1824,82 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8e92d17fcffc8f46b7ff8a9c0431c0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1269876956176921208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5419467288907341210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 2752926525503953099}
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -572773157
+    DestinationState: -2045864598
+    TransitionDuration: 0.25
+    TriggerNameHash: 1572982582
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -572773157
+    DestinationState: -853943172
+    TransitionDuration: 0.25
+    TriggerNameHash: -364168966
+    TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1033023557
+    DestinationState: -2045864598
+    TransitionDuration: 0
+    TriggerNameHash: 1572982582
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1033023557
+    DestinationState: -853943172
+    TransitionDuration: 1
+    TriggerNameHash: -364168966
+    TransitionIndex: 1
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: IsFall
+      NameHash: 1572982582
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsSpecialMove
+      NameHash: -701375724
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsStun
+      NameHash: 1441120564
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsWalk
+      NameHash: 721447535
+      Synchronize: 1
+      ParameterType: 4
+    - name: IsPunch
+      NameHash: -364168966
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsHit
+      NameHash: 2006285284
+      Synchronize: 1
+      ParameterType: 9
+    - name: isDead
+      NameHash: 1276664872
+      Synchronize: 1
+      ParameterType: 4
+  AnimatorParametersExpanded: 0
 --- !u!1 &5799600748158442091
 GameObject:
   m_ObjectHideFlags: 0
@@ -1625,6 +1980,7 @@ GameObject:
   - component: {fileID: 3723192962551003597}
   - component: {fileID: 8332838919019849434}
   - component: {fileID: 1331667530610737987}
+  - component: {fileID: 3237964284983744779}
   m_Layer: 0
   m_Name: SecondAula (1)
   m_TagString: Untagged
@@ -1671,6 +2027,7 @@ Animator:
   m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &1331667530610737987
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1686,6 +2043,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1707,9 +2069,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -594612932, guid: 083b7d0c8433f17458b09baef0f4ebf0, type: 3}
   m_Color: {r: 1, g: 0.13604958, b: 0, a: 1}
   m_FlipX: 0
@@ -1719,8 +2083,27 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3237964284983744779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600155313467951033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 8332838919019849434}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
 --- !u!1 &9011707360181079306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1780,6 +2163,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2070275301819873927, guid: ec828f60d44aba348964cd42b8408008, type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -2099,13 +2483,45 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4140492610447195185, guid: a81cf958c12b04b42b109b31ddd926cb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3990999788311516972}
   m_SourcePrefab: {fileID: 100100000, guid: a81cf958c12b04b42b109b31ddd926cb, type: 3}
 --- !u!4 &2577324202706993140 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3583973466752442633, guid: a81cf958c12b04b42b109b31ddd926cb, type: 3}
   m_PrefabInstance: {fileID: 1331000968168972029}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3102230566636626636 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4140492610447195185, guid: a81cf958c12b04b42b109b31ddd926cb, type: 3}
+  m_PrefabInstance: {fileID: 1331000968168972029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3990999788311516972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3102230566636626636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 7823556101798294662}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Damage
+      NameHash: 375673178
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
 --- !u!95 &7823556101798294662 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 9145245717503109755, guid: a81cf958c12b04b42b109b31ddd926cb, type: 3}
@@ -3019,16 +3435,44 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1723004922054505539, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2247130800683049983}
   m_SourcePrefab: {fileID: 100100000, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
 --- !u!1 &5627342651441952626 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1723004922054505539, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
   m_PrefabInstance: {fileID: 6480963033627935537}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2247130800683049983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5627342651441952626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 8773340320474262683}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
 --- !u!4 &7721861680928276419 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3663838567827438834, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
+  m_PrefabInstance: {fileID: 6480963033627935537}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8773340320474262683 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2319401101367848874, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
   m_PrefabInstance: {fileID: 6480963033627935537}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7405107193565189794
@@ -3638,11 +4082,44 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3692687812014262487, guid: 6f4120a5aaf033d4c835526fc08bd527, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 106509720443725027}
   m_SourcePrefab: {fileID: 100100000, guid: 6f4120a5aaf033d4c835526fc08bd527, type: 3}
 --- !u!4 &6130723681357989477 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4275220204364528868, guid: 6f4120a5aaf033d4c835526fc08bd527, type: 3}
+  m_PrefabInstance: {fileID: 7944374667363711617}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6737110899872838230 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3692687812014262487, guid: 6f4120a5aaf033d4c835526fc08bd527, type: 3}
+  m_PrefabInstance: {fileID: 7944374667363711617}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &106509720443725027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6737110899872838230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 7868336063055371786}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
+--- !u!95 &7868336063055371786 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 248233841924039819, guid: 6f4120a5aaf033d4c835526fc08bd527, type: 3}
   m_PrefabInstance: {fileID: 7944374667363711617}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8742646100005208301
@@ -3980,16 +4457,44 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6898919176856905565, guid: 4018666254674a9469792b71cf22cd6d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6959585339908276915}
   m_SourcePrefab: {fileID: 100100000, guid: 4018666254674a9469792b71cf22cd6d, type: 3}
 --- !u!1 &2588671215058059769 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6898919176856905565, guid: 4018666254674a9469792b71cf22cd6d, type: 3}
   m_PrefabInstance: {fileID: 8957990273669867172}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6959585339908276915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2588671215058059769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 8727386122583602744}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries: []
+  AnimatorParametersExpanded: 0
 --- !u!4 &5291377298096286718 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3836947239275023706, guid: 4018666254674a9469792b71cf22cd6d, type: 3}
+  m_PrefabInstance: {fileID: 8957990273669867172}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8727386122583602744 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 381904098565017756, guid: 4018666254674a9469792b71cf22cd6d, type: 3}
   m_PrefabInstance: {fileID: 8957990273669867172}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9046959697906077801
