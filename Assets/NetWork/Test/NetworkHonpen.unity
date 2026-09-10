@@ -543,7 +543,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8457900479767568619, guid: 194ca10c546db1343b318d43b72e4ed6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8457900479767568619, guid: 194ca10c546db1343b318d43b72e4ed6, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2249,7 +2249,7 @@ PlayableDirector:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913912267}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 86a4239067d4bca4f8c3d23128a142fc, type: 2}
   m_InitialState: 1
@@ -3751,6 +3751,10 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 7181852192758532379, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7361557712577755416, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3829,6 +3833,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7361557712577755416, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738506609317396993, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7739582669458800890, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
@@ -5163,6 +5171,7 @@ MonoBehaviour:
     NetworkTopology: 0
     UseCMBService: 0
     AutoSpawnPlayerPrefabClientSide: 1
+    NetworkMessageMetrics: 1
     NetworkProfilingMetrics: 1
     OldPrefabList: []
   RunInBackground: 1
@@ -5648,27 +5657,27 @@ PrefabInstance:
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[0]'
       value: 
-      objectReference: {fileID: 8040145471762432446, guid: 82d0852d80de370419d93eac52414340, type: 3}
+      objectReference: {fileID: 5767563302658300784, guid: 13b8bdee7f136cb48b8833a5ecd9da76, type: 3}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[1]'
       value: 
-      objectReference: {fileID: 2352948565609527624, guid: ff7d36a6744241d46a3f9e9b6efcb1bc, type: 3}
+      objectReference: {fileID: 8040145471762432446, guid: 82d0852d80de370419d93eac52414340, type: 3}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[2]'
       value: 
-      objectReference: {fileID: 7007337045382877353, guid: d98d537adc79f674b81582b3f60986b1, type: 3}
+      objectReference: {fileID: 2352948565609527624, guid: ff7d36a6744241d46a3f9e9b6efcb1bc, type: 3}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[3]'
       value: 
-      objectReference: {fileID: 232265274260777928, guid: 541a83ab4b5bc7f40bf5df2656a541e1, type: 3}
+      objectReference: {fileID: 7007337045382877353, guid: d98d537adc79f674b81582b3f60986b1, type: 3}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[4]'
       value: 
-      objectReference: {fileID: 798049783679337448, guid: a8b36df4a4a656441978eff0d8c311ef, type: 3}
+      objectReference: {fileID: 232265274260777928, guid: 541a83ab4b5bc7f40bf5df2656a541e1, type: 3}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[5]'
       value: 
-      objectReference: {fileID: 5767563302658300784, guid: 13b8bdee7f136cb48b8833a5ecd9da76, type: 3}
+      objectReference: {fileID: 798049783679337448, guid: a8b36df4a4a656441978eff0d8c311ef, type: 3}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[6]'
       value: 
@@ -6106,6 +6115,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
@@ -6728,6 +6738,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1

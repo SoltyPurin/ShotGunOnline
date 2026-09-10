@@ -40,6 +40,11 @@ public class BossMachPunch : MonoBehaviour
 
     public void MachPunch()
     {
+        if (_stateManagement == null || _stateManagement.Player == null)
+        {
+            //Debug.LogWarning("BossMachPunch: Player または _stateManagement が null のため攻撃処理をスキップしました。");
+            return;
+        }
         Vector3 _directionToPlayer = _stateManagement.Player.transform.position - this.gameObject.transform.position;
         _directionToPlayerNormalized = _directionToPlayer.normalized;
         _isTargeting = true;

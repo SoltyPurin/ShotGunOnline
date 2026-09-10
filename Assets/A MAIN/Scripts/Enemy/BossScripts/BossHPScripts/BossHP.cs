@@ -79,6 +79,8 @@ public class BossHP : EnemyTakeDamage
         _enemyHP = JsonSaver.Instance.EnemyJson.BossHP;
         _firstHP = _enemyHP;
         _halfFirstHP = _firstHP / 2;
+
+        _isInvincible = false;
     }
 
     private void FixedUpdate()
@@ -118,46 +120,51 @@ public class BossHP : EnemyTakeDamage
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        _damageAnimator.SetTrigger("Damage");
-        _hitFlash.DoFlash();
-        if (!_isInvincible)
+        if (!IsServer) //鯖以外は即リターン
         {
-            _hPGageAnimeCon.HitGageAnime();
-            if (state == PlayerState.Ultimate)
-            {
-                float damage = _ultMultiplier;
-                _enemyHP = (_enemyHP - (int)damage);
-
-                if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
-            && _stateManagement._currentState != BossStateManagement.BossState.Punch)
-                {
-                    canDieState = true;
-                }
-
-                if (_enemyHP <= 0 && canDieState)
-                {
-                    DeadBossProcess();
-                }
-            }
-            else
-            {
-                float damage = chargeTime * _damageMultiplier;
-                damage = Mathf.Max(damage, _minDamage);
-                _enemyHP = (_enemyHP - (int)damage);
-
-                if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
-            && _stateManagement._currentState != BossStateManagement.BossState.Punch)
-                {
-                    canDieState = true;
-                }
-
-                if (_enemyHP <= 0 && canDieState)
-                {
-                    DeadBossProcess();
-                }
-            }
+            return;
         }
+        if (_isInvincible)//無敵状態なら即リターン
+        {
+            return;
+        }
+            _damageAnimator.SetTrigger("Damage");
+            _hitFlash.DoFlash();
+                _hPGageAnimeCon.HitGageAnime();
+                if (state == PlayerState.Ultimate)
+                {
+                    float damage = _ultMultiplier;
+                    _enemyHP = (_enemyHP - (int)damage);
 
+                    if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
+                && _stateManagement._currentState != BossStateManagement.BossState.Punch)
+                    {
+                        canDieState = true;
+                    }
+
+                    if (_enemyHP <= 0 && canDieState)
+                    {
+                        DeadBossProcess();
+                    }
+                }
+                else
+                {
+                    float damage = chargeTime * _damageMultiplier;
+                    damage = Mathf.Max(damage, _minDamage);
+                    _enemyHP = (_enemyHP - (int)damage);
+
+                    if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
+                && _stateManagement._currentState != BossStateManagement.BossState.Punch)
+                    {
+                        canDieState = true;
+                    }
+
+                    if (_enemyHP <= 0 && canDieState)
+                    {
+                        DeadBossProcess();
+                    }
+            Debug.Log("残り体力" + _enemyHP);
+                }
     }
 
     public override void FallDamage()

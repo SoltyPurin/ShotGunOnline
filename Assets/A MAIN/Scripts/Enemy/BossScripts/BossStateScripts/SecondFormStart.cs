@@ -33,7 +33,7 @@ public class SecondFormStart : MonoBehaviour
     public void ToBESecondForm()
     {
         _bossSprite.color = _secondColor;
-        _bossHP._isInvincible = true;
+        //_bossHP._isInvincible = true;
         _animeManager.ResetAllTriggers();
         //_stateManagement.enabled = false;
         if(_secondEffect != null)
