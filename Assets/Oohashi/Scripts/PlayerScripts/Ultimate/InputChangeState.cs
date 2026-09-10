@@ -61,19 +61,19 @@ public class InputChangeState : MonoBehaviour
     private void Start()
     {
         //ウルトのオーラを表示する
-        if(_ultAura != null)
+        if (_ultAura != null)
         {
             _ultAura.SetActive(false);
         }
 
-        if(_canUltAura != null)
+        if (_canUltAura != null)
         {
             _canUltAura.SetActive(false);
         }
 
         _pause = GameObject.Find("PauseVision").GetComponent<InputPause>();
         //ネットワーク版だとインスペクターから設定できないためここで取得
-        if(_toNormal == null && _toUlt == null)
+        if (_toNormal == null && _toUlt == null)
         {
             _toNormal = GameObject.Find("ToNormal");
             _toUlt = GameObject.Find("ToUlt");
@@ -106,7 +106,7 @@ public class InputChangeState : MonoBehaviour
                 _canUltAura.SetActive(true);
             }
         }// ウルト使用可能状態が解除された瞬間の処理(ウルト撃った後にコインがなくなったとき)
-        else if(_canUseUltimate)
+        else if (_canUseUltimate)
         {
             _canUseUltimate = false;
             _ultimateActive = false;
@@ -114,15 +114,27 @@ public class InputChangeState : MonoBehaviour
             ToNormalAnimation();
             _stateManager.NormalState();
         }
-        if (Gamepad.current == null)
+
+        bool isLeftTriggerInput = false;
+        if (Gamepad.current != null)
         {
-            return;
+            _leftTriggerValue = Gamepad.current.leftTrigger.ReadValue();
+            isLeftTriggerInput = _leftTriggerValue >= 0.9f;
         }
-        _leftTriggerValue = Gamepad.current.leftTrigger.ReadValue();
-        bool isLeftTriggerInput = _leftTriggerValue >= 0.9f;
+        else
+        {
+            _leftTriggerValue = 0f;
+        }
+
+        // キーボードでのアルティメット切り替えキー（Eキー）
+        bool isKeyboardUltInput = false;
+        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            isKeyboardUltInput = true;
+        }
 
         //ウルトボタンが押されたときかつ左トリガーが入力した時点でまだ押されてない時に実行
-        if (((Input.GetButtonDown(USE_ULTIMATE_BUTTON)) || isLeftTriggerInput) && !_isLeftTriggerPressed)
+        if (((Input.GetButtonDown(USE_ULTIMATE_BUTTON)) || isLeftTriggerInput || isKeyboardUltInput) && !_isLeftTriggerPressed)
         {
             if (_stateManager.PlayerState == PlayerState.Movie)
             {
@@ -146,7 +158,7 @@ public class InputChangeState : MonoBehaviour
 
         }
         //左トリガーのフラグを切り替え
-        if (!isLeftTriggerInput)
+        if (!isLeftTriggerInput && !isKeyboardUltInput)
         {
             _isLeftTriggerPressed = false;
         }
@@ -163,7 +175,7 @@ public class InputChangeState : MonoBehaviour
         _toNormalAnim.SetTrigger("Change");
         _ultAura.SetActive(false);
 
-        if(_ultCharge.activeInHierarchy)
+        if (_ultCharge.activeInHierarchy)
         {
             ShowUltCharge(false);
         }
@@ -174,7 +186,7 @@ public class InputChangeState : MonoBehaviour
     /// </summary>
     public void ToUltAnimation()
     {
-        if(_toUlt == null) return;
+        if (_toUlt == null) return;
         _toUlt.transform.position = this.transform.position;
         _toUltAnim.SetTrigger("Change");
         _ultAura.SetActive(true);

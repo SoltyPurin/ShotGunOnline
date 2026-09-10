@@ -37,36 +37,81 @@ public class PlayerAiming : NetworkBehaviour
 
     private void Awake()
     {
-        if (Gamepad.current == null || _playerObject == null) return;
-        _gamePad = Gamepad.current;
+        if (_playerObject == null) return;
+        if (Gamepad.current != null)
+        {
+            _gamePad = Gamepad.current;
+        }
     }
 
     private void Update()
     {
-        // 入力の取得は「自分が操作している時(Owner)」だけ行う
+        // 入力の取得は「操作している時(Owner)」に行う
         if (this.IsOwner)
         {
             InputAiming();
         }
     }
 
+    private bool _useMouseAim = false;
+
     private void InputAiming()
     {
-        if (_gamePad == null) return;
-        _rightStickInput = _gamePad.rightStick.ReadValue();
+        Vector2 stickInput = Vector2.zero;
+        if (_gamePad != null)
+        {
+            stickInput = _gamePad.rightStick.ReadValue();
+        }
+
+        if (stickInput.sqrMagnitude > 0.04f)
+        {
+            _rightStickInput = stickInput;
+            _useMouseAim = false;
+        }
+        else
+        {
+            _useMouseAim = true;
+        }
     }
 
     private void FixedUpdate()
     {
-        // 自分が操作しているキャラ（Owner）の場合の処理
+        // 操作している側（Owner）の場合の処理
         if (this.IsOwner)
         {
-            if (_rightStickInput.sqrMagnitude > 0.04f)
+            if (!_useMouseAim)
             {
-                _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
+                if (_rightStickInput.sqrMagnitude > 0.04f)
+                {
+                    _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
+                }
+            }
+            else
+            {
+                // マウスでの照準
+                if (Camera.main != null)
+                {
+                    Vector3 mousePos = Vector3.zero;
+                    if (Mouse.current != null)
+                    {
+                        mousePos = Mouse.current.position.ReadValue();
+                    }
+                    else
+                    {
+                        mousePos = Input.mousePosition;
+                    }
+                    Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z - transform.position.z)));
+                    Vector3 playerPos = transform.position;
+                    Vector3 diff = worldMousePos - playerPos;
+                    diff.z = 0;
+                    if (diff.sqrMagnitude > 0.01f)
+                    {
+                        _prevDirection = diff.normalized;
+                    }
+                }
             }
 
-            // ネットワーク変数に現在の方向を書き込む（これで自動的にホスト・クライアント全員に同期される）
+            // ネットワーク変数に現在の向きを入力（自動的にホスト・クライアント全員に同期）
             _netAimDirection.Value = _prevDirection;
         }
 
