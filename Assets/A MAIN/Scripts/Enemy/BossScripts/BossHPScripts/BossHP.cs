@@ -226,7 +226,15 @@ public class BossHP : EnemyTakeDamage
         }
         Instantiate(_deathObject, transform.position, Quaternion.identity);
         _deathExplosion.Explosion(this.transform.position);
-        Destroy(this.gameObject);
+        // ネットワークオブジェクトの場合は Despawn、ローカルの場合は Destroy
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
     }
 
@@ -257,5 +265,6 @@ public class BossHP : EnemyTakeDamage
             _deathTimeline.SetActive(true);
         }
         _shadow.SetActive(false);
+        StartCoroutine(DeathProtocol(1.0f));
     }
 }
