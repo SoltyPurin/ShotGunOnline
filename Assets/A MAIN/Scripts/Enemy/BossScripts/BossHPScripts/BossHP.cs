@@ -54,7 +54,7 @@ public class BossHP : EnemyTakeDamage
 
     public int BossHPVariable
     {
-        get { return _enemyHP; }
+        get { return _enemyHP.Value; }
     }
 
     private float _firstHP = default;
@@ -76,8 +76,8 @@ public class BossHP : EnemyTakeDamage
 
         Scene currentScene = SceneManager.GetActiveScene();
 
-        _enemyHP = JsonSaver.Instance.EnemyJson.BossHP;
-        _firstHP = _enemyHP;
+        _enemyHP.Value = JsonSaver.Instance.EnemyJson.BossHP;
+        _firstHP = _enemyHP.Value;
         _halfFirstHP = _firstHP / 2;
 
         _isInvincible = false;
@@ -85,7 +85,7 @@ public class BossHP : EnemyTakeDamage
 
     private void FixedUpdate()
     {
-        bool isHPhalf = (_halfFirstHP >= _enemyHP) && (_enemyHP > 0);
+        bool isHPhalf = (_halfFirstHP >= _enemyHP.Value) && (_enemyHP.Value > 0);
         bool isStopState = (_stateManagement._currentState == BossStateManagement.BossState.Stop);
 
 
@@ -111,9 +111,9 @@ public class BossHP : EnemyTakeDamage
     {
         float damage = chargeTime * _damageMultiplier;
         damage = Mathf.Max(damage, _minDamage);
-        _enemyHP = (_enemyHP - (int)damage);
+        _enemyHP.Value = (_enemyHP.Value - (int)damage);
         _playTheSEManager.PlayEnemyDamageSound();
-        if (_enemyHP <= 0)
+        if (_enemyHP.Value <= 0)
         {
             StartCoroutine(DeathProtocol(chargeTime));
         }
@@ -134,7 +134,7 @@ public class BossHP : EnemyTakeDamage
                 if (state == PlayerState.Ultimate)
                 {
                     float damage = _ultMultiplier;
-                    _enemyHP = (_enemyHP - (int)damage);
+                    _enemyHP.Value = (_enemyHP.Value - (int)damage);
 
                     if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
                 && _stateManagement._currentState != BossStateManagement.BossState.Punch)
@@ -142,7 +142,7 @@ public class BossHP : EnemyTakeDamage
                         canDieState = true;
                     }
 
-                    if (_enemyHP <= 0 && canDieState)
+                    if (_enemyHP.Value <= 0 && canDieState)
                     {
                         DeadBossProcess();
                     }
@@ -151,7 +151,7 @@ public class BossHP : EnemyTakeDamage
                 {
                     float damage = chargeTime * _damageMultiplier;
                     damage = Mathf.Max(damage, _minDamage);
-                    _enemyHP = (_enemyHP - (int)damage);
+                    _enemyHP.Value = (_enemyHP.Value - (int)damage);
 
                     if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
                 && _stateManagement._currentState != BossStateManagement.BossState.Punch)
@@ -159,7 +159,7 @@ public class BossHP : EnemyTakeDamage
                         canDieState = true;
                     }
 
-                    if (_enemyHP <= 0 && canDieState)
+                    if (_enemyHP.Value <= 0 && canDieState)
                     {
                         DeadBossProcess();
                     }
@@ -171,7 +171,7 @@ public class BossHP : EnemyTakeDamage
     {
         _collider.isTrigger = true;
         _enemyMove.EnemyState = EnemyState.fall;
-        _enemyHP -= _fallDamage;
+        _enemyHP.Value -= _fallDamage;
         if (this.gameObject.activeInHierarchy)
         {
             _playTheSEManager.PlayDropSound();
@@ -189,7 +189,7 @@ public class BossHP : EnemyTakeDamage
     public override void SetExplosionDamgage(float chargeTime)
     {
         float damage = _explosionMultiplier;
-        _enemyHP = (_enemyHP - (int)damage);
+        _enemyHP.Value = (_enemyHP.Value - (int)damage);
 
         if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
             && _stateManagement._currentState != BossStateManagement.BossState.Punch)
@@ -197,7 +197,7 @@ public class BossHP : EnemyTakeDamage
             canDieState = true;
         }
 
-        if (_enemyHP <= 0 && canDieState)
+        if (_enemyHP.Value <= 0 && canDieState)
         {
             DeadBossProcess();
         }
@@ -241,7 +241,7 @@ public class BossHP : EnemyTakeDamage
     public override void ContactStoneMethod()
     {
         float damage = _stoneDamage;
-        _enemyHP = (_enemyHP - (int)damage);
+        _enemyHP.Value = (_enemyHP.Value - (int)damage);
         _playTheSEManager.PlayRoadKill();
 
     }

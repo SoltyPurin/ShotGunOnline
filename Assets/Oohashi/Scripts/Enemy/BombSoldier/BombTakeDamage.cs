@@ -12,11 +12,11 @@ public class BombTakeDamage : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        _enemyHP = JsonSaver.Instance.EnemyJson.BombHP;
+        _enemyHP.Value = JsonSaver.Instance.EnemyJson.BombHP;
         if (_hpUI != null)
         {
             //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
-            _hpUI.Initialize(_enemyHP);
+            _hpUI.Initialize(_enemyHP.Value);
         }
 
     }
@@ -29,8 +29,8 @@ public class BombTakeDamage : EnemyTakeDamage
     {
         if (_hasExploted) return;
         float damage = chargeTime * _explosionMultiplier;
-        _enemyHP = (_enemyHP - (int)damage);
-        if (_enemyHP <= 0)
+        _enemyHP.Value = (_enemyHP.Value - (int)damage);
+        if (_enemyHP.Value <= 0)
         {
             _isDead = true;
             _bombProtocol.BombCircleCheck();

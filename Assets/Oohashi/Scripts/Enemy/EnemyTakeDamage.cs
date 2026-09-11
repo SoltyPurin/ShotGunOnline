@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class EnemyTakeDamage : NetworkBehaviour
 {
-    protected int _enemyHP = 1000;
-    public int EnemyHP
+    protected NetworkVariable<int> _enemyHP = new NetworkVariable<int>(
+    1000, 
+    NetworkVariableReadPermission.Everyone, 
+    NetworkVariableWritePermission.Server
+);
+    public NetworkVariable<int> EnemyHP
     {
         get { return _enemyHP; }
     }
@@ -100,6 +104,40 @@ public class EnemyTakeDamage : NetworkBehaviour
             _damageMaterial.Damage();
         }
     }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (_hpUI != null)
+        {
+            // 初期値をUIに設定
+            _hpUI.Initialize(_enemyHP.Value);
+
+            // HPが変更された時に自動でUIを更新するイベントを登録（クライアント側でも発火）
+            _enemyHP.OnValueChanged += OnHPChanged;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (_hpUI != null)
+        {
+            // イベント解除（メモリリーク防止）
+            _enemyHP.OnValueChanged -= OnHPChanged;
+        }
+    }
+
+    // HPの値が変わった時にサーバー・クライアント共通で実行される処理
+    private void OnHPChanged(int previousValue, int newValue)
+    {
+        if (_hpUI != null)
+        {
+            _hpUI.UpdateHP(newValue);
+        }
+    }
     /// <summary>
     /// ダメージを喰らったときのメソッド、ウルトと通常で挙動が変わる
     /// </summary>
@@ -132,12 +170,12 @@ public class EnemyTakeDamage : NetworkBehaviour
                 //ダメージが低すぎた場合、最低保証をする
                 damage = Mathf.Max(damage, _minDamage);
                 //hpを更新
-                _enemyHP = (_enemyHP - (int)damage);
-                _hpUI.UpdateHP(_enemyHP);
+                _enemyHP.Value = (_enemyHP.Value - (int)damage);
+                _hpUI.UpdateHP(_enemyHP.Value);
                 //被弾音を再生
                 _playTheSEManager.PlayEnemyDamageSound();
                 //体力が0になったらコルーチン起動
-                if (_enemyHP <= 0)
+                if (_enemyHP.Value <= 0)
                 {
                     _isDead = true;
                     StartCoroutine(DeathProtocol(chargeTime));
@@ -157,10 +195,10 @@ public class EnemyTakeDamage : NetworkBehaviour
             //ダメージの代入、HPの書き換え
             float damage = chargeTime * _damageMultiplier;
             damage = Mathf.Max(damage, _minDamage);
-            _enemyHP = (_enemyHP - (int)damage);
-            _hpUI.UpdateHP(_enemyHP);
+            _enemyHP.Value = (_enemyHP.Value - (int)damage);
+            _hpUI.UpdateHP(_enemyHP.Value);
             _playTheSEManager.PlayEnemyDamageSound();
-            if (_enemyHP <= 0)
+            if (_enemyHP.Value <= 0)
             {
                 StartCoroutine(DeathProtocol(chargeTime));
             }
@@ -180,7 +218,7 @@ public class EnemyTakeDamage : NetworkBehaviour
             }
             _isDead = true;
             _enemyMove.EnemyState = EnemyState.fall;
-            _enemyHP -= _enemyHP;
+            _enemyHP.Value -= _enemyHP.Value;
             if (this.gameObject.activeInHierarchy)
             {
                 _playTheSEManager.PlayDropSound();
@@ -231,9 +269,9 @@ public class EnemyTakeDamage : NetworkBehaviour
         if (IsServer)
         {
             float damage = chargeTime * _explosionMultiplier;
-            _enemyHP = (_enemyHP - (int)damage);
-            _hpUI.UpdateHP(_enemyHP);
-            if (_enemyHP <= 0)
+            _enemyHP.Value = (_enemyHP.Value - (int)damage);
+            _hpUI.UpdateHP(_enemyHP.Value);
+            if (_enemyHP.Value <= 0)
             {
                 _isDead = true;
                 StartCoroutine(DeathProtocol(chargeTime));
