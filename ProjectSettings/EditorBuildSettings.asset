@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/A MAIN/Scenes/Honpen.unity
     guid: 421eb0f7d2157e24eb2920f3d27eb66d
   - enabled: 1
+    path: Assets/A MAIN/Scenes/MP_Honpen.unity
+    guid: 2877c11498494bc439be4a84bb88931a
+  - enabled: 1
     path: Assets/A MAIN/Scenes/ResultScene.unity
     guid: 52ccd783c3e05714ea78a6bd229d3666
   - enabled: 1

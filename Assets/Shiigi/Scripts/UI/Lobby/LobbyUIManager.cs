@@ -233,5 +233,6 @@ public class LobbyUIManager : MonoBehaviour
     {
         Debug.Log("ゲームを開始");
         // TODO: ゲーム開始時の処理（NGO等のシーン遷移など）
+        _sessionManager.StartGame();
     }
 }

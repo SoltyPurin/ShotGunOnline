@@ -5,6 +5,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Multiplayer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MultiplayerSessionManager : MonoBehaviour
 {
@@ -204,5 +205,10 @@ public class MultiplayerSessionManager : MonoBehaviour
         {
             Debug.LogError($"準備状態の更新に失敗しました: {ex.Message}");
         }
+    }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("MP_Honpen");
     }
 }
