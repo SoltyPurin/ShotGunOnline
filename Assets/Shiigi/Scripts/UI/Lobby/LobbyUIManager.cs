@@ -231,8 +231,7 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private void StartGame()
     {
-        Debug.Log("ゲームを開始");
         // TODO: ゲーム開始時の処理（NGO等のシーン遷移など）
-        _sessionManager.StartGame();
+        _sessionManager.StartMultiplayGame();
     }
 }
