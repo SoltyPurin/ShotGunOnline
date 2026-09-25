@@ -5,6 +5,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Multiplayer;
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
 public class MultiplayerSessionManager : MonoBehaviour
@@ -88,6 +89,11 @@ public class MultiplayerSessionManager : MonoBehaviour
 
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
             _currentSession.Changed += HandleSessionChanged;
+
+            // ホストとしてゲーム開始
+            NetworkManager.Singleton.StartHost();
+            Debug.Log("[MSM]: ホストとして接続");
+
             return true;
         }
         catch (Exception ex)
@@ -145,6 +151,9 @@ public class MultiplayerSessionManager : MonoBehaviour
             _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id);
             _currentSession.Changed += HandleSessionChanged;
 
+            NetworkManager.Singleton.StartClient();
+            Debug.Log("[MSM]: クライアントとして接続");
+
             return true;
         }
         catch (Exception ex)
@@ -167,6 +176,9 @@ public class MultiplayerSessionManager : MonoBehaviour
             _currentSession.Changed -= HandleSessionChanged;
             await _currentSession.LeaveAsync();
             _currentSession = null;
+            
+            // 接続解除
+            NetworkManager.Singleton?.Shutdown();
         }
         catch (Exception ex)
         {
@@ -207,8 +219,12 @@ public class MultiplayerSessionManager : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public void StartMultiplayGame()
     {
-        SceneManager.LoadScene("MP_Honpen");
+        if (NetworkManager.Singleton.IsHost)
+        {
+            Debug.Log("ゲームを開始");
+            NetworkManager.Singleton?.SceneManager.LoadScene("MP_Honpen", LoadSceneMode.Single);
+        }
     }
 }
