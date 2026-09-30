@@ -27,7 +27,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     protected EnemyMove _enemyMove = default;
     [SerializeField, Header("HPを表示するUI")]
     protected EnemyDamageUI _hpUI = default;
-    private PlayerCoinDrop _coinControl = default;
+    private PlayerCoinDrop _playerCoinDrop = default;
     [SerializeField, Header("アニメーションのオブジェクト")]
     protected GameObject _deathObject = default;
     [SerializeField, Header("ダメージエフェクトのアニメーター")]
@@ -55,7 +55,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         JsonSaver.Instance.LoadAllConfigs();
         GameObject seManager = GameObject.FindWithTag("SEManager");
         _playTheSEManager = seManager.GetComponent<SEManager>();
-        _coinControl = GetComponent<PlayerCoinDrop>();
+        _playerCoinDrop = GetComponent<PlayerCoinDrop>();
     }
 
     [ServerRpc(RequireOwnership = false)] // 誰からでも呼び出し可能にする
@@ -248,7 +248,7 @@ public class EnemyTakeDamage : NetworkBehaviour
                 _playTheSEManager.PlayMoneyDropSound();
                 Instantiate(_deathObject, transform.position, Quaternion.identity);
                 //ソウルが落ちるアニメーション再生
-                _coinControl.CoinDrop(1);
+                _playerCoinDrop.CoinDrop(1);
 
                 //滅殺
                 //Destroy(this.gameObject);
@@ -293,22 +293,24 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
 
         // 安全対策：サーバー（ホスト）以外は処理を中断
+
         if (!IsServer) yield break;
         if (!this.gameObject.scene.isLoaded)
             {
                 yield break;
             }
-            //チャージ時間を死ぬまでの乗算値で割って死亡時間を出す
-            float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
-            _playTheSEManager.PlayEnemyDeathSound();
+        _playerCoinDrop.CoinDrop(1);
+        _playTheSEManager.PlayEnemyDeathSound();
+        _playTheSEManager.PlayMoneyDropSound();
+        Instantiate(_deathObject, transform.position, Quaternion.identity);
+
+        //チャージ時間を死ぬまでの乗算値で割って死亡時間を出す
+        float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
             //死亡時間待つ
             yield return new WaitForSeconds(timeLeftUntilDeath);
             //ComboCounter counter = GameObject.FindWithTag(COMBOCOUNTER_TAGNAME).GetComponent<ComboCounter>();
             //コンボカウンターにプラス
             //counter.ComboPlus();
-            _playTheSEManager.PlayMoneyDropSound();
-            Instantiate(_deathObject, transform.position, Quaternion.identity);
-            _coinControl.CoinDrop(1);
         if (NetworkObject != null && NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
@@ -332,7 +334,7 @@ public class EnemyTakeDamage : NetworkBehaviour
             //轢殺音再生
             _playTheSEManager.PlayRoadKill();
             Instantiate(_deathObject, transform.position, Quaternion.identity);
-            _coinControl.CoinDrop(1);
+            _playerCoinDrop.CoinDrop(1);
             //Destroy(this.gameObject);
             if (NetworkObject != null && NetworkObject.IsSpawned)
             {

@@ -12,7 +12,10 @@ public class BombTakeDamage : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        _enemyHP.Value = JsonSaver.Instance.EnemyJson.BombHP;
+        if (IsServer)
+        {
+            _enemyHP.Value = JsonSaver.Instance.EnemyJson.BombHP;
+        }
         if (_hpUI != null)
         {
             //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è

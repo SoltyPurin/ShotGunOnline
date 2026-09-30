@@ -7,7 +7,10 @@ public class FatSlowTakeDamage : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        _enemyHP.Value = JsonSaver.Instance.EnemyJson.FatHP;
+        if (IsServer)
+        {
+            _enemyHP.Value = JsonSaver.Instance.EnemyJson.FatHP;
+        }
         if (_hpUI != null)
         {
             //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
