@@ -85,9 +85,25 @@ public class SoulMeter : MonoBehaviour
     /// <param name="count">現在の所有ソウルを渡す</param>
     public void AddMeter(int count)
     {
+        //_maxCeil = _soulFirstPos + count * _upValue;
+        //_soulFlashAnimator.SetTrigger("Flash");
+        //_getSoulEffect.SetTrigger("Get");
         _maxCeil = _soulFirstPos + count * _upValue;
-        _soulFlashAnimator.SetTrigger("Flash");
-        _getSoulEffect.SetTrigger("Get");
+
+        Vector2 soulPos = _soulRect.localPosition;
+
+        // ソウルが減って現在の高さを超えてしまった場合は、即座に目標位置へ下げる
+        if (soulPos.y > _maxCeil)
+        {
+            soulPos.y = _maxCeil;
+            _soulRect.localPosition = soulPos;
+        }
+        else
+        {
+            // 増えた時のみ演出を再生
+            if (_soulFlashAnimator != null) _soulFlashAnimator.SetTrigger("Flash");
+            if (_getSoulEffect != null) _getSoulEffect.SetTrigger("Get");
+        }
     }
 
 

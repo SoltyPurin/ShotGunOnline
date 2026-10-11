@@ -145,7 +145,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// <param name="state">現在のプレイヤーのステート</param>
     public virtual void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        if (IsServer)
+        if (IsServer || !_isDead)
         {
 
             //ダメージのアニメーション再生
@@ -190,7 +190,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// <param name="chargeTime"></param>
     public virtual void SetMirrorDamage(float chargeTime)
     {
-        if (IsServer)
+        if (IsServer || !_isDead)
         {
             //ダメージの代入、HPの書き換え
             float damage = chargeTime * _damageMultiplier;
@@ -266,7 +266,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// <param name="chargeTime">爆発のプロトコルから渡される仮のチャージ値</param>
     public virtual void SetExplosionDamgage(float chargeTime)
     {
-        if (IsServer)
+        if (IsServer || !_isDead)
         {
             float damage = chargeTime * _explosionMultiplier;
             _enemyHP.Value = (_enemyHP.Value - (int)damage);
