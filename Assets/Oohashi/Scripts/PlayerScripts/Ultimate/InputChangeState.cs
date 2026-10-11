@@ -1,7 +1,8 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputChangeState : MonoBehaviour
+public class InputChangeState : NetworkBehaviour
 {
     #region Serializeの変数
     [SerializeField, Header("モードチェンジエフェクトのオブジェクト")]
@@ -84,6 +85,10 @@ public class InputChangeState : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         if (_pause.IsPauseing || _stateManager.PlayerState == PlayerState.Movie)
         {
             return;

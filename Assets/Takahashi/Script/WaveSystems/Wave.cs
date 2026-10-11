@@ -223,27 +223,86 @@ public class Wave : NetworkBehaviour
     /// </summary>
     private void GimmickSetTrue()
     {
-        //ギミックが存在しないならステートを変更し早期リターン
-        if(_gimmickList.Count <= 0)
+        // ギミックが存在しないならステートを変更し早期リターン
+        if (_gimmickList.Count <= 0)
         {
             _nowState = Transition.Enemy;
             return;
         }
 
-        //タイマーを加算
+        // タイマーを加算
         _gimmickFrame++;
 
-        //generateFrame分時間が経ったら有効化して次へ
-        while(_gimmickFrame >= _gimmickList[_nowGimmick]._generateFrame)
+        // generateFrame分時間が経ったら有効化して次へ
+        while (_gimmickFrame >= _gimmickList[_nowGimmick]._generateFrame)
         {
-            //リスト内にギミックが存在するなら、ギミックを出現させる。
-            if (_gimmickList[_nowGimmick]._waveGimmick != null)
+            WaveGimmick waveGimmickObj = _gimmickList[_nowGimmick]._waveGimmick;
+
+            if (waveGimmickObj != null)
             {
-                _gimmickList[_nowGimmick]._waveGimmick.gameObject.SetActive(true);
-                _gimmickList[_nowGimmick]._waveGimmick.GimmickPopAnm();
+                // 1. シーン上のダミーからプレハブ名を整形・取得
+                string cleanedName = System.Text.RegularExpressions.Regex.Replace(waveGimmickObj.name, @"\s*\(\d+\)", "");
+                string targetPrefabName = cleanedName.Replace("(Clone)", "").Trim();
+                GameObject prefabToSpawn = null;
+
+                // 2. NetworkManager の登録リストから「本物の岩プレハブ」を探す
+                if (Unity.Netcode.NetworkManager.Singleton != null)
+                {
+                    foreach (Unity.Netcode.NetworkPrefabsList prefabList in Unity.Netcode.NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
+                    {
+                        foreach (Unity.Netcode.NetworkPrefab networkPrefab in prefabList.PrefabList)
+                        {
+                            if (networkPrefab.Prefab != null && networkPrefab.Prefab.name == targetPrefabName)
+                            {
+                                prefabToSpawn = networkPrefab.Prefab;
+                                break;
+                            }
+                        }
+                        if (prefabToSpawn != null) break;
+                    }
+                }
+
+                // 3. プレハブが見つかったら、ダミーと同じ座標・回転で生成して Spawn！
+                if (prefabToSpawn != null)
+                {
+                    GameObject spawnedGimmick = Instantiate(
+                        prefabToSpawn,
+                        waveGimmickObj.transform.position,
+                        waveGimmickObj.transform.rotation
+                    );
+
+                    // ネットワーク上に一斉スポーン（クライアント側にも自動同期生成）
+                    NetworkObject netObj = spawnedGimmick.GetComponent<NetworkObject>();
+                    if (netObj != null)
+                    {
+                        netObj.transform.SetParent(null); // 親子関係を解消
+                        netObj.Spawn();
+                    }
+
+                    // 4. 生成された本物のギミックの出現アニメーションを再生
+                    WaveGimmick newGimmick = spawnedGimmick.GetComponent<WaveGimmick>();
+                    if (newGimmick != null)
+                    {
+                        newGimmick.GimmickPopAnm();
+
+                        // リスト内の参照を、新しく生まれた本物に差し替える
+                        _gimmickList[_nowGimmick] = new GimmickData
+                        {
+                            _generateFrame = _gimmickList[_nowGimmick]._generateFrame,
+                            _waveGimmick = newGimmick
+                        };
+                    }
+
+                    // 5. サーバー側で不要になった配置用ダミーを破棄
+                    Destroy(waveGimmickObj.gameObject);
+                }
+                else
+                {
+                    Debug.LogError($"[Wave] NetworkManager にプレハブ '{targetPrefabName}' が登録されていません！");
+                }
             }
 
-            //次のギミックへ移動
+            // 次のギミックへ移動
             NextGimmick();
 
             if (_nowState != Transition.Gimmick)

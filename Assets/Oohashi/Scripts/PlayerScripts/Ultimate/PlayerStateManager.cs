@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public enum PlayerState
@@ -11,14 +12,18 @@ public enum PlayerState
 }
 
 
-public class PlayerStateManager : MonoBehaviour
+public class PlayerStateManager : NetworkBehaviour
 {
     //現在のプレイヤーのステートを保存
-    private PlayerState _playerState = PlayerState.Normal;
+    private NetworkVariable<PlayerState> _playerState = new NetworkVariable<PlayerState>(
+            PlayerState.Normal,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Owner
+        );
 
     public PlayerState PlayerState
     {
-        get { return _playerState; }
+        get { return _playerState.Value; }
     }
     //private void Update()
     //{
@@ -30,7 +35,7 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void UltimateState()
     {
-        _playerState = PlayerState.Ultimate;
+        _playerState.Value = PlayerState.Ultimate;
     }
 
     /// <summary>
@@ -38,7 +43,7 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void NormalState()
     {
-        _playerState = PlayerState.Normal;
+        _playerState.Value = PlayerState.Normal;
     }
 
     /// <summary>
@@ -46,7 +51,7 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void FallState()
     {
-        _playerState = PlayerState.Fall;
+        _playerState.Value = PlayerState.Fall;
     }
 
     /// <summary>
@@ -54,7 +59,7 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void KnockBackingState()
     {
-        _playerState = PlayerState.KnockBack;
+        _playerState.Value = PlayerState.KnockBack;
     }
 
     /// <summary>
@@ -62,7 +67,7 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void DamageKnockBackState()
     {
-        _playerState = PlayerState.DamageKnockBack;
+        _playerState.Value = PlayerState.DamageKnockBack;
     }
 
     /// <summary>
@@ -70,6 +75,6 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void MovieState()
     {
-        _playerState = PlayerState.Movie;
+        _playerState.Value = PlayerState.Movie;
     }
 }
