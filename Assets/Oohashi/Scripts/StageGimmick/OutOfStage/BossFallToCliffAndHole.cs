@@ -16,17 +16,38 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     [SerializeField, Header("復帰ポイント登録")]
     private GameObject _returnPointTransform = default;
 
+    //そのままだと登場した瞬間に落下死するので無理やりガードする
+    [SerializeField, Header("登場直後の落下無効時間（秒）")]
+    private float _spawnProtectTime = 2.0f;
+    private float _spawnTimer = 0f;
+
     //---アニメーターのトリガー---//
     private readonly string FALLTRIGGER = "Fall";
     private readonly string RETURNFALL = "IsFall";
-    private readonly string RETURNPOINT = "Return";
 
+
+    private void OnEnable()
+    {
+        // オブジェクトが有効化した時にタイマーリセット
+        _spawnTimer = 0f;
+    }
+
+    private void Update()
+    {
+        if (_spawnTimer < _spawnProtectTime)
+        {
+            _spawnTimer += Time.deltaTime;
+        }
+    }
     /// <summary>
     /// 落下処理を行う
     /// </summary>
-
     public override void FallMethod()
     {
+        if (_spawnTimer < _spawnProtectTime)
+        {
+            return;
+        }
         _seManager.PlayDropSound();
         _animator.SetTrigger(FALLTRIGGER);
         _enemyTakeDamage.FallDamage();
