@@ -2256,6 +2256,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 856460218}
   m_CullTransparentMesh: 1
+--- !u!114 &859085832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878215783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2451062905
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!1 &878215783 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5183092787753709392, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+  m_PrefabInstance: {fileID: 1125572586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &913912267 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 254134187990706144, guid: 194ca10c546db1343b318d43b72e4ed6, type: 3}
@@ -2801,6 +2832,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: RespawnPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 5269334230982165910, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -24.3
+      objectReference: {fileID: 0}
     - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
       propertyPath: _camera
       value: 
@@ -2847,14 +2882,17 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3561210239596616374, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1243715643}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5183092787753709392, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 859085832}
   m_SourcePrefab: {fileID: 100100000, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
 --- !u!114 &1125572587 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
   m_PrefabInstance: {fileID: 1125572586}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 878215783}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7065be250d108b498cb5d25920e4dcb, type: 3}
@@ -6655,11 +6693,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a53bed89b6be7ed499e72cc561323e88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _waveUIManager: {fileID: 1175026819}
   _bgmControll: {fileID: 1449552547}
   _scoreManager: {fileID: 1592384699}
   _respawn: {fileID: 1125572587}
-  _playerMove: {fileID: 0}
+  _playerMove: []
   _fadeAnimator: {fileID: 1457316061}
   _transitionInterval: 4
   _bossTransitionInterval: 4
