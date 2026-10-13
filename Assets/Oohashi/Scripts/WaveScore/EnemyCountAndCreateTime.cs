@@ -4,7 +4,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyCountAndCreateTime : MonoBehaviour
+public class EnemyCountAndCreateTime : NetworkBehaviour
 {
     #region Serialize変数群
 
@@ -174,6 +174,10 @@ public class EnemyCountAndCreateTime : MonoBehaviour
 
     public void Calculator()
     {
+        if (!IsServer && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            // サーバー以外は計算しない（二重計算防止）
+        }
         // --- プレイヤーを安全に自動取得する処理を追加 ---
         if (_playerDamage == null)
         {
@@ -182,7 +186,7 @@ public class EnemyCountAndCreateTime : MonoBehaviour
             foreach (GameObject p in players)
             {
                 NetworkObject netObj = p.GetComponent<Unity.Netcode.NetworkObject>();
-                // 自分が操作しているローカルプレイヤーのコンポーネントを一本釣りする
+                // 自分が操作しているローカルプレイヤーのコンポーネントを取得
                 if (netObj != null && netObj.IsLocalPlayer)
                 {
                     _playerDamage = p.GetComponent<PlayerDamageKnockBack>();
@@ -217,7 +221,12 @@ public class EnemyCountAndCreateTime : MonoBehaviour
             _timeRank = BRANK;
         }
 
-        _scoreData.SetScore(_timeRank, _playerDamage.DamageCount, _initWaveTime);
+        WaveManager waveManager = FindAnyObjectByType<WaveManager>();
+        if (waveManager != null)
+        {
+            waveManager.SyncScoreClientRpc(_timeRank, _playerDamage.DamageCount, _initWaveTime);
+        }
+        //_scoreData.SetScore(_timeRank, _playerDamage.DamageCount, _initWaveTime);
         _playerDamage.ResetDamageCount();
 
 

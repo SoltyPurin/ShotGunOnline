@@ -384,4 +384,16 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     {
         _uiManager.SetEnemyCounter(count);
     }
+
+    /// <summary>
+    /// サーバーで計算したスコア結果を全プレイヤーのScoreDataに反映させるRPC
+    /// </summary>
+    [ClientRpc]
+    public void SyncScoreClientRpc(int timeRank, int damageCount, float clearTime)
+    {
+        if (ScoreData._scoreData != null)
+        {
+            ScoreData._scoreData.SetScore(timeRank, damageCount, clearTime);
+        }
+    }
 }
