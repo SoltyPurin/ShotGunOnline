@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerHoleFall : EntityFall
@@ -56,7 +57,7 @@ public class PlayerHoleFall : EntityFall
         _rigidbody2D.simulated = true;
         _fadeAnimator.SetTrigger("FadeIn");
         _damageKnockBack.ResetForce();
-        _respawn.Respawn();
+        _respawn.FallRespawnRpc(this.gameObject);
         _playerStateManager.NormalState();
         _inputChangeState.ToNormalAnimation();
     }
@@ -66,7 +67,12 @@ public class PlayerHoleFall : EntityFall
     /// </summary>
     public override void Fall()
     {
-        if(_playerStateManager.PlayerState == PlayerState.Movie)
+        NetworkObject netObj = GetComponent<NetworkObject>();
+        if (netObj != null && !netObj.IsOwner)
+        {
+            return;
+        }
+        if (_playerStateManager.PlayerState == PlayerState.Movie)
         {
             return;
         }
@@ -89,43 +95,6 @@ public class PlayerHoleFall : EntityFall
         }
 
         StartCoroutine(_damageKnockBack.DamagePerformance());
-        //int ultSoul = _soul.VStock;
-        //int soul = _soul.UseFullSoul;
-
-        //int dropCoinCount = 0;
-
-        //if (ultSoul >= 1)
-        //{
-        //    Debug.Log("vストックあり");
-        //    if (soul >= 1)
-        //    {
-        //        dropCoinCount = soul;
-        //    }
-        //    else
-        //    {
-        //        dropCoinCount = 10;
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.Log("vストックなし");
-        //    if (soul >= 1)
-        //    {
-        //        dropCoinCount = soul;
-        //    }
-        //}
-        //for (int i = 0; i < dropCoinCount; i++)
-        //{
-        //    GameObject coin = Instantiate(_dropCoinObject, transform.position, Quaternion.identity);
-        //    coin.GetComponent<BoxCollider2D>().enabled = false;
-        //    MoveCoin moveCoin = coin.GetComponent<MoveCoin>();
-        //    if (moveCoin != null)
-        //    {
-        //        moveCoin.MoveStart();
-        //    }
-        //}
-
-        //_soul.ReduceCoin();
 
 
     }

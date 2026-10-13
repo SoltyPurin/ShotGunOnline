@@ -163,12 +163,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 496002147
+  GlobalObjectIdHash: 471865071
   InScenePlacedSourceGlobalObjectIdHash: 2488626245
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
@@ -678,6 +679,7 @@ GameObject:
   - component: {fileID: 2434346382887947851}
   - component: {fileID: 6646353978686657396}
   - component: {fileID: 3061139487866105975}
+  - component: {fileID: 6468200829788414455}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: BossSprite
@@ -865,6 +867,82 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8e92d17fcffc8f46b7ff8a9c0431c0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6468200829788414455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5578373518510397160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 5608777152012203185}
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -572773157
+    DestinationState: -2045864598
+    TransitionDuration: 0.25
+    TriggerNameHash: 1572982582
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -572773157
+    DestinationState: -853943172
+    TransitionDuration: 0.25
+    TriggerNameHash: -364168966
+    TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1033023557
+    DestinationState: -2045864598
+    TransitionDuration: 0
+    TriggerNameHash: 1572982582
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1033023557
+    DestinationState: -853943172
+    TransitionDuration: 1
+    TriggerNameHash: -364168966
+    TransitionIndex: 1
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: IsFall
+      NameHash: 1572982582
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsSpecialMove
+      NameHash: -701375724
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsStun
+      NameHash: 1441120564
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsWalk
+      NameHash: 721447535
+      Synchronize: 1
+      ParameterType: 4
+    - name: IsPunch
+      NameHash: -364168966
+      Synchronize: 1
+      ParameterType: 9
+    - name: IsHit
+      NameHash: 2006285284
+      Synchronize: 1
+      ParameterType: 9
+    - name: isDead
+      NameHash: 1276664872
+      Synchronize: 1
+      ParameterType: 4
+  AnimatorParametersExpanded: 0
 --- !u!1 &5603067191771254424
 GameObject:
   m_ObjectHideFlags: 0
@@ -1508,12 +1586,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 100748120
+  GlobalObjectIdHash: 611267745
   InScenePlacedSourceGlobalObjectIdHash: 2488626245
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1

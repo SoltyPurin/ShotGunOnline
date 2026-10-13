@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class WaveTransitionAnim : MonoBehaviour
+public class WaveTransitionAnim : NetworkBehaviour
 {
     #region 【変数】
     [SerializeField, Header("ウェーブの数を取得するためのスクリプト")]
@@ -24,11 +24,8 @@ public class WaveTransitionAnim : MonoBehaviour
     [SerializeField, Header("暗闇のイメージ")]
     private GameObject _blackImage = default;
 
-    [SerializeField, Header("カメラ")]
-    private GameObject _camera = default;
-
     [SerializeField,Header("プレイヤーのステート管理")]
-    private PlayerStateManager _stateManager = default;
+    private List<PlayerStateManager> _stateManager = new List<PlayerStateManager>();
     [SerializeField]
     private InputChangeState _inputChangeState = default;
 
@@ -93,11 +90,24 @@ public class WaveTransitionAnim : MonoBehaviour
         {
             return;
         }
-        if(_stateManager == null)
+        if(_stateManager == null || _stateManager.Count <= 0)
         {
-            _stateManager = GameObject.FindWithTag("Player").GetComponent<PlayerStateManager>();
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject p in players)
+            {
+                PlayerStateManager state = p.GetComponent<PlayerStateManager>();
+                if(state != null)
+                {
+                    _stateManager.Add(state);
+                    state.MovieState();
+                }
+            }
         }
-        _stateManager.MovieState();
+        //if(_stateManager == null)
+        //{
+        //    _stateManager = GameObject.FindWithTag("Player").GetComponent<PlayerStateManager>();
+        //}
+        //_stateManager.MovieState();
 
         _runningRoutine = StartCoroutine(TriggerReset(newIndex));
 
@@ -161,9 +171,8 @@ public class WaveTransitionAnim : MonoBehaviour
         //オンライン版
         if (_stateManager == null || _inputChangeState == null)
         {
-            PlayerStateManager[] states = FindObjectsByType<PlayerStateManager>();
             InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
-            foreach(PlayerStateManager state in states)
+            foreach(PlayerStateManager state in _stateManager)
             {
                 if(state == null)
                 {
@@ -197,7 +206,7 @@ public class WaveTransitionAnim : MonoBehaviour
         else //ソロプレイ版
         {
             Debug.Log("ソロプレイ");
-            _stateManager.NormalState();
+            _stateManager[0].NormalState();
             _inputChangeState.ToNormalAnimation();
         }
     }

@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -20,7 +21,16 @@ public class MediumBossMovieManager : MonoBehaviour
         _mainCanvasAnim = mainCanvas.GetComponent<Animator>();
 
         _mainCanvasAnim.SetTrigger("Hide");
-        _playableDirector.Play();
+        PlayTimelineClientRpc();
+    }
+
+    [ClientRpc]
+    public void PlayTimelineClientRpc()
+    {
+        if (_playableDirector != null)
+        {
+            _playableDirector.Play();
+        }
     }
 
     public void ShowCanvas()

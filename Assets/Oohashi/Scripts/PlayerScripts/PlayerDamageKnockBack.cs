@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerDamageKnockBack : MonoBehaviour
+public class PlayerDamageKnockBack : NetworkBehaviour
 {
     #region 変数
     private Vector2 _contactNormal = default;
@@ -230,24 +231,28 @@ public class PlayerDamageKnockBack : MonoBehaviour
         _trenble.DamageTrenble();
 
         // コインの情報取得
-        int soul = _soulKeep.UseFullSoul;
-        int stock = _soulKeep.VStock;
 
         int dropCoinCount = 0;
-
-        if (soul == 0 && stock > 0)
+        if (IsServer)
         {
-            // ストックペナルティとして10個ドロップ
-            dropCoinCount = 10;
-            _soulKeep.ReduceVStock();
+            int soul = _soulKeep.UseFullSoul;
+            int stock = _soulKeep.VStock;
 
-        }
-        else
-        {
-            // 通常ドロップ
-            dropCoinCount = soul;
-            // コインを減らす
-            _soulKeep.ReduceCoin();
+            if (soul == 0 && stock > 0)
+            {
+                // ストックペナルティとして10個ドロップ
+                dropCoinCount = 10;
+                _soulKeep.ReduceVStock();
+
+            }
+            else
+            {
+                // 通常ドロップ
+                dropCoinCount = soul;
+                // コインを減らす
+                _soulKeep.ReduceCoin();
+            }
+
         }
         // コインをドロップ
         for (int i = 0; i < dropCoinCount; i++)

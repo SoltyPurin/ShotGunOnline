@@ -28,6 +28,14 @@ public class SoulGraduallyMoveToPlayer : MonoBehaviour
         {
             return;
         }
+        if(_playerObjcet == null)
+        {
+            _playerObjcet = GameObject.FindWithTag("Player");
+            if(_playerObjcet == null)
+            {
+                return;
+            }
+        }
         Vector2 playerPos = _playerObjcet.transform.position;
         Vector2 initPos = this.transform.position;
         float distance = Vector2.Distance(playerPos,initPos);

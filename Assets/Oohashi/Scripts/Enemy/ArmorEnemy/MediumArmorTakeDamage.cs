@@ -34,11 +34,11 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     {
         base.Start();
         _cameraSW = GetComponent<MidiumCameraSW>();
-        _enemyHP = JsonSaver.Instance.EnemyJson.ArmorHP;
+        _enemyHP.Value = JsonSaver.Instance.EnemyJson.ArmorHP;
         if (_hpUI != null)
         {
             //最初にHP表示のバーに最大hpを設定
-            _hpUI.Initialize(_enemyHP);
+            _hpUI.Initialize(_enemyHP.Value);
         }
 
     }
@@ -72,9 +72,9 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
 
         }
         //HPからダメージ分引いて代入、HPバーを更新
-        _enemyHP = (_enemyHP - (int)_damage);
-        _hpUI.UpdateHP(_enemyHP);
-        if (_enemyHP <= 0)
+        _enemyHP.Value = (_enemyHP.Value - (int)_damage);
+        _hpUI.UpdateHP(_enemyHP.Value);
+        if (_enemyHP.Value <= 0)
         {
             StartCoroutine(DeathProtocol(chargeTime));
         }
@@ -89,10 +89,10 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
         //ダメージに岩の接触ダメージを代入
         _damage = _stoneTakeDamage;
         //hpを減らしてhpバーを更新
-        _enemyHP = (_enemyHP - (int)_damage);
-        _hpUI.UpdateHP(_enemyHP);
+        _enemyHP.Value = (_enemyHP.Value - (int)_damage);
+        _hpUI.UpdateHP(_enemyHP.Value);
         //体力が0になったら1秒後に死亡のコルーチン実行
-        if (_enemyHP <= 0)
+        if (_enemyHP.Value <= 0)
         {
             StartCoroutine(DeathProtocol(1));
         }
@@ -106,15 +106,15 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
         //ステートを落下中にする
         _enemyMove.EnemyState = EnemyState.fall;
         //hpから落下ダメージを引いて体力バーを更新
-        _enemyHP -= (int)_fallTakeDamage;
-        _hpUI.UpdateHP(_enemyHP);
+        _enemyHP.Value -= (int)_fallTakeDamage;
+        _hpUI.UpdateHP(_enemyHP.Value);
         //落下の効果音鳴らす
         _playTheSEManager.PlayDropSound();
         //復帰のコルーチン起動
         _bossFall.StartCoroutine(FALLCOROUTINENAME);
         //ステージに戻る
         StartCoroutine(ReturnStage());
-        if (_enemyHP <= 0)
+        if (_enemyHP.Value <= 0)
         {
             StartCoroutine(DeathProtocol(1));
         }

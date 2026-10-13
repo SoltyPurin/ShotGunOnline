@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class EnemyTakeDamage : NetworkBehaviour
 {
-    protected int _enemyHP = 1000;
-    public int EnemyHP
+    protected NetworkVariable<int> _enemyHP = new NetworkVariable<int>(
+    1000, 
+    NetworkVariableReadPermission.Everyone, 
+    NetworkVariableWritePermission.Server
+);
+    public NetworkVariable<int> EnemyHP
     {
         get { return _enemyHP; }
     }
@@ -23,7 +27,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     protected EnemyMove _enemyMove = default;
     [SerializeField, Header("HPを表示するUI")]
     protected EnemyDamageUI _hpUI = default;
-    private PlayerCoinDrop _coinControl = default;
+    private PlayerCoinDrop _playerCoinDrop = default;
     [SerializeField, Header("アニメーションのオブジェクト")]
     protected GameObject _deathObject = default;
     [SerializeField, Header("ダメージエフェクトのアニメーター")]
@@ -51,7 +55,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         JsonSaver.Instance.LoadAllConfigs();
         GameObject seManager = GameObject.FindWithTag("SEManager");
         _playTheSEManager = seManager.GetComponent<SEManager>();
-        _coinControl = GetComponent<PlayerCoinDrop>();
+        _playerCoinDrop = GetComponent<PlayerCoinDrop>();
     }
 
     [ServerRpc(RequireOwnership = false)] // 誰からでも呼び出し可能にする
@@ -100,6 +104,40 @@ public class EnemyTakeDamage : NetworkBehaviour
             _damageMaterial.Damage();
         }
     }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (_hpUI != null)
+        {
+            // 初期値をUIに設定
+            _hpUI.Initialize(_enemyHP.Value);
+
+            // HPが変更された時に自動でUIを更新するイベントを登録（クライアント側でも発火）
+            _enemyHP.OnValueChanged += OnHPChanged;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (_hpUI != null)
+        {
+            // イベント解除（メモリリーク防止）
+            _enemyHP.OnValueChanged -= OnHPChanged;
+        }
+    }
+
+    // HPの値が変わった時にサーバー・クライアント共通で実行される処理
+    private void OnHPChanged(int previousValue, int newValue)
+    {
+        if (_hpUI != null)
+        {
+            _hpUI.UpdateHP(newValue);
+        }
+    }
     /// <summary>
     /// ダメージを喰らったときのメソッド、ウルトと通常で挙動が変わる
     /// </summary>
@@ -107,7 +145,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// <param name="state">現在のプレイヤーのステート</param>
     public virtual void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        if (IsServer)
+        if (IsServer || !_isDead)
         {
 
             //ダメージのアニメーション再生
@@ -132,12 +170,12 @@ public class EnemyTakeDamage : NetworkBehaviour
                 //ダメージが低すぎた場合、最低保証をする
                 damage = Mathf.Max(damage, _minDamage);
                 //hpを更新
-                _enemyHP = (_enemyHP - (int)damage);
-                _hpUI.UpdateHP(_enemyHP);
+                _enemyHP.Value = (_enemyHP.Value - (int)damage);
+                _hpUI.UpdateHP(_enemyHP.Value);
                 //被弾音を再生
                 _playTheSEManager.PlayEnemyDamageSound();
                 //体力が0になったらコルーチン起動
-                if (_enemyHP <= 0)
+                if (_enemyHP.Value <= 0)
                 {
                     _isDead = true;
                     StartCoroutine(DeathProtocol(chargeTime));
@@ -152,15 +190,15 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// <param name="chargeTime"></param>
     public virtual void SetMirrorDamage(float chargeTime)
     {
-        if (IsServer)
+        if (IsServer || !_isDead)
         {
             //ダメージの代入、HPの書き換え
             float damage = chargeTime * _damageMultiplier;
             damage = Mathf.Max(damage, _minDamage);
-            _enemyHP = (_enemyHP - (int)damage);
-            _hpUI.UpdateHP(_enemyHP);
+            _enemyHP.Value = (_enemyHP.Value - (int)damage);
+            _hpUI.UpdateHP(_enemyHP.Value);
             _playTheSEManager.PlayEnemyDamageSound();
-            if (_enemyHP <= 0)
+            if (_enemyHP.Value <= 0)
             {
                 StartCoroutine(DeathProtocol(chargeTime));
             }
@@ -180,7 +218,7 @@ public class EnemyTakeDamage : NetworkBehaviour
             }
             _isDead = true;
             _enemyMove.EnemyState = EnemyState.fall;
-            _enemyHP -= _enemyHP;
+            _enemyHP.Value -= _enemyHP.Value;
             if (this.gameObject.activeInHierarchy)
             {
                 _playTheSEManager.PlayDropSound();
@@ -210,7 +248,7 @@ public class EnemyTakeDamage : NetworkBehaviour
                 _playTheSEManager.PlayMoneyDropSound();
                 Instantiate(_deathObject, transform.position, Quaternion.identity);
                 //ソウルが落ちるアニメーション再生
-                _coinControl.CoinDrop(1);
+                _playerCoinDrop.CoinDrop(1);
 
                 //滅殺
                 //Destroy(this.gameObject);
@@ -228,12 +266,12 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// <param name="chargeTime">爆発のプロトコルから渡される仮のチャージ値</param>
     public virtual void SetExplosionDamgage(float chargeTime)
     {
-        if (IsServer)
+        if (IsServer || !_isDead)
         {
             float damage = chargeTime * _explosionMultiplier;
-            _enemyHP = (_enemyHP - (int)damage);
-            _hpUI.UpdateHP(_enemyHP);
-            if (_enemyHP <= 0)
+            _enemyHP.Value = (_enemyHP.Value - (int)damage);
+            _hpUI.UpdateHP(_enemyHP.Value);
+            if (_enemyHP.Value <= 0)
             {
                 _isDead = true;
                 StartCoroutine(DeathProtocol(chargeTime));
@@ -255,22 +293,24 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
 
         // 安全対策：サーバー（ホスト）以外は処理を中断
+
         if (!IsServer) yield break;
         if (!this.gameObject.scene.isLoaded)
             {
                 yield break;
             }
-            //チャージ時間を死ぬまでの乗算値で割って死亡時間を出す
-            float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
-            _playTheSEManager.PlayEnemyDeathSound();
+        _playerCoinDrop.CoinDrop(1);
+        _playTheSEManager.PlayEnemyDeathSound();
+        _playTheSEManager.PlayMoneyDropSound();
+        Instantiate(_deathObject, transform.position, Quaternion.identity);
+
+        //チャージ時間を死ぬまでの乗算値で割って死亡時間を出す
+        float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
             //死亡時間待つ
             yield return new WaitForSeconds(timeLeftUntilDeath);
             //ComboCounter counter = GameObject.FindWithTag(COMBOCOUNTER_TAGNAME).GetComponent<ComboCounter>();
             //コンボカウンターにプラス
             //counter.ComboPlus();
-            _playTheSEManager.PlayMoneyDropSound();
-            Instantiate(_deathObject, transform.position, Quaternion.identity);
-            _coinControl.CoinDrop(1);
         if (NetworkObject != null && NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
@@ -294,7 +334,7 @@ public class EnemyTakeDamage : NetworkBehaviour
             //轢殺音再生
             _playTheSEManager.PlayRoadKill();
             Instantiate(_deathObject, transform.position, Quaternion.identity);
-            _coinControl.CoinDrop(1);
+            _playerCoinDrop.CoinDrop(1);
             //Destroy(this.gameObject);
             if (NetworkObject != null && NetworkObject.IsSpawned)
             {

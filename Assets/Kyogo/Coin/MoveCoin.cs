@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class MoveCoin : MonoBehaviour
+public class MoveCoin : NetworkBehaviour
 {
     private float _xDirection = 0;
     private float _yDirection = 0;

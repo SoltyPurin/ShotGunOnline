@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
-public class PlayerRespawn : MonoBehaviour
+public class PlayerRespawn : NetworkBehaviour
 {
     [SerializeField,Header("リスポーンポイントを登録するリスト")]
     private List<GameObject> _respawnPoints = new List<GameObject>();
@@ -50,5 +52,26 @@ public class PlayerRespawn : MonoBehaviour
         }
             FollowingCameraToBurrel follow = _camera.GetComponent<FollowingCameraToBurrel>();
         follow.MovieMove(respawnPoint);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void FallRespawnRpc(NetworkObjectReference fallPlayerRef)
+    {
+        if (fallPlayerRef.TryGet(out NetworkObject netObj))
+        {
+
+            NetworkTransform netPlayer = netObj.GetComponent<NetworkTransform>();
+            Vector2 respawnPoint = _respawnPoints[_currentRespawnIndex].transform.position;
+            if (netPlayer != null)
+            {
+                netPlayer.Teleport(respawnPoint, Quaternion.identity, netObj.transform.localScale);
+            }
+            else
+            {
+                netObj.transform.position = respawnPoint;
+            }
+            FollowingCameraToBurrel follow = _camera.GetComponent<FollowingCameraToBurrel>();
+            follow.MovieMove(respawnPoint);
+        }
     }
 }

@@ -1,3 +1,5 @@
+using Unity.Netcode;
+using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,7 +40,12 @@ public class SceneTransitionManager : MonoBehaviour
     }
 
     [HideInInspector]
-    public TransitionState _state = TransitionState.Normal;
+    private TransitionState _state = TransitionState.Normal;
+    public TransitionState State
+    {
+        set {  _state = value; }
+    }
+
     [HideInInspector]
     public bool _transition = false;
 
@@ -103,7 +110,20 @@ public class SceneTransitionManager : MonoBehaviour
         if(_timer >= _sceneTransitionTime)
         {
             _timer = 0;
-            SceneManager.LoadScene(_waveManager.NextSceneName);
+            //SceneManager.LoadScene(_waveManager.NextSceneName);
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject player in players)
+            {
+                // 各プレイヤーオブジェクトから NetworkObject コンポーネントを取得
+                NetworkObject netObj = player.GetComponent<NetworkObject>();
+
+                // Nullチェックと Spawn 済みかの確認を行った上で Despawn を実行
+                if (netObj != null && netObj.IsSpawned)
+                {
+                    netObj.Despawn(true); // 引数を true にすることで Destroy も同時に行われます
+                }
+            }
+            NetworkManager.Singleton.SceneManager.LoadScene(_waveManager.NextSceneName, LoadSceneMode.Single);
             return;
         }
 

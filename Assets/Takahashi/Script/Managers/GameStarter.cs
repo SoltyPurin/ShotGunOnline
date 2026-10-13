@@ -17,9 +17,6 @@ public class GameStarter : MonoBehaviour
     [SerializeField]
     private GameObject _StarterCanvas = default;
 
-    [SerializeField, Header("タイムライン")]
-    private PlayableDirector _playerDirector = default;
-
     private void GetPlayer()
     {
         // ネットワーク上の全プレイヤーオブジェクトを探す

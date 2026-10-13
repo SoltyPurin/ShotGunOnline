@@ -11,27 +11,27 @@ public enum ShootState
 
 public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 {
-    [SerializeField,Header("狙ってる方向のスクリプト")]
+    [SerializeField, Header("狙ってる方向のスクリプト")]
     private PlayerAiming _playerAiming = default;
-    [SerializeField,Header("ノックバックのスクリプト")]
+    [SerializeField, Header("ノックバックのスクリプト")]
     private PlayerKnockBack _knockBackScriput = default;
-    [SerializeField,Header("プレイヤーの移動のスクリプト")]
+    [SerializeField, Header("プレイヤーの移動のスクリプト")]
     private PlayerMove _playerMoveScript = default;
-    [SerializeField,Header("ショットガンの判定スクリプト")]
+    [SerializeField, Header("ショットガンの判定スクリプト")]
     private ShootRange _shootRange = default;
-    [SerializeField,Header("当たり判定を表示するスクリプト")]
+    [SerializeField, Header("当たり判定を表示するスクリプト")]
     private ShootShape _shootShape = default;
-    [SerializeField,Header("レバブルのスクリプト")]
+    [SerializeField, Header("レバブルのスクリプト")]
     private ControllerVibelation _vibe = default;
-    [SerializeField,Header("ウルトのスクリプト")]
+    [SerializeField, Header("ウルトのスクリプト")]
     private UltimateShot _ultShot = default;
-    [SerializeField,Header("コインを管理するスクリプト")]
+    [SerializeField, Header("コインを管理するスクリプト")]
     private SoulKeep _coinKeep = default;
-    [SerializeField,Header("プレイヤーのステートを管理")]
+    [SerializeField, Header("プレイヤーのステートを管理")]
     private PlayerStateManager _stateManager = default;
-    [SerializeField,Header("銃弾のプール")]
+    [SerializeField, Header("銃弾のプール")]
     private BulletPool _bulletPool = default;
-    [SerializeField,Header("SEのスクリプト")]
+    [SerializeField, Header("SEのスクリプト")]
     private PlayerSEControlScript _seScript = default;
     [SerializeField, Header("オーバーヒートのスクリプト")]
     private OverHeat _overHeat = default;
@@ -66,15 +66,11 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     {
         get { return _canDecChargeValue; }
     }
-    public NetworkVariable<float> _chargeTime = new NetworkVariable<float>(
-        0f,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner
-    );
-    //private float _chargeTime = 0.0f;//チャージしてる時間
+
+    private float _chargeTime = 0.0f;//チャージしてる時間
     public float ChargeValue
     {
-        get { return _chargeTime.Value; }
+        get { return _chargeTime; }
     }
     //制限されない現在のチャージ時間を測定
     private float _initChargeTime = 0.0f;
@@ -90,11 +86,17 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     {
         get { return _hasShotUltimate; }
     }
-    //射撃ボタンを押したかどうか
-    private bool _isPushShootButton = false; 
+    ////射撃ボタンを押したかどうか
+    //private bool _isPushShootButton = false;
+    private NetworkVariable<bool> _netIsPushShootButton = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
     public bool IsPushShotButton
     {
-        get { return _isPushShootButton; }
+        get { return _netIsPushShootButton.Value; }
+        //get { return _isPushShootButton; }
     }
     //ステートを所有してる変数
     private ShootState _shootState = ShootState.CanShoot;
@@ -105,7 +107,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     }
 
     //チャージ時間に乗算する値、ご褒美中はこの値が増加する
-    private float _bonusMultiplier = 1.0f; 
+    private float _bonusMultiplier = 1.0f;
     public float BonusMultiplier
     {
         get { return _bonusMultiplier; }
@@ -121,10 +123,13 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     }
 
     private float _rightTriggerValue = default;
+    private bool _isKeyboardShootPressed = false;
+    private bool _isKeyboardShootDown = false;
+
     private void Start()
     {
         _criticalGraceTime += MAXCHARGEVALUE;
-        if(_bloom == null)
+        if (_bloom == null)
         {
             _bloom = GameObject.Find("PostManager").GetComponent<BloomScript>();
         }
@@ -140,72 +145,108 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private void Update()
     {
-        //死んでたら処理は行わない
-        if (!_isAlive)
-        {
-            return;
-        }
-        //落下中は早期リターンする
+        // 死んでたら処理は行わない
+        if (!_isAlive) return;
+
+        // 落下中は早期リターンする
         if (_stateManager.PlayerState == PlayerState.Fall) return;
-        //MaxChargeDec();
-        if(Gamepad.current == null)
+
+        // ★操作しているプレイヤー（IsOwner）のみが自身の入力を検出して同期する
+        if (this.IsOwner)
         {
-            return;
-        }
-            //右トリガーから値を取得
-            _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
-
-            PadShot();
-    }
-
-    private void PadShot()
-    {
-    if (this.IsOwner)
-    {
-
-        bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
-        bool isRbPressed = Gamepad.current.rightShoulder.isPressed;
-            switch (_stateManager.PlayerState)
-        {
-            case PlayerState.Normal:
-                _isPushShootButton = (isrightTriggerInput || isRbPressed && !_isDecChargeTime) ;
-                break;
-
-            case PlayerState.Ultimate:
-                _isPushShootButton = (isrightTriggerInput || isRbPressed);
-                break;
-
-            case PlayerState.Fall:
-                break;
-        }
-            //入力が0.9以上であれば実行判定に移す
-        }
-
-    }
-
-    private void Charge()
-    {
-            _initChargeTime += Time.deltaTime * _bonusMultiplier;
-            if (_canCriticalShoot)
+            if (Gamepad.current != null)
             {
-                _chargeTime.Value = _criticalPower;
+                _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
             }
             else
             {
-                //チャージ時間に加算
-                _chargeTime.Value += Time.deltaTime * _bonusMultiplier;
-                //チャージ時間は最大2秒なのでその中に収まるようにする
-                _chargeTime.Value = Mathf.Clamp(_chargeTime.Value, 0, MAXCHARGEVALUE);
-                //チャージしてる判定にする
-                _isCharge = true;
-
+                _rightTriggerValue = 0f;
             }
+
+            // キーボード・マウスの射撃入力を取得
+            _isKeyboardShootPressed = false;
+            _isKeyboardShootDown = false;
+            if (Mouse.current != null)
+            {
+                _isKeyboardShootPressed |= Mouse.current.leftButton.isPressed;
+                _isKeyboardShootDown |= Mouse.current.leftButton.wasPressedThisFrame;
+            }
+            if (Keyboard.current != null)
+            {
+                _isKeyboardShootPressed |= Keyboard.current.spaceKey.isPressed;
+                _isKeyboardShootDown |= Keyboard.current.spaceKey.wasPressedThisFrame;
+            }
+
+            // 入力判定
+            bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
+            bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || Input.GetButton(FIREBUTTONNAME);
+            bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || Input.GetButtonDown(FIREBUTTONNAME);
+
+            bool currentPushState = false;
+
+            switch (_stateManager.PlayerState)
+            {
+                case PlayerState.Normal:
+                    currentPushState = isShootPressed && !_isDecChargeTime;
+                    break;
+
+                case PlayerState.Ultimate:
+                    currentPushState = isShootDown;
+                    break;
+
+                case PlayerState.Fall:
+                    break;
+            }
+
+            // ネットワーク変数に設定（自動的にホスト・クライアント全員へ同期される）
+            _netIsPushShootButton.Value = currentPushState;
+        }
+    }
+
+    //private void PadShot()
+    //{
+    //    bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
+    //    bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || Input.GetButton(FIREBUTTONNAME);
+    //    bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || Input.GetButtonDown(FIREBUTTONNAME);
+
+    //    switch (_stateManager.PlayerState)
+    //    {
+    //        case PlayerState.Normal:
+    //            _isPushShootButton = isShootPressed && !_isDecChargeTime;
+    //            break;
+
+    //        case PlayerState.Ultimate:
+    //            _isPushShootButton = isShootDown;
+    //            break;
+
+    //        case PlayerState.Fall:
+    //            break;
+    //    }
+    //}
+
+    private void Charge()
+    {
+        _initChargeTime += Time.deltaTime * _bonusMultiplier;
+        if (_canCriticalShoot)
+        {
+            _chargeTime = _criticalPower;
+        }
+        else
+        {
+            //チャージ時間に加算
+            _chargeTime += Time.deltaTime * _bonusMultiplier;
+            //チャージ時間は最大2秒なのでその中に収まるようにする
+            _chargeTime = Mathf.Clamp(_chargeTime, 0, MAXCHARGEVALUE);
+            //チャージしてる判定にする
+            _isCharge = true;
+
+        }
     }
 
 
     private void CriticalMethod()
     {
-        if(_initChargeTime >= 2 && _initChargeTime < _criticalGraceTime)
+        if (_initChargeTime >= 2 && _initChargeTime < _criticalGraceTime)
         {
             _canCriticalShoot = true;
         }
@@ -235,18 +276,13 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!this.IsOwner)
-        {
-            return;
-        }
-        if(_bulletPool == null)
+        if (_bulletPool == null)
         {
             _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
             return;
         }
-
         //チャージ時間が0以上でチャージ中でない場合
-        if (_chargeTime.Value > 0 && !_isCharge)
+        if (_chargeTime > 0 && !_isCharge)
         {
             ChargeTimeDecrease();
             _isDecChargeTime = true; //チャージ減算中のboolをtrueに
@@ -261,23 +297,23 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             case PlayerState.Normal:
                 //入力はUpdateで管理する
                 //撃つボタンを押しており、チャージ減算中でなく、ステートが射撃可能な時に撃つ
-                if (_isPushShootButton && !_canDecChargeValue)
+                if (_netIsPushShootButton.Value && !_canDecChargeValue)
                 {
                     if (_shootState == ShootState.OverHeat)
                     {
                         _seScript.PlayDryFire();
                         return;
                     }
-                        //チャージするメソッド
-                        Charge();
-                        //当たり判定の計算メソッドを実行
-                        _shootRange.CalcChargeAngle(_chargeTime.Value);
-                        //クリティカル判定のメソッド
-                        CriticalMethod();
-
+                    //当たり判定の計算メソッドを実行
+                    _shootRange.CalcChargeAngle(_chargeTime);
+                    //クリティカル判定のメソッド
+                    CriticalMethod();
+                    //チャージするメソッド
+                    Charge();
+                    //_shootRange.StartCharge();
                 }
                 //撃つボタンを離して、なおかつ現在チャージ中でなく落下中でなかったら解放可能
-                else if (!_isPushShootButton && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
+                else if (!_netIsPushShootButton.Value && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
                 {
                     _initChargeTime = 0;
                     _canDecChargeValue = false;
@@ -294,26 +330,26 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                         _hitstop.CriticalHitStopMethod();
                         _bloom.UseCritical();
                         //当たり判定上の敵にダメージを与えるメソッドを実行
-                        _shootRange.ShotgunHitCheck(_chargeTime.Value,true);
+                        _shootRange.ShotgunHitCheck(_chargeTime, true);
                     }
                     else
                     {
-                        _shootRange.ShotgunHitCheck(_chargeTime.Value,false   );
-                        _knockBackScriput.SetDirection(_playerAiming.Direction, _chargeTime.Value);
+                        _shootRange.ShotgunHitCheck(_chargeTime, false);
+                        _knockBackScriput.SetDirection(_playerAiming.Direction, _chargeTime);
                     }
                     //レバブルにチャージ時間を渡して震えさせるメソッドを実行
-                    _vibe.ViblationPortocol(_chargeTime.Value);
+                    _vibe.ViblationPortocol(_chargeTime);
                     //マズルフラッシュのアニメーション再生メソッドを実行
                     _muzzleFlashAnimation.PlayTheMuzzleFlash();
                     //銃弾(当たり判定無し)の表示
-                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, _chargeTime.Value);
+                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, _chargeTime);
                 }
                 break;
 
             case PlayerState.Ultimate:
 
                 //ウルト使用可能かつウルトチャージエフェクトが非表示なら表示させる。
-                if(!_hasShotUltimate && !_showUltCharge)
+                if (!_hasShotUltimate && !_showUltCharge)
                 {
                     _inputChengeState.ShowUltCharge(true);
                     _showUltCharge = true;
@@ -323,7 +359,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 _shootShape.UltShape(_playerAiming.Direction);
                 //撃つ判定を検知
                 //射撃ボタンを押してなおかつウルトを撃ってない時にウルト発射可能
-                if (_isPushShootButton && !_hasShotUltimate)
+                if (_netIsPushShootButton.Value && !_hasShotUltimate)
                 {
                     //ウルト発射状態に切り替え
                     _hasShotUltimate = true;
@@ -352,7 +388,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     /// </summary>
     private void ChargeTimeDecrease()
     {
-        _chargeTime.Value -= Time.fixedDeltaTime *1.5f;
+        _chargeTime -= Time.fixedDeltaTime * 1.5f;
     }
 
     /// <summary>

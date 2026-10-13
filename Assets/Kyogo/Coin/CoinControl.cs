@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class CoinControl : MonoBehaviour
+public class CoinControl : NetworkBehaviour
 {
     private enum CoinState
     {
@@ -39,9 +40,8 @@ public class CoinControl : MonoBehaviour
 
     void Start()
     {
-        _playerObj = GameObject.FindWithTag(PLAYER_TAGNAME);
+        _playerObj = GameObject.FindGameObjectWithTag(PLAYER_TAGNAME);
     }
-
     //左右に移動させる処理
     void Update()
     {
@@ -89,15 +89,15 @@ public class CoinControl : MonoBehaviour
 
     private void MoveMethod()
     {
-        Vector3 direction = _playerObj.transform.position - this.transform.position;
-        transform.position += direction * _absorbSpeed * Time.deltaTime;
+            Vector3 direction = _playerObj.transform.position - this.transform.position;
+            transform.position += direction * _absorbSpeed * Time.deltaTime;
 
-        float distance = Vector3.Distance(_playerObj.transform.position, this.transform.position);
-        if(distance <= _disappearDistance)
-        {
-            SoulKeep soul = _playerObj.GetComponent<SoulKeep>();
-            soul.AdditionCoin();
-            Destroy(this.gameObject);
+            float distance = Vector3.Distance(_playerObj.transform.position, this.transform.position);
+            if (distance <= _disappearDistance)
+            {
+                //SoulKeep soul = _playerObj.GetComponent<SoulKeep>();
+                //soul.AdditionCoin();
+                Destroy(this.gameObject);
         }
     }
 
