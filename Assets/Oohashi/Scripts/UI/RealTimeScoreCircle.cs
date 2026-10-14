@@ -60,7 +60,7 @@ public class RealTimeScoreCircle : MonoBehaviour
     {
         if (!progress) return;
 
-        float currentTime = _createTime.InitWaveTime;
+        float currentTime = _createTime.CurrentWaveTime;
 
         switch (_rankState)
         {
