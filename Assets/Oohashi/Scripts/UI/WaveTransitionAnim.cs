@@ -57,6 +57,7 @@ public class WaveTransitionAnim : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsServer) return;
         //this.transform.position = Vector2.zero;
         bool now = _waveTransition.IsWaveChangeMoment;
         if (!_wasWaveChangeMoment && now)
@@ -68,7 +69,7 @@ public class WaveTransitionAnim : NetworkBehaviour
         if (_waveTransition.EndTransition() && !_checkOnce)
         {
             _checkOnce = true;
-            DeActiveBalls();
+            DeActiveBallsClientRpc();
         }
 
             _wasWaveChangeMoment = now;
@@ -77,7 +78,8 @@ public class WaveTransitionAnim : NetworkBehaviour
     /// <summary>
     /// ”’‹Ê’B‚ð”ñ•\Ž¦‚É‚·‚é
     /// </summary>
-    private void DeActiveBalls()
+    [ClientRpc]
+    private void DeActiveBallsClientRpc()
     {
         _mapObj.SetActive(false);
         _blackImage.SetActive(false);
@@ -114,15 +116,22 @@ public class WaveTransitionAnim : NetworkBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        PlayAnimationClientRpc(curIndex);
+
+        StartCoroutine(PlayerCanMove());
+    }
+    [ClientRpc]
+    private void PlayAnimationClientRpc(int curIndex)
+    {
         _blackImage.SetActive(true);
         _mapObj.SetActive(true);
         _blackLine.SetActive(true);
 
         try
         {
-            yield return null;
-            switch(curIndex)
+            switch (curIndex)
             {
+                case 0:
                 case 1:
                     _animator.SetTrigger(FIRST);
                     break;
@@ -156,8 +165,6 @@ public class WaveTransitionAnim : NetworkBehaviour
         }
 
         _checkOnce = false;
-
-        StartCoroutine(PlayerCanMove());
     }
 
     private IEnumerator PlayerCanMove()
