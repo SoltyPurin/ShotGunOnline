@@ -99,10 +99,8 @@ public class WaveTransition : NetworkBehaviour
         GameObject uiObj = GameObject.FindWithTag(WAVESCORE);
         if(uiObj != null)
         {
-            _scoreUIManager = FindFirstObjectByType<ScoreUIManager>();
-        }
-        else
-        {
+            //_scoreUIManager = FindFirstObjectByType<ScoreUIManager>();
+            _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();
         }
     }
 
@@ -111,6 +109,7 @@ public class WaveTransition : NetworkBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        //if (!IsServer) return;
         //Switchを使い、各ウェーブの種類に応じて処理を変更
         switch (_nowState)
         {
@@ -188,7 +187,7 @@ public class WaveTransition : NetworkBehaviour
 
             //_fadeAnimator.SetTrigger("In");
             FadeAnimationClientRpc(0);
-            _scoreManager.TextAlpha(true);
+            //_scoreManager.TextAlpha(true);
             _bgmControll.HiCutOn(CUT_ON_VALUE, CUT_ON_TIME);
         }
         //タイマーが一定の値以上になったら実行
@@ -215,7 +214,7 @@ public class WaveTransition : NetworkBehaviour
             FadeAnimationClientRpc(0);
             //_fadeAnimator.SetTrigger("In");
             _bgmControll.BGMFade_Out(FADE_OUT_TIME, 0);
-            _scoreManager.TextAlpha(true);
+            //_scoreManager.TextAlpha(true);
         }
         //タイマーが一定の値以上になったら実行
         else if (_intervalTimer >= _bossTransitionInterval)
@@ -265,14 +264,6 @@ public class WaveTransition : NetworkBehaviour
                     _playerMove.Add(pMove);
                 }
             }
-            //if (player != null)
-            //{
-            //    _playerMove = player.GetComponent<PlayerMove>();
-            //}
-            //else
-            //{
-            //    return;
-            //}
         }
         if(_intervalTimer <= 0.0f)
         {
@@ -286,26 +277,17 @@ public class WaveTransition : NetworkBehaviour
             {
                 playerMoves.IsFadeing = true;
             }
-            //for(int i =0;i < _playerMove.Length; i++)
-            //{
-            //    _playerMove[i].IsFadeing = true;
-            //}
         }
         else if ( _intervalTimer >= _fadeOutInterval)
         {
             //_fadeAnimator.SetTrigger("Out");
             FadeAnimationClientRpc(1);
-            _scoreManager.TextAlpha(false);
+            //_scoreManager.TextAlpha(false);
             _isWaveChangeMoment = false;
-            //_playerMove.IsFadeing = false;
             foreach (PlayerMove playerMoves in _playerMove)
             {
                 playerMoves.IsFadeing = false;
             }
-            //for (int i = 0; i < _playerMove.Length; i++)
-            //{
-            //    _playerMove[i].IsFadeing = false;
-            //}
             _bgmControll.HiCutOff(MAX_VALUE, CUT_OFF_TIME);
             _intervalTimer = 0;
             _nowState = State.Wait;
@@ -313,8 +295,17 @@ public class WaveTransition : NetworkBehaviour
         }
         else if(_intervalTimer >= _fadeOutInterval * 0.5f && !_respawnCheck)
         {
-            _respawn.Respawn();
-            _scoreUIManager.HiddenText();
+            if (_respawn != null)
+            {
+                _respawn.Respawn();
+            }
+            //if (_scoreUIManager == null) {
+            //    _scoreUIManager = FindAnyObjectByType<ScoreUIManager>(); 
+            //}
+            //if (_scoreUIManager != null) { 
+                _scoreUIManager.HiddenText(); 
+            //}
+            //_scoreUIManager.HiddenText();
             _respawnCheck = true;
         }
 
@@ -344,25 +335,36 @@ public class WaveTransition : NetworkBehaviour
     [ClientRpc]
     private void FadeAnimationClientRpc(int exNumber)
     {
-        if(_fadeAnimator != null)
+        {
+            GameObject fadeObj = GameObject.FindWithTag("FadeUI");
+            if (fadeObj != null) _fadeAnimator = fadeObj.GetComponent<Animator>();
+        }
+        if (_fadeAnimator != null)
         {
             switch (exNumber)
             {
                 case 0:
+                    Debug.Log("フェードイン");
+                    _scoreManager.TextAlpha(true);
                     _fadeAnimator.SetTrigger("In");
                     break;
 
                 case 1:
+                    Debug.Log("フェードアウト");
+                    _scoreManager.TextAlpha(false);
                     _fadeAnimator.SetTrigger("Out");
                     break;
 
                 case 2:
+                    Debug.Log("フェードマックス");
+                    _scoreUIManager.HiddenText();
                     _fadeAnimator.SetTrigger("Max");
                     break;
 
                 default:
                     break;
             }
+            //
         }
     }
 }

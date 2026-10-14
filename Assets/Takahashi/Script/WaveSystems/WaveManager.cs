@@ -396,4 +396,22 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
             ScoreData._scoreData.SetScore(timeRank, damageCount, clearTime);
         }
     }
+
+    /// <summary>
+    /// クライアントが被弾した際、全プレイヤーのタイマーとScoreDataにペナルティを同期する
+    /// </summary>
+    [Rpc(SendTo.Server)]
+    public void NotifyTakeDamageServerRpc()
+    {
+        NotifyTakeDamageClientRpc();
+    }
+
+    [ClientRpc]
+    public void NotifyTakeDamageClientRpc()
+    {
+        if (ScoreData._scoreData != null)
+        {
+            ScoreData._scoreData.TakeDamageCountPlusLocal();
+        }
+    }
 }

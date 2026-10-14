@@ -103,11 +103,6 @@ public class WaveTransitionAnim : NetworkBehaviour
                 }
             }
         }
-        //if(_stateManager == null)
-        //{
-        //    _stateManager = GameObject.FindWithTag("Player").GetComponent<PlayerStateManager>();
-        //}
-        //_stateManager.MovieState();
 
         _runningRoutine = StartCoroutine(TriggerReset(newIndex));
 
