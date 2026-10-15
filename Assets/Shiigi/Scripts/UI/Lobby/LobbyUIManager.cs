@@ -32,6 +32,7 @@ public class LobbyUIManager : MonoBehaviour
 
         // セッション更新イベントを購読
         _sessionManager.OnSessionChanged += UpdateRoomUI;
+        _sessionManager.OnGameStarting += ShowGameStarting;
 
         _createRoomDialogUI.gameObject.SetActive(false);
 
@@ -59,6 +60,7 @@ public class LobbyUIManager : MonoBehaviour
         if (_sessionManager != null)
         {
             _sessionManager.OnSessionChanged -= UpdateRoomUI;
+            _sessionManager.OnGameStarting -= ShowGameStarting;
         }
     }
 
@@ -231,7 +233,13 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private void StartGame()
     {
-        // TODO: ゲーム開始時の処理（NGO等のシーン遷移など）
+        // ホスト自身はネットワーク通知を待たず、ボタン押下時に即座に表示する
+        TransitionTo(LobbyUIState.Connecting);
         _sessionManager.StartMultiplayGame();
+    }
+
+    private void ShowGameStarting()
+    {
+        TransitionTo(LobbyUIState.Connecting);
     }
 }
