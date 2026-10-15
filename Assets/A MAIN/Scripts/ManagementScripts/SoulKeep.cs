@@ -115,9 +115,10 @@ public class SoulKeep : NetworkBehaviour
         }
 
         // 演出呼び出し
-        if (_playerAnimation != null) _playerAnimation.SoulGet();
-        if (_seScript != null) _seScript.PlayGetSoulSE();
-        if (_soulCountUI != null) _soulCountUI.SoulPlus();
+        ShowGetSoulEffectsClientRpc();
+        //if (_playerAnimation != null) _playerAnimation.SoulGet();
+        //if (_seScript != null) _seScript.PlayGetSoulSE();
+        //if (_soulCountUI != null) _soulCountUI.SoulPlus();
 
         // 10ソウルごとにVStockへ変換
         while (_useFullSoul.Value >= USEULTIMATE_NEEDSOUL && _vStock.Value < 3)
@@ -131,7 +132,24 @@ public class SoulKeep : NetworkBehaviour
             _useFullSoul.Value = 0;
         }
     }
+    /// <summary>
+    /// 全クライアント端末上で獲得エフェクト・SE・UI演出を発火するRPC
+    /// </summary>
+    [ClientRpc]
+    private void ShowGetSoulEffectsClientRpc()
+    {
+        if (_playerAnimation != null) _playerAnimation.SoulGet();
+        if (_seScript != null) _seScript.PlayGetSoulSE();
 
+        // 自分が操作しているプレイヤー（IsOwner）の画面のUIのみポップアップを表示
+        if (IsOwner)
+        {
+            if (_soulCountUI != null)
+            {
+                _soulCountUI.SoulPlus();
+            }
+        }
+    }
     public void ReduceCoin()
     {
         if (!IsServer) return; // サーバー限定

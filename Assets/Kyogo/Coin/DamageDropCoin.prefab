@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 7272833698276464326}
   - component: {fileID: 4912953288595670930}
   - component: {fileID: 8858662160541075378}
+  - component: {fileID: -259072863712881119}
   - component: {fileID: 8548332341323146792}
   - component: {fileID: 11939674410112590}
-  - component: {fileID: -259072863712881119}
   - component: {fileID: -2050803461922665984}
   m_Layer: 0
   m_Name: DamageDropCoin
@@ -97,43 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900c47e02f4ca6742b37f24d39a6d093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8548332341323146792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2331047327620445287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8abdd5d1289201f46b65adc40c9bfdf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _movePlusLimit: 6
-  _moveMinusLimit: -6
-  _maxMoveSpeed: 5
-  _minMoveSpeed: 4
-  _speedDecMinLimit: 0.1
-  _speedDecMaxLimit: 0.2
-  _colliderActiveTime: 0.5
-  _spriteRenderer: {fileID: 2617686455376860529}
-  _destroyTime: 8
-  _blinkingStartTime: 5
---- !u!114 &11939674410112590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2331047327620445287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5483438e286363b498da5abd7e0edf42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _coinMoveSpeed: 9
-  _chaseRange: 3
-  _isActive: 0
 --- !u!114 &-259072863712881119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +123,44 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &8548332341323146792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331047327620445287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8abdd5d1289201f46b65adc40c9bfdf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _movePlusLimit: 6
+  _moveMinusLimit: -6
+  _maxMoveSpeed: 5
+  _minMoveSpeed: 4
+  _speedDecMinLimit: 0.1
+  _speedDecMaxLimit: 0.2
+  _colliderActiveTime: 0.5
+  _spriteRenderer: {fileID: 2617686455376860529}
+  _destroyTime: 8
+  _blinkingStartTime: 5
+--- !u!114 &11939674410112590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331047327620445287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5483438e286363b498da5abd7e0edf42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _coinMoveSpeed: 9
+  _chaseRange: 3
+  _isActive: 0
 --- !u!114 &-2050803461922665984
 MonoBehaviour:
   m_ObjectHideFlags: 0

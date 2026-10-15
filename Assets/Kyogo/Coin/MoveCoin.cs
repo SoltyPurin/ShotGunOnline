@@ -54,7 +54,35 @@ public class MoveCoin : NetworkBehaviour
 
     private SoulGraduallyMoveToPlayer _soulCollectRange = default;
 
-    public void MoveStart()
+    /// <summary>
+    /// ネットワーク上にスポーンされた瞬間にサーバー側で移動パラメータをセットアップする
+    /// </summary>
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        // 当たり判定は全端末で最初はオフにしておく
+        BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+        if (boxCollider2D != null) boxCollider2D.enabled = false;
+
+        // 移動計算とパラメータ決定はサーバー側でのみ行う
+        if (IsServer)
+        {
+            _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
+
+            _xDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
+            _yDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
+
+            _firstMoveSpeed = Random.Range(_minMoveSpeed, _maxMoveSpeed);
+            _moveDirection = new Vector2(_xDirection, _yDirection);
+            _speedDecValue = Random.Range(_speedDecMinLimit, _speedDecMaxLimit);
+
+            _canMove = true;
+            StartCoroutine(ActiveHitjudgment());
+        }
+    }
+    [ClientRpc]
+    public void MoveStartClientRpc()
     {
         _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
 
@@ -74,9 +102,23 @@ public class MoveCoin : NetworkBehaviour
     private IEnumerator ActiveHitjudgment()
     {
         yield return new WaitForSeconds(_colliderActiveTime);
+        EnableColliderClientRpc();
+        //BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+        //boxCollider2D.enabled = true;
+        //if(_soulCollectRange != null)
+        //{
+        //    _soulCollectRange.EnableCollider();
+        //}
+    }
+
+    [ClientRpc]
+    private void EnableColliderClientRpc()
+    {
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
-        boxCollider2D.enabled = true;
-        if(_soulCollectRange != null)
+        if (boxCollider2D != null) boxCollider2D.enabled = true;
+
+        if (_soulCollectRange == null) _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
+        if (_soulCollectRange != null)
         {
             _soulCollectRange.EnableCollider();
         }
@@ -90,39 +132,48 @@ public class MoveCoin : NetworkBehaviour
     private void FixedUpdate()
     {
 
-        if (!_canMove)
+        if (_canMove && IsServer)
         {
-            return;
-        }
 
-        _initAliveTime += Time.fixedDeltaTime;
-        if(_firstMoveSpeed >=0)
-        {
-            transform.position += (Vector3)_moveDirection * _firstMoveSpeed * Time.fixedDeltaTime;
-
-            _firstMoveSpeed -= _speedDecValue;
-
-
-        }
-
-        if(_initAliveTime >= _blinkingStartTime)
-        {
-            CoinControl control = GetComponent<CoinControl>();
-            if(control != null)
+            _initAliveTime += Time.fixedDeltaTime;
+            if (_firstMoveSpeed >= 0)
             {
-                control.WaitMethod(0);
-                _canMove = false;   
-            }
-            else
-            {
-                _isActive = !_isActive;
-                _spriteRenderer.enabled = _isActive;
-            }
-        }
+                transform.position += (Vector3)_moveDirection * _firstMoveSpeed * Time.fixedDeltaTime;
 
-        if(_initAliveTime >= _destroyTime)
-        {
-            Destroy(this.gameObject);
+                _firstMoveSpeed -= _speedDecValue;
+
+
+            }
+
+            if (_initAliveTime >= _destroyTime && IsServer)
+            {
+                //Destroy(this.gameObject);
+                NetworkObject nObj = this.GetComponent<NetworkObject>();
+                if (nObj != null)
+                {
+                    nObj.Despawn();
+                }
+            }
+
+
+            if (!_canMove) {
+                return; 
+            }
+            if (_initAliveTime >= _blinkingStartTime)
+            {
+                CoinControl control = GetComponent<CoinControl>();
+                if (control != null)
+                {
+                    control.WaitMethod(0);
+                    _canMove = false;
+                }
+                else
+                {
+                    _isActive = !_isActive;
+                    _spriteRenderer.enabled = _isActive;
+                }
+            }
+
         }
     }
 }

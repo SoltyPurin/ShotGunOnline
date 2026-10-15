@@ -232,38 +232,13 @@ public class PlayerDamageKnockBack : NetworkBehaviour
 
         // コインの情報取得
 
-        int dropCoinCount = 0;
         if (IsServer)
         {
-            int soul = _soulKeep.UseFullSoul;
-            int stock = _soulKeep.VStock;
-
-            if (soul == 0 && stock > 0)
-            {
-                // ストックペナルティとして10個ドロップ
-                dropCoinCount = 10;
-                _soulKeep.ReduceVStock();
-
-            }
-            else
-            {
-                // 通常ドロップ
-                dropCoinCount = soul;
-                // コインを減らす
-                _soulKeep.ReduceCoin();
-            }
-
+            SpawnCoinsServer();
         }
-        // コインをドロップ
-        for (int i = 0; i < dropCoinCount; i++)
+        else
         {
-            GameObject coin = Instantiate(_dropCoinObject, transform.position, Quaternion.identity);
-            coin.GetComponent<BoxCollider2D>().enabled = false;
-            MoveCoin moveCoin = coin.GetComponent<MoveCoin>();
-            if (moveCoin != null)
-            {
-                moveCoin.MoveStart();
-            }
+            RequestSpawnCoinsServerRpc();
         }
 
         yield return new WaitForSecondsRealtime(_invincibleTime);
@@ -278,9 +253,48 @@ public class PlayerDamageKnockBack : NetworkBehaviour
 
             case false:
                 _backPlayerSprite.enabled = true;
-                break;  
+                break;
         }
 
+    }
+
+    [Rpc(SendTo.Server)]
+    private void RequestSpawnCoinsServerRpc()
+    {
+        SpawnCoinsServer();
+    }
+
+    /// <summary>
+    /// サーバー側でコインを生成・スポーンする実体処理
+    /// </summary>
+    private void SpawnCoinsServer()
+    {
+        if (_soulKeep == null) return;
+
+        int soul = _soulKeep.UseFullSoul;
+        int stock = _soulKeep.VStock;
+        int dropCoinCount = 0;
+
+        if (soul == 0 && stock > 0)
+        {
+            dropCoinCount = 10;
+            _soulKeep.ReduceVStock();
+        }
+        else
+        {
+            dropCoinCount = soul;
+            _soulKeep.ReduceCoin();
+        }
+
+        for (int i = 0; i < dropCoinCount; i++)
+        {
+            GameObject coin = Instantiate(_dropCoinObject, transform.position, Quaternion.identity);
+            NetworkObject netObj = coin.GetComponent<NetworkObject>();
+            if (netObj != null)
+            {
+                netObj.Spawn(); // スポーンするだけで MoveCoin.cs の OnNetworkSpawn() が自動発火する
+            }
+        }
     }
     /// <summary>
     /// 壁にぶつかった時に力を0にする
