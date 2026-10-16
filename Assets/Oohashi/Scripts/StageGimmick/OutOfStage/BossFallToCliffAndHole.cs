@@ -16,6 +16,9 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     [SerializeField, Header("復帰ポイント登録")]
     private GameObject _returnPointTransform = default;
 
+    [SerializeField,Header("復帰ポイントの名前")]
+    private string _returnPointName = default;
+
     //そのままだと登場した瞬間に落下死するので無理やりガードする
     [SerializeField, Header("登場直後の落下無効時間（秒）")]
     private float _spawnProtectTime = 2.0f;
@@ -55,7 +58,7 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         {
             if(_returnPointTransform == null)
             {
-                _returnPointTransform = GameObject.Find("SpawonPoint2");
+                _returnPointTransform = GameObject.Find(_returnPointName);
             }
             StartCoroutine(HoleFallMethod());
             transform.rotation = Quaternion.identity;

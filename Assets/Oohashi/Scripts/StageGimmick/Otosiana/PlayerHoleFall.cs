@@ -67,6 +67,8 @@ public class PlayerHoleFall : EntityFall
     /// </summary>
     public override void Fall()
     {
+        _knockBack.Fall();
+        _damageKnockBack.Fall();
         NetworkObject netObj = GetComponent<NetworkObject>();
         if (netObj != null && !netObj.IsOwner)
         {
@@ -83,8 +85,6 @@ public class PlayerHoleFall : EntityFall
         {
             _seManager.PlayDropSound();
         }
-        _knockBack.Fall();
-        _damageKnockBack.Fall();
         _animator.SetTrigger(FALLTRIGGER);
         _playerStateManager.FallState();
         StartCoroutine(MoveToRespawnPoint());

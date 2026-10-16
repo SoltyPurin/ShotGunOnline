@@ -940,6 +940,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
@@ -983,6 +984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a55d25c1ac3601e409cb6ab21ebafd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyMove: {fileID: 2106976858053371579}
   _critStiffnessTime: 0.3
   _ultStiffnessTime: 0.5
@@ -1088,6 +1090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec17062087d9f4e45bf3ec0e52c0ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySpawnAnim: {fileID: 2474203910217920414}
 --- !u!114 &2474203910217920414
 MonoBehaviour:
@@ -1125,6 +1128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b976f28bd5ead594a821de5bb16dd59b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _damageMultiplier: 500
   _minDamage: 200
   _explosionMultiplier: 1000
@@ -1154,12 +1158,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04f79a06c767a4141be8f0cf2840a99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _animator: {fileID: 4578660687166410891}
   _enemyTakeDamage: {fileID: 5174406571932695504}
   _returnAnim: {fileID: 1863521536634089226}
   _armorMove: {fileID: 2106976858053371579}
   _kyousei: {fileID: 0}
   _returnPointTransform: {fileID: 0}
+  _returnPointName: MediumSpawnPoint
+  _spawnProtectTime: 2
 --- !u!114 &5356080610709457703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1172,6 +1179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6cab3b03ecebf4bbb10469fd71e009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   Coin: {fileID: 7710591009316209668, guid: e6e11fcddb633f9468c5548d6cfa901b, type: 3}
 --- !u!114 &-7290166355595770235
 MonoBehaviour:

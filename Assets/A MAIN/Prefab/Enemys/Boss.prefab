@@ -74,12 +74,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3371291297
+  GlobalObjectIdHash: 2864902951
   InScenePlacedSourceGlobalObjectIdHash: 2864902951
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
@@ -172,7 +173,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896013826991222920}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85de9455678aea844b9ed55d88059685, type: 3}
   m_Name: 
@@ -347,12 +348,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04f79a06c767a4141be8f0cf2840a99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _animator: {fileID: 1541806618305281365}
   _enemyTakeDamage: {fileID: 5664278761013691538}
   _returnAnim: {fileID: 1541806618305281365}
   _armorMove: {fileID: 0}
   _kyousei: {fileID: 8587264259570551082}
   _returnPointTransform: {fileID: 0}
+  _returnPointName: SpawonPoint2
+  _spawnProtectTime: 2
 --- !u!114 &5236341858051466352
 MonoBehaviour:
   m_ObjectHideFlags: 0

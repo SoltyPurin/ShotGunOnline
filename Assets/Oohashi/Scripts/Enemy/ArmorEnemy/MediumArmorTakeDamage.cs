@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 public class MediumArmorTakeDamage : ArmorTakeDamage
@@ -61,14 +62,16 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
         {
             _damage = chargeTime * _guardMultiplier;
             _damage = Mathf.Max(_damage, _guardMinDamage);
-            _guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            //_guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            TakeDamageEffectClientRpc(true);
         }
         else //側面などから攻撃した場合の処理
         {
             _damage = chargeTime * _damageMultiplier;
             _damage = Mathf.Max(_damage, _minDamage);
-            _damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
-            _damageMaterial.Damage();
+            //_damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            //_damageMaterial.Damage();
+            TakeDamageEffectClientRpc(false);
 
         }
         //HPからダメージ分引いて代入、HPバーを更新
@@ -79,6 +82,23 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
             StartCoroutine(DeathProtocol(chargeTime));
         }
 
+    }
+
+    /// <summary>
+    /// 被弾時の演出を再生するメソッド
+    /// </summary>
+    /// <param name="isGuard">ガードしたかどうか</param>
+    [ClientRpc]
+    private void TakeDamageEffectClientRpc(bool isGuard)
+    {
+        if (isGuard) {
+            _guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+        }
+        else
+        {
+            _damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            _damageMaterial.Damage();
+        }
     }
 
     /// <summary>
@@ -109,7 +129,8 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
         _enemyHP.Value -= (int)_fallTakeDamage;
         _hpUI.UpdateHP(_enemyHP.Value);
         //落下の効果音鳴らす
-        _playTheSEManager.PlayDropSound();
+        //_playTheSEManager.PlayDropSound();
+        FallSoundClientRpc();
         //復帰のコルーチン起動
         _bossFall.StartCoroutine(FALLCOROUTINENAME);
         //ステージに戻る
@@ -120,6 +141,11 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
         }
     }
 
+    [ClientRpc]
+    private void FallSoundClientRpc()
+    {
+        _playTheSEManager.PlayDropSound();
+    }
     /// <summary>
     /// ステージに戻ってくるコルーチン
     /// </summary>

@@ -260,24 +260,6 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 
-    /// <summary>
-    /// 爆発のダメージ、渡された仮の値に爆発の乗算値を掛ける
-    /// </summary>
-    /// <param name="chargeTime">爆発のプロトコルから渡される仮のチャージ値</param>
-    public virtual void SetExplosionDamgage(float chargeTime)
-    {
-        if (IsServer || !_isDead)
-        {
-            float damage = chargeTime * _explosionMultiplier;
-            _enemyHP.Value = (_enemyHP.Value - (int)damage);
-            _hpUI.UpdateHP(_enemyHP.Value);
-            if (_enemyHP.Value <= 0)
-            {
-                _isDead = true;
-                StartCoroutine(DeathProtocol(chargeTime));
-            }
-        }
-    }
 
     /// <summary>
     /// 死亡処理を行うコルーチン
@@ -331,9 +313,10 @@ public class EnemyTakeDamage : NetworkBehaviour
             }
 
             _isDead = true;
-            //轢殺音再生
-            _playTheSEManager.PlayRoadKill();
-            Instantiate(_deathObject, transform.position, Quaternion.identity);
+            //轢殺演出再生
+            PlayRoadKillEffectClientRpc();
+            //_playTheSEManager.PlayRoadKill();
+            //Instantiate(_deathObject, transform.position, Quaternion.identity);
             _playerCoinDrop.CoinDrop(1);
             //Destroy(this.gameObject);
             if (NetworkObject != null && NetworkObject.IsSpawned)
@@ -342,4 +325,43 @@ public class EnemyTakeDamage : NetworkBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 全クライアント端末上で轢殺音と死亡エフェクトを再生するRPC
+    /// </summary>
+    [ClientRpc]
+    private void PlayRoadKillEffectClientRpc()
+    {
+        // 各端末の SEManager で音を鳴らす
+        if (_playTheSEManager != null)
+        {
+            _playTheSEManager.PlayRoadKill();
+        }
+
+        // 各端末で死亡エフェクトアニメーションを生成
+        if (_deathObject != null)
+        {
+            Instantiate(_deathObject, transform.position, Quaternion.identity);
+        }
+    }
+
+    /// <summary>
+    /// 爆発のダメージ、渡された仮の値に爆発の乗算値を掛ける
+    /// </summary>
+    /// <param name="chargeTime">爆発のプロトコルから渡される仮のチャージ値</param>
+    public virtual void SetExplosionDamgage(float chargeTime)
+    {
+        if (IsServer || !_isDead)
+        {
+            float damage = chargeTime * _explosionMultiplier;
+            _enemyHP.Value = (_enemyHP.Value - (int)damage);
+            _hpUI.UpdateHP(_enemyHP.Value);
+            if (_enemyHP.Value <= 0)
+            {
+                _isDead = true;
+                StartCoroutine(DeathProtocol(chargeTime));
+            }
+        }
+    }
+
 }

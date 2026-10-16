@@ -104,7 +104,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     private readonly string WALL_TAG_NAME = "Wall";
     #endregion
 
-
+    private Coroutine _hitStopCoroutine = null;
     private void Start()
     {
         //タグで探して登録
@@ -128,6 +128,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!IsOwner) return;
         if (collision.gameObject.CompareTag(STONETAGNAME))
         {
             return;
@@ -173,7 +174,9 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             {
                 //ぶつかってきた方向を代入
                 _contactNormal = collision.contacts[0].normal;
-                StartCoroutine(HitStop(collision, _contactNormal));
+                if (_hitStopCoroutine != null) StopCoroutine(_hitStopCoroutine);
+                _hitStopCoroutine = StartCoroutine(HitStop(collision, _contactNormal));
+                //StartCoroutine(HitStop(collision, _contactNormal));
             }
             else
             {
@@ -201,11 +204,46 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     {
         _trenble.RushTrenble();
         yield return new WaitForSecondsRealtime(_armorHitStopTime);
-        //吹き飛ぶ方向のメソッド呼び出し
-        SetDirection(direction, _armorRushForce, collision.gameObject);
+        ////吹き飛ぶ方向のメソッド呼び出し
+        //SetDirection(direction, _armorRushForce, collision.gameObject);
+        TriggerKnockBack(direction, _armorRushForce, collision.gameObject);
+        _hitStopCoroutine = null;
         //ダメージのレバブルを設定
         _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
 
+    }
+
+    /// <summary>
+    /// ローカルでのノックバック実行＋サーバーへの同期要求
+    /// </summary>
+    private void TriggerKnockBack(Vector3 direction, float power, GameObject collision)
+    {
+        // 1. ローカル画面でのノックバック実行
+        SetDirection(direction, power, collision);
+
+        // 2. ホスト（サーバー）にも吹き飛び状態を送信して位置同期を噛み合わせる
+        if (!IsServer)
+        {
+            SyncKnockBackServerRpc(direction, power);
+        }
+    }
+
+    /// <summary>
+    /// サーバー側でもプレイヤーを吹き飛ばして NetworkTransform の同期ズレを防ぐ RPC
+    /// </summary>
+    [ServerRpc]
+    private void SyncKnockBackServerRpc(Vector3 direction, float power)
+    {
+        _isKnockBacking = true;
+        _contactNormal = direction;
+
+        float powValue = Mathf.Pow(power, 5f);
+        _force = Mathf.Lerp(3, powValue, 0.5f);
+
+        if (_playerState != null)
+        {
+            _playerState.DamageKnockBackState();
+        }
     }
 
     /// <summary>
@@ -372,7 +410,14 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     /// </summary>
     public void Fall()
     {
+        if (_hitStopCoroutine != null)
+        {
+            StopCoroutine(_hitStopCoroutine);
+            _hitStopCoroutine = null;
+        }
         _force = 0;
+        _isKnockBacking = false;
+        Debug.Log("落下");
     }
 
     /// <summary>
@@ -380,7 +425,14 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     /// </summary>
     public void ResetForce()
     {
-        _force = 2f;
+        if (_hitStopCoroutine != null)
+        {
+            StopCoroutine(_hitStopCoroutine);
+            _hitStopCoroutine = null;
+        }
+        _force = 0f;
+        _isKnockBacking = false;
+        Debug.Log("力をリセット");
     }
 
     private void FixedUpdate()
