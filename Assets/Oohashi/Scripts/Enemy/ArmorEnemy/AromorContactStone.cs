@@ -42,6 +42,10 @@ public class AromorContactStone : EnemyContactStone
     /// <param name="collision">岩のゲームオブジェクト</param>
     public override void ContactStoneMethod(GameObject collision)
     {
+        if (!IsServer)
+        {
+            return;
+        }
         base.ContactStoneMethod(collision);
 
         PlayStoneCrachClientRpc();
@@ -72,6 +76,6 @@ public class AromorContactStone : EnemyContactStone
     private void PlayStoneCrachClientRpc()
     {
         //岩が砕けた時のエフェクト
-        _playTheBombEffect.BreakEffect(transform.position);
+        _playTheBombEffect.BreakEffect(this.transform.position);
     }
 }
