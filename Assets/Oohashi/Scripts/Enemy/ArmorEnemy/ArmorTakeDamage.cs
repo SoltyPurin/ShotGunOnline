@@ -48,10 +48,10 @@ public class ArmorTakeDamage : EnemyTakeDamage
             
         }
         //hpからダメージ分引く
-        _enemyHP = (_enemyHP - (int)_damage);
+        _enemyHP.Value = (_enemyHP.Value - (int)_damage);
         //HPバーを更新
-        _hpUI.UpdateHP(_enemyHP);
-        if (_enemyHP <= 0)
+        _hpUI.UpdateHP(_enemyHP.Value);
+        if (_enemyHP.Value <= 0)
         {
             StartCoroutine(DeathProtocol(chargeTime));
         }

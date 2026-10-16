@@ -86,7 +86,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             if (burrelTransform != null) _burrel = burrelTransform.gameObject;
             return;
         }
-        if (_playerState.PlayerState == PlayerState.Movie)
+        if (_playerState.PlayerState == PlayerState.Movie && !_isMovie && !_isEndMovie)
         {
             return;
         }
@@ -108,21 +108,21 @@ public class FollowingCameraToBurrel : MonoBehaviour
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
         }
-        else if (_isMovie)
-        {
-            _boss = GameObject.FindGameObjectWithTag("BossSprite");
+        //else if (_isMovie)
+        //{
+        //    _boss = GameObject.FindGameObjectWithTag("BossSprite");
 
-            if (_boss == null)
-            {
-                return;
-            }
+        //    if (_boss == null)
+        //    {
+        //        return;
+        //    }
 
-            Vector3 targetPosition = _boss.transform.position;
-            targetPosition.z = transform.position.z;
+        //    Vector3 targetPosition = _boss.transform.position;
+        //    targetPosition.z = transform.position.z;
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
+        //    transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
-        }
+        //}
         else if (_isBossWave && !_isMovie)//ボスのウェーブであればボスにカメラを合わせる
         {
 
@@ -147,6 +147,12 @@ public class FollowingCameraToBurrel : MonoBehaviour
             if (_midiumBoss == null)
             {
                 _midiumBoss = GameObject.FindWithTag("MediumArmor");
+            }
+            if (_midiumBoss == null)
+            {
+                // 中ボスがいないならフラグを下ろして通常カメラに戻す
+                _isMidiumBoss = false;
+                return;
             }
             //ボスとプレイヤーの中心点を探す
             Vector3 targetPosition = (_player.transform.position + _midiumBoss.transform.position) / 2f;

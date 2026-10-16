@@ -1,6 +1,8 @@
+using Unity.Netcode;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class WaveTransition : MonoBehaviour
+public class WaveTransition : NetworkBehaviour
 {
     #region 【Enum】
     public enum State
@@ -29,7 +31,7 @@ public class WaveTransition : MonoBehaviour
     [SerializeField]
     private PlayerRespawn _respawn = default;
     [SerializeField]
-    private PlayerMove _playerMove = default;
+    private List<PlayerMove> _playerMove = new List<PlayerMove>();
 
     [SerializeField, Header("アニメーター取得")]
     private Animator _fadeAnimator = default;
@@ -97,10 +99,8 @@ public class WaveTransition : MonoBehaviour
         GameObject uiObj = GameObject.FindWithTag(WAVESCORE);
         if(uiObj != null)
         {
-            _scoreUIManager = FindFirstObjectByType<ScoreUIManager>();
-        }
-        else
-        {
+            //_scoreUIManager = FindFirstObjectByType<ScoreUIManager>();
+            _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();
         }
     }
 
@@ -109,6 +109,7 @@ public class WaveTransition : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        //if (!IsServer) return;
         //Switchを使い、各ウェーブの種類に応じて処理を変更
         switch (_nowState)
         {
@@ -183,8 +184,10 @@ public class WaveTransition : MonoBehaviour
         if (_intervalTimer <= 0.0f)
         {
             //画面を暗くし、音楽のHighをカットする。
-            _fadeAnimator.SetTrigger("In");
-            _scoreManager.TextAlpha(true);
+
+            //_fadeAnimator.SetTrigger("In");
+            FadeAnimationClientRpc(0);
+            //_scoreManager.TextAlpha(true);
             _bgmControll.HiCutOn(CUT_ON_VALUE, CUT_ON_TIME);
         }
         //タイマーが一定の値以上になったら実行
@@ -208,9 +211,10 @@ public class WaveTransition : MonoBehaviour
         if (_intervalTimer <= 0.0f)
         {
             //画面を暗くし、音楽をフェードアウトさせる。
-            _fadeAnimator.SetTrigger("In");
+            FadeAnimationClientRpc(0);
+            //_fadeAnimator.SetTrigger("In");
             _bgmControll.BGMFade_Out(FADE_OUT_TIME, 0);
-            _scoreManager.TextAlpha(true);
+            //_scoreManager.TextAlpha(true);
         }
         //タイマーが一定の値以上になったら実行
         else if (_intervalTimer >= _bossTransitionInterval)
@@ -249,32 +253,41 @@ public class WaveTransition : MonoBehaviour
     /// </summary>
     private void FadeOutStage()
     {
-        if(_playerMove == null)
+        if(_playerMove == null || _playerMove.Count <=0)
         {
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player != null)
+            GameObject[] player = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject gameObject in player)
             {
-                _playerMove = player.GetComponent<PlayerMove>();
-            }
-            else
-            {
-                return;
+                if(gameObject != null)
+                {
+                    PlayerMove pMove = gameObject.GetComponent<PlayerMove>();
+                    _playerMove.Add(pMove);
+                }
             }
         }
         if(_intervalTimer <= 0.0f)
         {
-            _fadeAnimator.SetTrigger("Max");
+            //_fadeAnimator.SetTrigger("Max");
+            FadeAnimationClientRpc(2);
             _isWaveChangeMoment = true;
-            _playerMove.IsFadeing = true;
+            //_playerMove.IsFadeing = true;
             _respawn.CountUp();
             _respawnCheck = false;
+            foreach(PlayerMove playerMoves in _playerMove)
+            {
+                playerMoves.IsFadeing = true;
+            }
         }
         else if ( _intervalTimer >= _fadeOutInterval)
         {
-            _fadeAnimator.SetTrigger("Out");
-            _scoreManager.TextAlpha(false);
+            //_fadeAnimator.SetTrigger("Out");
+            FadeAnimationClientRpc(1);
+            //_scoreManager.TextAlpha(false);
             _isWaveChangeMoment = false;
-            _playerMove.IsFadeing = false;
+            foreach (PlayerMove playerMoves in _playerMove)
+            {
+                playerMoves.IsFadeing = false;
+            }
             _bgmControll.HiCutOff(MAX_VALUE, CUT_OFF_TIME);
             _intervalTimer = 0;
             _nowState = State.Wait;
@@ -282,8 +295,17 @@ public class WaveTransition : MonoBehaviour
         }
         else if(_intervalTimer >= _fadeOutInterval * 0.5f && !_respawnCheck)
         {
-            _respawn.Respawn();
-            _scoreUIManager.HiddenText();
+            if (_respawn != null)
+            {
+                _respawn.Respawn();
+            }
+            //if (_scoreUIManager == null) {
+            //    _scoreUIManager = FindAnyObjectByType<ScoreUIManager>(); 
+            //}
+            //if (_scoreUIManager != null) { 
+                _scoreUIManager.HiddenText(); 
+            //}
+            //_scoreUIManager.HiddenText();
             _respawnCheck = true;
         }
 
@@ -303,6 +325,46 @@ public class WaveTransition : MonoBehaviour
         else
         {
             return true;
+        }
+    }
+
+    /// <summary>
+    /// フェードのアニメーション再生
+    /// </summary>
+    /// <param name="exNumber">実行するフェードの番号 0 = in, 1 = out, 2 = max</param>
+    [ClientRpc]
+    private void FadeAnimationClientRpc(int exNumber)
+    {
+        {
+            GameObject fadeObj = GameObject.FindWithTag("FadeUI");
+            if (fadeObj != null) _fadeAnimator = fadeObj.GetComponent<Animator>();
+        }
+        if (_fadeAnimator != null)
+        {
+            switch (exNumber)
+            {
+                case 0:
+                    Debug.Log("フェードイン");
+                    _scoreManager.TextAlpha(true);
+                    _fadeAnimator.SetTrigger("In");
+                    break;
+
+                case 1:
+                    Debug.Log("フェードアウト");
+                    _scoreManager.TextAlpha(false);
+                    _fadeAnimator.SetTrigger("Out");
+                    break;
+
+                case 2:
+                    Debug.Log("フェードマックス");
+                    _scoreUIManager.HiddenText();
+                    _fadeAnimator.SetTrigger("Max");
+                    break;
+
+                default:
+                    break;
+            }
+            //
         }
     }
 }

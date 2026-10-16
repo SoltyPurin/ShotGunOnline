@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class AromorContactStone : EnemyContactStone
@@ -41,10 +42,13 @@ public class AromorContactStone : EnemyContactStone
     /// <param name="collision">岩のゲームオブジェクト</param>
     public override void ContactStoneMethod(GameObject collision)
     {
+        if (!IsServer)
+        {
+            return;
+        }
         base.ContactStoneMethod(collision);
-        //岩が砕けた時のエフェクト
-        _playTheBombEffect.BreakEffect(transform.position);
 
+        PlayStoneCrachClientRpc();
         //岩を砕く
         Destroy(collision.gameObject);
         //突撃中だった場合処理を行う
@@ -66,5 +70,12 @@ public class AromorContactStone : EnemyContactStone
             //コンボ数にプラスする
             _counter.ComboPlus();
         }
+    }
+
+    [ClientRpc]
+    private void PlayStoneCrachClientRpc()
+    {
+        //岩が砕けた時のエフェクト
+        _playTheBombEffect.BreakEffect(this.transform.position);
     }
 }

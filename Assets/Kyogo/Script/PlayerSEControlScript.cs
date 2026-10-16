@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
@@ -7,7 +9,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// プレイヤーのSEをコントロールするスクリプト
 /// </summary>
-public class PlayerSEControlScript : MonoBehaviour
+public class PlayerSEControlScript : NetworkBehaviour
 {
     [SerializeField, Header("効果音のクールタイム")]
     private float _seCoolTime = 0.1f;
@@ -66,6 +68,7 @@ public class PlayerSEControlScript : MonoBehaviour
     float Shotgun_Shot_Medium;
 
     private float _rightTriggerValue = default;
+    private float _lastChargeValue = 0f; // 離す直前のチャージ量を保持
 
     //Script
     InputPlayerShot _inputPlayerShot;
@@ -106,11 +109,18 @@ public class PlayerSEControlScript : MonoBehaviour
     void Update()
     {
         //ボタン管理--------------------------------------------------------------------------------
-        if(Gamepad.current == null)
+        //if(Gamepad.current == null)
+        //{
+        //    return;
+        //}
+        if (!IsOwner)
         {
             return;
         }
-        _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();//ゲームパッドのRTの押し込み具合を見ている
+        if (Gamepad.current != null)
+        {
+            _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();//ゲームパッドのRTの押し込み具合を見ている
+        }
         bool isrightTriggerInput = _rightTriggerValue >= 0.9f;//RTが強く（90%以上)押されているのかを判定する
         _canShooting = (isrightTriggerInput || Input.GetButton(FIREBUTTONNAME));//True=Charge中
 
@@ -118,11 +128,19 @@ public class PlayerSEControlScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner || _inputPlayerShot == null || _PlayerStateManager == null) return;
+
+        float currentCharge = _inputPlayerShot.ChargeValue;
+
+        // チャージ中の数値を毎フレーム保存（ボタンを離してリセットされる前の値を保持）
+        if (_canShooting && currentCharge > 0)
+        {
+            _lastChargeValue = currentCharge;
+        }
         //チャージ開始--------------------------------------------------------------------------------
 
-        if (_canShooting && _inputPlayerShot.ChargeValue <= 0.1f
-        && !_inputPlayerShot.IsDecCharge
-        && _PlayerStateManager.PlayerState == PlayerState.Normal && _inputPlayerShot.ShootState == ShootState.CanShoot)
+        if (_canShooting && !charge_wait && !_inputPlayerShot.IsDecCharge
+            && _PlayerStateManager.PlayerState == PlayerState.Normal)
         {
             audioSource2.clip = chargeSE;
             audioSource2.loop = false;
@@ -130,7 +148,6 @@ public class PlayerSEControlScript : MonoBehaviour
         }
 
         //発射音の管理--------------------------------------------------------------------------------
-        float currentCharge = _inputPlayerShot.ChargeValue;
         bool canPlaySound = charge_wait && !_canShooting && !_inputPlayerShot.IsDecCharge && (_PlayerStateManager.PlayerState == PlayerState.Normal) && _inputPlayerShot.ShootState == ShootState.CanShoot;
         if (canPlaySound)
         {
@@ -152,6 +169,8 @@ public class PlayerSEControlScript : MonoBehaviour
             float pitchCorrection = 1f / _inputPlayerShot.BonusMultiplier;
             audioSource.pitch = _inputPlayerShot.BonusMultiplier;
             _mixer.SetFloat("Pitch", pitchCorrection);
+
+            _lastChargeValue = 0f;
         }
         if (currentCharge >= 2 && !_isMaxPlaying)
         {

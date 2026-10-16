@@ -1,8 +1,9 @@
+using Unity.Netcode;
 using UnityEngine;
 /// <summary>
 /// ボスの第二形態変移時のステータスアップのメソッド
 /// </summary>
-public class SecondFormStart : MonoBehaviour
+public class SecondFormStart : NetworkBehaviour
 {
     #region[変数名]
     //---GameObject,Script,Animator等---------------------------------
@@ -25,13 +26,22 @@ public class SecondFormStart : MonoBehaviour
     private float _secondSpeed = 15.0f;
 
     #endregion
-    public void ToBESecondForm()
+
+    private void Update()
+    {
+        _bossSprite.enabled = true;
+    }
+    [ClientRpc]
+    public void ToBESecondFormClientRpc()
     {
         _bossSprite.color = _secondColor;
-        _bossHP._isInvincible = true;
+        //_bossHP._isInvincible = true;
         _animeManager.ResetAllTriggers();
-        _stateManagement.enabled = false;
-        _secondEffect.SetActive(true);
+        //_stateManagement.enabled = false;
+        if(_secondEffect != null)
+        {
+            _secondEffect.SetActive(true);
+        }
         _agent._moveSpeed = _secondSpeed;
 
     }

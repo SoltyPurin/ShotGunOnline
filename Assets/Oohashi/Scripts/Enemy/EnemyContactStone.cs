@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyContactStone : MonoBehaviour
+public class EnemyContactStone : NetworkBehaviour
 {
     [SerializeField,Header("ノックバックのスクリプト")]
     protected EnemyKnockBack _enemyKnockBack = default;

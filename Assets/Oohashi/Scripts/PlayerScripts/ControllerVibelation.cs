@@ -11,7 +11,7 @@ public class ControllerVibelation : MonoBehaviour
 
     private void Start()
     {
-        if(Gamepad.current == null)
+        if (Gamepad.current == null)
         {
             //パッドが接続されてなかったらリターン
             return;
@@ -21,35 +21,38 @@ public class ControllerVibelation : MonoBehaviour
     }
 
     /// <summary>
-    /// レバブルするメソッド
+    /// バイブするメソッド
     /// </summary>
     /// <param name="chargeTime">チャージ時間</param>
     public void ViblationPortocol(float chargeTime)
     {
-        //1以内に値を収めるため2で割る
+        if (_gamepad == null) return;
+        //1以内の値に込めるため2で割る
         _vibeValue = chargeTime / 2;
-        //1以内に収めた値でレバブル
+        //1以内の値でモータバイブ
         _gamepad.SetMotorSpeeds(_vibeValue, _vibeValue);
-        //モーター停止のコルーチン呼び出し
+        //モータストップのコーチン呼び出し
         StartCoroutine(ViblationStop());
     }
     /// <summary>
-    /// レバブルを止めるコルーチン
+    /// バイブ止めるコーチン
     /// </summary>
     /// <returns>0.3秒待ってから停止</returns>
     private IEnumerator ViblationStop()
     {
+        if (_gamepad == null) yield break;
         yield return new WaitForSeconds(0.3f);
         _gamepad.SetMotorSpeeds(0, 0);
     }
     /// <summary>
-    /// ウルトのレバブルのコルーチン、各秒数待機して実行
+    /// ウルトのバイブのコーチン、各待機時間経て実行
     /// </summary>
-    /// <returns>左右でわけてレバブル</returns>
+    /// <returns>撃ちわけてバイブ</returns>
     public IEnumerator UltVibeProtocol()
     {
-        yield return null; // 1フレームだけ待ってから
-        _gamepad.SetMotorSpeeds(1f,1f);
+        if (_gamepad == null) yield break;
+        yield return null; // 1フレ待つ
+        _gamepad.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.1f);
         _gamepad.SetMotorSpeeds(1, 0f);
         yield return new WaitForSeconds(0.5f);
@@ -60,9 +63,9 @@ public class ControllerVibelation : MonoBehaviour
         _gamepad.SetMotorSpeeds(0, 0);
     }
     /// <summary>
-    /// コントローラーのレバブルの左右を決める
+    /// コントローラーのバイブの左右決める
     /// </summary>
-    /// <param name="collisionEnemyPos">ぶつかってきた敵のオブジェクト</param>
+    /// <param name="collisionEnemyPos">ぶつかってる敵のオブジェクト</param>
     public void ViblartionSettingLeftAndRight(Vector2 collisionEnemyPos)
     {
         float enemyPosX = collisionEnemyPos.x;
@@ -79,16 +82,18 @@ public class ControllerVibelation : MonoBehaviour
         }
     }
     /// <summary>
-    /// 与えられた方のモーターを起動してレバブル
+    /// 与えられたのモーター回してバイブ
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
     /// <returns></returns>
     private IEnumerator DamageVibeProtocol(float left, float right)
     {
+        if (_gamepad == null) yield break;
         _gamepad.SetMotorSpeeds(left, right);
         yield return new WaitForSeconds(0.5f);
         _gamepad.SetMotorSpeeds(0, 0);
     }
+
 
 }

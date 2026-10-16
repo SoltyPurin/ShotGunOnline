@@ -1,9 +1,9 @@
 using UnityEngine;
-
+using Unity.Netcode;
 /// <summary>
 /// ウェーブ内に登場する敵に継承させるスクリプト
 /// </summary>
-public class WaveObj : MonoBehaviour
+public class WaveObj : NetworkBehaviour
 {
     [SerializeField, Header("取得")]
     private EnemySpawnAnim _enemySpawnAnim;
@@ -20,12 +20,19 @@ public class WaveObj : MonoBehaviour
 
         return true;
     }
-
+    public override void OnNetworkSpawn()
+    {
+        PopAnim();
+    }
     public void PopAnim()
     {
         if(_enemySpawnAnim != null)
         {
             _enemySpawnAnim.StartAnim();
+        }
+        else
+        {
+            _enemySpawnAnim = GetComponent<EnemySpawnAnim>();
         }
     }
 }

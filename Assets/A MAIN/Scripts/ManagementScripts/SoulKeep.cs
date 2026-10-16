@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class SoulKeep : MonoBehaviour
+public class SoulKeep : NetworkBehaviour
 {
     [SerializeField] private SoulMeter _soulMeter;
     [SerializeField, Header("効果音")]
@@ -10,251 +11,164 @@ public class SoulKeep : MonoBehaviour
     [SerializeField, Header("プラスカウントを表示するスクリプト")]
     private SoulCountUI _soulCountUI = default;
 
-    private int _vStock = 0;
-    public int VStock
-    {
-        get { return _vStock; }
-    }
-    private int _useFullSoul = 0;
-    public int UseFullSoul
-    {
-        get { return _useFullSoul; }
-    }
+    private NetworkVariable<int> _vStock = new NetworkVariable<int>(
+        0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    public int VStock => _vStock.Value;
+
+    private NetworkVariable<int> _useFullSoul = new NetworkVariable<int>(
+        0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    public int UseFullSoul => _useFullSoul.Value;
 
     private const int USEULTIMATE_NEEDSOUL = 10;
-    public int NeedUseUltimateCoin
-    {
-        get { return USEULTIMATE_NEEDSOUL; }
-    }
+    public int NeedUseUltimateCoin => USEULTIMATE_NEEDSOUL;
 
-    private bool _isVstockMax = false;
-
+    // vStockがMAX（3以上）かどうかをプロパティで判定
+    public bool IsVStockMax => _vStock.Value >= 3;
 
     private void Start()
     {
-        if(_soulMeter == null)
+        //if (_soulMeter == null)
+        //{
+        //    _soulMeter = GameObject.Find("Soul_Bottle").GetComponent<SoulMeter>();
+        //}
+
+        // 自分のプレイヤー（ローカル）である場合のみ画面UIを取得する
+        if (IsOwner && _soulMeter == null)
         {
-            _soulMeter = GameObject.Find("Soul_Bottle").GetComponent<SoulMeter>();
+            GameObject bottleObj = GameObject.Find("Soul_Bottle");
+            if (bottleObj != null)
+            {
+                _soulMeter = bottleObj.GetComponent<SoulMeter>();
+            }
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        //base.OnNetworkSpawn();
+        //_vStock.OnValueChanged += OnVStockChanged;
+        //_useFullSoul.OnValueChanged += OnSoulChanged;
+
+        //// 初期表示の同期
+        //UpdateSoulUI(_useFullSoul.Value);
+        //UpdateVStockUI(_vStock.Value);
+        base.OnNetworkSpawn();
+        _vStock.OnValueChanged += OnVStockChanged;
+        _useFullSoul.OnValueChanged += OnSoulChanged;
+
+        //  自分が操作するプレイヤー（IsOwner）の時だけ画面のUIを初期同期する
+        if (IsOwner)
+        {
+            if (_soulMeter == null)
+            {
+                GameObject bottleObj = GameObject.Find("Soul_Bottle");
+                if (bottleObj != null)
+                {
+                    _soulMeter = bottleObj.GetComponent<SoulMeter>();
+                }
+            }
+            UpdateSoulUI(_useFullSoul.Value);
+            UpdateVStockUI(_vStock.Value);
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        _vStock.OnValueChanged -= OnVStockChanged;
+        _useFullSoul.OnValueChanged -= OnSoulChanged;
+        base.OnNetworkDespawn();
+    }
+
+    private void OnVStockChanged(int prevValue, int newValue)
+    {
+        UpdateVStockUI(newValue);
+    }
+
+    private void OnSoulChanged(int prevValue, int newValue)
+    {
+        UpdateSoulUI(newValue);
+    }
+
+    // UI更新はすべて NetworkVariable の変更通知（OnValueChanged）経由で実行
+    private void UpdateSoulUI(int soulValue)
+    {
+        if (_soulMeter == null) return;
+        _soulMeter.SetCount(soulValue);
+        _soulMeter.AddMeter(soulValue);
+    }
+
+    private void UpdateVStockUI(int vStockValue)
+    {
+        if (_soulMeter == null) return;
+        _soulMeter.UpdateVStockDisplay(vStockValue);
+    }
 
     public void AdditionCoin()
     {
-        if (!_isVstockMax)
+        if (!IsServer) return;
+
+        if (!IsVStockMax)
         {
-            _useFullSoul++;
+            _useFullSoul.Value++;
         }
-        _playerAnimation.SoulGet();
-        _seScript.PlayGetSoulSE();
-        while (_useFullSoul >= USEULTIMATE_NEEDSOUL && _vStock < 3)
+
+        // 演出呼び出し
+        ShowGetSoulEffectsClientRpc();
+        //if (_playerAnimation != null) _playerAnimation.SoulGet();
+        //if (_seScript != null) _seScript.PlayGetSoulSE();
+        //if (_soulCountUI != null) _soulCountUI.SoulPlus();
+
+        // 10ソウルごとにVStockへ変換
+        while (_useFullSoul.Value >= USEULTIMATE_NEEDSOUL && _vStock.Value < 3)
         {
-            _useFullSoul -= USEULTIMATE_NEEDSOUL;
-            _vStock++;
-            if(_vStock <= 2)
+            _useFullSoul.Value -= USEULTIMATE_NEEDSOUL;
+            _vStock.Value++;
+        }
+
+        if (_vStock.Value >= 3)
+        {
+            _useFullSoul.Value = 0;
+        }
+    }
+    /// <summary>
+    /// 全クライアント端末上で獲得エフェクト・SE・UI演出を発火するRPC
+    /// </summary>
+    [ClientRpc]
+    private void ShowGetSoulEffectsClientRpc()
+    {
+        if (_playerAnimation != null) _playerAnimation.SoulGet();
+        if (_seScript != null) _seScript.PlayGetSoulSE();
+
+        // 自分が操作しているプレイヤー（IsOwner）の画面のUIのみポップアップを表示
+        if (IsOwner)
+        {
+            if (_soulCountUI != null)
             {
-                _soulMeter.ResetMeter();
+                _soulCountUI.SoulPlus();
             }
         }
-        if (_vStock >= 3)
-        {
-            Debug.Log("最大");
-            _soulMeter.SetCount(10);
-            _useFullSoul = 0;
-            _isVstockMax = true;
-            return;
-        }
-        else
-        {
-            _soulMeter.SetCount(_useFullSoul);
-            _soulMeter.AddMeter(_useFullSoul);
-            _soulCountUI.SoulPlus();
-            _isVstockMax = false;
-        }
-
-        UpdateVStockUI();
     }
-
-
     public void ReduceCoin()
     {
-        Debug.Log("被弾");
-        _useFullSoul = 0;
-        _soulMeter.SetCount(_useFullSoul);
-        _soulMeter.ResetMeter() ;
-        UpdateVStockUI();
+        if (!IsServer) return; // サーバー限定
+        _useFullSoul.Value = 0; // 値の変更のみ。UI更新は OnValueChanged が自動で行う
     }
 
     public void ReduceVStock()
     {
-        if (_vStock <= 0)
-        {
-            return;
-        }
-        if (_isVstockMax)
-        {
-            _soulMeter.SetCount(_useFullSoul);
-            _soulMeter.ResetMeter();
-            _isVstockMax = false;
-        }
-        _vStock--;
-        UpdateVStockUI();
-    }
+        if (!IsServer) return;
+        if (_vStock.Value <= 0) return;
 
+        _vStock.Value--;
+    }
 
     public void UseUltimate()
     {
-        if (_vStock <= 0) return;
-        if(_vStock >= 3)
-        {
-            _soulMeter.ResetMeter();                                                                                                                                                                                                    
-        }
-        _vStock--;
-        _soulMeter.SetCount(_useFullSoul);
-        UpdateVStockUI();
+        if (!IsServer) return;
+        if (_vStock.Value <= 0) return;
+
+        _vStock.Value--;
     }
-
-
-    private void UpdateVStockUI()
-    {
-        _soulMeter.UpdateVStockDisplay(_vStock);
-    }
-    //[SerializeField] private PlayerStateManager _stateManager = default;
-    //[SerializeField] private InputChangeState _changeState = default;
-
-    //[SerializeField, Header("VStockの所持上限")]
-    //private const int VSTOCK_LIMIT = 3;
-
-    //[SerializeField,Header("ソウルのメーターを表示するスクリプト")]
-    //private SoulMeter _soulMeter = default;
-
-
-
-
-    ////vストックが3つあるかどうかを判断する
-    //private bool _isVStockMax = false;
-
-
-    //private const int ONE_VSTOCK_NEED_SOUL = 10; //Vストックが1つ溜まるのに必要なソウルの数
-    //private int _initPossesionSoul = 0;
-
-    ////ウルトを使用する際に使用するストック、ソウル10個で1つ
-    //private int _vStock = 0;
-
-    //public int VStock
-    //{
-    //    get { return _vStock; }
-    //}
-
-    ///// <summary>
-    ///// 使用可能なソウル
-    ///// </summary>
-    //public int UseFullSoul
-    //{
-    //    get { return _initPossesionSoul; }  
-    //}
-
-
-    ///// <summary>
-    ///// ウルトを使用可能になるためのソウルの数
-    ///// </summary>
-    //public int NeedUseUltimateCoin
-    //{
-    //    get { return ONE_VSTOCK_NEED_SOUL; }
-    //}
-
-    ///// <summary>
-    ///// 所持ソウルが規定数を超えたらvストックを1個貯める
-    ///// </summary>
-    //private void Update()
-    //{
-
-    //    if(_initPossesionSoul >= ONE_VSTOCK_NEED_SOUL)
-    //    {
-    //        _vStock++;
-    //        if (_vStock < 3)
-    //        {
-    //            _vStock = Mathf.Clamp(_vStock, 0, VSTOCK_LIMIT);
-    //            _initPossesionSoul = 0;
-    //            _soulMeter.ResetMeter();
-    //        }
-    //        else
-    //        {
-    //            _initPossesionSoul = 0;
-    //        }
-    //        _soulMeter.ActiveVStock(_vStock);
-    //    }
-    //    if (_vStock <= VSTOCK_LIMIT)
-    //    {
-    //        _isVStockMax = false;
-    //    }
-    //    else
-    //    {
-    //        _isVStockMax = true;
-    //    }
-
-    //}
-
-    //public void AdditionCoin()
-    //{
-    //    if (!_isVStockMax)
-    //    {
-    //        _initPossesionSoul++;
-
-    //        _soulMeter.AddMeter(_initPossesionSoul);
-
-
-    //        //取得ソウルをカウンターに表示
-    //        _soulMeter.SetCount(_initPossesionSoul);
-
-    //    }
-    //}
-
-    //public void ReduceCoin()
-    //{
-    //    if (!this.gameObject.scene.isLoaded)
-    //    {
-    //        return;
-    //    }
-
-    //    if (!this.gameObject.activeInHierarchy)
-    //    {
-    //        return;
-    //    }
-
-    //    if (_vStock >= 1)
-    //    {
-    //        if(_initPossesionSoul >= 1)
-    //        {
-    //            _initPossesionSoul = 0;
-    //        }
-    //        else
-    //        {
-    //            _vStock--;
-    //            _soulMeter.DeActiveVStock();
-    //        }
-    //    }
-    //    else
-    //    {
-    //        _initPossesionSoul = 0;
-    //    }
-    //}
-
-    //public void UseUltimate()
-    //{
-
-    //    _vStock--;
-    //    _soulMeter.DeActiveVStock();
-    //    if(_vStock <=0 && _stateManager.PlayerState == PlayerState.Ultimate)
-    //    {
-    //        _stateManager.NormalState();
-    //        _changeState.UltimateActive = false;
-    //    }
-    //}
-
-    //public void UpdateVStockUI()
-    //{
-
-    //}
-
 }

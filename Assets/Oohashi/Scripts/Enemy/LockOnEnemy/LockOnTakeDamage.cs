@@ -7,11 +7,14 @@ public class LockOnTakeDamage : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        _enemyHP = JsonSaver.Instance.EnemyJson.LockOnHP;
+        if (IsServer)
+        {
+            _enemyHP.Value = JsonSaver.Instance.EnemyJson.LockOnHP;
+        }
         if (_hpUI != null)
         {
             //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
-            _hpUI.Initialize(_enemyHP);
+            _hpUI.Initialize(_enemyHP.Value);
         }
 
     }

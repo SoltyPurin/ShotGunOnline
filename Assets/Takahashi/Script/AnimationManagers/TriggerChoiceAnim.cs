@@ -40,4 +40,9 @@ public class TriggerChoiceAnim : MonoBehaviour
     {
         _parentAnimator.SetTrigger("4");
     }
+
+    public void TriggerToChoice5()
+    {
+        _parentAnimator.SetTrigger("5");
+    }
 }

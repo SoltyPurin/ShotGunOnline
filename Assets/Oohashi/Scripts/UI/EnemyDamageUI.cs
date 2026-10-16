@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public class EnemyDamageUI : MonoBehaviour
     /// 最初にスライダーの最大値とHPを設定する
     /// </summary>
     /// <param name="maxHP">最初のHPを最大値とする</param>
-    public void Initialize( float maxHP)
+    public void Initialize(float maxHP)
     {
         _hpSlider.maxValue = maxHP;
         _hpSlider.value = maxHP;

@@ -1,7 +1,3 @@
-using NUnit.Framework.Api;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -99,7 +95,26 @@ public class ScoreData : MonoBehaviour
         _maxCombo = maxCombo;
     }
 
+    /// <summary>
+    /// 被弾時にプレイヤーから呼ばれるメソッド
+    /// </summary>
     public void TakeDamageCountPlus()
+    {
+        WaveManager waveManager = FindAnyObjectByType<WaveManager>();
+        if(waveManager != null)
+        {
+            waveManager.NotifyTakeDamageServerRpc();
+        }
+        else
+        {
+            TakeDamageCountPlusLocal();
+        }
+    }
+
+    /// <summary>
+    /// ローカルのスコア及びタイマーの加算
+    /// </summary>
+    public void TakeDamageCountPlusLocal()
     {
         _damageTakenCount++;
         _enemyCountAndCreateTime.TakeDamage();
@@ -132,4 +147,6 @@ public class ScoreData : MonoBehaviour
         _total = 0;
 
     }
+
+
 }

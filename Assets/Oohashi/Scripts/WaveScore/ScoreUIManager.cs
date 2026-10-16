@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+
 //using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -61,7 +63,16 @@ public class ScoreUIManager : MonoBehaviour
         _waveText.text = "Wave " + nowWave;
 
         _scorePrefab.SetActive(true);
-        _scoreTimeLine.Play();
+        PlayTimelineClientRpc();
+    }
+
+    [ClientRpc]
+    public void PlayTimelineClientRpc()
+    {
+        if (_scoreTimeLine != null)
+        {
+            _scoreTimeLine.Play();
+        }
     }
 
     private string CalcRank(int score)

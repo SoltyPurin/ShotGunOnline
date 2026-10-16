@@ -137,7 +137,7 @@ public class ArmorMove : EnemyMove
 
 
             case ArmorState.Rush:
-                _cantMove = _enemyState == EnemyState.knockback || _enemyState == EnemyState.fall;
+                _cantMove = _enemyState.Value == EnemyState.knockback || _enemyState.Value == EnemyState.fall;
                 //ノックバック中または落下中は移動しないようにする
                 if (_cantMove) 
                 {

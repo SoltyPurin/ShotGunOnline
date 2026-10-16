@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NavMesh2DAgent : MonoBehaviour
+public class NavMesh2DAgent : Unity.Netcode.NetworkBehaviour
 {
     [SerializeField,Header("ˆÚ“®‘¬“x")]
     internal float _moveSpeed = 1.0f;
@@ -41,6 +41,7 @@ public class NavMesh2DAgent : MonoBehaviour
 
     private void Trace(Vector2 current, Vector2 target)
     {
+        if (!IsServer) return;
         if (Vector2.Distance(current, target) <= _stoppingDistance)
         {
             return;

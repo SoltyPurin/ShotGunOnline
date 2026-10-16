@@ -45,7 +45,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
     private Vector2 _saveDirection = Vector2.zero;
     public Vector2 SaveDirection
     {
-        set { _saveDirection = value; } 
+        set { _saveDirection = value; }
     }
 
     private Vector2 _moveDirection;
@@ -62,11 +62,10 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
     private void Start()
     {
-        if(Gamepad.current == null)//コントローラーがない場合はリターン
+        if (Gamepad.current != null)
         {
-            return;
+            _gamePad = Gamepad.current;//現在のコントローラーを代入
         }
-        _gamePad = Gamepad.current;//現在のコントローラーを代入
         _originPlayerMoveSpeed = _playerMoveSpeed;
     }
 
@@ -109,24 +108,49 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
                 _chargeMoveMultiplier = 1;
             }
 
-            if (_gamePad == null)
+            Vector2 input = Vector2.zero;
+            if (_gamePad != null)
             {
-                return;
+                input = _gamePad.leftStick.ReadValue();
             }
-            //左スティック取得
-            Vector2 input = _gamePad.leftStick.ReadValue();
+
+            // コントローラーの入力がない場合、キーボード入力を取得する
+            if (input.sqrMagnitude < 0.01f)
+            {
+                float x = 0;
+                float y = 0;
+                if (Keyboard.current != null)
+                {
+                    if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) y += 1f;
+                    if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) y -= 1f;
+                    if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) x -= 1f;
+                    if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) x += 1f;
+                }
+                else
+                {
+                    x = Input.GetAxisRaw("Horizontal");
+                    y = Input.GetAxisRaw("Vertical");
+                }
+                input = new Vector2(x, y);
+                // 斜め移動で速くならないように正規化する（キーボード入力のみ）
+                if (input.sqrMagnitude > 1f)
+                {
+                    input.Normalize();
+                }
+            }
+
             //Vector3型に変換
             SetMoveInputServerRpc(input.x, input.y);
 
         }
-        if(this.IsServer)
+        if (this.IsServer)
         {
             Move();//移動のメソッド呼び出し
         }
 
     }
     [Unity.Netcode.ServerRpc]
-    private void SetMoveInputServerRpc(float x,float y)
+    private void SetMoveInputServerRpc(float x, float y)
     {
         //左スティック取得
         _input = new Vector2(x, y);
@@ -140,7 +164,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
         ////ベロシティを移動方向*スピードで直接変更
         Vector2 targetVelocity = _moveDirection * _playerMoveSpeed * _chargeMoveMultiplier;
-        if(_moveDirection != Vector2.zero)
+        if (_moveDirection != Vector2.zero)
         {
             _saveDirection = _rigidbody.linearVelocity;
         }
@@ -148,10 +172,10 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         if (_isFloating)
         {
             float t = Time.fixedDeltaTime * _inertiaStrangth;
-            _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity, targetVelocity,t);
-            if(_moveDirection == Vector2.zero)
+            _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity, targetVelocity, t);
+            if (_moveDirection == Vector2.zero)
             {
-                _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity,_saveDirection,t);
+                _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity, _saveDirection, t);
             }
         }
         else
@@ -167,7 +191,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         }
         else
         {
-            if(_canPlayWait)
+            if (_canPlayWait)
             {
                 _playerAnimation.Wait();
                 _canPlayWait = false;

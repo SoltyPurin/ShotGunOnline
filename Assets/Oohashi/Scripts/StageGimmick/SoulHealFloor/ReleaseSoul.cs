@@ -27,7 +27,7 @@ public class ReleaseSoul : MonoBehaviour
             MoveCoin moveCoin = coin.GetComponent<MoveCoin>();
             if(moveCoin != null )
             {
-                moveCoin.MoveStart();
+                moveCoin.MoveStartClientRpc();
                 moveCoin.ChangeWaitTimeMethod(_collectTime);
             }
         }
