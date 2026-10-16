@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -37,7 +38,8 @@ public class BossJumpAtack : BossColliderTriggerSW
     }
 
     //íÖínéûÇÃìñÇΩÇËîªíËî≠ê∂
-    public void JumpLand()
+    [ClientRpc]
+    public void JumpLandClientRpc()
     {
         _mainCameraShake.Shake();
         _jumpAtackArea.SetActive(true);
@@ -45,22 +47,24 @@ public class BossJumpAtack : BossColliderTriggerSW
         Vector3 shockHolePos = new Vector3(transform.position.x, transform.position.y - 2, 0);
         Instantiate(_shockHole, shockHolePos, Quaternion.identity);
 
-
-        if (_stateManagement._changed)
+        if (IsServer && _stateManagement != null && _stateManagement._changed)
         {
-            for (int i = 0; i < _shockLangeList.Length; i++)
+            if (_stateManagement._changed)
             {
-                _jumpAtackWaveDirection = (_stateManagement.Player.transform.position - transform.position).normalized;
-                Vector2 rotatedDir = Quaternion.AngleAxis(_shockLangeList[i], Vector3.forward) * _jumpAtackWaveDirection;
-                EnemyShotBullet shotBullet = Instantiate(_shockWave, transform.position, Quaternion.identity).GetComponent<EnemyShotBullet>();
-                shotBullet.transform.localScale = new Vector3(3, 3, 1);
-                shotBullet.DirectionSetting(this.gameObject,rotatedDir);
+                for (int i = 0; i < _shockLangeList.Length; i++)
+                {
+                    _jumpAtackWaveDirection = (_stateManagement.Player.transform.position - transform.position).normalized;
+                    Vector2 rotatedDir = Quaternion.AngleAxis(_shockLangeList[i], Vector3.forward) * _jumpAtackWaveDirection;
+                    EnemyShotBullet shotBullet = Instantiate(_shockWave, transform.position, Quaternion.identity).GetComponent<EnemyShotBullet>();
+                    NetworkObject nBullet = shotBullet.GetComponent<NetworkObject>();
+                    shotBullet.transform.localScale = new Vector3(3, 3, 1);
+                    shotBullet.DirectionSetting(this.gameObject, rotatedDir);
+                    nBullet.Spawn();
+                }
             }
         }
-        
         _bossCollider.isTrigger = false;
     }
-
     public void JumpAttackEnd()
     {
         _jumpAtackArea.SetActive(false);

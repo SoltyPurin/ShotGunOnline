@@ -39,7 +39,7 @@ public class BossAttackFunction : MonoBehaviour
 
     public void JumpAtackAreaPop()
     {
-        _jumpAtack.JumpLand();
+        _jumpAtack.JumpLandClientRpc();
     }
 
     public void JumpAimStart()

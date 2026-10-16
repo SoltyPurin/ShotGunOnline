@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public enum MoveState
@@ -88,6 +89,10 @@ public class KeepDistanceMove : EnemyMove
                     _direction = (_playerObject.transform.position - transform.position).normalized;
                     //銃弾に方向を渡す
                     scriptOfBullet.DirectionSetting(this.gameObject, _direction);
+                    //ネットワークのコンポーネントを取得
+                    NetworkObject nBullet = bullet.GetComponent<NetworkObject>();
+                    //ネットワーク上にスポーンさせる
+                    nBullet.Spawn();
                     //音を再生
                     _seManager.PlayEnemyShotSound();
                     //停止時間をリセット
