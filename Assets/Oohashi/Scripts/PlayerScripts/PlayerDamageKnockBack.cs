@@ -151,7 +151,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         else if (collision.gameObject.CompareTag(MIRRORBULLETTAGNAME))
         {
             //吹き飛ぶ方向のメソッド呼び出し
-            SetDirection(_contactNormal, _bossMirrorBulletForce, collision.gameObject);
+            TriggerKnockBack(_contactNormal, _force, collision.gameObject);
+            //SetDirection(_contactNormal, _bossMirrorBulletForce, collision.gameObject);
             //ダメージのレバブルを設定
             _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
@@ -160,7 +161,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         else if (collision.gameObject.CompareTag(ENEMYBULLETTAGNAME))
         {
             //吹き飛ぶ方向のメソッド呼び出し
-            SetDirection(_contactNormal, _force, collision.gameObject);
+            TriggerKnockBack(_contactNormal, _force, collision.gameObject);
+            //SetDirection(_contactNormal, _force, collision.gameObject);
             //ダメージのレバブルを設定
             _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
@@ -177,13 +179,16 @@ public class PlayerDamageKnockBack : NetworkBehaviour
                 if (_hitStopCoroutine != null) StopCoroutine(_hitStopCoroutine);
                 _hitStopCoroutine = StartCoroutine(HitStop(collision, _contactNormal));
                 //StartCoroutine(HitStop(collision, _contactNormal));
+                //ダメージのレバブルを設定
+                _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             }
             else
             {
                 //ぶつかってきた方向を代入
                 _contactNormal = collision.contacts[0].normal;
                 //吹き飛ぶ方向のメソッド呼び出し
-                SetDirection(_contactNormal, _force, collision.gameObject);
+                TriggerKnockBack(_contactNormal, _force, collision.gameObject);
+                //SetDirection(_contactNormal, _force, collision.gameObject);
                 //ダメージのレバブルを設定
                 _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
 
@@ -194,7 +199,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //ぶつかってきた方向を代入
             _contactNormal = collision.contacts[0].normal;
             //吹き飛ぶ方向のメソッド呼び出し
-            SetDirection(_contactNormal, _force, collision.gameObject);
+            TriggerKnockBack(_contactNormal, _force, collision.gameObject);
+            //SetDirection(_contactNormal, _force, collision.gameObject);
             //ダメージのレバブルを設定
             _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
         }
