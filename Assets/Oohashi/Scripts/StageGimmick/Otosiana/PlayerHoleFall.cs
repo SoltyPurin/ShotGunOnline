@@ -69,12 +69,19 @@ public class PlayerHoleFall : EntityFall
     {
         _knockBack.Fall();
         _damageKnockBack.Fall();
-        NetworkObject netObj = GetComponent<NetworkObject>();
-        if (netObj != null && !netObj.IsOwner)
+        if (_playerStateManager.PlayerState == PlayerState.Movie)
         {
             return;
         }
-        if (_playerStateManager.PlayerState == PlayerState.Movie)
+
+        if (!_damageKnockBack.IsInvincible)
+        {
+            //無敵時間中でなければコインを減らす
+            StartCoroutine(_damageKnockBack.DamagePerformance());
+        }
+
+        NetworkObject netObj = GetComponent<NetworkObject>();
+        if (netObj != null && !netObj.IsOwner)
         {
             return;
         }
@@ -88,13 +95,6 @@ public class PlayerHoleFall : EntityFall
         _animator.SetTrigger(FALLTRIGGER);
         _playerStateManager.FallState();
         StartCoroutine(MoveToRespawnPoint());
-        //無敵時間中はコインを減らさない
-        if (_damageKnockBack.IsInvincible)
-        {
-            return;
-        }
-
-        StartCoroutine(_damageKnockBack.DamagePerformance());
 
 
     }

@@ -92,23 +92,28 @@ public class WaveTransitionAnim : NetworkBehaviour
         {
             return;
         }
-        if(_stateManager == null || _stateManager.Count <= 0)
-        {
-            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            foreach(GameObject p in players)
-            {
-                PlayerStateManager state = p.GetComponent<PlayerStateManager>();
-                if(state != null)
-                {
-                    _stateManager.Add(state);
-                    state.MovieState();
-                }
-            }
-        }
+        SetPlayersMovieStateClientRpc();
 
         _runningRoutine = StartCoroutine(TriggerReset(newIndex));
 
         }
+
+    /// <summary>
+    /// 全クライアント端末で各自機プレイヤーを MovieState に変更する RPC
+    /// </summary>
+    [ClientRpc]
+    private void SetPlayersMovieStateClientRpc()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
+        {
+            PlayerStateManager state = p.GetComponent<PlayerStateManager>();
+            if (state != null)
+            {
+                state.MovieState();
+            }
+        }
+    }
 
     private IEnumerator TriggerReset(int curIndex)
     {
@@ -170,46 +175,69 @@ public class WaveTransitionAnim : NetworkBehaviour
     private IEnumerator PlayerCanMove()
     {
         yield return new WaitForSeconds(2.5f);
-        //オンライン版
-        if (_stateManager == null || _inputChangeState == null)
+        SetPlayersNormalStateClientRpc();
+    }
+
+    [ClientRpc]
+    private void SetPlayersNormalStateClientRpc()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
         {
-            InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
-            foreach(PlayerStateManager state in _stateManager)
+            if (p == null) continue;
+
+            PlayerStateManager state = p.GetComponent<PlayerStateManager>();
+            InputChangeState inputState = p.GetComponent<InputChangeState>();
+
+            if (state != null)
             {
-                if(state == null)
-                {
-                    continue;
-                }
-                if (state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
-                {
-                    if (netObj.IsLocalPlayer)
-                    {
-                        state.NormalState();
-                        break; 
-                    }
-                }
+                state.NormalState();
             }
-            foreach(InputChangeState state in inputStates)
+            if (inputState != null)
             {
-                if(state == null)
-                {
-                    continue ;
-                }
-                if(state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
-                {
-                    if (netObj.IsLocalPlayer)
-                    {
-                        state.ToNormalAnimation();
-                        break;
-                    }
-                }
+                inputState.ToNormalAnimation();
             }
         }
-        else //ソロプレイ版
-        {
-            Debug.Log("ソロプレイ");
-            _stateManager[0].NormalState();
-            _inputChangeState.ToNormalAnimation();
-        }
+        ////オンライン版
+        //if (_stateManager == null || _inputChangeState == null)
+        //{
+        //    InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
+        //    foreach (PlayerStateManager state in _stateManager)
+        //    {
+        //        if (state == null)
+        //        {
+        //            continue;
+        //        }
+        //        if (state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
+        //        {
+        //            if (netObj.IsLocalPlayer)
+        //            {
+        //                state.NormalState();
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    foreach (InputChangeState state in inputStates)
+        //    {
+        //        if (state == null)
+        //        {
+        //            continue;
+        //        }
+        //        if (state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
+        //        {
+        //            if (netObj.IsLocalPlayer)
+        //            {
+        //                state.ToNormalAnimation();
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+        //else //ソロプレイ版
+        //{
+        //    Debug.Log("ソロプレイ");
+        //    _stateManager[0].NormalState();
+        //    _inputChangeState.ToNormalAnimation();
+        //}
     }
 }
