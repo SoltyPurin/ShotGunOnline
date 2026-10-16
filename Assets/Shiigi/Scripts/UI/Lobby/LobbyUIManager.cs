@@ -113,7 +113,7 @@ public class LobbyUIManager : MonoBehaviour
 
         if (result.IsCanceled) return;
 
-        // 簡単な入力バリデーション
+        // バリデーション
         while (string.IsNullOrWhiteSpace(result.RoomName))
         {
             if (await _confirmDialogUI.ShowAsync("ルーム名を正しく入力してください"))
