@@ -91,7 +91,7 @@ public class SceneTransitionManager : MonoBehaviour
         if(_timer >= _transitionTime)
         {
             _timer = 0;
-            _waveUIManager.FadeOutImage();
+            _waveUIManager.FadeOutImageClientRpc();
             _audioSource.PlayOneShot(_audioClip);
             _bgmControll.BGMFade_Out(1, 0);
             _state = TransitionState.SceneTransition;

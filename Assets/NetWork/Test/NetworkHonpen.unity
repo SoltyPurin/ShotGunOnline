@@ -4059,6 +4059,10 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 4693913340570356596, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5460242032068369882, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
       propertyPath: m_TagString
       value: FadeUI

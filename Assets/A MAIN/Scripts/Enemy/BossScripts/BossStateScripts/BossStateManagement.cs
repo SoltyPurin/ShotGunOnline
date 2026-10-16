@@ -131,7 +131,7 @@ public class BossStateManagement : EnemyMove
         if (_bossHP._secondForm && !_changed)
         {
             _changed = true;
-            _changeSecondForm.ToBESecondForm();
+            _changeSecondForm.ToBESecondFormClientRpc();
             _currentState = BossState.Stop;
             _hasDecidedNextAction = false;
         }

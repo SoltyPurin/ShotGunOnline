@@ -262,7 +262,7 @@ public class Wave : NetworkBehaviour
                     }
                 }
 
-                // 3. プレハブが見つかったら、ダミーと同じ座標・回転で生成して Spawn！
+                // 3. プレハブが見つかったら、ダミーと同じ座標・回転で生成してスポーン
                 if (prefabToSpawn != null)
                 {
                     GameObject spawnedGimmick = Instantiate(

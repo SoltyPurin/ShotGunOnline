@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -72,7 +73,6 @@ public class BossHP : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        _deathExplosion = GameObject.FindWithTag("ExplosionManager").GetComponent<PlayBossDeadExplosion>();
 
         Scene currentScene = SceneManager.GetActiveScene();
 
@@ -224,8 +224,7 @@ public class BossHP : EnemyTakeDamage
         {
             GameObject.Destroy(enemy2);
         }
-        Instantiate(_deathObject, transform.position, Quaternion.identity);
-        _deathExplosion.Explosion(this.transform.position);
+        DeathObjectClientRpc();
         // ネットワークオブジェクトの場合は Despawn、ローカルの場合は Destroy
         if (NetworkObject != null && NetworkObject.IsSpawned)
         {
@@ -235,7 +234,14 @@ public class BossHP : EnemyTakeDamage
         {
             Destroy(gameObject);
         }
+    }
 
+    [ClientRpc]
+    private void DeathObjectClientRpc()
+    {
+        _deathExplosion = GameObject.FindWithTag("ExplosionManager").GetComponent<PlayBossDeadExplosion>();
+        Instantiate(_deathObject, transform.position, Quaternion.identity);
+        _deathExplosion.Explosion(this.transform.position);
     }
 
     public override void ContactStoneMethod()
@@ -245,8 +251,8 @@ public class BossHP : EnemyTakeDamage
         _playTheSEManager.PlayRoadKill();
 
     }
-
-    private void DeactivateBoss()
+    [ClientRpc]
+    private void DeactivateBossClientRpc()
     {
         _stateManagement.enabled = false;
         _summonEnemy.enabled = false;
@@ -258,7 +264,7 @@ public class BossHP : EnemyTakeDamage
 
     private void DeadBossProcess()
     {
-        DeactivateBoss();
+        DeactivateBossClientRpc();
         _collider.isTrigger = true;
         if (_deathTimeline != null)
         {

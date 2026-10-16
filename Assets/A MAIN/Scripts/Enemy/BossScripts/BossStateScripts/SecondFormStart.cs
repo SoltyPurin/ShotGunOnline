@@ -1,8 +1,9 @@
+using Unity.Netcode;
 using UnityEngine;
 /// <summary>
 /// ボスの第二形態変移時のステータスアップのメソッド
 /// </summary>
-public class SecondFormStart : MonoBehaviour
+public class SecondFormStart : NetworkBehaviour
 {
     #region[変数名]
     //---GameObject,Script,Animator等---------------------------------
@@ -30,7 +31,8 @@ public class SecondFormStart : MonoBehaviour
     {
         _bossSprite.enabled = true;
     }
-    public void ToBESecondForm()
+    [ClientRpc]
+    public void ToBESecondFormClientRpc()
     {
         _bossSprite.color = _secondColor;
         //_bossHP._isInvincible = true;
