@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,13 +12,12 @@ using UnityEngine.SceneManagement;
 
 public class MultiplayerSessionManager : MonoBehaviour
 {
+    private const string GameSceneName = "MP_Honpen";
     private const string GameStartingMessageName = "GameStarting";
 
     public static MultiplayerSessionManager Instance { get; private set; }
 
     private ISession _currentSession;
-    private bool _gameStartingHandlerRegistered;
-    private NetworkManager _networkManagerForHandler;
     public ISession CurrentSession => _currentSession;
     public event Action OnSessionChanged;
     public event Action OnGameStarting;
@@ -51,51 +50,70 @@ public class MultiplayerSessionManager : MonoBehaviour
         }
     }
 
-    private void RegisterGameStartingMessage()
+    private void OnDestroy()
     {
-        var networkManager = NetworkManager.Singleton;
-        if (networkManager == null)
-        {
-            Debug.LogWarning("[MSM] NetworkManager がまだ利用できないため、開始通知を登録できません。");
-            return;
-        }
-
-        if (_gameStartingHandlerRegistered)
-            return;
-
-        if (networkManager.CustomMessagingManager == null)
-        {
-            if (_networkManagerForHandler != networkManager)
-            {
-                if (_networkManagerForHandler != null)
-                    _networkManagerForHandler.OnClientConnectedCallback -= OnNetworkClientConnected;
-
-                _networkManagerForHandler = networkManager;
-                _networkManagerForHandler.OnClientConnectedCallback += OnNetworkClientConnected;
-            }
-
-            Debug.Log("[MSM] CustomMessagingManager の初期化待ちです。");
-            return;
-        }
-
-        networkManager.CustomMessagingManager.RegisterNamedMessageHandler(
-            GameStartingMessageName,
-            OnGameStartingMessageReceived);
-        _gameStartingHandlerRegistered = true;
-        networkManager.OnClientConnectedCallback -= OnNetworkClientConnected;
-        _networkManagerForHandler = null;
-        Debug.Log("[MSM] ゲーム開始通知ハンドラーを登録しました。");
+        UnsubscribeNetworkEvents();
     }
 
-    private void OnNetworkClientConnected(ulong clientId)
+    private void SubscribeNetworkEvents()
     {
-        RegisterGameStartingMessage();
+        if (NetworkManager.Singleton == null) return;
+
+        // 接続完了時にも再登録を保証
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+
+        // NGOシーンイベントの監視（フォールバック用）
+        if (NetworkManager.Singleton.SceneManager != null)
+        {
+            NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleSceneEvent;
+            NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneEvent;
+        }
+
+        // CustomMessageの監視（即時性用）
+        if (NetworkManager.Singleton.CustomMessagingManager != null)
+        {
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(GameStartingMessageName);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(GameStartingMessageName, OnGameStartingMessageReceived);
+        }
+    }
+
+    private void UnsubscribeNetworkEvents()
+    {
+        if (NetworkManager.Singleton == null) return;
+
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+
+        if (NetworkManager.Singleton.SceneManager != null)
+        {
+            NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleSceneEvent;
+        }
+
+        if (NetworkManager.Singleton.CustomMessagingManager != null)
+        {
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(GameStartingMessageName);
+        }
+    }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        SubscribeNetworkEvents();
     }
 
     private void OnGameStartingMessageReceived(ulong senderClientId, FastBufferReader reader)
     {
-        Debug.Log($"[MSM] ゲーム開始通知を受信しました。送信元: {senderClientId}");
+        Debug.Log($"[MSM] ホストからのゲーム開始通知を受信しました (Sender: {senderClientId})");
         OnGameStarting?.Invoke();
+    }
+
+    private void HandleSceneEvent(SceneEvent sceneEvent)
+    {
+        // ホストがゲームシーンの読み込みを開始した瞬間、全クライアントにイベントが届く
+        if (sceneEvent.SceneEventType == SceneEventType.Load && sceneEvent.SceneName == GameSceneName)
+        {
+            Debug.Log($"[MSM] ゲームシーン読み込み開始を検知しました: {sceneEvent.SceneName}");
+            OnGameStarting?.Invoke();
+        }
     }
 
     /// <summary>
@@ -133,21 +151,23 @@ public class MultiplayerSessionManager : MonoBehaviour
 
         try
         {
-            // オプション作成
+            // オプション作成（Relayを有効化）
             var options = new SessionOptions
             {
                 Name = roomName,
                 MaxPlayers = maxPlayers,
                 IsPrivate = false
-            };
+            }.WithRelayNetwork();
 
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
             _currentSession.Changed += HandleSessionChanged;
 
             // ホストとしてゲーム開始
-            RegisterGameStartingMessage();
-            NetworkManager.Singleton.StartHost();
-            RegisterGameStartingMessage();
+            if (!NetworkManager.Singleton.IsListening)
+            {
+                NetworkManager.Singleton.StartHost();
+            }
+            SubscribeNetworkEvents();
             Debug.Log("[MSM]: ホストとして接続");
 
             return true;
@@ -207,9 +227,11 @@ public class MultiplayerSessionManager : MonoBehaviour
             _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id);
             _currentSession.Changed += HandleSessionChanged;
 
-            RegisterGameStartingMessage();
-            NetworkManager.Singleton.StartClient();
-            RegisterGameStartingMessage();
+            if (!NetworkManager.Singleton.IsListening)
+            {
+                NetworkManager.Singleton.StartClient();
+            }
+            SubscribeNetworkEvents();
             Debug.Log("[MSM]: クライアントとして接続");
 
             return true;
@@ -231,6 +253,7 @@ public class MultiplayerSessionManager : MonoBehaviour
 
         try
         {
+            UnsubscribeNetworkEvents();
             _currentSession.Changed -= HandleSessionChanged;
             await _currentSession.LeaveAsync();
             _currentSession = null;
@@ -277,32 +300,28 @@ public class MultiplayerSessionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ホストがゲームを開始する
+    /// </summary>
     public void StartMultiplayGame()
     {
-        if (NetworkManager.Singleton.IsHost)
-        {
-            Debug.Log("ゲームを開始");
-
-            using (var writer = new FastBufferWriter(1, Allocator.Temp))
-            {
-                Debug.Log("[MSM] クライアントへゲーム開始通知を送信します。");
-                NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(
-                    GameStartingMessageName,
-                    writer,
-                    NetworkDelivery.ReliableSequenced);
-            }
-
-            StartCoroutine(LoadGameSceneAfterNotification());
-        }
-    }
-
-    private IEnumerator LoadGameSceneAfterNotification()
-    {
-        yield return new WaitForSecondsRealtime(0.1f);
-
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost)
         {
-            NetworkManager.Singleton.SceneManager.LoadScene("MP_Honpen", LoadSceneMode.Single);
+            Debug.Log("[MSM] ホストがゲームを開始: 即時通知を送信し、シーン遷移を実行します");
+
+            // ゲーム開始を通知(クライアントを接続中ステータスに更新させる)
+            if (NetworkManager.Singleton.CustomMessagingManager != null)
+            {
+                using (var writer = new FastBufferWriter(0, Allocator.Temp))
+                {
+                    NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(
+                        GameStartingMessageName,
+                        writer,
+                        NetworkDelivery.ReliableSequenced);
+                }
+            }
+
+            NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
         }
     }
 }

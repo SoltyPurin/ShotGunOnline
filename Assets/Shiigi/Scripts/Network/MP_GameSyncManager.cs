@@ -1,4 +1,4 @@
-﻿using Unity.Netcode;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -54,6 +54,29 @@ public class MP_GameSyncManager : NetworkBehaviour
         if (Instance == this)
         {
             Instance = null;
+        }
+    }
+
+    private void Awake()
+    {
+        // バックグラウンドでも処理が停止しないように設定
+        Application.runInBackground = true;
+    }
+
+    /// <summary>
+    /// バックグラウンドで止まってた時の処理 (多分いらない)
+    /// </summary>
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus && IsClient && !IsServer && IsSpawned)
+        {
+            // バックグラウンド復帰時にホストの現在のフェーズと同期を取る
+            Debug.Log($"[MP_GameSyncManager] ウィンドウ復帰を検知。現在のフェーズ: {CurrentPhase.Value}");
+            if (CurrentPhase.Value == GamePhase.Playing && MP_GameManager.Instance != null && MP_GameManager.Instance.CurrentState != MP_GameManager.GameState.Playing)
+            {
+                Debug.Log("[MP_GameSyncManager] ホストはプレイ中のため、遅れてゲーム開始処理を実行します。");
+                MP_GameManager.Instance.OnGameStart();
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -47,6 +47,9 @@ public class MP_GameManager : MonoBehaviour
 
     private void Awake()
     {
+        // バックグラウンド時（非フォーカス・最小化など）でも処理・通信が停止しないように設定
+        Application.runInBackground = true;
+
         if (Instance == null)
         {
             Instance = this;
