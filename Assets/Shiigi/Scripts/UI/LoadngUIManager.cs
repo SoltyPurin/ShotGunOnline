@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-public class LoadngUIManager : MonoBehaviour
+public class LoadingUIManager : MonoBehaviour
 {
     [SerializeField] private GameObject _loadingUICanvas;
 
