@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
@@ -12,12 +11,18 @@ using UnityEngine.SceneManagement;
 
 public class MultiplayerSessionManager : MonoBehaviour
 {
-    private const string GameSceneName = "MP_Honpen";
+    private const string GameSceneName = "MP_GameScene";
     private const string GameStartingMessageName = "GameStarting";
+    private const string HeartbeatMessageName = "PlayerHeartbeat";
+    private const float HeartbeatInterval = 2f;
+    private const float HeartbeatTimeout = 10f;
 
     public static MultiplayerSessionManager Instance { get; private set; }
 
     private ISession _currentSession;
+    private readonly Dictionary<string, float> _lastHeartbeatByPlayerId = new Dictionary<string, float>();
+    private readonly HashSet<string> _playersBeingRemoved = new HashSet<string>();
+    private float _nextHeartbeatTime;
     public ISession CurrentSession => _currentSession;
     public event Action OnSessionChanged;
     public event Action OnGameStarting;
@@ -55,13 +60,26 @@ public class MultiplayerSessionManager : MonoBehaviour
         UnsubscribeNetworkEvents();
     }
 
+    private void Update()
+    {
+        var networkManager = NetworkManager.Singleton;
+        if (_currentSession == null || networkManager == null || !networkManager.IsListening) return;
+
+        var now = Time.unscaledTime;
+        if (networkManager.IsServer)
+        {
+            CheckPlayerHeartbeats(now);
+        }
+        else if (networkManager.IsClient && now >= _nextHeartbeatTime)
+        {
+            SendHeartbeat();
+            _nextHeartbeatTime = now + HeartbeatInterval;
+        }
+    }
+
     private void SubscribeNetworkEvents()
     {
         if (NetworkManager.Singleton == null) return;
-
-        // 接続完了時にも再登録を保証
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
 
         // NGOシーンイベントの監視（フォールバック用）
         if (NetworkManager.Singleton.SceneManager != null)
@@ -75,14 +93,14 @@ public class MultiplayerSessionManager : MonoBehaviour
         {
             NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(GameStartingMessageName);
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(GameStartingMessageName, OnGameStartingMessageReceived);
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(HeartbeatMessageName);
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(HeartbeatMessageName, OnHeartbeatReceived);
         }
     }
 
     private void UnsubscribeNetworkEvents()
     {
         if (NetworkManager.Singleton == null) return;
-
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
 
         if (NetworkManager.Singleton.SceneManager != null)
         {
@@ -92,12 +110,95 @@ public class MultiplayerSessionManager : MonoBehaviour
         if (NetworkManager.Singleton.CustomMessagingManager != null)
         {
             NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(GameStartingMessageName);
+            NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(HeartbeatMessageName);
         }
     }
 
-    private void OnClientConnected(ulong clientId)
+    private void SendHeartbeat()
     {
-        SubscribeNetworkEvents();
+        if (_currentSession?.CurrentPlayer == null || NetworkManager.Singleton.CustomMessagingManager == null) return;
+
+        using (var writer = new FastBufferWriter(128, Allocator.Temp))
+        {
+            writer.WriteValueSafe(_currentSession.CurrentPlayer.Id);
+            NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
+                HeartbeatMessageName,
+                NetworkManager.ServerClientId,
+                writer,
+                NetworkDelivery.ReliableSequenced);
+        }
+    }
+
+    private void OnHeartbeatReceived(ulong senderClientId, FastBufferReader reader)
+    {
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer || _currentSession == null) return;
+
+        reader.ReadValueSafe(out string playerId);
+        if (string.IsNullOrWhiteSpace(playerId) || _currentSession.GetPlayer(playerId) == null) return;
+
+        _lastHeartbeatByPlayerId[playerId] = Time.unscaledTime;
+    }
+
+    private void CheckPlayerHeartbeats(float now)
+    {
+        if (_currentSession == null || !(_currentSession is IHostSession)) return;
+
+        var hostPlayerId = _currentSession.CurrentPlayer?.Id;
+        var activePlayerIds = new HashSet<string>();
+        foreach (var player in _currentSession.Players)
+        {
+            if (player.Id == hostPlayerId) continue;
+
+            activePlayerIds.Add(player.Id);
+            if (!_lastHeartbeatByPlayerId.ContainsKey(player.Id) && !_playersBeingRemoved.Contains(player.Id))
+            {
+                _lastHeartbeatByPlayerId[player.Id] = now;
+            }
+        }
+
+        _playersBeingRemoved.RemoveWhere(playerId => !activePlayerIds.Contains(playerId));
+
+        var stalePlayerIds = new List<string>();
+        var timedOutPlayerIds = new List<string>();
+        foreach (var heartbeat in _lastHeartbeatByPlayerId)
+        {
+            if (!activePlayerIds.Contains(heartbeat.Key))
+            {
+                stalePlayerIds.Add(heartbeat.Key);
+            }
+            else if (now - heartbeat.Value >= HeartbeatTimeout)
+            {
+                timedOutPlayerIds.Add(heartbeat.Key);
+            }
+        }
+
+        foreach (var playerId in stalePlayerIds)
+        {
+            _lastHeartbeatByPlayerId.Remove(playerId);
+        }
+
+        foreach (var playerId in timedOutPlayerIds)
+        {
+            RemoveTimedOutPlayerAsync(playerId).Forget();
+        }
+    }
+
+    private async UniTaskVoid RemoveTimedOutPlayerAsync(string playerId)
+    {
+        if (!(_currentSession is IHostSession hostSession) || !_playersBeingRemoved.Add(playerId)) return;
+
+        try
+        {
+            Debug.Log($"[MSM] プレイヤータイムアウト: {playerId}");
+            await hostSession.RemovePlayerAsync(playerId);
+            _lastHeartbeatByPlayerId.Remove(playerId);
+        }
+        catch (Exception ex)
+        {
+            _lastHeartbeatByPlayerId[playerId] = Time.unscaledTime;
+            _playersBeingRemoved.Remove(playerId);
+            Debug.LogError($"[MSM] タイムアウトしたプレイヤーの削除に失敗: {ex.Message}");
+        }
     }
 
     private void OnGameStartingMessageReceived(ulong senderClientId, FastBufferReader reader)
@@ -257,6 +358,9 @@ public class MultiplayerSessionManager : MonoBehaviour
             _currentSession.Changed -= HandleSessionChanged;
             await _currentSession.LeaveAsync();
             _currentSession = null;
+            _lastHeartbeatByPlayerId.Clear();
+            _playersBeingRemoved.Clear();
+            _nextHeartbeatTime = 0f;
             
             // 接続解除
             NetworkManager.Singleton?.Shutdown();

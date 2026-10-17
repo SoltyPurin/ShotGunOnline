@@ -1,37 +1,37 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerHoleFall : EntityFall
 {
-    //—‚Æ‚µŒŠ‚É—‚¿‚½‚ç‘€ì•s‰Â”\{‰Šú’n“_(0,0)‚ÉˆÚ“®
+    //è½ã¨ã—ç©´ã«è½ã¡ãŸã‚‰æ“ä½œä¸å¯èƒ½ï¼‹åˆæœŸåœ°ç‚¹(0,0)ã«ç§»å‹•
     [SerializeField] private Animator _animator;
     [SerializeField] private SoulKeep _soul = default;
     [SerializeField] private PlayerStateManager _playerStateManager = default;
     [SerializeField] private GameObject _playerObject = default;
     [SerializeField] private GameObject _playerImage = default;
     [SerializeField] private GameObject _dropCoinObject = default;
-    [SerializeField, Header("ƒŠƒWƒbƒhƒ{ƒfƒB‚ğæ“¾")]
+    [SerializeField, Header("ãƒªã‚¸ãƒƒãƒ‰ãƒœãƒ‡ã‚£ã‚’å–å¾—")]
     private Rigidbody2D _rigidbody2D = default;
-    [SerializeField, Header("ƒVƒ‡ƒbƒgƒKƒ“‚Ì‚«”ò‚Ñ")]
+    [SerializeField, Header("ã‚·ãƒ§ãƒƒãƒˆã‚¬ãƒ³ã®å¹ãé£›ã³")]
     private PlayerKnockBack _knockBack = default;
-    [SerializeField, Header("ƒ_ƒ[ƒW‚Ì‚«”ò‚Ñ")]
+    [SerializeField, Header("ãƒ€ãƒ¡ãƒ¼ã‚¸ã®å¹ãé£›ã³")]
     private PlayerDamageKnockBack _damageKnockBack = default;
-    [SerializeField, Header("SEƒ}ƒl[ƒWƒƒ[")]
+    [SerializeField, Header("SEãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼")]
     private SEManager _seManager = default;
-    [SerializeField, Header("ƒŠƒXƒ|[ƒ“‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒªã‚¹ãƒãƒ¼ãƒ³ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private PlayerRespawn _respawn = default;
-    [SerializeField, Header("ƒXƒe[ƒgƒ`ƒFƒ“ƒW—pƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚§ãƒ³ã‚¸ç”¨ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private InputChangeState _inputChangeState = default;
 
-    [Header("ƒAƒjƒ[ƒ^[")]
-    [SerializeField, Tooltip("ƒtƒF[ƒh‚ÌƒAƒjƒ[ƒ^[iPlayerUI“à‚É‚ ‚éj")]
+    [Header("ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
+    [SerializeField, Tooltip("ãƒ•ã‚§ãƒ¼ãƒ‰ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼ï¼ˆPlayerUIå†…ã«ã‚ã‚‹ï¼‰")]
     private Animator _fadeAnimator = default;
 
     private PlayerDamageKnockBack _damage = default;
 
-    //---ƒAƒjƒ[ƒ^[‚ÌƒgƒŠƒK[---//
+    //---ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼---//
     private readonly string FALLTRIGGER = "Fall";
 
     private void Start()
@@ -43,7 +43,7 @@ public class PlayerHoleFall : EntityFall
 
 
     /// <summary>
-    /// ƒŠƒXƒ|[ƒ“À•W‚ÉˆÚ“®‚·‚éƒRƒ‹[ƒ`ƒ“
+    /// ãƒªã‚¹ãƒãƒ¼ãƒ³åº§æ¨™ã«ç§»å‹•ã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
     /// <returns></returns>
     private IEnumerator MoveToRespawnPoint()
@@ -63,7 +63,7 @@ public class PlayerHoleFall : EntityFall
     }
 
     /// <summary>
-    /// —‰ºƒƒ\ƒbƒh
+    /// è½ä¸‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public override void Fall()
     {
@@ -76,7 +76,7 @@ public class PlayerHoleFall : EntityFall
 
         if (!_damageKnockBack.IsInvincible)
         {
-            //–³“GŠÔ’†‚Å‚È‚¯‚ê‚ÎƒRƒCƒ“‚ğŒ¸‚ç‚·
+            //ç„¡æ•µæ™‚é–“ä¸­ã§ãªã‘ã‚Œã°ã‚³ã‚¤ãƒ³ã‚’æ¸›ã‚‰ã™
             StartCoroutine(_damageKnockBack.DamagePerformance());
         }
 

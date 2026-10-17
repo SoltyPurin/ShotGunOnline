@@ -69,6 +69,37 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         _originPlayerMoveSpeed = _playerMoveSpeed;
     }
 
+    public override void OnNetworkSpawn()
+    {
+        if (_rigidbody == null)
+        {
+            _rigidbody = GetComponent<Rigidbody2D>();
+        }
+
+        // クライアント側では、他プレイヤー（ホストなど）の Rigidbody2D を Kinematic にする
+        if (!IsServer && !IsOwner && _rigidbody != null)
+        {
+            _rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            _rigidbody.linearVelocity = Vector2.zero;
+        }
+
+        if (IsOwner)
+        {
+            // 自機の操作状態を Normal（操作可能）にする
+            if (_playerStateManger != null)
+            {
+                _playerStateManger.NormalState();
+            }
+
+            // メインカメラを探して自機を追従ターゲットに設定する
+            var cam = Camera.main != null ? Camera.main.GetComponent<FollowingCameraToBurrel>() : null;
+            if (cam != null)
+            {
+                cam.SetTargetPlayer(this.gameObject);
+            }
+        }
+    }
+
     public void DeathMethod()
     {
         _isAlive = false;
@@ -81,14 +112,14 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         {
             return;
         }
-        bool isStateFall = _playerStateManger.PlayerState == PlayerState.Fall;
-        bool isStateKnockBack = _playerStateManger.PlayerState == PlayerState.KnockBack;
-        bool isStateDamageKnockBack = _playerStateManger.PlayerState == PlayerState.DamageKnockBack;
-        bool isStateMovie = _playerStateManger.PlayerState == PlayerState.Movie;
+        bool isStateFall = _playerStateManger != null && _playerStateManger.PlayerState == PlayerState.Fall;
+        bool isStateKnockBack = _playerStateManger != null && _playerStateManger.PlayerState == PlayerState.KnockBack;
+        bool isStateDamageKnockBack = _playerStateManger != null && _playerStateManger.PlayerState == PlayerState.DamageKnockBack;
+        bool isStateMovie = _playerStateManger != null && _playerStateManger.PlayerState == PlayerState.Movie;
         bool cantMoveState = isStateFall || isStateKnockBack || isStateDamageKnockBack || isStateMovie;
         if (cantMoveState)
         {
-            return; //落下中は操作不可能にするため早期リターン
+            return; //落下中・ムービー中は操作不可能にするため早期リターン
         }
         //フェード中は移動させない
         if (_isFadeing)
@@ -96,10 +127,10 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             return;
         }
 
+        // 自分のキャラクター（Owner）のみが入力と移動をローカルで行う
         if (this.IsOwner)
         {
-
-            if (_inputPlayerShot.IsPushShotButton)
+            if (_inputPlayerShot != null && _inputPlayerShot.IsPushShotButton)
             {
                 CalcMoveMultiplier(_inputPlayerShot.ChargeValue);
             }
@@ -139,15 +170,19 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
                 }
             }
 
-            //Vector3型に変換
-            SetMoveInputServerRpc(input.x, input.y);
-
+            _input = input;
+            _moveDirection = new Vector3(input.x, input.y);
+            Move();
         }
-        if (this.IsServer)
+        else
         {
-            Move();//移動のメソッド呼び出し
+            // 他プレイヤーのキャラクターは物理シミュレーションを切る（ClientNetworkTransformの受信に任せる）
+            if (_rigidbody != null && _rigidbody.bodyType != RigidbodyType2D.Kinematic)
+            {
+                _rigidbody.bodyType = RigidbodyType2D.Kinematic;
+                _rigidbody.linearVelocity = Vector2.zero;
+            }
         }
-
     }
     [Unity.Netcode.ServerRpc]
     private void SetMoveInputServerRpc(float x, float y)

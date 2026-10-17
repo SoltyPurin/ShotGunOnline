@@ -50,6 +50,50 @@ public class FollowingCameraToBurrel : MonoBehaviour
     {
         _camera = GetComponent<Camera>();
     }
+
+    /// <summary>
+    /// 自プレイヤーがスポーンした瞬間に直接カメラターゲットを登録する
+    /// </summary>
+    public void SetTargetPlayer(GameObject player)
+    {
+        if (player == null) return;
+
+        _player = player;
+        _playerState = _player.GetComponent<PlayerStateManager>();
+
+        // 銃身（GunBurrel）を探す
+        Transform burrelTransform = _player.transform.Find("Burrel/GunBurrel");
+        if (burrelTransform == null)
+        {
+            // フォールバック：子オブジェクトから再帰的に GunBurrel または Burrel を探す
+            foreach (var child in _player.GetComponentsInChildren<Transform>())
+            {
+                if (child.name == "GunBurrel" || child.name == "Burrel")
+                {
+                    burrelTransform = child;
+                    break;
+                }
+            }
+        }
+
+        if (burrelTransform != null)
+        {
+            _burrel = burrelTransform.gameObject;
+        }
+        else
+        {
+            // 最悪見つからなくてもプレイヤー自身をターゲットにする
+            _burrel = _player;
+        }
+
+        // カメラ位置をプレイヤーの現在位置へ即時移動（初期瞬間移動）
+        Vector3 initialPos = _burrel.transform.position;
+        initialPos.z = transform.position.z;
+        transform.position = initialPos;
+
+        Debug.Log($"[FollowingCameraToBurrel] 自プレイヤー ({_player.name}) をカメラターゲットに設定しました (初期位置: {initialPos})");
+    }
+
     private void GetPlayer()
     {
         // プレイヤーが見当たらなかったら探索

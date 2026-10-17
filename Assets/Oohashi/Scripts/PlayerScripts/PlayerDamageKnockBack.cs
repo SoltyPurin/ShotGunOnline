@@ -1,4 +1,4 @@
-﻿using NUnit.Framework.Constraints;
+using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -246,7 +246,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         float powValue = Mathf.Pow(power, 5f);
         _force = Mathf.Lerp(3, powValue, 0.5f);
 
-        if (_playerState != null)
+        if (IsOwner && _playerState != null)
         {
             _playerState.DamageKnockBackState();
         }
@@ -455,7 +455,10 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //吹き飛び方向に移動させる
             transform.position += (Vector3)_contactNormal * _force * Time.fixedDeltaTime;
             //ステートをダメージノックバックにする
-            _playerState.DamageKnockBackState();
+            if (IsOwner)
+            {
+                _playerState.DamageKnockBackState();
+            }
             //吹き飛び力を減算
             _force -= 0.5f;
             //吹き飛びが0以下になったら実行
@@ -466,27 +469,30 @@ public class PlayerDamageKnockBack : NetworkBehaviour
                 _force = _originForce;
                 //ノックバックのフラグをOFFにする
                 _isKnockBacking = false;
-                //前のステートがウルトだった場合実行
-                if (_oldState == PlayerState.Ultimate)
+                if (IsOwner)
                 {
-                    //所有してるコインがウルトの必要枚数を下回ってるかどうか確認
-                    if (_soulKeep.VStock <= 0)
+                    //前のステートがウルトだった場合実行
+                    if (_oldState == PlayerState.Ultimate)
                     {
-                        //ステートをノーマルに変更
-                        _playerState.NormalState();
-                        _inputChangeState.ToNormalAnimation();
+                        //所有してるコインがウルトの必要枚数を下回ってるかどうか確認
+                        if (_soulKeep.VStock <= 0)
+                        {
+                            //ステートをノーマルに変更
+                            _playerState.NormalState();
+                            _inputChangeState.ToNormalAnimation();
+                        }
+                        else
+                        {
+                            //ウルトを継続
+                            _playerState.UltimateState();
+                        }
                     }
                     else
                     {
-                        //ウルトを継続
-                        _playerState.UltimateState();
+                        //前のステートがウルト以外だったらステートをノーマル継続
+                        _playerState.NormalState();
+                        _inputChangeState.ToNormalAnimation();
                     }
-                }
-                else
-                {
-                    //前のステートがウルト以外だったらステートをノーマル継続
-                    _playerState.NormalState();
-                    _inputChangeState.ToNormalAnimation();
                 }
             }
         }

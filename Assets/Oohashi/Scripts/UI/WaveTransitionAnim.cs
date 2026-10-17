@@ -5,43 +5,43 @@ using UnityEngine;
 
 public class WaveTransitionAnim : NetworkBehaviour
 {
-    #region y•Ï”z
-    [SerializeField, Header("ƒEƒF[ƒu‚Ì”‚ğæ“¾‚·‚é‚½‚ß‚ÌƒXƒNƒŠƒvƒg")]
+    #region ã€å¤‰æ•°ã€‘
+    [SerializeField, Header("ã‚¦ã‚§ãƒ¼ãƒ–ã®æ•°ã‚’å–å¾—ã™ã‚‹ãŸã‚ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private WaveManager _waveManager = default;
 
-    [SerializeField, Header("ƒEƒF[ƒu‘JˆÚ‚ÌƒXƒe[ƒg‚ğŠÄ‹‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç›£è¦–ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private WaveTransition _waveTransition = default;
 
-    [SerializeField, Header("ƒAƒjƒ[ƒ^[")]
+    [SerializeField, Header("ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     private Animator _animator = default;
 
-    [SerializeField, Header("ƒ}ƒbƒv‚ÌƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ãƒãƒƒãƒ—ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _mapObj = default;
 
-    [SerializeField, Header("‚‚ê–‹")]
+    [SerializeField, Header("å‚ã‚Œå¹•")]
     private GameObject _blackLine = default;
 
-    [SerializeField, Header("ˆÃˆÅ‚ÌƒCƒ[ƒW")]
+    [SerializeField, Header("æš—é—‡ã®ã‚¤ãƒ¡ãƒ¼ã‚¸")]
     private GameObject _blackImage = default;
 
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒgŠÇ—")]
+    [SerializeField,Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆç®¡ç†")]
     private List<PlayerStateManager> _stateManager = new List<PlayerStateManager>();
     [SerializeField]
     private InputChangeState _inputChangeState = default;
 
-    //ˆê‰ñ‚ÌƒEƒF[ƒu‘JˆÚ‚Åˆê‰ñ‚¾‚¯ƒRƒ‹[ƒ`ƒ“‚ğ‘–‚ç‚¹‚é
+    //ä¸€å›ã®ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ã§ä¸€å›ã ã‘ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’èµ°ã‚‰ã›ã‚‹
     private bool _isTransitionRunning = false;
 
-    // —§‚¿ã‚ª‚èŒŸo—p
+    // ç«‹ã¡ä¸ŠãŒã‚Šæ¤œå‡ºç”¨
     private bool _wasWaveChangeMoment = default;
 
-    private Coroutine _runningRoutine;    // Às’†ƒnƒ“ƒhƒ‹
+    private Coroutine _runningRoutine;    // å®Ÿè¡Œä¸­ãƒãƒ³ãƒ‰ãƒ«
 
     private bool _checkOnce = false;
 
     #endregion
 
-    #regiony’è”z
+    #regionã€å®šæ•°ã€‘
     private readonly string FIRST = "First";
 
     private readonly string SECOND = "Second";
@@ -76,7 +76,7 @@ public class WaveTransitionAnim : NetworkBehaviour
     }
 
     /// <summary>
-    /// ”’‹Ê’B‚ğ”ñ•\¦‚É‚·‚é
+    /// ç™½ç‰é”ã‚’éè¡¨ç¤ºã«ã™ã‚‹
     /// </summary>
     [ClientRpc]
     private void DeActiveBallsClientRpc()
@@ -99,7 +99,7 @@ public class WaveTransitionAnim : NetworkBehaviour
         }
 
     /// <summary>
-    /// ‘SƒNƒ‰ƒCƒAƒ“ƒg’[––‚ÅŠe©‹@ƒvƒŒƒCƒ„[‚ğ MovieState ‚É•ÏX‚·‚é RPC
+    /// å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç«¯æœ«ã§å„è‡ªæ©Ÿãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ MovieState ã«å¤‰æ›´ã™ã‚‹ RPC
     /// </summary>
     [ClientRpc]
     private void SetPlayersMovieStateClientRpc()
@@ -108,7 +108,7 @@ public class WaveTransitionAnim : NetworkBehaviour
         foreach (GameObject p in players)
         {
             PlayerStateManager state = p.GetComponent<PlayerStateManager>();
-            if (state != null)
+            if (state != null && state.IsOwner)
             {
                 state.MovieState();
             }
@@ -189,16 +189,16 @@ public class WaveTransitionAnim : NetworkBehaviour
             PlayerStateManager state = p.GetComponent<PlayerStateManager>();
             InputChangeState inputState = p.GetComponent<InputChangeState>();
 
-            if (state != null)
+            if (state != null && state.IsOwner)
             {
                 state.NormalState();
             }
-            if (inputState != null)
+            if (inputState != null && inputState.IsOwner)
             {
                 inputState.ToNormalAnimation();
             }
         }
-        ////ƒIƒ“ƒ‰ƒCƒ“”Å
+        ////ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ç‰ˆ
         //if (_stateManager == null || _inputChangeState == null)
         //{
         //    InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
@@ -233,9 +233,9 @@ public class WaveTransitionAnim : NetworkBehaviour
         //        }
         //    }
         //}
-        //else //ƒ\ƒƒvƒŒƒC”Å
+        //else //ã‚½ãƒ­ãƒ—ãƒ¬ã‚¤ç‰ˆ
         //{
-        //    Debug.Log("ƒ\ƒƒvƒŒƒC");
+        //    Debug.Log("ã‚½ãƒ­ãƒ—ãƒ¬ã‚¤");
         //    _stateManager[0].NormalState();
         //    _inputChangeState.ToNormalAnimation();
         //}

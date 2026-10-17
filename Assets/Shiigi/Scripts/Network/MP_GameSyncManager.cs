@@ -90,9 +90,9 @@ public class MP_GameSyncManager : NetworkBehaviour
         // サーバーおよび接続中の全クライアントがシーンロードを完了した瞬間に発火
         if (sceneEvent.SceneEventType == SceneEventType.LoadEventCompleted)
         {
-            Debug.Log("[MP_GameSyncManager] 全プレイヤーのシーン読み込みが完了。ゲームを開始");
+            Debug.Log("[MP_GameSyncManager] 全プレイヤーのシーン読み込みが完了。開始シーケンスを開始します");
             
-            // Playingに変更（全クライアントへ自動同期）
+            // Playingに変更（全クライアントへ自動同期され、MP_GameManager.OnGameStart が発火）
             CurrentPhase.Value = GamePhase.Playing;
         }
     }

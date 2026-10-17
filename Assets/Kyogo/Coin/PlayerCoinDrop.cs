@@ -8,7 +8,7 @@ public class PlayerCoinDrop : NetworkBehaviour
     //CoinDrips Coinが落ちる数
     public void CoinDrop(int CoinDrops)
     {
-        Debug.Log($"[CoinDrop]{gameObject.name} / IsServer:{IsServer} /Time:{Time.frameCount}");
+        // Debug.Log($"[CoinDrop]{gameObject.name} / IsServer:{IsServer} /Time:{Time.frameCount}");
         if (!IsServer)
         {
             return;

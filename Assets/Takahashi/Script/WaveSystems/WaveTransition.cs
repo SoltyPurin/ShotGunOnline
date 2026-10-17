@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class WaveTransition : NetworkBehaviour
 {
-    #region yEnumz
+    #region ã€Enumã€‘
     public enum State
     {
         Wait,
@@ -21,8 +21,8 @@ public class WaveTransition : NetworkBehaviour
     }
     #endregion
 
-    #region y•Ï”z
-    [SerializeField, Header("ƒXƒNƒŠƒvƒgæ“¾Œn")]
+    #region ã€å¤‰æ•°ã€‘
+    [SerializeField, Header("ã‚¹ã‚¯ãƒªãƒ—ãƒˆå–å¾—ç³»")]
     private WaveUIManager _waveUIManager = default;
     [SerializeField]
     private BGMControl_Ver2 _bgmControll = default;
@@ -33,42 +33,42 @@ public class WaveTransition : NetworkBehaviour
     [SerializeField]
     private List<PlayerMove> _playerMove = new List<PlayerMove>();
 
-    [SerializeField, Header("ƒAƒjƒ[ƒ^[æ“¾")]
+    [SerializeField, Header("ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼å–å¾—")]
     private Animator _fadeAnimator = default;
 
-    [SerializeField, Header("‘JˆÚ‚É‚©‚©‚éŠÔ")]
+    [SerializeField, Header("é·ç§»ã«ã‹ã‹ã‚‹æ™‚é–“")]
     private float _transitionInterval = 5.0f;
-    [SerializeField, Tooltip("ƒ{ƒX‚Ìê‡")]
+    [SerializeField, Tooltip("ãƒœã‚¹ã®å ´åˆ")]
     private float _bossTransitionInterval = 5.0f;
-    [SerializeField, Tooltip("ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìê‡")]
+    [SerializeField, Tooltip("ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®å ´åˆ")]
     private float _tutorialTransitionInterval = 2.0f;
-    [SerializeField, Tooltip("ƒtƒF[ƒhƒAƒEƒg‚©‚çƒtƒF[ƒhƒCƒ“‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField, Tooltip("ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã‹ã‚‰ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã¾ã§ã®æ™‚é–“")]
     private float _fadeOutInterval = 3.0f;
 
     private ScoreUIManager _scoreUIManager = default;
 
 
-    //ƒEƒF[ƒu‘JˆÚƒXƒe[ƒWŠO‚É—‚¿‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß‚Ì‚à‚ÌAtrue‚È‚ç—‚¿‚È‚¢B
+    //ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»æ™‚ã‚¹ãƒ†ãƒ¼ã‚¸å¤–ã«è½ã¡ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®ã‚‚ã®ã€trueãªã‚‰è½ã¡ãªã„ã€‚
     private bool _isWaveChangeMoment = false;
     public bool IsWaveChangeMoment
     {
         get { return _isWaveChangeMoment; }
     }
 
-    //ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒXƒe[ƒW‚©‚Ç‚¤‚©‚Ì”»•Ê
+    //ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚¹ãƒ†ãƒ¼ã‚¸ã‹ã©ã†ã‹ã®åˆ¤åˆ¥
     private bool _tutorial = false;
     public bool Tutorial
     {
         set { _tutorial = value; }
     }
 
-    //‘JˆÚ‚Ég‚¤ƒ^ƒCƒ}[
+    //é·ç§»æ™‚ã«ä½¿ã†ã‚¿ã‚¤ãƒãƒ¼
     private float _intervalTimer = 0.0f;
 
-    //ƒŠƒXƒ|[ƒ“‚µ‚½‚©‚Ç‚¤‚©‚Ì”»’è
+    //ãƒªã‚¹ãƒãƒ¼ãƒ³ã—ãŸã‹ã©ã†ã‹ã®åˆ¤å®š
     private bool _respawnCheck = false;
 
-    //ƒEƒF[ƒu‚ğíœ‰Â”\‚©‚Ç‚¤‚©‚Ì”»’è
+    //ã‚¦ã‚§ãƒ¼ãƒ–ã‚’å‰Šé™¤å¯èƒ½ã‹ã©ã†ã‹ã®åˆ¤å®š
     private bool _canWaveDestroy = false;
     public bool CanWaveDestroy
     {
@@ -76,8 +76,8 @@ public class WaveTransition : NetworkBehaviour
     }
     #endregion
 
-    #region y’è”z
-    //Šeí‰¹—Ê’²ß—p’è”
+    #region ã€å®šæ•°ã€‘
+    //å„ç¨®éŸ³é‡èª¿ç¯€ç”¨å®šæ•°
     private const float CUT_ON_TIME = 1.0f;
     private const float CUT_ON_VALUE = 1000f;
     private const float CUT_OFF_TIME = 3.0f;
@@ -89,10 +89,10 @@ public class WaveTransition : NetworkBehaviour
 
     private void Start()
     {
-        //ƒ^ƒCƒ}[‚Ì‰Šú‰»
+        //ã‚¿ã‚¤ãƒãƒ¼ã®åˆæœŸåŒ–
         _intervalTimer = 0.0f;
 
-        //Šeíbool‚Ì‰Šú‰»
+        //å„ç¨®boolã®åˆæœŸåŒ–
         _respawnCheck = false;
         _canWaveDestroy = false;
 
@@ -105,70 +105,70 @@ public class WaveTransition : NetworkBehaviour
     }
 
     /// <summary>
-    /// ˆê’è•b”‚²‚Æ‚ÉŒÄ‚Î‚ê‚éˆ—
+    /// ä¸€å®šç§’æ•°ã”ã¨ã«å‘¼ã°ã‚Œã‚‹å‡¦ç†
     /// </summary>
     private void FixedUpdate()
     {
         //if (!IsServer) return;
-        //Switch‚ğg‚¢AŠeƒEƒF[ƒu‚Ìí—Ş‚É‰‚¶‚Äˆ—‚ğ•ÏX
+        //Switchã‚’ä½¿ã„ã€å„ã‚¦ã‚§ãƒ¼ãƒ–ã®ç¨®é¡ã«å¿œã˜ã¦å‡¦ç†ã‚’å¤‰æ›´
         switch (_nowState)
         {
-            //‘Ò‹@ó‘Ô
+            //å¾…æ©ŸçŠ¶æ…‹
             case State.Wait:
                 break;
 
-            //’Êí‘JˆÚ
+            //é€šå¸¸é·ç§»
             case State.TransitionToNormal:
                 NormalTransition();
                 break;
 
-            //ƒ{ƒXí‘JˆÚ
+            //ãƒœã‚¹æˆ¦é·ç§»
             case State.TransitionToBoss:
                 BossTransition();
                 break;
 
-            //ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ
+            //ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«é·ç§»
             case State.TransitionToTutorial:
                 TutorialTransition();
                 break;
 
-            //ƒtƒF[ƒhƒAƒEƒgˆ—
+            //ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆå‡¦ç†
             case State.FadeOut:
                 FadeOutStage();
                 break;
         }
     }
 
-    //------------yƒƒ\ƒbƒhz------------
+    //------------ã€ãƒ¡ã‚½ãƒƒãƒ‰ã€‘------------
 
     /// <summary>
-    /// ƒEƒF[ƒu‘JˆÚŠJn—pƒƒ\ƒbƒh
+    /// ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»é–‹å§‹ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="type">Ÿ‚ÌƒEƒF[ƒu‚Ì‘®«‚ğ‘ã“üA’l‚É‚æ‚Á‚Ä‘JˆÚ‚Ìd•û‚ª•Ï‚í‚éB</param>
+    /// <param name="type">æ¬¡ã®ã‚¦ã‚§ãƒ¼ãƒ–ã®å±æ€§ã‚’ä»£å…¥ã€å€¤ã«ã‚ˆã£ã¦é·ç§»ã®ä»•æ–¹ãŒå¤‰ã‚ã‚‹ã€‚</param>
     public void StartTransition(Wave.WaveEnemyType type)
     {
-        //ƒ`ƒ…[ƒgƒŠƒAƒ‹‚È‚ç“Á‚É‰½‚à‚¹‚¸ƒŠƒ^[ƒ“
+        //ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ãªã‚‰ç‰¹ã«ä½•ã‚‚ã›ãšãƒªã‚¿ãƒ¼ãƒ³
         if (_tutorial)
         {
             _nowState = State.TransitionToTutorial;
             return;
         }
 
-        //‘ã“ü‚³‚ê‚½’l‚É‰‚¶‚ÄAswitch‚Å‘JˆÚ•û–@‚ğ•ÏX
+        //ä»£å…¥ã•ã‚ŒãŸå€¤ã«å¿œã˜ã¦ã€switchã§é·ç§»æ–¹æ³•ã‚’å¤‰æ›´
         switch(type)
         {
-            //Ÿ‚ª’ÊíƒEƒF[ƒu‚¾‚Á‚½ê‡’Êí‘JˆÚ‚ğÀs
+            //æ¬¡ãŒé€šå¸¸ã‚¦ã‚§ãƒ¼ãƒ–ã ã£ãŸå ´åˆé€šå¸¸é·ç§»ã‚’å®Ÿè¡Œ
             case Wave.WaveEnemyType.Normal:
                 _nowState = State.TransitionToNormal;
                 break;
 
 
-            //Ÿ‚ªƒ{ƒXƒEƒF[ƒu‚¾‚Á‚½ê‡ƒ{ƒXí‘JˆÚ‚ğÀs
+            //æ¬¡ãŒãƒœã‚¹ã‚¦ã‚§ãƒ¼ãƒ–ã ã£ãŸå ´åˆãƒœã‚¹æˆ¦é·ç§»ã‚’å®Ÿè¡Œ
             case Wave.WaveEnemyType.Boss:
                 _nowState = State.TransitionToBoss;
                 break;
 
-            //Ÿ‚ª’†ƒ{ƒXƒEƒF[ƒu‚¾‚Á‚½ê‡’†ƒ{ƒXí‘JˆÚ‚ğÀs
+            //æ¬¡ãŒä¸­ãƒœã‚¹ã‚¦ã‚§ãƒ¼ãƒ–ã ã£ãŸå ´åˆä¸­ãƒœã‚¹æˆ¦é·ç§»ã‚’å®Ÿè¡Œ
             case Wave.WaveEnemyType.MediumBoss:
                 _nowState = State.TransitionToNormal;
                 break;
@@ -176,24 +176,24 @@ public class WaveTransition : NetworkBehaviour
     }
 
     /// <summary>
-    /// ’Êí‚ÌƒEƒF[ƒu‘JˆÚ—pƒƒ\ƒbƒh
+    /// é€šå¸¸ã®ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void NormalTransition()
     {
-        //Å‰‚ÉÀs‚³‚ê‚éˆ—
+        //æœ€åˆã«å®Ÿè¡Œã•ã‚Œã‚‹å‡¦ç†
         if (_intervalTimer <= 0.0f)
         {
-            //‰æ–Ê‚ğˆÃ‚­‚µA‰¹Šy‚ÌHigh‚ğƒJƒbƒg‚·‚éB
+            //ç”»é¢ã‚’æš—ãã—ã€éŸ³æ¥½ã®Highã‚’ã‚«ãƒƒãƒˆã™ã‚‹ã€‚
 
             //_fadeAnimator.SetTrigger("In");
             FadeAnimationClientRpc(0);
             //_scoreManager.TextAlpha(true);
             _bgmControll.HiCutOn(CUT_ON_VALUE, CUT_ON_TIME);
         }
-        //ƒ^ƒCƒ}[‚ªˆê’è‚Ì’lˆÈã‚É‚È‚Á‚½‚çÀs
+        //ã‚¿ã‚¤ãƒãƒ¼ãŒä¸€å®šã®å€¤ä»¥ä¸Šã«ãªã£ãŸã‚‰å®Ÿè¡Œ
         else if(_intervalTimer >= _transitionInterval)
         {
-            //ƒXƒe[ƒg‚ğ•ÏX‚·‚éB
+            //ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰æ›´ã™ã‚‹ã€‚
             _intervalTimer = 0;
             _nowState = State.FadeOut;
             return;
@@ -203,23 +203,23 @@ public class WaveTransition : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒ{ƒXíƒEƒF[ƒu‘JˆÚ—pƒƒ\ƒbƒh
+    /// ãƒœã‚¹æˆ¦ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void BossTransition()
     {
-        //Å‰‚ÉÀs‚³‚ê‚éˆ—
+        //æœ€åˆã«å®Ÿè¡Œã•ã‚Œã‚‹å‡¦ç†
         if (_intervalTimer <= 0.0f)
         {
-            //‰æ–Ê‚ğˆÃ‚­‚µA‰¹Šy‚ğƒtƒF[ƒhƒAƒEƒg‚³‚¹‚éB
+            //ç”»é¢ã‚’æš—ãã—ã€éŸ³æ¥½ã‚’ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã•ã›ã‚‹ã€‚
             FadeAnimationClientRpc(0);
             //_fadeAnimator.SetTrigger("In");
             _bgmControll.BGMFade_Out(FADE_OUT_TIME, 0);
             //_scoreManager.TextAlpha(true);
         }
-        //ƒ^ƒCƒ}[‚ªˆê’è‚Ì’lˆÈã‚É‚È‚Á‚½‚çÀs
+        //ã‚¿ã‚¤ãƒãƒ¼ãŒä¸€å®šã®å€¤ä»¥ä¸Šã«ãªã£ãŸã‚‰å®Ÿè¡Œ
         else if (_intervalTimer >= _bossTransitionInterval)
         {
-            //‰¹Šy‚ğƒXƒgƒbƒv‚³‚¹AAudioSource‚Ì’l‚ğŒ³‚É–ß‚·B‚»‚ÌŒãƒXƒe[ƒg‚ğ•ÏX
+            //éŸ³æ¥½ã‚’ã‚¹ãƒˆãƒƒãƒ—ã•ã›ã€AudioSourceã®å€¤ã‚’å…ƒã«æˆ»ã™ã€‚ãã®å¾Œã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰æ›´
             _bgmControll.BGM_Stop();
             _bgmControll.BGMFade_In(0.01f, _bgmControll._bgmVolume);
             _intervalTimer = 0;
@@ -231,14 +231,14 @@ public class WaveTransition : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ—pƒƒ\ƒbƒh
+    /// ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«é·ç§»ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void TutorialTransition()
     {
-        //ƒ^ƒCƒ}[‚ªˆê’è‚Ì’lˆÈã‚É‚È‚Á‚½‚çÀs
+        //ã‚¿ã‚¤ãƒãƒ¼ãŒä¸€å®šã®å€¤ä»¥ä¸Šã«ãªã£ãŸã‚‰å®Ÿè¡Œ
         if( _intervalTimer >= _tutorialTransitionInterval)
         {
-            //ƒŠƒXƒ|[ƒ“’n“_‚ğXV‚µAƒXƒe[ƒg‚ğ•ÏX
+            //ãƒªã‚¹ãƒãƒ¼ãƒ³åœ°ç‚¹ã‚’æ›´æ–°ã—ã€ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰æ›´
             _respawn.CountUp();
             _intervalTimer = 0;
             _nowState = State.Wait;
@@ -249,7 +249,7 @@ public class WaveTransition : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒtƒF[ƒhƒAƒEƒg‚©‚çŸ‚ÌƒXƒe[ƒW‚Ö‚Ì‘JˆÚ—pƒƒ\ƒbƒh
+    /// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã‹ã‚‰æ¬¡ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã¸ã®é·ç§»ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void FadeOutStage()
     {
@@ -313,9 +313,9 @@ public class WaveTransition : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒEƒF[ƒu‘JˆÚ‚ªI‚í‚Á‚½‚©‚ğ•Ô‚·Boolƒƒ\ƒbƒh
+    /// ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ãŒçµ‚ã‚ã£ãŸã‹ã‚’è¿”ã™Boolãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <returns>ƒEƒF[ƒu‘JˆÚ‚ªŠ®—¹‚µ‚Ä‚¢‚é‚È‚çtrueA‚»‚¤‚Å‚È‚¢‚È‚çfalseB</returns>
+    /// <returns>ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ãŒå®Œäº†ã—ã¦ã„ã‚‹ãªã‚‰trueã€ãã†ã§ãªã„ãªã‚‰falseã€‚</returns>
     public bool EndTransition()
     {
         if(_nowState != State.Wait)
@@ -329,9 +329,9 @@ public class WaveTransition : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒtƒF[ƒh‚ÌƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+    /// ãƒ•ã‚§ãƒ¼ãƒ‰ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
     /// </summary>
-    /// <param name="exNumber">Às‚·‚éƒtƒF[ƒh‚Ì”Ô† 0 = in, 1 = out, 2 = max</param>
+    /// <param name="exNumber">å®Ÿè¡Œã™ã‚‹ãƒ•ã‚§ãƒ¼ãƒ‰ã®ç•ªå· 0 = in, 1 = out, 2 = max</param>
     [ClientRpc]
     private void FadeAnimationClientRpc(int exNumber)
     {
@@ -344,27 +344,43 @@ public class WaveTransition : NetworkBehaviour
             switch (exNumber)
             {
                 case 0:
-                    Debug.Log("ƒtƒF[ƒhƒCƒ“");
-                    _scoreManager.TextAlpha(true);
+                    Debug.Log("ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³");
+                    if (_scoreManager != null) _scoreManager.TextAlpha(true);
                     _fadeAnimator.SetTrigger("In");
                     break;
 
                 case 1:
-                    Debug.Log("ƒtƒF[ƒhƒAƒEƒg");
-                    _scoreManager.TextAlpha(false);
+                    Debug.Log("ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆ");
+                    if (_scoreManager != null) _scoreManager.TextAlpha(false);
                     _fadeAnimator.SetTrigger("Out");
                     break;
 
                 case 2:
-                    Debug.Log("ƒtƒF[ƒhƒ}ƒbƒNƒX");
-                    _scoreUIManager.HiddenText();
+                    Debug.Log("ãƒ•ã‚§ãƒ¼ãƒ‰ãƒãƒƒã‚¯ã‚¹");
+                    if (_scoreUIManager != null) _scoreUIManager.HiddenText();
                     _fadeAnimator.SetTrigger("Max");
                     break;
 
                 default:
                     break;
             }
-            //
+        }
+
+        // è‡ªæ©Ÿã® PlayerMove ã® IsFadeing ã‚’æ›´æ–°ï¼ˆãƒ•ã‚§ãƒ¼ãƒ‰ä¸­ã®ç§»å‹•ã‚’åˆ¶é™ï¼‰
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
+        {
+            if (p == null) continue;
+            var netObj = p.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsOwner)
+            {
+                var pMove = p.GetComponent<PlayerMove>();
+                if (pMove != null)
+                {
+                    pMove.IsFadeing = (exNumber == 2 || exNumber == 0);
+                }
+                break;
+            }
         }
     }
 }
