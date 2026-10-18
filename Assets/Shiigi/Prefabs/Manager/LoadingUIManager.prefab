@@ -43,5 +43,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23ee52c79cae43e4cb2dce9cf007ebec, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LoadngUIManager
+  m_EditorClassIdentifier: Assembly-CSharp::LoadingUIManager
   _loadingUICanvas: {fileID: 0}

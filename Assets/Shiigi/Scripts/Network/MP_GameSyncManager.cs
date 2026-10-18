@@ -1,8 +1,9 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// NGO標準の NetworkVariable と NetworkSceneManager イベントを用いたシンプルな進行同期クラス
+/// NGO標準の NetworkVariable と NetworkSceneManager イベントを用いたシンプルな進行同期クラス (SRP)
 /// </summary>
 public class MP_GameSyncManager : NetworkBehaviour
 {
@@ -21,14 +22,17 @@ public class MP_GameSyncManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
+    /// <summary>
+    /// フェーズ変更時に外部リスナーへ通知するイベント (OCP / DIP)
+    /// </summary>
+    public event Action<GamePhase> PhaseChanged;
+
     public override void OnNetworkSpawn()
     {
         Instance = this;
 
         // フェーズが変わったときのコールバックを全クライアントで購読
         CurrentPhase.OnValueChanged += OnPhaseChanged;
-
-        OnPhaseChanged(CurrentPhase.Value, CurrentPhase.Value);
 
         if (IsServer)
         {
@@ -40,6 +44,8 @@ public class MP_GameSyncManager : NetworkBehaviour
                 NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneEvent;
             }
         }
+
+        OnPhaseChanged(CurrentPhase.Value, CurrentPhase.Value);
     }
 
     public override void OnNetworkDespawn()
@@ -64,7 +70,7 @@ public class MP_GameSyncManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// バックグラウンドで止まってた時の処理 (多分いらない)
+    /// バックグラウンドで止まってた時の処理
     /// </summary>
     private void OnApplicationFocus(bool hasFocus)
     {
@@ -75,7 +81,7 @@ public class MP_GameSyncManager : NetworkBehaviour
             if (CurrentPhase.Value == GamePhase.Playing && MP_GameManager.Instance != null && MP_GameManager.Instance.CurrentState != MP_GameManager.GameState.Playing)
             {
                 Debug.Log("[MP_GameSyncManager] ホストはプレイ中のため、遅れてゲーム開始処理を実行します。");
-                MP_GameManager.Instance.OnGameStart();
+                NotifyPhase(GamePhase.Playing);
             }
         }
     }
@@ -91,8 +97,8 @@ public class MP_GameSyncManager : NetworkBehaviour
         if (sceneEvent.SceneEventType == SceneEventType.LoadEventCompleted)
         {
             Debug.Log("[MP_GameSyncManager] 全プレイヤーのシーン読み込みが完了。開始シーケンスを開始します");
-            
-            // Playingに変更（全クライアントへ自動同期され、MP_GameManager.OnGameStart が発火）
+
+            // Playingに変更（全クライアントへ自動同期される）
             CurrentPhase.Value = GamePhase.Playing;
         }
     }
@@ -102,11 +108,18 @@ public class MP_GameSyncManager : NetworkBehaviour
     /// </summary>
     private void OnPhaseChanged(GamePhase previous, GamePhase current)
     {
-        if (current == GamePhase.Waiting)
+        NotifyPhase(current);
+    }
+
+    private void NotifyPhase(GamePhase phase)
+    {
+        PhaseChanged?.Invoke(phase);
+
+        if (phase == GamePhase.Waiting)
         {
             MP_GameManager.Instance?.OnWaitingForPlayers();
         }
-        else if (current == GamePhase.Playing)
+        else if (phase == GamePhase.Playing)
         {
             Debug.Log("[MP_GameSyncManager] GamePhase.Playing を受信。ゲーム本編を開始します。");
             MP_GameManager.Instance?.OnGameStart();

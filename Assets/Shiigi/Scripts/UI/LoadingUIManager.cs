@@ -1,12 +1,13 @@
-﻿using UnityEngine;
-
 using UnityEngine;
 
-public class LoadngUIManager : MonoBehaviour
+/// <summary>
+/// インゲームの進行状態（IGameStateProvider）を購読し、ローディングUI Canvasの表示を切り替えるクラス (SRP / DIP)
+/// </summary>
+public class LoadingUIManager : MonoBehaviour
 {
     [SerializeField] private GameObject _loadingUICanvas;
 
-    private MP_GameManager _gameManager;
+    private IGameStateProvider _gameStateProvider;
     private bool _isSubscribed;
 
     private void OnEnable()
@@ -25,23 +26,23 @@ public class LoadngUIManager : MonoBehaviour
         if (_isSubscribed)
             return;
 
-        _gameManager = MP_GameManager.Instance;
-        if (_gameManager == null)
+        _gameStateProvider = MP_GameManager.Instance;
+        if (_gameStateProvider == null)
         {
             Debug.LogWarning("[LoadingUIManager] MP_GameManager が見つかりません。");
             return;
         }
 
-        _gameManager.StateChanged += OnStateChanged;
+        _gameStateProvider.StateChanged += OnStateChanged;
         _isSubscribed = true;
-        ApplyState(_gameManager.CurrentState);
+        ApplyState(_gameStateProvider.CurrentState);
     }
 
     private void OnDisable()
     {
-        if (_isSubscribed && _gameManager != null)
+        if (_isSubscribed && _gameStateProvider != null)
         {
-            _gameManager.StateChanged -= OnStateChanged;
+            _gameStateProvider.StateChanged -= OnStateChanged;
             _isSubscribed = false;
         }
     }

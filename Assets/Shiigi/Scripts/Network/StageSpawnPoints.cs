@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 各ステージシーンに配置し、そのステージ固有のプレイヤー初期位置・向きを提供するクラス
 /// </summary>
-public class StageSpawnPoints : MonoBehaviour
+public class StageSpawnPoints : MonoBehaviour, ISpawnPointProvider
 {
     public static StageSpawnPoints Instance { get; private set; }
 

@@ -3,20 +3,19 @@ using UnityEngine.UI;
 
 public class DebugHonpen : MonoBehaviour
 {
-    private MP_GameManager _gameManager;
+    private IGameStateProvider _gameStateProvider;
     [SerializeField] private Text _gameStateText;
 
     private void Start()
     {
-        _gameManager = MP_GameManager.Instance;
+        _gameStateProvider = MP_GameManager.Instance;
     }
 
     private void Update()
     {
-        if (_gameManager != null)
+        if (_gameStateProvider != null && _gameStateText != null)
         {
-            if (_gameStateText != null)
-                _gameStateText.text = $"Game State: {_gameManager.CurrentState}";
+            _gameStateText.text = $"Game State: {_gameStateProvider.CurrentState}";
         }
     }
 }

@@ -1,14 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// ゲーム全体の進行管理（状態遷移、プレイヤー管理、UI、ウェーブ開始）を行うクラス
+/// ゲーム全体の状態遷移オーケストレーションを行うファサードクラス。
+/// UI表示・ムービー再生・プレイヤースポーン・ローカル入力ロックの各単一責務クラスへ処理を委譲します。
 /// </summary>
-public class MP_GameManager : MonoBehaviour
+public class MP_GameManager : MonoBehaviour, IGameStateProvider
 {
     public static MP_GameManager Instance { get; private set; }
 
@@ -30,7 +30,7 @@ public class MP_GameManager : MonoBehaviour
     [SerializeField] private GameObject _hudCanvas;
     [Tooltip("開始前のNow Loading画面Canvas")]
     [SerializeField] private GameObject _starterCanvas;
-    public GameObject StarterCanvas => _starterCanvas;
+    public GameObject StarterCanvas => _uiStateBinder != null ? _uiStateBinder.StarterCanvas : _starterCanvas;
 
     [Header("進行 参照")]
     [SerializeField] private WaveManager _waveManager;
@@ -43,11 +43,20 @@ public class MP_GameManager : MonoBehaviour
     [Tooltip("マルチプレイ用のPlayerプレハブ（NetWork Player Variantなど）")]
     [SerializeField] private GameObject _playerPrefab;
 
-    // ネットワーク上のプレイヤーリスト
-    private readonly List<NetworkObject> _players = new();
-    public IReadOnlyList<NetworkObject> Players => _players;
+    // 各単一責務サブシステム
+    private InGameUIStateBinder _uiStateBinder;
+    private OpeningCutsceneController _cutsceneController;
+    private NetworkPlayerSpawner _playerSpawner;
+    private LocalPlayerStateLocker _localPlayerLocker;
 
-    private PlayerStateManager _localPlayerState;
+    public IReadOnlyList<NetworkObject> Players
+    {
+        get
+        {
+            EnsureSubsystemsInitialized();
+            return _playerSpawner.Players;
+        }
+    }
 
     public event Action<GameState, GameState> StateChanged;
 
@@ -66,6 +75,22 @@ public class MP_GameManager : MonoBehaviour
             return;
         }
 
+        DisableLegacyGameStarter();
+        EnsureSubsystemsInitialized();
+    }
+
+    private void EnsureSubsystemsInitialized()
+    {
+        if (_playerSpawner != null) return;
+
+        _uiStateBinder = new InGameUIStateBinder(_starterCanvas, _hudCanvas);
+        _cutsceneController = new OpeningCutsceneController(_startDirectors);
+        _playerSpawner = new NetworkPlayerSpawner(_playerPrefab);
+        _localPlayerLocker = new LocalPlayerStateLocker();
+    }
+
+    private void DisableLegacyGameStarter()
+    {
         // 既存の GameStarter がシーンに残っている場合、勝手にタイムラインで開始してしまうため無効化・破棄する
         var oldStarter = FindAnyObjectByType<GameStarter>();
         if (oldStarter != null && oldStarter.gameObject != this.gameObject)
@@ -78,33 +103,15 @@ public class MP_GameManager : MonoBehaviour
 
     private void Start()
     {
-        // _starterCanvas がインスペクター未設定の場合のフォールバック
-        if (_starterCanvas == null)
-        {
-            var loadingText = GameObject.Find("NowLoadingText");
-            if (loadingText != null)
-            {
-                var canvas = loadingText.GetComponentInParent<Canvas>();
-                if (canvas != null)
-                {
-                    _starterCanvas = canvas.gameObject;
-                }
-            }
-        }
+        EnsureSubsystemsInitialized();
 
-        // 初期状態はイベントが発火しないため、現在の状態を明示的に反映する
-        ApplyStateToUI(_currentState);
+        // _starterCanvas がインスペクター未設定の場合のフォールバック解決と初期UI反映
+        _uiStateBinder.ResolveFallbackCanvases();
+        _starterCanvas = _uiStateBinder.StarterCanvas;
+        _uiStateBinder.ApplyStateToUI(_currentState);
 
-        // Play On Awake をOFFにした Timeline の初期状態(ローディング表示など)を、再生せずに反映する
-        if (_startDirectors != null)
-        {
-            foreach (var director in _startDirectors)
-            {
-                if (director == null) continue;
-                director.time = 0;
-                director.Evaluate();
-            }
-        }
+        // Play On Awake をOFFにした Timeline の初期状態を再生せずに反映
+        _cutsceneController.EvaluateInitialState();
 
         // WaveManagerのフォールバック
         if (_waveManager == null)
@@ -116,30 +123,9 @@ public class MP_GameManager : MonoBehaviour
     private void Update()
     {
         // ゲーム開始前は自プレイヤーの操作を制限
-        if (_localPlayerState == null && _currentState == GameState.WaitingForPlayers)
+        if (_currentState == GameState.WaitingForPlayers && !_localPlayerLocker.HasLocalPlayer)
         {
-            FindAndLockLocalPlayer();
-        }
-    }
-
-    /// <summary>
-    /// 自端末のプレイヤーを探し、ゲーム開始前は操作をロックする
-    /// </summary>
-    private void FindAndLockLocalPlayer()
-    {
-        var playerObjs = GameObject.FindGameObjectsWithTag("Player");
-        foreach (var obj in playerObjs)
-        {
-            var netObj = obj.GetComponent<NetworkObject>();
-            if (netObj != null && netObj.IsLocalPlayer)
-            {
-                _localPlayerState = obj.GetComponent<PlayerStateManager>();
-                if (_localPlayerState != null)
-                {
-                    _localPlayerState.MovieState();
-                }
-                break;
-            }
+            _localPlayerLocker.TryFindAndLockLocalPlayer();
         }
     }
 
@@ -148,37 +134,11 @@ public class MP_GameManager : MonoBehaviour
     /// </summary>
     public void OnGameStart()
     {
-        StartCoroutine(StartMovieSequenceRoutine());
-    }
-
-    private IEnumerator StartMovieSequenceRoutine()
-    {
+        EnsureSubsystemsInitialized();
         SetState(GameState.OpeningMovie);
         Debug.Log("[MP_GameManager] シーン読み込み完了。開始ムービーを再生します");
 
-        float maxDuration = 0f;
-        if (_startDirectors != null && _startDirectors.Length > 0)
-        {
-            foreach (var director in _startDirectors)
-            {
-                if (director == null) continue;
-                director.time = 0;
-                director.Play();
-                if (director.duration > maxDuration)
-                {
-                    maxDuration = (float)director.duration;
-                }
-            }
-        }
-
-        // ムービーの長さ分待機（ムービーがない場合は即座に進行）
-        if (maxDuration > 0f)
-        {
-            yield return new WaitForSeconds(maxDuration);
-        }
-
-        // ムービー終了後にプレイヤー生成・ゲームプレイ開始
-        StartGamePlay();
+        StartCoroutine(_cutsceneController.PlaySequenceRoutine(StartGamePlay));
     }
 
     private void StartGamePlay()
@@ -202,32 +162,7 @@ public class MP_GameManager : MonoBehaviour
         }
 
         // 自プレイヤーの操作を解禁
-        FindAndUnlockLocalPlayer();
-    }
-
-    /// <summary>
-    /// 自端末のプレイヤーを探索して操作ロックを解除する
-    /// </summary>
-    private void FindAndUnlockLocalPlayer()
-    {
-        if (_localPlayerState == null)
-        {
-            var playerObjs = GameObject.FindGameObjectsWithTag("Player");
-            foreach (var obj in playerObjs)
-            {
-                var netObj = obj.GetComponent<NetworkObject>();
-                if (netObj != null && netObj.IsLocalPlayer)
-                {
-                    _localPlayerState = obj.GetComponent<PlayerStateManager>();
-                    break;
-                }
-            }
-        }
-
-        if (_localPlayerState != null)
-        {
-            _localPlayerState.NormalState();
-        }
+        _localPlayerLocker.FindAndUnlockLocalPlayer();
     }
 
     public void OnWaitingForPlayers()
@@ -243,35 +178,19 @@ public class MP_GameManager : MonoBehaviour
         var previousState = _currentState;
         _currentState = newState;
         StateChanged?.Invoke(previousState, newState);
-        ApplyStateToUI(newState);
-    }
-
-    private void ApplyStateToUI(GameState state)
-    {
-        // 開始演出Canvas（Now Loading表示および開始ムービーUI）はロード待機中〜開始ムービー再生中まで表示
-        if (_starterCanvas != null)
-        {
-            _starterCanvas.SetActive(state == GameState.WaitingForPlayers || state == GameState.OpeningMovie);
-        }
-
-        // HUDはゲームプレイ中のみ表示（ムービー中は非表示）
-        if (_hudCanvas != null)
-        {
-            _hudCanvas.SetActive(state == GameState.Playing);
-        }
+        _uiStateBinder?.ApplyStateToUI(newState);
     }
 
     public void RegisterPlayer(NetworkObject player)
     {
-        if (!_players.Contains(player))
-        {
-            _players.Add(player);
-        }
+        EnsureSubsystemsInitialized();
+        _playerSpawner.RegisterPlayer(player);
     }
 
     public void UnregisterPlayer(NetworkObject player)
     {
-        _players.Remove(player);
+        EnsureSubsystemsInitialized();
+        _playerSpawner.UnregisterPlayer(player);
     }
 
     /// <summary>
@@ -279,40 +198,7 @@ public class MP_GameManager : MonoBehaviour
     /// </summary>
     public void SpawnAllPlayers()
     {
-        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
-
-        if (_playerPrefab == null)
-        {
-            Debug.LogError("[MP_GameManager] _playerPrefab がインスペクターで設定されていません！");
-            return;
-        }
-
-        var spawnPoints = StageSpawnPoints.Instance;
-        var clients = NetworkManager.Singleton.ConnectedClientsList;
-
-        int index = 0;
-        foreach (var client in clients)
-        {
-            // 既にそのクライアント用の PlayerObject が存在する場合はスキップ（重複防止）
-            if (client.PlayerObject != null)
-            {
-                Debug.Log($"[MP_GameManager] ClientId {client.ClientId} のプレイヤーは既にスポーン済みです。");
-                continue;
-            }
-
-            Transform spawnPoint = spawnPoints != null ? spawnPoints.GetSpawnPoint(index) : null;
-            Vector3 pos = spawnPoint != null ? spawnPoint.position : Vector3.zero;
-            Quaternion rot = spawnPoint != null ? spawnPoint.rotation : Quaternion.identity;
-
-            GameObject playerObj = Instantiate(_playerPrefab, pos, rot);
-            var netObj = playerObj.GetComponent<NetworkObject>();
-
-            // クライアントの所有権を付与してネットワーク上にスポーン
-            netObj.SpawnAsPlayerObject(client.ClientId, destroyWithScene: true);
-            RegisterPlayer(netObj);
-
-            Debug.Log($"[MP_GameManager] ClientId {client.ClientId} のプレイヤーをスポーンしました (位置: {pos})");
-            index++;
-        }
+        EnsureSubsystemsInitialized();
+        _playerSpawner.SpawnAllPlayers(NetworkManager.Singleton, StageSpawnPoints.Instance);
     }
 }

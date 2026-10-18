@@ -21,12 +21,8 @@ public class LobbyPlayerEntryUI : MonoBehaviour
         }
         _playerNameText.text = playerName;
 
-        // 準備状況の取得
-        var isReady = false;
-        if (player.Properties != null && player.Properties.TryGetValue("IsReady", out var prop))
-        {
-            isReady = prop.Value == "true";
-        }
+        // 準備状況の取得（ドメインヘルパーへ委譲）
+        var isReady = SessionPlayerPropertyHelper.IsPlayerReady(player);
 
         if (isHost)
         {
