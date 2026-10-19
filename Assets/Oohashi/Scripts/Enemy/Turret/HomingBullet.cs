@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -19,6 +20,8 @@ public class HomingBullet : EnemyShotBullet
     private float _initAliveTime = 0;
     private bool _canMoveToPlayer = false;
     private float _smooth = 0.4f;
+    private Vector3 _lastPosition = default;
+    private bool _hasLastPosition = false;
     #endregion
 
     private void Start()
@@ -50,11 +53,36 @@ public class HomingBullet : EnemyShotBullet
         _canMoveToPlayer = true;
     }
 
+    private bool IsClientOnly()
+    {
+        return NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && !NetworkManager.Singleton.IsServer;
+    }
+
+    /// <summary>
+    /// 繧ｯ繝ｩ繧､繧｢繝ｳ繝亥�ｴ縺ｯ蠑ｾ縺ｮ蜷代″縺悟酔譛溘＆繧後↑縺�縺溘ａ縲∝ｮ滄圀縺ｮ遘ｻ蜍墓婿蜷代°繧牙髄縺阪ｒ豎ｺ繧√ｋ
+    /// </summary>
+    private void LateUpdate()
+    {
+        if (!IsClientOnly()) return;
+        if (_hasLastPosition)
+        {
+            Vector3 delta = transform.position - _lastPosition;
+            if (delta.sqrMagnitude > 0.000001f)
+            {
+                float angle = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
+                _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
+        }
+        _lastPosition = transform.position;
+        _hasLastPosition = true;
+    }
     /// <summary>
     /// 最初は指定された方向に飛び、その後プレイヤーの方向に飛んでいく
     /// </summary>
     public override void FixedUpdate()
     {
+        // ???????????????(???????????????)
+        if (IsClientOnly()) return;
         _initAliveTime += Time.fixedDeltaTime;
         if(_initAliveTime >= _destroyTime)
         {

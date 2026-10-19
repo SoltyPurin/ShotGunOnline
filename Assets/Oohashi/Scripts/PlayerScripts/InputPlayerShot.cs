@@ -54,7 +54,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     private bool _canDecChargeValue = false;
 
     [SerializeField, Header("クリティカルショットの猶予時間")]
-    private float _criticalGraceTime = 0.1f;
+    private float _criticalGraceTime = 0.35f;
 
     [SerializeField, Header("ウルト状態遷移のスクリプト")]
     private InputChangeState _inputChengeState = default;
@@ -148,9 +148,6 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         // 死んでたら処理は行わない
         if (!_isAlive) return;
 
-        // 落下中は早期リターンする
-        if (_stateManager.PlayerState == PlayerState.Fall) return;
-
         // ★操作しているプレイヤー（IsOwner）のみが自身の入力を検出して同期する
         if (this.IsOwner)
         {
@@ -194,7 +191,9 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                     currentPushState = isShootDown;
                     break;
 
+                case PlayerState.DamageKnockBack:
                 case PlayerState.Fall:
+                    currentPushState = false;
                     break;
             }
 
@@ -237,16 +236,32 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _chargeTime += Time.deltaTime * _bonusMultiplier;
             //チャージ時間は最大2秒なのでその中に収まるようにする
             _chargeTime = Mathf.Clamp(_chargeTime, 0, MAXCHARGEVALUE);
-            //チャージしてる判定にする
-            _isCharge = true;
+        }
+        //チャージしてる判定にする
+        _isCharge = true;
+    }
 
+    /// <summary>
+    /// 被弾時や落下時にチャージ状態を即座にキャンセル・リセットする
+    /// </summary>
+    public void CancelCharge()
+    {
+        _isCharge = false;
+        _chargeTime = 0f;
+        _initChargeTime = 0f;
+        _canCriticalShoot = false;
+        _canDecChargeValue = false;
+        _isDecChargeTime = false;
+
+        if (this.IsOwner && IsSpawned)
+        {
+            _netIsPushShootButton.Value = false;
         }
     }
 
-
     private void CriticalMethod()
     {
-        if (_initChargeTime >= 2 && _initChargeTime < _criticalGraceTime)
+        if (_initChargeTime >= 2f && _initChargeTime <= _criticalGraceTime)
         {
             _canCriticalShoot = true;
         }
@@ -287,6 +302,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
             return;
         }
+
+        // 被弾ノックバック中・落下中はチャージをキャンセルして早期リターン
+        if (_stateManager.PlayerState == PlayerState.DamageKnockBack || _stateManager.PlayerState == PlayerState.Fall)
+        {
+            CancelCharge();
+            return;
+        }
+
         //チャージ時間が0以上でチャージ中でない場合
         if (_chargeTime > 0 && !_isCharge)
         {
@@ -321,8 +344,13 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 //撃つボタンを離して、なおかつ現在チャージ中でなく落下中でなかったら解放可能
                 else if (!_netIsPushShootButton.Value && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
                 {
+                    float shotCharge = _chargeTime;
+                    bool isCrit = _canCriticalShoot;
+                    bool isMaxCharge = shotCharge >= 2.0f;
+
                     _initChargeTime = 0;
                     _canDecChargeValue = false;
+                    _canCriticalShoot = false;
                     //_initMaxChargetTime = 0;
                     //オーバーヒートの値を加算するメソッド実行
                     _overHeat.ShotCountPlus();
@@ -332,29 +360,51 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                     // 当たり判定・反動・画面エフェクト・振動は撃った本人（Owner）のみ実行する（複数端末からの2重ダメージ防止）
                     if (this.IsOwner)
                     {
+                        if (_bloom == null)
+                        {
+                            var postManager = GameObject.Find("PostManager");
+                            if (postManager != null) _bloom = postManager.GetComponent<BloomScript>();
+                        }
+
                         //ノックバックのスクリプトに現在向いてる方向を渡す
-                        //クリティカル判定だった場合プレイヤーの反動はほぼ0
-                        if (_canCriticalShoot)
+                        //クリティカル判定または最大チャージだった場合、インパクトある演出を行う
+                        if (isCrit)
                         {
                             _knockBackScriput.SetDirection(_playerAiming.Direction, _criticalKnockBackValue);
-                            _hitstop.CriticalHitStopMethod();
-                            _bloom.UseCritical();
+                            if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                            if (_bloom != null) _bloom.UseCritical();
                             //当たり判定上の敵にダメージを与えるメソッドを実行
-                            _shootRange.ShotgunHitCheck(_chargeTime, true);
+                            _shootRange.ShotgunHitCheck(shotCharge, true);
                         }
                         else
                         {
-                            _shootRange.ShotgunHitCheck(_chargeTime, false);
-                            _knockBackScriput.SetDirection(_playerAiming.Direction, _chargeTime);
+                            if (isMaxCharge)
+                            {
+                                // 最大チャージ時もクリティカルと同等のインパクト演出を発動
+                                if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                                if (_bloom != null) _bloom.UseCritical();
+                                _shootRange.ShotgunHitCheck(shotCharge, true);
+                            }
+                            else
+                            {
+                                _shootRange.ShotgunHitCheck(shotCharge, false);
+                            }
+                            _knockBackScriput.SetDirection(_playerAiming.Direction, shotCharge);
                         }
                         //レバブルにチャージ時間を渡して震えさせるメソッドを実行
-                        _vibe.ViblationPortocol(_chargeTime);
+                        if (_vibe != null) _vibe.ViblationPortocol(shotCharge);
                     }
 
                     //マズルフラッシュのアニメーション再生メソッドを実行
                     _muzzleFlashAnimation.PlayTheMuzzleFlash();
                     //銃弾(当たり判定無し)の表示
-                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, _chargeTime);
+                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, shotCharge);
+
+                    // 発射音を確実に再生（クリティカルまたは最大チャージ時はshotSE_Largeを再生）
+                    if (_seScript != null)
+                    {
+                        _seScript.PlayShotSE(shotCharge, isCrit || isMaxCharge);
+                    }
                 }
                 break;
 
@@ -389,8 +439,9 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
                 break;
 
+            case PlayerState.DamageKnockBack:
             case PlayerState.Fall:
-                //落下中はなにもできない
+                CancelCharge();
                 break;
         }
 
@@ -400,7 +451,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     /// </summary>
     private void ChargeTimeDecrease()
     {
-        _chargeTime -= Time.fixedDeltaTime * 1.5f;
+        _chargeTime = Mathf.Max(0f, _chargeTime - Time.fixedDeltaTime * 1.5f);
     }
 
     /// <summary>

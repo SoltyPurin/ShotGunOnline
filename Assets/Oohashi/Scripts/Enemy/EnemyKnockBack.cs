@@ -5,36 +5,36 @@ using UnityEngine.Rendering;
 
 public class EnemyKnockBack : NetworkBehaviour
 {
-    #region •Ï”
-    [SerializeField,Header("“G‚ÌˆÚ“®ƒXƒNƒŠƒvƒg")]
+    #region å¤‰æ•°
+    [SerializeField,Header("æ•µã®ç§»å‹•ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     protected EnemyMove _enemyMove = default;
-    [SerializeField, Header("ƒNƒŠƒeƒBƒJƒ‹‚Ìd’¼ŠÔ")]
+    [SerializeField, Header("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã®ç¡¬ç›´æ™‚é–“")]
     protected float _critStiffnessTime = 0.3f;
-    [SerializeField, Header("ƒEƒ‹ƒg‚Ìd’¼ŠÔ")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆã®ç¡¬ç›´æ™‚é–“")]
     protected float _ultStiffnessTime = 0.5f;
     protected TrenbleEnemy _trenble = default;
-    //‚«”ò‚Ñ‰Â”\‚©
+    //å¹ãé£›ã³å¯èƒ½ã‹
     protected bool _canKnockBack = false;
     public bool CanKnockBack
     {
         get { return _canKnockBack; }
     }
-    //Pow‚µ‚½’l‚ğ•Û‘¶
+    //Powã—ãŸå€¤ã‚’ä¿å­˜
     protected float _powValue = default;
-    //ÀÛ‚É‚«”ò‚Ô—Í
+    //å®Ÿéš›ã«å¹ãé£›ã¶åŠ›
     protected float _force = default;
-    [SerializeField, Header("‚Á”ò‚Î‚µ‚ÌÅ’á’l")]
+    [SerializeField, Header("å¹ã£é£›ã°ã—ã®æœ€ä½å€¤")]
     protected float _minForce = 20;
-    [SerializeField, Header("‚Á”ò‚Î‚µ‚ÌæZ’l")]
+    [SerializeField, Header("å¹ã£é£›ã°ã—ã®ä¹—ç®—å€¤")]
     protected float _forceMultiplier = 5;
-    [SerializeField, Header("Œ¸‘¬‚·‚é’l")]
+    [SerializeField, Header("æ¸›é€Ÿã™ã‚‹å€¤")]
     protected float _decelerationValue = 0.5f;
-    //•Ç‚É‚Ô‚Â‚©‚Á‚½‚Æ‚«‚ÉŒ¸‘¬‚³‚¹‚éŠ„‡
+    //å£ã«ã¶ã¤ã‹ã£ãŸã¨ãã«æ¸›é€Ÿã•ã›ã‚‹å‰²åˆ
     private float _divisionRatio = 0.8f;
-    //‚«”ò‚Ô•ûŒü
+    //å¹ãé£›ã¶æ–¹å‘
     protected Vector2 _blowAwayDirection = default;
     #endregion
-    #region ’è”
+    #region å®šæ•°
     private readonly string WALLTAG = "Wall";
     #endregion
 
@@ -45,29 +45,29 @@ public class EnemyKnockBack : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestKnockBackServerRpc(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
     {
-        // ƒT[ƒo[ã‚ÅƒmƒbƒNƒoƒbƒN‚Ì•ûŒü‚Æ—Í‚ğŒvZE“K—p‚·‚é
+        // ã‚µãƒ¼ãƒãƒ¼ä¸Šã§ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®æ–¹å‘ã¨åŠ›ã‚’è¨ˆç®—ãƒ»é©ç”¨ã™ã‚‹
         SetDirectionAndForce(playerPos, chargeTime, isCrit, isUlt);
     }
 
     /// <summary>
-    /// ‚«”ò‚Ô•ûŒü‚Æ‰Á‚¦‚é—Í‚ğİ’è‚·‚éƒƒ\ƒbƒh
+    /// å¹ãé£›ã¶æ–¹å‘ã¨åŠ ãˆã‚‹åŠ›ã‚’è¨­å®šã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="playerPos">ƒvƒŒƒCƒ„[‚ÌÀ•W</param>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
-    /// <param name="isCrit">ƒNƒŠƒeƒBƒJƒ‹UŒ‚</param>
-    /// <param name="isUlt">ƒEƒ‹ƒg</param>
+    /// <param name="playerPos">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
+    /// <param name="isCrit">ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«æ”»æ’ƒ</param>
+    /// <param name="isUlt">ã‚¦ãƒ«ãƒˆ</param>
     public virtual void SetDirectionAndForce(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
     {
         //if (IsServer)
         //{
             _blowAwayDirection = ((playerPos - (Vector2)this.transform.position) * -1).normalized;
-            //ƒ`ƒƒ[ƒWŠÔ‚Ìæ‚ğ‹‚ß‚é
+            //ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã®ä¹—ã‚’æ±‚ã‚ã‚‹
             _powValue = Mathf.Pow(chargeTime, _forceMultiplier);
-            //Å’á6‚©‚çpowValue‚Ü‚Å‚ÌŠÔ‚ÅüŒ`•â³‚ğs‚¢Aƒ`ƒƒ[ƒW’l‚²‚Æ‚Ì‚«”ò‚Î‚µ‚ğ‚È‚ß‚ç‚©‚É
-            //“G‚ÌƒmƒbƒNƒoƒbƒN‚Í‰‘¬Å‘¬‚ÅuŠÔ“I‚ÉÅ‚‘¬“x‚©‚ç’ïR‚É•‰‚¯‚ÄŒ¸‘¬‚·‚é‚İ‚½‚¢‚ÈƒVƒXƒeƒ€‚É‚·‚é
-            //’·‹——£”ò‚Ô‚í‚¯‚Å‚Í‚È‚¢‚¯‚Ç‘òR”ò‚Ô‚í‚¯‚Å‚Í‚È‚¢
-            //3‚ÂƒvƒŒƒCƒ„[‚É‹C‚Ã‚©‚¹‚é‚±‚Æ‚ÅƒvƒŒƒCƒ„[‚Í–Ê”’‚¢‚ÆŠ´‚¶‚é
-            //ÅŒã‚Ü‚Å‹C‚Ã‚©‚ê‚È‚¢‚Ì‚Íâ‘Îƒ_ƒ
+            //æœ€ä½6ã‹ã‚‰powValueã¾ã§ã®é–“ã§ç·šå½¢è£œæ­£ã‚’è¡Œã„ã€ãƒãƒ£ãƒ¼ã‚¸å€¤ã”ã¨ã®å¹ãé£›ã°ã—ã‚’ãªã‚ã‚‰ã‹ã«
+            //æ•µã®ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã¯åˆé€Ÿæœ€é€Ÿã§ç¬é–“çš„ã«æœ€é«˜é€Ÿåº¦ã‹ã‚‰æŠµæŠ—ã«è² ã‘ã¦æ¸›é€Ÿã™ã‚‹ã¿ãŸã„ãªã‚·ã‚¹ãƒ†ãƒ ã«ã™ã‚‹
+            //é•·è·é›¢é£›ã¶ã‚ã‘ã§ã¯ãªã„ã‘ã©æ²¢å±±é£›ã¶ã‚ã‘ã§ã¯ãªã„
+            //3ã¤ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«æ°—ã¥ã‹ã›ã‚‹ã“ã¨ã§ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¯é¢ç™½ã„ã¨æ„Ÿã˜ã‚‹
+            //æœ€å¾Œã¾ã§æ°—ã¥ã‹ã‚Œãªã„ã®ã¯çµ¶å¯¾ãƒ€ãƒ¡
             _force = Mathf.Lerp(_minForce, _powValue, 0.5f);
 
             if (_trenble != null)
@@ -98,7 +98,43 @@ public class EnemyKnockBack : NetworkBehaviour
             {
                 damageEffect.PlayAnim();
             }
+
+            if (IsServer)
+            {
+                PlayKnockBackEffectsClientRpc(isCrit, isUlt, chargeTime);
+            }
         //}
+    }
+
+    /// <summary>
+    /// å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç«¯æœ«ä¸Šã§æ•µã®éœ‡ãˆæ¼”å‡ºã¨ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿã™ã‚‹RPC
+    /// </summary>
+    [ClientRpc]
+    protected void PlayKnockBackEffectsClientRpc(bool isCrit, bool isUlt, float chargeTime)
+    {
+        if (IsServer) return; // ã‚µãƒ¼ãƒãƒ¼ï¼ˆãƒ›ã‚¹ãƒˆï¼‰å´ã§ã¯ SetDirectionAndForce å†…ã§æ—¢ã«å†ç”Ÿæ¸ˆã¿
+
+        if (_trenble != null)
+        {
+            if (isCrit)
+            {
+                _trenble.TrenbleProtocol(_critStiffnessTime);
+            }
+            else if (isUlt)
+            {
+                _trenble.TrenbleProtocol(_ultStiffnessTime);
+            }
+            else
+            {
+                _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
+            }
+        }
+
+        DamageEffect damageEffect = GetComponentInChildren<DamageEffect>();
+        if (damageEffect != null)
+        {
+            damageEffect.PlayAnim();
+        }
     }
     public IEnumerator HitStop(float force, float waitTime)
     {
@@ -119,7 +155,7 @@ public class EnemyKnockBack : NetworkBehaviour
     {
         if (IsServer)
         {
-            //ƒmƒbƒNƒoƒbƒN’†‚¾‚Á‚½‚çˆ—‚µ‚È‚¢
+            //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­ã ã£ãŸã‚‰å‡¦ç†ã—ãªã„
             if (!_canKnockBack)
             {
                 return;
@@ -128,7 +164,7 @@ public class EnemyKnockBack : NetworkBehaviour
         }
     }
     /// <summary>
-    /// —‰º‚µ‚½‚Æ‚«‚É—Í‚ğƒ[ƒ‚É‚µ‚Ä—‚Æ‚µŒŠ‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
+    /// è½ä¸‹ã—ãŸã¨ãã«åŠ›ã‚’ã‚¼ãƒ­ã«ã—ã¦è½ã¨ã—ç©´ã‚’è¶…ãˆãªã„ã‚ˆã†ã«ã™ã‚‹
     /// </summary>
     public virtual void Fall()
     {
@@ -142,36 +178,36 @@ public class EnemyKnockBack : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒmƒbƒNƒoƒbƒN‚·‚éƒƒ\ƒbƒh
+    /// ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public virtual void KnockBackMethod()
     {
-        //—‰º’†‚Å‚È‚¯‚ê‚ÎÀs
+        //è½ä¸‹ä¸­ã§ãªã‘ã‚Œã°å®Ÿè¡Œ
         if(_enemyMove.EnemyState != EnemyState.fall)
         {
-            //—Í‚ª0ˆÈã‚¾‚Á‚½‚çŒ¸‘¬
+            //åŠ›ãŒ0ä»¥ä¸Šã ã£ãŸã‚‰æ¸›é€Ÿ
             if (_force >= 0)
             {
-                //‚«”ò‚Ñ—Í‚©‚çŒ¸Z
+                //å¹ãé£›ã³åŠ›ã‹ã‚‰æ¸›ç®—
                 _force -= _decelerationValue;
-                //ƒmƒbƒNƒoƒbƒN‚ÌƒXƒe[ƒg‚ğŒp‘±
+                //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç¶™ç¶š
                 _enemyMove.EnemyState = EnemyState.knockback;
             }
             else
             {
-                //ƒmƒbƒNƒoƒbƒN‚Ìƒtƒ‰ƒO‚ğƒmƒbƒNƒoƒbƒN‚µ‚Ä‚È‚¢”»’è‚É‚·‚é
+                //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ãƒ•ãƒ©ã‚°ã‚’ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã—ã¦ãªã„åˆ¤å®šã«ã™ã‚‹
                     _canKnockBack = false;
-                //Œ»İ‚ÌƒXƒe[ƒg‚ğˆÚ“®ƒXƒe[ƒg‚ÉØ‚è‘Ö‚¦‚é
+                //ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç§»å‹•ã‚¹ãƒ†ãƒ¼ãƒˆã«åˆ‡ã‚Šæ›¿ãˆã‚‹
                     _enemyMove.EnemyState = EnemyState.move;
             }
         }
         else
         {
-            //—‰º’†‚¾‚Á‚½‚çforce‚ğ0‚É‚·‚é
+            //è½ä¸‹ä¸­ã ã£ãŸã‚‰forceã‚’0ã«ã™ã‚‹
             _force=0;
 
         }
-        //ÀÛ‚É‚«”ò‚Î‚·
+        //å®Ÿéš›ã«å¹ãé£›ã°ã™
         transform.position += (Vector3)_blowAwayDirection * _force * Time.fixedDeltaTime;
 
     }

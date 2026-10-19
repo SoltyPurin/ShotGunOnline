@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,10 +10,10 @@ public class EnemyMirrorBullet : EnemyShotBullet
 
     private float _chargeTime = default;
 
-    [SerializeField, Header("’e‚Ì“à•”HP")]
+    [SerializeField, Header("å¼¾ã®å†…éƒ¨HP")]
     protected float _bulletHP = 0.1f;
 
-    [SerializeField, Header("‚«”ò‚Î‚µ‚ÌæZ’l")]
+    [SerializeField, Header("å¹ãé£›ã°ã—ã®ä¹—ç®—å€¤")]
     private float _forceMultiplier = 4;
 
     private readonly string STONETAGNAME = "Stone";
@@ -25,10 +25,10 @@ public class EnemyMirrorBullet : EnemyShotBullet
     private readonly string BOSSTAGNAME = "Boss";
 
     /// <summary>
-    /// ‘Å‚Á‚½‚Ée’e‚Ì“à•”HP‚ğŒ¸Z‚·‚é
+    /// æ‰“ã£ãŸæ™‚ã«éŠƒå¼¾ã®å†…éƒ¨HPã‚’æ¸›ç®—ã™ã‚‹
     /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
-    /// <param name="playerDirection">ƒvƒŒƒCƒ„[‚ÌŒ©‚Ä‚é•ûŒüA”½Ë‚Ég‚¤</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
+    /// <param name="playerDirection">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¦‹ã¦ã‚‹æ–¹å‘ã€åå°„ã«ä½¿ã†</param>
     public virtual void DecBulletHP(float chargeTime,Vector2 playerDirection)
     {
         _bulletHP -= chargeTime;
@@ -38,18 +38,18 @@ public class EnemyMirrorBullet : EnemyShotBullet
         }
     }
     /// <summary>
-    /// ”½Ë‚Ìƒƒ\ƒbƒh
+    /// åå°„ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
-    /// <param name="playerDirection">ƒvƒŒƒCƒ„[‚ÌŒ©‚Ä‚é•ûŒü</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
+    /// <param name="playerDirection">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¦‹ã¦ã‚‹æ–¹å‘</param>
     public void Mirror(float chargeTime,Vector2 playerDirection)
     {
         _isMirroring = true;
         _direction = playerDirection;
         _bulletLifeLimitTime = 3;
-        //ƒ`ƒƒ[ƒWŠÔ‚Ìæ‚ğ‹‚ß‚é
+        //ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã®ä¹—ã‚’æ±‚ã‚ã‚‹
         float powValue = Mathf.Pow(chargeTime, _forceMultiplier);
-        //Å’á6‚©‚çpowValue‚Ü‚Å‚ÌŠÔ‚ÅüŒ`•â³‚ğs‚¢Aƒ`ƒƒ[ƒW’l‚²‚Æ‚Ì‚«”ò‚Î‚µ‚ğ‚È‚ß‚ç‚©‚É
+        //æœ€ä½6ã‹ã‚‰powValueã¾ã§ã®é–“ã§ç·šå½¢è£œæ­£ã‚’è¡Œã„ã€ãƒãƒ£ãƒ¼ã‚¸å€¤ã”ã¨ã®å¹ãé£›ã°ã—ã‚’ãªã‚ã‚‰ã‹ã«
         float force = Mathf.Lerp(6, powValue, 0.5f);
         _moveSpeed *= force;
         _chargeTime = chargeTime;
@@ -82,10 +82,10 @@ public class EnemyMirrorBullet : EnemyShotBullet
     }
 
     /// <summary>
-    /// ”½Ë‚µ‚ÄŠâ‚É“–‚½‚Á‚½ê‡‚Ìƒƒ\ƒbƒh
+    /// åå°„ã—ã¦å²©ã«å½“ãŸã£ãŸå ´åˆã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="hitObject">Šâ‚ÌƒIƒuƒWƒFƒNƒg</param>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
+    /// <param name="hitObject">å²©ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
     private void StoneBlowAway(GameObject hitObject, float chargeTime)
     {
         SetKnockBackStone stoneBlowAway = hitObject.GetComponent<SetKnockBackStone>();
@@ -97,10 +97,10 @@ public class EnemyMirrorBullet : EnemyShotBullet
     }
 
     /// <summary>
-    /// ”½Ë‚µ‚Äƒ{ƒX‚É“–‚½‚Á‚½ê‡‚Ìƒƒ\ƒbƒh
+    /// åå°„ã—ã¦ãƒœã‚¹ã«å½“ãŸã£ãŸå ´åˆã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="hitObject">ƒ{ƒX‚ÌƒIƒuƒWƒFƒNƒg</param>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
+    /// <param name="hitObject">ãƒœã‚¹ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
     private void BossHitObject(GameObject hitObject, float chargeTime)
     {
         BossHP bossHP = hitObject.GetComponent<BossHP>();
@@ -114,7 +114,7 @@ public class EnemyMirrorBullet : EnemyShotBullet
     }
 
     /// <summary>
-    /// ”½Ë‚µ‚ÄƒA[ƒ}[‚É“–‚½‚Á‚½‚Ìƒƒ\ƒbƒh
+    /// åå°„ã—ã¦ã‚¢ãƒ¼ãƒãƒ¼ã«å½“ãŸã£ãŸæ™‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     /// <param name="hitObject"></param>
     /// <param name="chargeTime"></param>

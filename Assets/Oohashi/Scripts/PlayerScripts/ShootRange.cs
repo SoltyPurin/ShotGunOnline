@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class ShootRange : MonoBehaviour
 {
@@ -109,6 +109,7 @@ public class ShootRange : MonoBehaviour
         //float halfAngleRad = Mathf.Deg2Rad * (_maxAngle / 2);
         if (chargeTime < 2)
         {
+            _didSwingStart = false;
             //チャージ2秒未満の場合は最大角度から最低角度まで下げていく
             _viewMaxAngle = Mathf.Lerp(_originMaxAngle, _minAngle, _t) ;
             //_viewMaxAngle = _maxAngle;

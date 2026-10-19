@@ -157,15 +157,13 @@ public class BombProtocol : NetworkBehaviour
             {
                 //プレイヤーに接触したときのダメージ判定を呼び出す
                 _takeDamage.PlayerCollision();
-                if(_collision != null)
+                Vector3 direction = (hitObject.transform.position - this.transform.position).normalized;
+                PlayerDamageKnockBack knockback = hitObject.GetComponent<PlayerDamageKnockBack>();
+                if (knockback != null)
                 {
-                    Vector3 direction = (_collision.transform.position - this.transform.position).normalized;
-                    PlayerDamageKnockBack knockback = _collision.gameObject.GetComponent<PlayerDamageKnockBack>();
                     //吹き飛ばしのメソッド呼び出し
                     knockback.SetDirection(direction, _bombPower, this.gameObject);
-
                 }
-
             }
             else
             {
