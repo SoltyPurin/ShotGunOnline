@@ -58,7 +58,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         _playerCoinDrop = GetComponent<PlayerCoinDrop>();
     }
 
-    [ServerRpc(RequireOwnership = false)] // 誰からでも呼び出し可能にする
+    [Rpc(SendTo.Server)] // 誰からでも呼び出し可能にする
     public void RequestTakeDamageServerRpc(float chargeTime, PlayerState state)
     {
         // サーバー上で実際のダメージ処理を実行する
@@ -66,7 +66,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     }
 
     //  追加：反射弾のダメージ要求用ServerRpc
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server)]
     public void RequestMirrorDamageServerRpc(float chargeTime)
     {
         SetMirrorDamage(chargeTime);

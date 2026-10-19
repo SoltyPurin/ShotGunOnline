@@ -128,9 +128,10 @@ public class BossHP : EnemyTakeDamage
         {
             return;
         }
-            _damageAnimator.SetTrigger("Damage");
-            _hitFlash.DoFlash();
-                _hPGageAnimeCon.HitGageAnime();
+        BossTakeDamageEffectClientRpc();
+            //_damageAnimator.SetTrigger("Damage");
+            //_hitFlash.DoFlash();
+            //    _hPGageAnimeCon.HitGageAnime();
                 if (state == PlayerState.Ultimate)
                 {
                     float damage = _ultMultiplier;
@@ -167,6 +168,14 @@ public class BossHP : EnemyTakeDamage
                 }
     }
 
+
+    [ClientRpc]
+    private void BossTakeDamageEffectClientRpc()
+    {
+        _damageAnimator.SetTrigger("Damage");
+        _hitFlash.DoFlash();
+        _hPGageAnimeCon.HitGageAnime();
+    }
     public override void FallDamage()
     {
         _collider.isTrigger = true;
