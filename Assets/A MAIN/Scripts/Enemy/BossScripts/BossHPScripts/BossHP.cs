@@ -120,6 +120,7 @@ public class BossHP : EnemyTakeDamage
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
+        Debug.Log("被弾関数呼び出し");
         if (!IsServer) //鯖以外は即リターン
         {
             return;
@@ -128,6 +129,7 @@ public class BossHP : EnemyTakeDamage
         {
             return;
         }
+        Debug.Log("ボス被弾");
         BossTakeDamageEffectClientRpc();
             //_damageAnimator.SetTrigger("Damage");
             //_hitFlash.DoFlash();

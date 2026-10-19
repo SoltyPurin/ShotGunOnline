@@ -1,10 +1,11 @@
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
 /// 敵の出現アニメーションを管理するクラス
 /// 【作成者：髙橋英士】
 /// </summary>
-public class EnemySpawnAnim : MonoBehaviour
+public class EnemySpawnAnim : NetworkBehaviour
 {
     //アニメーションのステータス
     public enum AnimState
@@ -81,7 +82,7 @@ public class EnemySpawnAnim : MonoBehaviour
                 NoticeTimer();
                 break;
             case AnimState.EnemySpawn:
-                SpawnTimer();
+                SpawnTimerClientRpc();
                 break;
         }
     }
@@ -116,7 +117,8 @@ public class EnemySpawnAnim : MonoBehaviour
     /// 敵がポップしてから判定やHPバーが表示されるまでを管理するメソッド。
     /// _enableColliderTimeによって出てくるまでの時間を変えられます。
     /// </summary>
-    private void SpawnTimer()
+    [ClientRpc]
+    private void SpawnTimerClientRpc()
     {
         //タイマーの値が_enableColliderTime以上になったら敵出現アニメーションの方に遷移
         if (_timer >= _enableColliderTime)

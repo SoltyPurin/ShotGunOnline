@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/A MAIN/Scenes/Title.unity
     guid: e889aa3d365d3df428ea8dfb0ced624e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Shiigi/Scenes/MultiplayerLobbyScene.unity
     guid: 7cc17fc1c03bc764a946f22328686315
   - enabled: 0
@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/A MAIN/Scenes/MP_Honpen.unity
     guid: 2877c11498494bc439be4a84bb88931a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Shiigi/Scenes/MP_GameScene.unity
     guid: 6f372309fb533a34a84d63053c3a29a4
   - enabled: 1
