@@ -82,7 +82,7 @@ public class EnemySpawnAnim : NetworkBehaviour
                 NoticeTimer();
                 break;
             case AnimState.EnemySpawn:
-                SpawnTimerClientRpc();
+                SpawnTimer();
                 break;
         }
     }
@@ -117,8 +117,8 @@ public class EnemySpawnAnim : NetworkBehaviour
     /// 敵がポップしてから判定やHPバーが表示されるまでを管理するメソッド。
     /// _enableColliderTimeによって出てくるまでの時間を変えられます。
     /// </summary>
-    [ClientRpc]
-    private void SpawnTimerClientRpc()
+    //[ClientRpc]
+    private void SpawnTimer()
     {
         //タイマーの値が_enableColliderTime以上になったら敵出現アニメーションの方に遷移
         if (_timer >= _enableColliderTime)
@@ -140,9 +140,11 @@ public class EnemySpawnAnim : NetworkBehaviour
     /// <summary>
     /// スポーンを開始させるメソッド
     /// </summary>
-    public void StartAnim()
+    [ClientRpc]
+    public void StartAnimClientRpc()
     {
         _spawnPoint.SetTrigger("Spawn");
+        _timer = 0.0f;
         _state = AnimState.SpawnNotice;
     }
 

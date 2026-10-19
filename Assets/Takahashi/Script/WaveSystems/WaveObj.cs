@@ -28,7 +28,7 @@ public class WaveObj : NetworkBehaviour
     {
         if(_enemySpawnAnim != null)
         {
-            _enemySpawnAnim.StartAnim();
+            _enemySpawnAnim.StartAnimClientRpc();
         }
         else
         {
