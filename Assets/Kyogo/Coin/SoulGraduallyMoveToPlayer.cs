@@ -28,23 +28,46 @@ public class SoulGraduallyMoveToPlayer : MonoBehaviour
         {
             return;
         }
-        if(_playerObjcet == null)
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _chaseRange);
+        Transform nearestPlayer = null;
+        float minDistance = float.MaxValue;
+
+        foreach (Collider2D hit in hits)
         {
-            _playerObjcet = GameObject.FindWithTag("Player");
-            if(_playerObjcet == null)
+            if (hit.CompareTag(PLAYER_TAG))
             {
-                return;
+                float dist = Vector2.Distance(transform.position, hit.transform.position);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    nearestPlayer = hit.transform;
+                }
             }
         }
-        Vector2 playerPos = _playerObjcet.transform.position;
-        Vector2 initPos = this.transform.position;
-        float distance = Vector2.Distance(playerPos,initPos);
 
-        if(distance <= _chaseRange)
+        // ˆê”Ô‹ß‚¢ƒvƒŒƒCƒ„[‚ÉŒü‚©‚Á‚Ä‹z‚¢Šñ‚¹‚ç‚ê‚é
+        if (nearestPlayer != null)
         {
-            Vector2 direction = (playerPos - initPos).normalized;
+            Vector2 direction = (nearestPlayer.position - transform.position).normalized;
             transform.position += (Vector3)direction * _coinMoveSpeed * Time.fixedDeltaTime;
         }
+        //if(_playerObjcet == null)
+        //{
+        //    _playerObjcet = GameObject.FindWithTag("Player");
+        //    if(_playerObjcet == null)
+        //    {
+        //        return;
+        //    }
+        //}
+        //Vector2 playerPos = _playerObjcet.transform.position;
+        //Vector2 initPos = this.transform.position;
+        //float distance = Vector2.Distance(playerPos,initPos);
+
+        //if(distance <= _chaseRange)
+        //{
+        //    Vector2 direction = (playerPos - initPos).normalized;
+        //    transform.position += (Vector3)direction * _coinMoveSpeed * Time.fixedDeltaTime;
+        //}
 
     }
 

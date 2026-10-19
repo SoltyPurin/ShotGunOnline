@@ -75,9 +75,12 @@ public class BossHP : EnemyTakeDamage
         base.Start();
 
         Scene currentScene = SceneManager.GetActiveScene();
-
-        _enemyHP.Value = JsonSaver.Instance.EnemyJson.BossHP;
-        _firstHP = _enemyHP.Value;
+        if (IsServer)
+        {
+            _enemyHP.Value = JsonSaver.Instance.EnemyJson.BossHP;
+        }
+        float maxHp = JsonSaver.Instance.EnemyJson.BossHP;
+        _firstHP = maxHp;
         _halfFirstHP = _firstHP / 2;
 
         _isInvincible = false;

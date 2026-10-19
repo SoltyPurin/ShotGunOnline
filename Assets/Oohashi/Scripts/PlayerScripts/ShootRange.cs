@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
-public class ShootRange : MonoBehaviour
+public class ShootRange : NetworkBehaviour
 {
     #region 変数
     [SerializeField, Header("見てる方向のスクリプト")]
@@ -206,8 +207,46 @@ public class ShootRange : MonoBehaviour
         }
         else //反射弾じゃなかったとき
         {
-            Instantiate(_destroyEffect, hitObject.transform.position, Quaternion.identity);
-            Destroy(hitObject);
+            // 破壊エフェクトは全端末のローカル画面で出して OK
+            if (_destroyEffect != null)
+            {
+                Instantiate(_destroyEffect, hitObject.transform.position, Quaternion.identity);
+            }
+
+            // 弾本体の Destroy はサーバー（ホスト）側限定で実行する！
+            // クライアント側で弾を消したい場合は、ServerRpc を経由するか、サーバーの判定に任せる
+            NetworkObject netObj = hitObject.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
+            {
+                if (IsServer)
+                {
+                    netObj.Despawn(true); // サーバーで Despawn すれば全クライアントから消える
+                }
+                else
+                {
+                    // クライアントからはサーバーへ消去依頼の ServerRpc を送る（必要に応じて）
+                    RequestDestroyBulletServerRpc(netObj);
+                }
+            }
+            else if (IsServer)
+            {
+                Destroy(hitObject);
+            }
+            //Instantiate(_destroyEffect, hitObject.transform.position, Quaternion.identity);
+
+            //Destroy(hitObject);
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void RequestDestroyBulletServerRpc(NetworkObjectReference bulletRef)
+    {
+        if (bulletRef.TryGet(out NetworkObject netObj))
+        {
+            if (netObj.IsSpawned)
+            {
+                netObj.Despawn(true);
+            }
         }
     }
 
