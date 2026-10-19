@@ -1,20 +1,61 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
+using Unity.Netcode;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 
-public class MultiplayerSessionManager : MonoBehaviour
+/// <summary>
+/// マルチプレイセッション関連機能のエントリポイント（ファサード）クラス。
+/// 認証初期化・ルーム管理・ハートビート監視・シーン遷移の各単一責務クラスを統合・調整します。
+/// </summary>
+public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 {
+    private const string GameSceneName = "MP_GameScene";
+    private const float HeartbeatInterval = 2f;
+    private const float HeartbeatTimeout = 10f;
+
     public static MultiplayerSessionManager Instance { get; private set; }
 
-    private ISession _currentSession;
-    public ISession CurrentSession => _currentSession;
-    public event Action OnSessionChanged;
+    private IUnityServicesInitializer _servicesInitializer;
+    private ILobbySessionService _sessionService;
+    private SessionHeartbeatMonitor _heartbeatMonitor;
+    private NetworkSceneTransitionHandler _sceneTransitionHandler;
 
-    public bool IsInitialized { get; private set; }
+    public ISession CurrentSession => _sessionService?.CurrentSession;
+    public bool IsInitialized => _servicesInitializer != null && _servicesInitializer.IsInitialized;
+
+    public event Action OnSessionChanged
+    {
+        add
+        {
+            EnsureSubsystemsInitialized();
+            _sessionService.OnSessionChanged += value;
+        }
+        remove
+        {
+            if (_sessionService != null)
+            {
+                _sessionService.OnSessionChanged -= value;
+            }
+        }
+    }
+
+    public event Action OnGameStarting
+    {
+        add
+        {
+            EnsureSubsystemsInitialized();
+            _sceneTransitionHandler.OnGameStarting += value;
+        }
+        remove
+        {
+            if (_sceneTransitionHandler != null)
+            {
+                _sceneTransitionHandler.OnGameStarting -= value;
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -23,6 +64,7 @@ public class MultiplayerSessionManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            EnsureSubsystemsInitialized();
         }
         else
         {
@@ -30,179 +72,116 @@ public class MultiplayerSessionManager : MonoBehaviour
         }
     }
 
+    private void EnsureSubsystemsInitialized()
+    {
+        if (_servicesInitializer != null) return;
+
+        _servicesInitializer = new UnityServicesInitializer();
+        _sceneTransitionHandler = new NetworkSceneTransitionHandler(GameSceneName);
+        _sessionService = new LobbySessionService(
+            _servicesInitializer,
+            onSessionConnected: SubscribeNetworkEvents,
+            onSessionLeaving: HandleSessionLeaving);
+        _heartbeatMonitor = new SessionHeartbeatMonitor(
+            () => _sessionService.CurrentSession,
+            HeartbeatInterval,
+            HeartbeatTimeout);
+    }
+
     private async void Start()
     {
-        try
+        EnsureSubsystemsInitialized();
+        await _servicesInitializer.InitializeAsync();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
         {
-            await InitializeMultiplayerServicesAsync();
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"UnityServicesの初期化に失敗: {ex.Message}");
+            UnsubscribeNetworkEvents();
         }
     }
 
-    /// <summary>
-    /// マルチプレイ用のUnityServicesの初期化メソッド
-    /// </summary>
-    /// <returns></returns>
-    private async UniTask InitializeMultiplayerServicesAsync()
+    private void Update()
     {
-        try
-        {
-            await UnityServices.InitializeAsync();
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        _heartbeatMonitor?.Tick(Time.unscaledTime, NetworkManager.Singleton);
+    }
 
-            IsInitialized = true;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Unity Servicesの初期化に失敗: {ex.Message}");
-        }
+    private void SubscribeNetworkEvents()
+    {
+        var networkManager = NetworkManager.Singleton;
+        if (networkManager == null) return;
+
+        _sceneTransitionHandler?.SubscribeEvents(networkManager);
+        _heartbeatMonitor?.SubscribeMessaging(networkManager.CustomMessagingManager);
+    }
+
+    private void UnsubscribeNetworkEvents()
+    {
+        var networkManager = NetworkManager.Singleton;
+        if (networkManager == null) return;
+
+        _sceneTransitionHandler?.UnsubscribeEvents(networkManager);
+        _heartbeatMonitor?.UnsubscribeMessaging(networkManager.CustomMessagingManager);
+    }
+
+    private void HandleSessionLeaving()
+    {
+        UnsubscribeNetworkEvents();
+        _heartbeatMonitor?.Reset();
     }
 
     /// <summary>
     /// ホストとして新しいルームを作成する
     /// </summary>
-    /// <param name="roomName"></param>
-    /// <param name="maxPlayers"></param>
-    /// <returns></returns>
-    public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers)
+    public UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers)
     {
-        if (!IsInitialized)
-        {
-            Debug.LogError("Servicesが初期化されていません");
-            return false;
-        }
-
-        try
-        {
-            // オプション作成
-            var options = new SessionOptions
-            {
-                Name = roomName,
-                MaxPlayers = maxPlayers,
-                IsPrivate = false
-            };
-
-            _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
-            _currentSession.Changed += HandleSessionChanged;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Debug.Log($"ルーム作成失敗: {ex.Message}");
-            return false;
-        }
+        EnsureSubsystemsInitialized();
+        return _sessionService.CreateRoomSessionAsync(roomName, maxPlayers);
     }
 
     /// <summary>
     /// 公開されているルームを検索
     /// </summary>
-    /// <returns></returns>
-    public async UniTask<List<ISessionInfo>> SearchRoomSessionsAsync()
+    public UniTask<List<ISessionInfo>> SearchRoomSessionsAsync()
     {
-        if (!IsInitialized)
-        {
-            Debug.LogError("Servicesが初期化されていません");
-            return new List<ISessionInfo>();
-        }
-
-        try
-        {
-            // 検索条件作成
-            var queryOptions = new QuerySessionsOptions
-            {
-                // TODO: 検索条件がある場合はここに追加（例えばルームの空き状況など）
-            };
-
-            QuerySessionsResults queryResponse = await MultiplayerService.Instance.QuerySessionsAsync(queryOptions);
-            return new List<ISessionInfo>(queryResponse.Sessions);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"ルーム検索失敗: {ex.Message}");
-            return new List<ISessionInfo>();
-        }
+        EnsureSubsystemsInitialized();
+        return _sessionService.SearchRoomSessionsAsync();
     }
 
     /// <summary>
     /// 指定したセッションに参加する
     /// </summary>
-    /// <param name="targetRoom"></param>
-    /// <returns></returns>
-    public async UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom)
+    public UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom)
     {
-        if (!IsInitialized)
-        {
-            Debug.Log("Servicesが初期化されていません");
-            return false;
-        }
-
-        try
-        {
-            _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id);
-            _currentSession.Changed += HandleSessionChanged;
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Debug.Log($"ルームに参加失敗: {ex.Message}");
-            return false;
-        }
+        EnsureSubsystemsInitialized();
+        return _sessionService.JoinRoomSessionAsync(targetRoom);
     }
 
     /// <summary>
     /// 現在参加しているルームから退出する
     /// </summary>
-    /// <returns></returns>
-    public async UniTask LeaveRoomSessionAsync()
+    public UniTask LeaveRoomSessionAsync()
     {
-        if (_currentSession == null) return;
-
-        try
-        {
-            _currentSession.Changed -= HandleSessionChanged;
-            await _currentSession.LeaveAsync();
-            _currentSession = null;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"ルーム退出時にエラーが発生しました: {ex.Message}");
-        }
-    }
-
-    private void HandleSessionChanged()
-    {
-        OnSessionChanged?.Invoke();
+        EnsureSubsystemsInitialized();
+        return _sessionService.LeaveRoomSessionAsync();
     }
 
     /// <summary>
     /// 準備完了ステータスを更新する
     /// </summary>
-    public async UniTask SetReadyStatusAsync(bool isReady)
+    public UniTask SetReadyStatusAsync(bool isReady)
     {
-        if (_currentSession == null || _currentSession.CurrentPlayer == null)
-        {
-            Debug.LogError("セッションまたはプレイヤーが存在しません");
-            return;
-        }
+        EnsureSubsystemsInitialized();
+        return _sessionService.SetReadyStatusAsync(isReady);
+    }
 
-        try
-        {
-            var value = isReady ? "true" : "false";
-            var properties = new Dictionary<string, PlayerProperty>
-            {
-                { "IsReady", new PlayerProperty(value, VisibilityPropertyOptions.Member) }
-            };
-
-            _currentSession.CurrentPlayer.SetProperties(properties);
-            await _currentSession.SaveCurrentPlayerDataAsync();
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"準備状態の更新に失敗しました: {ex.Message}");
-        }
+    /// <summary>
+    /// ホストがゲームを開始する
+    /// </summary>
+    public void StartMultiplayGame()
+    {
+        EnsureSubsystemsInitialized();
+        _sceneTransitionHandler.StartMultiplayGame(NetworkManager.Singleton);
     }
 }

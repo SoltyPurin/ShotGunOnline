@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class UltimateShot : MonoBehaviour
 {
-    //ƒJƒƒ‰‚Ì—h‚ê‚ÆƒqƒbƒgƒXƒgƒbƒv‚Í“–‚½‚Á‚½‚¾‚¯
-    //ƒuƒ‹[ƒ€‚âƒRƒCƒ“‚ğŒ¸‚ç‚·‚Ì‚Í“–‚½‚Á‚Ä‚È‚­‚Ä‚àÀs
-    [SerializeField,Header("‘_‚Á‚Ä‚é•ûŒü‚ÌƒXƒNƒŠƒvƒg")]
+    //ã‚«ãƒ¡ãƒ©ã®æºã‚Œã¨ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—ã¯å½“ãŸã£ãŸæ™‚ã ã‘
+    //ãƒ–ãƒ«ãƒ¼ãƒ ã‚„ã‚³ã‚¤ãƒ³ã‚’æ¸›ã‚‰ã™ã®ã¯å½“ãŸã£ã¦ãªãã¦ã‚‚å®Ÿè¡Œ
+    [SerializeField,Header("ç‹™ã£ã¦ã‚‹æ–¹å‘ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private PlayerAiming _playerAiming = default;
-    [SerializeField,Header("Š—L‚µ‚Ä‚éƒRƒCƒ“‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("æ‰€æœ‰ã—ã¦ã‚‹ã‚³ã‚¤ãƒ³ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private SoulKeep _coinKeep = default;
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg")] 
+    [SerializeField,Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆ")] 
     private PlayerStateManager _stateManager = default;
-    [SerializeField,Header("ƒqƒbƒgƒXƒgƒbƒv‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private HitStop _hitStop = default;
-    [SerializeField,Header("ƒJƒƒ‰‚ª—h‚ê‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ã‚«ãƒ¡ãƒ©ãŒæºã‚Œã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private ScreenVibration _shake = default;
-    [SerializeField,Header("ƒEƒ‹ƒg‚Ìƒuƒ‹[ƒ€Œø‰Ê‰‰o‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ã‚¦ãƒ«ãƒˆã®ãƒ–ãƒ«ãƒ¼ãƒ åŠ¹æœæ¼”å‡ºã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private BloomScript _ultBloom = default;
-    [SerializeField, Header("e’e‚ªÁ‚¦‚é‚Æ‚«‚ÌƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("éŠƒå¼¾ãŒæ¶ˆãˆã‚‹ã¨ãã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private GameObject _destroyEffect = default;
 
     private readonly string ARMORTAGNAME = "Armor";
@@ -27,15 +27,15 @@ public class UltimateShot : MonoBehaviour
     private readonly string ENEMYBULLETTAGNAME = "EnemyBullet";
     private readonly string MIRRORBULLETTAGNAME = "MirrorBullet";
 
-    [SerializeField, Header("”½Ë’e‚É—^‚¦‚é—Í")]
+    [SerializeField, Header("åå°„å¼¾ã«ä¸ãˆã‚‹åŠ›")]
     private float _giveForceOfMirroBullet = 1.4f;
 
-    [SerializeField, Header("ƒEƒ‹ƒg–{‘Ì‚Ì‚«”ò‚Î‚µ—Í")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆæœ¬ä½“ã®å¹ãé£›ã°ã—åŠ›")]
     private float _ultimateForce = 2.5f;
 
-    // Ë’öŒÅ’è
+    // å°„ç¨‹å›ºå®š
     private float _radius = 20f;
-    // ‘O•û90“xˆÈ“à‚¾‚¯
+    // å‰æ–¹90åº¦ä»¥å†…ã ã‘
     private float _maxAngle = 90;
 
     private void Start()
@@ -48,24 +48,24 @@ public class UltimateShot : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒEƒ‹ƒg‚Ì”ÍˆÍ“à‚É‚¢‚é“G‚ğŠm”F‹y‚Ñ‚»‚ê‚É‘Î‚µ‚ÄƒAƒNƒVƒ‡ƒ“‚ğ‹N‚±‚·ƒƒ\ƒbƒh
+    /// ã‚¦ãƒ«ãƒˆã®ç¯„å›²å†…ã«ã„ã‚‹æ•µã‚’ç¢ºèªåŠã³ãã‚Œã«å¯¾ã—ã¦ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’èµ·ã“ã™ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void UltimateShotProtocol()
     {
         _ultBloom.UseUltimate();
 
-        //”»’è“à‚É‚¢‚½ƒIƒuƒWƒFƒNƒg‘S‚Ä‚ğˆê’Uû—e
+        //åˆ¤å®šå†…ã«ã„ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå…¨ã¦ã‚’ä¸€æ—¦åå®¹
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _radius);
 
         foreach (Collider2D hit in hits)
         {
-            //ƒ^[ƒQƒbƒg‚Ì‚¢‚é•ûŒü
+            //ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã„ã‚‹æ–¹å‘
             Vector2 directionToTarget = (hit.transform.position - transform.position).normalized;
-            //³–Ê‚ğƒvƒŒƒCƒ„[‚ÌŒ©‚Ä‚¢‚é•ûŒü‚Æ’è‚ß‚é
+            //æ­£é¢ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¦‹ã¦ã„ã‚‹æ–¹å‘ã¨å®šã‚ã‚‹
             Vector2 forward = _playerAiming.Direction;
-            //“G‚Ì‚¢‚éŠp“x‚ğ‹‚ß‚é
+            //æ•µã®ã„ã‚‹è§’åº¦ã‚’æ±‚ã‚ã‚‹
             float angle = Vector2.Angle(forward, directionToTarget);
-            //ƒ^[ƒQƒbƒg‚ªËŠp(maxAngle)‚Ì’†‰›•ûŒü}(maxAngle/2)ˆÈ“à‚É‚¢‚é‚©”»’è
+            //ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒå°„è§’(maxAngle)ã®ä¸­å¤®æ–¹å‘Â±(maxAngle/2)ä»¥å†…ã«ã„ã‚‹ã‹åˆ¤å®š
             if (angle <= _maxAngle / 2)
             {
                 GameObject hitObject = hit.gameObject;
@@ -94,38 +94,38 @@ public class UltimateShot : MonoBehaviour
     }
 
     /// <summary>
-    /// e’e‚Ìƒqƒbƒgˆ—A”½Ë’e‚¾‚Á‚½ê‡‚Íˆ—‚ğ•ÏX‚·‚é
+    /// éŠƒå¼¾ã®ãƒ’ãƒƒãƒˆå‡¦ç†ã€åå°„å¼¾ã ã£ãŸå ´åˆã¯å‡¦ç†ã‚’å¤‰æ›´ã™ã‚‹
     /// </summary>
-    /// <param name="hitObject">ƒEƒ‹ƒg‚Éˆø‚Á‚©‚©‚Á‚½ƒIƒuƒWƒFƒNƒg</param>
+    /// <param name="hitObject">ã‚¦ãƒ«ãƒˆã«å¼•ã£ã‹ã‹ã£ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
     private void MirrorTheBullet(GameObject hitObject)
     {
         EnemyMirrorBullet mirror = hitObject.GetComponent<EnemyMirrorBullet>();
         if (mirror != null)
         {
-            //”½Ë’e‚É‚ ‚é’ö“x‚Ì—Í‚ğ—^‚¦‚Ä”½Ë‚·‚é
+            //åå°„å¼¾ã«ã‚ã‚‹ç¨‹åº¦ã®åŠ›ã‚’ä¸ãˆã¦åå°„ã™ã‚‹
             mirror.DecBulletHP(_giveForceOfMirroBullet, _playerAiming.Direction);
         }
         else
         {
-            //”½Ë’e‚Å‚È‚¢ê‡‚ÍƒGƒtƒFƒNƒg‚ğ•¦‚©‚¹‚ÄƒfƒXƒgƒƒC‚·‚é
+            //åå°„å¼¾ã§ãªã„å ´åˆã¯ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’æ²¸ã‹ã›ã¦ãƒ‡ã‚¹ãƒˆãƒ­ã‚¤ã™ã‚‹
             Instantiate(_destroyEffect, hitObject.transform.position, Quaternion.identity);
             Destroy(hitObject);
         }
     }
 
     /// <summary>
-    /// ƒ{ƒX‚ª”»’è‚Éˆø‚Á‚©‚©‚Á‚½‚Ìƒƒ\ƒbƒh
+    /// ãƒœã‚¹ãŒåˆ¤å®šã«å¼•ã£ã‹ã‹ã£ãŸæ™‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="hitObject">ƒ{ƒX‚ÌƒIƒuƒWƒFƒNƒg</param>
-    /// <param name="force">—^‚¦‚é—Í</param>
+    /// <param name="hitObject">ãƒœã‚¹ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+    /// <param name="force">ä¸ãˆã‚‹åŠ›</param>
     private void BossHit(GameObject hitObject, float force)
     {
         EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
         if (knockback != null)
         {
-            knockback.SetDirectionAndForce((Vector2)transform.position, force-0.5f, false,true);
-            takeDamage.SetTakeDamege(force, PlayerState.Ultimate);
+            knockback.RequestKnockBackServerRpc((Vector2)transform.position, force - 0.5f, false, true);
+            takeDamage.RequestTakeDamageServerRpc(force, PlayerState.Ultimate);
             _hitStop.UltHitStopMethod();
             _shake.CanShake = true;
             StartCoroutine(ShakeStop());
@@ -133,16 +133,16 @@ public class UltimateShot : MonoBehaviour
     }
 
     /// <summary>
-    /// Šâ‚ªˆø‚Á‚©‚©‚Á‚½‚Ìƒƒ\ƒbƒh
+    /// å²©ãŒå¼•ã£ã‹ã‹ã£ãŸæ™‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="hitObject">Šâ‚ÌƒIƒuƒWƒFƒNƒg</param>
-    /// <param name="force">—^‚¦‚é—Í</param>
+    /// <param name="hitObject">å²©ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+    /// <param name="force">ä¸ãˆã‚‹åŠ›</param>
     private void StoneHit(GameObject hitObject, float force)
     {
         SetKnockBackStone stoneKnockBack = hitObject.GetComponent<SetKnockBackStone>();
         if(stoneKnockBack != null)
         {
-            stoneKnockBack.SetDirectionAndForce((Vector2)transform.position, force,false, false);
+            stoneKnockBack.RequestKnockBackServerRpc((Vector2)transform.position, force, false, false);
             _hitStop.UltHitStopMethod();
             _shake.CanShake = true;
             StartCoroutine(ShakeStop());
@@ -150,18 +150,18 @@ public class UltimateShot : MonoBehaviour
     }
 
     /// <summary>
-    /// “Áê‚Èˆ—‚ª‚È‚¢“G‚É“–‚½‚Á‚½‚Ìˆ—‚ğs‚¤ƒƒ\ƒbƒh
+    /// ç‰¹æ®Šãªå‡¦ç†ãŒãªã„æ•µã«å½“ãŸã£ãŸæ™‚ã®å‡¦ç†ã‚’è¡Œã†ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="hitObject">“G‚ÌƒIƒuƒWƒFƒNƒg</param>
-    /// <param name="force">—^‚¦‚é—Í</param>
+    /// <param name="hitObject">æ•µã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+    /// <param name="force">ä¸ãˆã‚‹åŠ›</param>
     private void NormalHitObject(GameObject hitObject, float force,bool isSpecial)
     {
         EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
         if (knockback != null)
         {
-            knockback.SetDirectionAndForce((Vector2)transform.position, force,false, true);
-            takeDamage.SetTakeDamege(force, PlayerState.Ultimate);
+            knockback.RequestKnockBackServerRpc((Vector2)transform.position, force, false, true);
+            takeDamage.RequestTakeDamageServerRpc(force, PlayerState.Ultimate);
             _hitStop.UltHitStopMethod();
             _shake.CanShake = true;
             StartCoroutine(ShakeStop());
@@ -169,25 +169,28 @@ public class UltimateShot : MonoBehaviour
     }
 
     /// <summary>
-    /// ‚‚¿‚ªˆø‚Á‚©‚©‚Á‚½‚Ìƒƒ\ƒbƒh
+    /// ç›¾æŒã¡ãŒå¼•ã£ã‹ã‹ã£ãŸæ™‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="hitObject">‚‚¿‚ÌƒIƒuƒWƒFƒNƒg</param>
-    /// <param name="force">—^‚¦‚é—Í</param>
+    /// <param name="hitObject">ç›¾æŒã¡ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+    /// <param name="force">ä¸ãˆã‚‹åŠ›</param>
     private void ArmorHitObject(GameObject hitObject, float force)
     {
         ArmorKnockBack armorKnockback = hitObject.GetComponent<ArmorKnockBack>();
         ArmorTakeDamage armorTakeDamage = hitObject.GetComponent<ArmorTakeDamage>();
-        armorKnockback.SetDirectionAndForce((Vector2)transform.position, force,PlayerState.Ultimate,false,true);
-        armorTakeDamage.SetTakeDamege(force, _stateManager.PlayerState);
-        _hitStop.UltHitStopMethod();
-        _shake.CanShake = true;
-        StartCoroutine(ShakeStop());
+        if (armorKnockback != null)
+        {
+            armorKnockback.RequestKnockBackServerRpc((Vector2)transform.position, force, false, true);
+            armorTakeDamage.RequestTakeDamageServerRpc(force, _stateManager.PlayerState);
+            _hitStop.UltHitStopMethod();
+            _shake.CanShake = true;
+            StartCoroutine(ShakeStop());
+        }
     }
 
     /// <summary>
-    /// ‰æ–Ê‚Ì—h‚ê‚ğ~‚ß‚éƒRƒ‹[ƒ`ƒ“
+    /// ç”»é¢ã®æºã‚Œã‚’æ­¢ã‚ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
-    /// <returns>’·‚·‚¬‚é‚ÆŒ‚¤‚Ì‚Å1•b‚Å’â~</returns>
+    /// <returns>é•·ã™ãã‚‹ã¨é…”ã†ã®ã§1ç§’ã§åœæ­¢</returns>
     private IEnumerator ShakeStop()
     {
         yield return new WaitForSecondsRealtime(1f);
@@ -195,22 +198,22 @@ public class UltimateShot : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒEƒ‹ƒg‚ÌƒfƒoƒbƒO“–‚½‚è”»’è‚ğ•\¦
+    /// ã‚¦ãƒ«ãƒˆã®ãƒ‡ãƒãƒƒã‚°å½“ãŸã‚Šåˆ¤å®šã‚’è¡¨ç¤º
     /// </summary>
     private void OnDrawGizmos()
     {
 
-        // ƒvƒŒƒCƒ„[‚ÌˆÊ’ui‚±‚ÌƒXƒNƒŠƒvƒg‚ªƒAƒ^ƒbƒ`‚³‚ê‚Ä‚éƒIƒuƒWƒFƒNƒgj
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ï¼ˆã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆãŒã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼‰
         Vector3 origin = transform.position;
 
-        // ƒvƒŒƒCƒ„[‚ÌŒü‚«
-        Vector3 forward = transform.right; // •ûŒü‚Íê‡‚É‚æ‚Á‚Ä•ÏX
-        float radius = 20;       // Ë’öŒÅ’è
-        float maxAngle = 90f;     // ‘O•û90“xˆÈ“à‚¾‚¯
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ã
+        Vector3 forward = transform.right; // æ–¹å‘ã¯å ´åˆã«ã‚ˆã£ã¦å¤‰æ›´
+        float radius = 20;       // å°„ç¨‹å›ºå®š
+        float maxAngle = 90f;     // å‰æ–¹90åº¦ä»¥å†…ã ã‘
 
-        int segments = 30; // îŒ`‚ğ‰½•ªŠ„‚·‚é‚©i‘½‚¢‚Ù‚ÇŠŠ‚ç‚©j
+        int segments = 30; // æ‰‡å½¢ã‚’ä½•åˆ†å‰²ã™ã‚‹ã‹ï¼ˆå¤šã„ã»ã©æ»‘ã‚‰ã‹ï¼‰
 
-        Gizmos.color = new Color(1, 0, 0, 0.4f); // ÔA“§–¾
+        Gizmos.color = new Color(1, 0, 0, 0.4f); // èµ¤ã€é€æ˜
 
         Vector3 prevPoint = origin;
 
@@ -221,7 +224,7 @@ public class UltimateShot : MonoBehaviour
             Vector3 dir = rot * forward;
             Vector3 point = origin + dir.normalized * radius;
 
-            // ü‚ğ•`‚­
+            // ç·šã‚’æã
             if (i > 0)
             {
                 Gizmos.DrawLine(prevPoint, point);
@@ -230,7 +233,7 @@ public class UltimateShot : MonoBehaviour
             prevPoint = point;
         }
 
-        // ’†S‚©‚ç—¼’[‚É‚àü‚ğˆø‚­
+        // ä¸­å¿ƒã‹ã‚‰ä¸¡ç«¯ã«ã‚‚ç·šã‚’å¼•ã
         Vector3 left = Quaternion.Euler(0, 0, -maxAngle / 2) * forward * radius;
         Vector3 right = Quaternion.Euler(0, 0, maxAngle / 2) * forward * radius;
         Gizmos.DrawLine(origin, origin + left);

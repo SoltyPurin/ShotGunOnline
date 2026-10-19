@@ -13,12 +13,14 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField]
     private LoadingOverlayController _loadingOverlay;
 
+    private ILobbySessionService _sessionService;
     private MultiplayerSessionManager _sessionManager;
     private LobbyUIState _currentState;
 
     private void Start()
     {
         _sessionManager = MultiplayerSessionManager.Instance;
+        _sessionService = _sessionManager;
 
         // Viewのイベントを購読
         _discoverUI.OnRefreshRequested += RefreshRoomList;
@@ -31,7 +33,14 @@ public class LobbyUIManager : MonoBehaviour
         _roomUI.OnStartGameRequested += StartGame;
 
         // セッション更新イベントを購読
-        _sessionManager.OnSessionChanged += UpdateRoomUI;
+        if (_sessionService != null)
+        {
+            _sessionService.OnSessionChanged += UpdateRoomUI;
+        }
+        if (_sessionManager != null)
+        {
+            _sessionManager.OnGameStarting += ShowGameStarting;
+        }
 
         _createRoomDialogUI.gameObject.SetActive(false);
 
@@ -56,9 +65,14 @@ public class LobbyUIManager : MonoBehaviour
             _roomUI.OnStartGameRequested -= StartGame;
         }
 
+        if (_sessionService != null)
+        {
+            _sessionService.OnSessionChanged -= UpdateRoomUI;
+        }
+
         if (_sessionManager != null)
         {
-            _sessionManager.OnSessionChanged -= UpdateRoomUI;
+            _sessionManager.OnGameStarting -= ShowGameStarting;
         }
     }
 
@@ -92,7 +106,7 @@ public class LobbyUIManager : MonoBehaviour
         _loadingOverlay.SetLoadingState(true, "更新中...");
         try
         {
-            var sessions = await _sessionManager.SearchRoomSessionsAsync();
+            var sessions = await _sessionService.SearchRoomSessionsAsync();
             _discoverUI.UpdateRoomList(sessions);
         }
         finally
@@ -111,7 +125,7 @@ public class LobbyUIManager : MonoBehaviour
 
         if (result.IsCanceled) return;
 
-        // 簡単な入力バリデーション
+        // バリデーション
         while (string.IsNullOrWhiteSpace(result.RoomName))
         {
             if (await _confirmDialogUI.ShowAsync("ルーム名を正しく入力してください"))
@@ -129,7 +143,7 @@ public class LobbyUIManager : MonoBehaviour
         TransitionTo(LobbyUIState.Connecting);
         try
         {
-            var success = await _sessionManager.CreateRoomSessionAsync(result.RoomName, result.MaxPlayers);
+            var success = await _sessionService.CreateRoomSessionAsync(result.RoomName, result.MaxPlayers);
             if (success)
             {
                 TransitionTo(LobbyUIState.InRoom);
@@ -155,7 +169,7 @@ public class LobbyUIManager : MonoBehaviour
         TransitionTo(LobbyUIState.Connecting);
         try
         {
-            var success = await _sessionManager.JoinRoomSessionAsync(sessionInfo);
+            var success = await _sessionService.JoinRoomSessionAsync(sessionInfo);
             if (success)
             {
                 TransitionTo(LobbyUIState.InRoom);
@@ -184,7 +198,7 @@ public class LobbyUIManager : MonoBehaviour
         TransitionTo(LobbyUIState.Connecting);
         try
         {
-            await _sessionManager.LeaveRoomSessionAsync();
+            await _sessionService.LeaveRoomSessionAsync();
             TransitionTo(LobbyUIState.Discover);
             RefreshRoomList(); // リストを最新にする
         }
@@ -199,9 +213,9 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private void UpdateRoomUI()
     {
-        if (_currentState == LobbyUIState.InRoom && _sessionManager.CurrentSession != null)
+        if (_currentState == LobbyUIState.InRoom && _sessionService?.CurrentSession != null)
         {
-            _roomUI.Refresh(_sessionManager.CurrentSession);
+            _roomUI.Refresh(_sessionService.CurrentSession);
         }
     }
 
@@ -210,20 +224,12 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void ToggleReadyState()
     {
-        var session = _sessionManager.CurrentSession;
+        var session = _sessionService?.CurrentSession;
         if (session == null || session.CurrentPlayer == null) return;
 
-        // 現在の準備状況を取得
-        var isReady = false;
-        if (session.CurrentPlayer.Properties != null && 
-            session.CurrentPlayer.Properties.TryGetValue("IsReady", out var prop))
-        {
-            isReady = prop.Value == "true";
-        }
-
-        // 反転させて送信
-        var nextReadyState = !isReady;
-        await _sessionManager.SetReadyStatusAsync(nextReadyState);
+        // 現在の準備状況を取得して反転させて送信
+        var isReady = SessionPlayerPropertyHelper.IsPlayerReady(session.CurrentPlayer);
+        await _sessionService.SetReadyStatusAsync(!isReady);
     }
 
     /// <summary>
@@ -231,7 +237,13 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private void StartGame()
     {
-        Debug.Log("ゲームを開始");
-        // TODO: ゲーム開始時の処理（NGO等のシーン遷移など）
+        // ホスト自身はネットワーク通知を待たず、ボタン押下時に即座に表示する
+        TransitionTo(LobbyUIState.Connecting);
+        _sessionManager.StartMultiplayGame();
+    }
+
+    private void ShowGameStarting()
+    {
+        TransitionTo(LobbyUIState.Connecting);
     }
 }

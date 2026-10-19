@@ -32,25 +32,16 @@ public class LobbyRoomUI : MonoBehaviour
         _startButton.onClick.AddListener(() => OnStartGameRequested?.Invoke());
     }
 
-    private void Start()
-    {
-        // gameObject.SetActive(false);
-    }
-
     public void Refresh(ISession session)
     {
         if (session == null) return;
 
-        // ルーム名表示
+        // ルーム名・プレイヤー数表示
         _roomNameText.text = $"{session.Name}";
-
-        // プレイヤー数表示
         _playerCountText.text = $"{session.Players.Count} / {session.MaxPlayers}";
 
-        // リストクリア
+        // リストクリア＆プレイヤー一覧描画
         ClearPlayerList();
-
-        // プレイヤー一覧描画
         foreach (var player in session.Players)
         {
             var entry = Instantiate(_playerEntryPrefab, _playerContainer);
@@ -65,42 +56,15 @@ public class LobbyRoomUI : MonoBehaviour
         _startButton.gameObject.SetActive(isLocalHost);
         _readyButton.gameObject.SetActive(!isLocalHost);
 
-        // ゲーム開始ボタンの有効無効（ホスト以外のプレイヤー全員が準備完了しているかチェック）
         if (isLocalHost)
         {
-            var allReady = true;
-            foreach (var player in session.Players)
-            {
-                if (player.Id == session.Host) continue; // ホスト自身はスキップ
-
-                bool isPlayerReady = false;
-                if (player.Properties != null && player.Properties.TryGetValue("IsReady", out var prop))
-                {
-                    isPlayerReady = prop.Value == "true";
-                }
-                if (!isPlayerReady)
-                {
-                    allReady = false;
-                    break;
-                }
-            }
-            
-            // 全員の準備が完了したらゲーム開始可能にする
-            _startButton.interactable = allReady && session.Players.Count > 1;
+            // ゲーム開始可能判定はドメインヘルパーへ委譲
+            _startButton.interactable = SessionPlayerPropertyHelper.CanHostStartGame(session);
         }
         else
         {
             // ゲストの場合は自身の準備状況を取得してテキスト更新
-            var localPlayer = session.CurrentPlayer;
-            if (localPlayer != null && localPlayer.Properties != null &&
-                localPlayer.Properties.TryGetValue("IsReady", out var prop))
-            {
-                _localIsReady = prop.Value == "true";
-            }
-            else
-            {
-                _localIsReady = false;
-            }
+            _localIsReady = SessionPlayerPropertyHelper.IsPlayerReady(session.CurrentPlayer);
             _readyButtonText.text = _localIsReady ? "取り消し" : "準備完了";
         }
     }

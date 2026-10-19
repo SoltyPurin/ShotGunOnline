@@ -14,7 +14,7 @@ public enum PlayerState
 
 public class PlayerStateManager : NetworkBehaviour
 {
-    //Œ»İ‚ÌƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg‚ğ•Û‘¶
+    //ç¾åœ¨ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ä¿å­˜
     private NetworkVariable<PlayerState> _playerState = new NetworkVariable<PlayerState>(
             PlayerState.Normal,
             NetworkVariableReadPermission.Everyone,
@@ -31,50 +31,56 @@ public class PlayerStateManager : NetworkBehaviour
     //}
 
     /// <summary>
-    /// ƒEƒ‹ƒg‚ÌƒXƒe[ƒg‚ÉØ‚è‘Ö‚¦
+    /// ã‚¦ãƒ«ãƒˆã®ã‚¹ãƒ†ãƒ¼ãƒˆã«åˆ‡ã‚Šæ›¿ãˆ
     /// </summary>
     public void UltimateState()
     {
+        if (!IsOwner) return;
         _playerState.Value = PlayerState.Ultimate;
     }
 
     /// <summary>
-    /// ƒm[ƒ}ƒ‹‚ÌƒXƒe[ƒg‚ÉØ‚è‘Ö‚¦
+    /// ãƒãƒ¼ãƒãƒ«ã®ã‚¹ãƒ†ãƒ¼ãƒˆã«åˆ‡ã‚Šæ›¿ãˆ
     /// </summary>
     public void NormalState()
     {
+        if (!IsOwner) return;
         _playerState.Value = PlayerState.Normal;
     }
 
     /// <summary>
-    /// —‰º‚ÌƒXƒe[ƒg‚ÉØ‚è‘Ö‚¦
+    /// è½ä¸‹ã®ã‚¹ãƒ†ãƒ¼ãƒˆã«åˆ‡ã‚Šæ›¿ãˆ
     /// </summary>
     public void FallState()
     {
+        if (!IsOwner) return;
         _playerState.Value = PlayerState.Fall;
     }
 
     /// <summary>
-    /// ƒmƒbƒNƒoƒbƒN‚ÌƒXƒe[ƒg(ƒVƒ‡ƒbƒgƒKƒ“‚ÌƒmƒbƒNƒoƒbƒN)‚ÉØ‚è‘Ö‚¦
+    /// ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ã‚¹ãƒ†ãƒ¼ãƒˆ(ã‚·ãƒ§ãƒƒãƒˆã‚¬ãƒ³ã®ãƒãƒƒã‚¯ãƒãƒƒã‚¯)ã«åˆ‡ã‚Šæ›¿ãˆ
     /// </summary>
     public void KnockBackingState()
     {
+        if (!IsOwner) return;
         _playerState.Value = PlayerState.KnockBack;
     }
 
     /// <summary>
-    /// ”í’e‚ÌƒmƒbƒNƒoƒbƒN‚ÌƒXƒe[ƒg‚ÉØ‚è‘Ö‚¦
+    /// è¢«å¼¾ã®ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ã‚¹ãƒ†ãƒ¼ãƒˆã«åˆ‡ã‚Šæ›¿ãˆ
     /// </summary>
     public void DamageKnockBackState()
     {
+        if (!IsOwner) return;
         _playerState.Value = PlayerState.DamageKnockBack;
     }
 
     /// <summary>
-    /// ƒ€[ƒr[Ä¶’†‚ÌƒXƒe[ƒg‚É•ÏX‚·‚é
+    /// ãƒ ãƒ¼ãƒ“ãƒ¼å†ç”Ÿä¸­ã®ã‚¹ãƒ†ãƒ¼ãƒˆã«å¤‰æ›´ã™ã‚‹
     /// </summary>
     public void MovieState()
     {
+        if (!IsOwner) return;
         _playerState.Value = PlayerState.Movie;
     }
 }

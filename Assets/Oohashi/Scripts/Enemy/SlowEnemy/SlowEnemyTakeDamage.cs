@@ -5,7 +5,11 @@ public class SlowEnemyTakeDamage : EnemyTakeDamage
     {
         base.Start();
         JsonSaver.Instance.LoadAllConfigs(); 
-        _enemyHP.Value = JsonSaver.Instance.EnemyJson.SlowHP;
+        if (IsServer || IsHost)
+        {
+            _enemyHP.Value = JsonSaver.Instance.EnemyJson.SlowHP;
+        }
+
         if (_hpUI != null)
         {
             //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
