@@ -4,17 +4,17 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    [SerializeField, Header("æ“¾Œn")]
+    [SerializeField, Header("å–å¾—ç³»")]
     private WaveManager _waveManager = default;
     [SerializeField]
     private SoulKeep _coinKeep = default;
     [SerializeField]
     private Text _timeText = default;
 
-    [SerializeField, Header("ƒXƒRƒAƒL[ƒp[")]
+    [SerializeField, Header("ã‚¹ã‚³ã‚¢ã‚­ãƒ¼ãƒ‘ãƒ¼")]
     private GetScoreManager _getScoreManager = default;
 
-    [SerializeField, Header("ƒeƒLƒXƒg‚Ì“§–¾“x")]
+    [SerializeField, Header("ãƒ†ã‚­ã‚¹ãƒˆã®é€æ˜åº¦")]
     private float _textAlpha = 0.5f;
 
     [HideInInspector]
@@ -26,12 +26,15 @@ public class ScoreManager : MonoBehaviour
     private float _oldSecond = 0;
     private float _timer = 0;
 
+    public int Minute => _minute;
+    public float Second => _second;
+
     private bool _canRunning = true;
 
-    [SerializeField, Header("ƒ^ƒCƒ€Œv‘ª‚·‚éH")]
+    [SerializeField, Header("ã‚¿ã‚¤ãƒ è¨ˆæ¸¬ã™ã‚‹ï¼Ÿ")]
     private bool _timerActive = true;
 
-    #region ƒVƒ“ƒOƒ‹ƒgƒ“‰»
+    #region ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³åŒ–
     [HideInInspector]
     public static ScoreManager _instance;
 
@@ -50,13 +53,13 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        //‰Šú‰»
+        //åˆæœŸåŒ–
         _scoreTimer = 0;
         _minute = 0;
         _second = 0;
         _oldSecond = 0;
 
-        //ƒ^ƒCƒ}[‚ğg‚í‚È‚¢ê‡‚Í‰½‚à•\¦‚µ‚È‚¢‚æ‚¤‚É‚·‚éB
+        //ã‚¿ã‚¤ãƒãƒ¼ã‚’ä½¿ã‚ãªã„å ´åˆã¯ä½•ã‚‚è¡¨ç¤ºã—ãªã„ã‚ˆã†ã«ã™ã‚‹ã€‚
         if (!_timerActive)
         {
             _timeText.text = "";
@@ -72,7 +75,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ŠÔŒv‘ª&ƒeƒLƒXƒg•ÏXƒƒ\ƒbƒh
+    /// æ™‚é–“è¨ˆæ¸¬&ãƒ†ã‚­ã‚¹ãƒˆå¤‰æ›´ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void TimerChange()
     {
@@ -80,14 +83,14 @@ public class ScoreManager : MonoBehaviour
         {
             return;
         }
-        //ƒEƒF[ƒu‘JˆÚ’†‚Å‚È‚¢A‚à‚µ‚­‚ÍƒEƒF[ƒu‚ªI‚í‚Á‚Ä‚¢‚È‚¢ŠÔ‚ÍŠÔ‚ğŒv‘ª‚µƒeƒLƒXƒg‚ğ•ÏX
+        //ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ä¸­ã§ãªã„ã€ã‚‚ã—ãã¯ã‚¦ã‚§ãƒ¼ãƒ–ãŒçµ‚ã‚ã£ã¦ã„ãªã„é–“ã¯æ™‚é–“ã‚’è¨ˆæ¸¬ã—ãƒ†ã‚­ã‚¹ãƒˆã‚’å¤‰æ›´
         if (_waveManager.NowTransitionState == WaveManager.TransitionState.Wave && !_waveManager.ListEnd)
         {
             _scoreTimer += Time.deltaTime;
             _timer += Time.deltaTime;
             _second = _scoreTimer;
 
-            //ŠÔ‚ª60•b‚ğ’´‚¦‚½‚çAŒ…‚ğŒJ‚èã‚ª‚è‚³‚¹‚éB
+            //æ™‚é–“ãŒ60ç§’ã‚’è¶…ãˆãŸã‚‰ã€æ¡ã‚’ç¹°ã‚Šä¸ŠãŒã‚Šã•ã›ã‚‹ã€‚
             if (_second >= 60.0f)
             {
                 _minute++;
@@ -95,7 +98,7 @@ public class ScoreManager : MonoBehaviour
                 _scoreTimer = 0.0f;
             }
 
-            //1•b’PˆÊ‚Å”’l‚Ì•ÏX‚ª‚ ‚Á‚½ê‡‚Ì‚İƒ^ƒCƒ}[‚Ì•\‹L‚ğ•ÏX‚·‚éB
+            //1ç§’å˜ä½ã§æ•°å€¤ã®å¤‰æ›´ãŒã‚ã£ãŸå ´åˆã®ã¿ã‚¿ã‚¤ãƒãƒ¼ã®è¡¨è¨˜ã‚’å¤‰æ›´ã™ã‚‹ã€‚
             if ((int)_second != (int)_oldSecond)
             {
                 _timeText.text = _minute.ToString("00") + ":" + ((int)_second).ToString("00");
@@ -107,9 +110,9 @@ public class ScoreManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ^ƒCƒ}[ƒeƒLƒXƒg‚Ì“§–¾“x‚ğ•Ï‚¦‚éƒƒ\ƒbƒh
+    /// ã‚¿ã‚¤ãƒãƒ¼ãƒ†ã‚­ã‚¹ãƒˆã®é€æ˜åº¦ã‚’å¤‰ãˆã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="cleanness">true‚È‚çİ’è‚µ‚½“§–¾“x‚É•ÏXAfalse‚È‚ç“§–¾“x‚ğ‚à‚Æ‚É–ß‚·B</param>
+    /// <param name="cleanness">trueãªã‚‰è¨­å®šã—ãŸé€æ˜åº¦ã«å¤‰æ›´ã€falseãªã‚‰é€æ˜åº¦ã‚’ã‚‚ã¨ã«æˆ»ã™ã€‚</param>
     public void TextAlpha(bool cleanness)
     {
         if (!_timerActive)
@@ -132,11 +135,33 @@ public class ScoreManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒXƒRƒA‚ğ•Ô‚·ƒƒ\ƒbƒh
+    /// ã‚¹ã‚³ã‚¢ã‚’è¿”ã™ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <returns>ƒXƒRƒA‚ğ‚»‚Ì‚Ü‚Ü•Ô‚µ‚Ü‚·BŒ»İ‚Íƒ^ƒCƒ}[‚Ì’l‚ğ‚»‚Ì‚Ü‚Ü•Ô‚µ‚Ü‚·‚æ</returns>
+    /// <returns>ã‚¹ã‚³ã‚¢ã‚’ãã®ã¾ã¾è¿”ã—ã¾ã™ã€‚ç¾åœ¨ã¯ã‚¿ã‚¤ãƒãƒ¼ã®å€¤ã‚’ãã®ã¾ã¾è¿”ã—ã¾ã™ã‚ˆ</returns>
     public void ScoreCalculation()
     {
-        _getScoreManager.GetScore(_minute,_second);
+        var scoreKeeper = _getScoreManager != null ? _getScoreManager : GetScoreManager._this;
+        if (scoreKeeper != null)
+        {
+            scoreKeeper.GetScore(_minute, _second);
+        }
+    }
+
+    /// <summary>
+    /// ãƒ›ã‚¹ãƒˆã‹ã‚‰åŒæœŸã•ã‚ŒãŸã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ ã‚’ä¿å­˜ãƒ»åæ˜ ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    public void SetSyncedClearTime(int minute, float second)
+    {
+        _minute = minute;
+        _second = second;
+        if (_timerActive && _timeText != null)
+        {
+            _timeText.text = _minute.ToString("00") + ":" + ((int)_second).ToString("00");
+        }
+        var scoreKeeper = _getScoreManager != null ? _getScoreManager : GetScoreManager._this;
+        if (scoreKeeper != null)
+        {
+            scoreKeeper.GetScore(_minute, _second);
+        }
     }
 }
