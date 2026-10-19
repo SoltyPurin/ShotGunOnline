@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 
@@ -39,12 +40,16 @@ public class LobbySessionService : ILobbySessionService
 
         try
         {
+            ConfigureWebSocketTransport();
+
             var options = new SessionOptions
             {
                 Name = roomName,
                 MaxPlayers = maxPlayers,
                 IsPrivate = false
-            }.WithRelayNetwork();
+            }
+            .WithRelayNetwork()
+            .WithNetworkOptions(new NetworkOptions { RelayProtocol = RelayProtocol.WSS });
 
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
             _currentSession.Changed += HandleSessionChanged;
@@ -55,7 +60,7 @@ public class LobbySessionService : ILobbySessionService
             }
 
             _onSessionConnected?.Invoke();
-            Debug.Log("[MSM]: ホストとして接続");
+            Debug.Log("[MSM]: ホストとして接続 (WSS)");
 
             return true;
         }
@@ -97,7 +102,12 @@ public class LobbySessionService : ILobbySessionService
 
         try
         {
-            _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id);
+            ConfigureWebSocketTransport();
+
+            var joinOptions = new JoinSessionOptions()
+                .WithNetworkOptions(new NetworkOptions { RelayProtocol = RelayProtocol.WSS });
+
+            _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id, joinOptions);
             _currentSession.Changed += HandleSessionChanged;
 
             if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
@@ -106,7 +116,7 @@ public class LobbySessionService : ILobbySessionService
             }
 
             _onSessionConnected?.Invoke();
-            Debug.Log("[MSM]: クライアントとして接続");
+            Debug.Log("[MSM]: クライアントとして接続 (WSS)");
 
             return true;
         }
@@ -114,6 +124,15 @@ public class LobbySessionService : ILobbySessionService
         {
             Debug.Log($"ルームに参加失敗: {ex.Message}");
             return false;
+        }
+    }
+
+    private static void ConfigureWebSocketTransport()
+    {
+        if (NetworkManager.Singleton != null &&
+            NetworkManager.Singleton.NetworkConfig?.NetworkTransport is UnityTransport transport)
+        {
+            transport.UseWebSockets = true;
         }
     }
 
