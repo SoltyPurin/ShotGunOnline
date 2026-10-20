@@ -33,6 +33,8 @@ public class EnemyKnockBack : NetworkBehaviour
     private float _divisionRatio = 0.8f;
     //吹き飛ぶ方向
     protected Vector2 _blowAwayDirection = default;
+    //直近の攻撃者のClientId
+    protected ulong _attackerClientId = default;
     #endregion
     #region 定数
     private readonly string WALLTAG = "Wall";
@@ -43,8 +45,10 @@ public class EnemyKnockBack : NetworkBehaviour
         _trenble = GetComponent<TrenbleEnemy>();
     }
     [ServerRpc(RequireOwnership = false)]
-    public void RequestKnockBackServerRpc(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
+    public void RequestKnockBackServerRpc(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt, ServerRpcParams rpcParams = default)
     {
+        // 攻撃者はローカルで演出を先行再生済みのため、ClientRpcでの二重再生を避けるために記録する
+        _attackerClientId = rpcParams.Receive.SenderClientId;
         // サーバー上でノックバックの方向と力を計算・適用する
         SetDirectionAndForce(playerPos, chargeTime, isCrit, isUlt);
     }
@@ -101,7 +105,7 @@ public class EnemyKnockBack : NetworkBehaviour
 
             if (IsServer)
             {
-                PlayKnockBackEffectsClientRpc(isCrit, isUlt, chargeTime);
+                PlayKnockBackEffectsClientRpc(isCrit, isUlt, chargeTime, _attackerClientId);
             }
         //}
     }
@@ -110,9 +114,11 @@ public class EnemyKnockBack : NetworkBehaviour
     /// 全クライアント端末上で敵の震え演出とダメージエフェクトを再生するRPC
     /// </summary>
     [ClientRpc]
-    protected void PlayKnockBackEffectsClientRpc(bool isCrit, bool isUlt, float chargeTime)
+    protected void PlayKnockBackEffectsClientRpc(bool isCrit, bool isUlt, float chargeTime, ulong attackerClientId)
     {
         if (IsServer) return; // サーバー（ホスト）側では SetDirectionAndForce 内で既に再生済み
+        // 攻撃者本人は ShootRange.PlayLocalHitFeedback で再生済み(ウルトはローカル再生なしのため除外しない)
+        if (!isUlt && NetworkManager.LocalClientId == attackerClientId) return;
 
         if (_trenble != null)
         {

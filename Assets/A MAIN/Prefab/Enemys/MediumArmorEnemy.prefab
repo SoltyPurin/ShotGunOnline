@@ -964,6 +964,7 @@ MonoBehaviour:
   _moveSpeed: 50
   _keepDistance: 0
   _inertiaStrangth: 4
+  _localSimulation: 0
   _armorRotation: {fileID: 8525266786350066813}
   _recoveryTime: 3
   _rushTime: 0.5
@@ -1104,6 +1105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySprite: {fileID: 1863521536634089226}
   _spawnPoint: {fileID: 3675403134437037083}
   _enemyCollider: {fileID: 2061886704450368901}
@@ -1193,6 +1195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268fb6967d68cd7409484004f2f718b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyKnockBack: {fileID: 3081958352932198646}
   _takeDamage: {fileID: 5174406571932695504}
   _armorMove: {fileID: 2106976858053371579}
@@ -1282,7 +1285,7 @@ MonoBehaviour:
   PositionInterpolationType: 0
   RotationInterpolationType: 0
   ScaleInterpolationType: 0
-  PositionLerpSmoothing: 0.1
+  PositionLerpSmoothing: 0
   PositionMaxInterpolationTime: 0.2
   RotationLerpSmoothing: 1
   RotationMaxInterpolationTime: 0.1

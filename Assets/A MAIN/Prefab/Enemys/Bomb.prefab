@@ -27,8 +27,8 @@ GameObject:
   - component: {fileID: 3152673849807732637}
   - component: {fileID: 5397615611010639427}
   - component: {fileID: 35321172035216993}
-  - component: {fileID: -5110007710299847138}
-  - component: {fileID: -1348869535736533815}
+  - component: {fileID: 683790122112564217}
+  - component: {fileID: -6476191413295115597}
   m_Layer: 6
   m_Name: Bomb
   m_TagString: Bomb
@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642175ceda051fa428c1ebb084a01b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _bombPower: 2
   _bombEnemyPower: 2
   _weekDamage: 4
@@ -136,6 +137,7 @@ MonoBehaviour:
   _moveSpeed: 2
   _keepDistance: 0
   _inertiaStrangth: 4
+  _localSimulation: 0
 --- !u!114 &6640406907337609652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,6 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcab6997c6189f344879b8cf5c2bd82c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyKnockBack: {fileID: 101468064006935997}
   _takeDamage: {fileID: 6640406907337609652}
 --- !u!114 &5399600683567012138
@@ -284,6 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySprite: {fileID: 405962262689686349}
   _spawnPoint: {fileID: 2349314595572794350}
   _enemyCollider: {fileID: 4372067273987316181}
@@ -307,6 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d99d32877c183a4fb72311fd6a243b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _animator: {fileID: 7284762768706959055}
   _enemyTakeDamage: {fileID: 6640406907337609652}
 --- !u!114 &5482239809493021916
@@ -338,6 +343,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _moveSpeed: 2
   _stoppingDistance: 0
+  _repathInterval: 0.15
 --- !u!114 &1627306870336948468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,7 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d043e683b9e9e4040ac921c1d3733bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-5110007710299847138
+--- !u!114 &683790122112564217
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -401,17 +407,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 904257301046165795}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c3e1f5a9b2d4e8fa1c6d0b3e5f79a24, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyNetworkTransform
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
   AutoOwnerAuthorityTickOffset: 1
   PositionInterpolationType: 0
   RotationInterpolationType: 0
   ScaleInterpolationType: 0
-  PositionLerpSmoothing: 0.1
-  PositionMaxInterpolationTime: 0.2
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
   RotationLerpSmoothing: 1
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
@@ -438,7 +444,7 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &-1348869535736533815
+--- !u!114 &-6476191413295115597
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -451,7 +457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkRigidbody2D
   ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 1
+  NetworkRigidbodyBaseExpanded: 0
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1

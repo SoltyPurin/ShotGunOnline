@@ -469,7 +469,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5806594159929614970}
   - component: {fileID: 3562255637817752412}
-  - component: {fileID: -3339229209471878638}
   - component: {fileID: 8993745834543382895}
   - component: {fileID: 9053223308237228765}
   - component: {fileID: 8919056594182577406}
@@ -486,7 +485,8 @@ GameObject:
   - component: {fileID: -3976007091032714616}
   - component: {fileID: 86841078270031518}
   - component: {fileID: 1690778917145277217}
-  - component: {fileID: -2263144391160236694}
+  - component: {fileID: -7848988649532776633}
+  - component: {fileID: 8677704419561498031}
   m_Layer: 6
   m_Name: Slow
   m_TagString: Enemy
@@ -533,6 +533,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
@@ -540,52 +541,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &-3339229209471878638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7256754549358920131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 0.1
-  PositionMaxInterpolationTime: 0.2
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!114 &8993745834543382895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,6 +557,7 @@ MonoBehaviour:
   _moveSpeed: 3
   _keepDistance: 0
   _inertiaStrangth: 1
+  _localSimulation: 0
 --- !u!114 &9053223308237228765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,6 +570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e1365c95c720d438b6bd9f95d5e04b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyMove: {fileID: 8993745834543382895}
   _critStiffnessTime: 0.3
   _ultStiffnessTime: 0.5
@@ -632,6 +589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18956b95f78d9dd4f9b502e7f3d9abe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _damageMultiplier: 500
   _minDamage: 200
   _explosionMultiplier: 1000
@@ -653,6 +611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec17062087d9f4e45bf3ec0e52c0ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySpawnAnim: {fileID: 5781265572620159207}
 --- !u!95 &2869724502269468304
 Animator:
@@ -751,6 +710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcab6997c6189f344879b8cf5c2bd82c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyKnockBack: {fileID: 9053223308237228765}
   _takeDamage: {fileID: 8919056594182577406}
 --- !u!114 &5781265572620159207
@@ -765,6 +725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySprite: {fileID: 364719716236352176}
   _spawnPoint: {fileID: 1810624894402882715}
   _enemyCollider: {fileID: 6937047940666339295}
@@ -788,6 +749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d99d32877c183a4fb72311fd6a243b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _animator: {fileID: 2869724502269468304}
   _enemyTakeDamage: {fileID: 8919056594182577406}
 --- !u!114 &235323412207202290
@@ -802,6 +764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6cab3b03ecebf4bbb10469fd71e009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   Coin: {fileID: 7710591009316209668, guid: e6e11fcddb633f9468c5548d6cfa901b, type: 3}
 --- !u!114 &-2404363350064752964
 MonoBehaviour:
@@ -815,8 +778,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 082ac80cfb81880419ab6502534b8754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _moveSpeed: 3
   _stoppingDistance: 0
+  _repathInterval: 0.15
 --- !u!114 &4551635620700073024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -871,7 +836,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d043e683b9e9e4040ac921c1d3733bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-2263144391160236694
+--- !u!114 &-7848988649532776633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7256754549358920131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3e1f5a9b2d4e8fa1c6d0b3e5f79a24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyNetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 1
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!114 &8677704419561498031
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
