@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,6 +12,10 @@ public class HomingBullet : EnemyShotBullet
     private GameObject _bulletSprite = default;
     [SerializeField, Header("何秒で弾が消えるか")]
     private float _destroyTime = 5;
+    [SerializeField, Header("この距離(m)以内に入ったら誘導を切って直進する")]
+    private float _stopHomingDistance = 1.8f;
+    [SerializeField, Header("誘導を継続する最大時間(秒)")]
+    private float _maxHomingDuration = 2.5f;
     #endregion
 
     #region 変数
@@ -20,6 +24,8 @@ public class HomingBullet : EnemyShotBullet
     private float _initAliveTime = 0;
     private bool _canMoveToPlayer = false;
     private float _smooth = 0.4f;
+    private float _homingTimer = 0f;
+    private bool _isHomingExpired = false;
     #endregion
 
     #region 定数
@@ -137,6 +143,18 @@ public class HomingBullet : EnemyShotBullet
                 MoveProtocol(_direction);
                 return;
             }
+        }
+
+        _homingTimer += Time.fixedDeltaTime;
+
+        // 追尾時間切れ、または一定距離まで近づいたら誘導を解除して直進させる
+        // （接近時の急旋回による理不尽なヒットを防ぎ、すれ違い回避を可能にする）
+        float distanceToPlayer = Vector2.Distance(transform.position, _playerObject.transform.position);
+        if (_isHomingExpired || _homingTimer >= _maxHomingDuration || distanceToPlayer <= _stopHomingDistance)
+        {
+            _isHomingExpired = true;
+            MoveProtocol(_direction);
+            return;
         }
 
         Vector3 playerObj = _playerObject.transform.position;

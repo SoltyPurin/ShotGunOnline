@@ -1,4 +1,4 @@
-using NUnit.Framework.Constraints;
+﻿using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -245,14 +245,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     /// </summary>
     private void TriggerKnockBack(Vector3 direction, float power, GameObject collision)
     {
-        // 1. ローカル画面でのノックバック実行
+        // ローカル画面でのノックバック実行（SetDirection 内で必要に応じて ServerRpc を送信)
         SetDirection(direction, power, collision);
-
-        // 2. ホスト（サーバー）にも吹き飛び状態を送信して位置同期を噛み合わせる
-        if (!IsServer)
-        {
-            SyncKnockBackServerRpc(direction, power);
-        }
     }
 
     /// <summary>
@@ -448,10 +442,17 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     {
         // サーバー上で、このプレイヤーのオーナーがリモートクライアントの場合、
         // そのクライアント実機へ被ダメージ命令を送信する
-        if (IsServer && !IsOwner)
+        // マルチプレイ時、自機（所有権を持つローカルプレイヤー）のみ被弾処理を行う
+        // （クライアント側で避けたのにサーバー側の遅延判定で被弾するゴーストヒットを防止）
+        if (!IsOwner)
         {
-            TakeDamageClientRpc(direction, power);
             return;
+        }
+
+        // クライアント側で被弾した場合、サーバー側の位置同期のためにノックバックを通知
+        if (!IsServer)
+        {
+            SyncKnockBackServerRpc(direction, power);
         }
 
         //無敵時間中は実行しない

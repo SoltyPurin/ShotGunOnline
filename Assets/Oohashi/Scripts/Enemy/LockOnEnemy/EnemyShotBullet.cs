@@ -1,14 +1,14 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyShotBullet : NetworkBehaviour
+public class EnemyShotBullet : MonoBehaviour
 {
 
     protected Vector2 _direction = default;
 
-    protected bool _canMove = false;
+    private bool _canMove = false;
 
     [SerializeField] protected float _moveSpeed = 2;
 
@@ -16,60 +16,28 @@ public class EnemyShotBullet : NetworkBehaviour
 
     private float _lifetime = 0.0f;
 
-    [SerializeField, Header("e’e‚Ì‚Á”ò‚Ñ")]
+    [SerializeField, Header("å¼¾ã®å¨åŠ›")]
     private float _bulletBlowAway = 2f;
 
-    [SerializeField, Header("e’e‚ÌƒXƒvƒ‰ƒCƒg")]
+    [SerializeField, Header("å¼¾ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ")]
     private GameObject _bullet = default;
 
-    [SerializeField, Header("’eÁ–Å‚ÌƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("å¼¾ã®æ­»äº¡ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private GameObject _deathEffect = default;
 
-    // ”jŠüˆ—’†‚©‚Ç‚¤‚©‚ğ”»’è‚·‚éƒtƒ‰ƒO
-    protected bool _isDestroyed = false;
-
-    ///// <summary>
-    ///// ƒvƒŒƒCƒ„[‚Ì‚¢‚é•ûŒü‚É”ò‚Î‚·‚½‚ß‚É‰ñ“]‚³‚¹‚é
-    ///// </summary>
-    ///// <param name="bulletDirection"></param>
-    //[ClientRpc]
-    //public virtual void DirectionSettingClientRpc(GameObject playerObj,Vector2 bulletDirection)
-    //{
-    //    _direction = bulletDirection;
-    //    float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-    //    _bullet.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    //    _canMove = true;
-    //}
-
     /// <summary>
-    /// ƒT[ƒo[ã‚ÅŒÄ‚Ño‚µA‘S’[––iƒNƒ‰ƒCƒAƒ“ƒgŠÜ‚Şj‚Ö•ûŒü‚ÆˆÚ“®‹–‰Âi_canMovej‚ğ“¯Šú‚·‚é
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã«é£›ã°ã™ãŸã‚ã«å›è»¢ã™ã‚‹
     /// </summary>
-    public virtual void DirectionSetting(GameObject playerObj, Vector2 bulletDirection)
-    {
-        if (!IsServer) return;
-
-        NetworkObject playerNetObj = playerObj != null ? playerObj.GetComponent<NetworkObject>() : null;
-        SetDirectionClientRpc(playerNetObj != null ? playerNetObj : default, bulletDirection);
-    }
-
-    [ClientRpc]
-    protected virtual void SetDirectionClientRpc(NetworkObjectReference playerRef, Vector2 bulletDirection)
+    /// <param name="bulletDirection"></param>
+    public virtual void DirectionSetting(GameObject playerObj,Vector2 bulletDirection)
     {
         _direction = bulletDirection;
+        float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+        _bullet.transform.rotation = Quaternion.Euler(0f, 0f, angle);
         _canMove = true;
-
-        if (_bullet != null)
-        {
-            float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-            _bullet.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-        }
     }
     public virtual void FixedUpdate()
     {
-        if (_isDestroyed || !_canMove)
-        {
-            return;
-        }
         if (_canMove)
         {
             transform.position += (Vector3)_direction * _moveSpeed * Time.fixedDeltaTime;
@@ -77,96 +45,29 @@ public class EnemyShotBullet : NetworkBehaviour
             if(_lifetime >= _bulletLifeLimitTime)
             {
                 Instantiate(_deathEffect, transform.position, Quaternion.identity);
-                //GetComponent<NetworkObject>().Despawn(true);
-                //Destroy(this.gameObject);
-                DestroyProtocol();
+                Destroy(this.gameObject);
             }
         }
     }
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (_isDestroyed)
-        {
-            return;
-        }
         if (collision.gameObject.CompareTag("Player"))
         {
+            // ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤æ™‚ã€ä»–äººã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã¯å½“ãŸã‚Šåˆ¤å®šã‚’è¡Œã‚ãªã„ï¼ˆå„ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã§è‡ªæ©Ÿã®è¢«å¼¾ã®ã¿åˆ¤å®šï¼‰
+            NetworkObject netObj = collision.GetComponent<NetworkObject>();
+            if (netObj != null && !netObj.IsOwner)
+            {
+                return;
+            }
+
             PlayerDamageKnockBack damageKnockBack = collision.GetComponent<PlayerDamageKnockBack>();
-            damageKnockBack.SetDirection(_direction, _bulletBlowAway, this.gameObject);
+            if (damageKnockBack != null)
+            {
+                damageKnockBack.SetDirection(_direction, _bulletBlowAway, this.gameObject);
+            }
             Instantiate(_deathEffect, transform.position, Quaternion.identity);
-            DestroyProtocol();
-        }
-    }
-
-    public virtual void DestroyProtocol()
-    {
-        if (_isDestroyed)
-        {
-            return;
-        }
-        _isDestroyed = true;
-
-        DisableBulletLocal();
-        DisableBulletClientRpc();
-        Debug.Log("e’eíœŒÄ‚Ño‚µ");
-        NetworkObject netObj = this.GetComponent<NetworkObject>();
-        if (netObj != null && netObj.IsSpawned)
-        {
-            if (IsServer)
-            {
-                netObj.Despawn(true); // ƒT[ƒo[‚Å Despawn ‚·‚ê‚Î‘SƒNƒ‰ƒCƒAƒ“ƒg‚©‚çÁ‚¦‚é
-            }
-            else
-            {
-                // ƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚ÍƒT[ƒo[‚ÖÁ‹ˆË—Š‚Ì ServerRpc ‚ğ‘—‚éi•K—v‚É‰‚¶‚Äj
-                RequestDestroyBulletServerRpc(netObj);
-            }
-        }
-        else
-        {
             Destroy(this.gameObject);
-        }
-    }
-
-    /// <summary>
-    /// ‘SƒNƒ‰ƒCƒAƒ“ƒg’[––ã‚Å“–‚½‚è”»’è‚ÆŒ©‚½–Ú‚ğ‘¦À‚ÉƒIƒt‚É‚·‚é RPC
-    /// </summary>
-    [ClientRpc]
-    private void DisableBulletClientRpc()
-    {
-        DisableBulletLocal();
-    }
-
-    /// <summary>
-    /// ƒ[ƒJƒ‹’[––ã‚Ì“–‚½‚è”»’èEˆÚ“®EƒXƒvƒ‰ƒCƒg‚ğ‘¦À‚É’â~‚·‚é
-    /// </summary>
-    private void DisableBulletLocal()
-    {
-        _isDestroyed = true;
-        _canMove = false;
-
-        Collider2D[] cols = GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D col in cols)
-        {
-            col.enabled = false;
-        }
-
-        if (_bullet != null)
-        {
-            _bullet.SetActive(false);
-        }
-    }
-
-    [Rpc(SendTo.Server)]
-    public void RequestDestroyBulletServerRpc(NetworkObjectReference bulletRef)
-    {
-        if (bulletRef.TryGet(out NetworkObject netObj))
-        {
-            if (netObj.IsSpawned)
-            {
-                netObj.Despawn(true);
-            }
         }
     }
 
