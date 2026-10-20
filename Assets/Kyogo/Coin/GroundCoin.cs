@@ -6,50 +6,65 @@ using UnityEngine;
 public class GroundCoin : NetworkBehaviour
 {
     private readonly string PLAYER_TAGNAME = "Player";
+    private bool _isCollected = false;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!IsServer) return;
+        if (_isCollected) return;
+
         GameObject colObject = collision.gameObject;
+        if (!colObject.CompareTag(PLAYER_TAGNAME)) return;
 
-        if (colObject.CompareTag(PLAYER_TAGNAME))
+        SoulKeep soul = colObject.GetComponent<SoulKeep>() ?? colObject.GetComponentInChildren<SoulKeep>() ?? colObject.GetComponentInParent<SoulKeep>();
+        if (soul == null) return;
+
+        var playerNetObj = colObject.GetComponent<NetworkObject>() ?? colObject.GetComponentInParent<NetworkObject>();
+
+        // ã‚µãƒ¼ãƒãƒ¼ä¸Šã§æ¤œçŸ¥ã—ãŸå ´åˆ
+        if (IsServer)
         {
-            SoulKeep soul = colObject.GetComponent<SoulKeep>();
-            if ((soul != null))
-            {
-                soul.AdditionCoin();
-                NetworkObject netObj = this.GetComponent<NetworkObject>();
-                if (netObj != null && netObj.IsSpawned)
-                {
-                    if (IsServer)
-                    {
-                        netObj.Despawn(true); // ƒT[ƒo[‚Å Despawn ‚·‚ê‚Î‘SƒNƒ‰ƒCƒAƒ“ƒg‚©‚çÁ‚¦‚é
-                    }
-                    else
-                    {
-                        // ƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚ÍƒT[ƒo[‚ÖÁ‹ˆË—Š‚Ì ServerRpc ‚ğ‘—‚éi•K—v‚É‰‚¶‚Äj
-                        RequestDestroySoulServerRpc(netObj);
-                    }
-                }
-                else if (IsServer)
-                {
-                    Destroy(this.gameObject);
-                }
+            _isCollected = true;
+            soul.AdditionCoin();
 
-                //Destroy(this.gameObject);
+            if (NetworkObject != null && NetworkObject.IsSpawned)
+            {
+                NetworkObject.Despawn();
             }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+        else if (playerNetObj != null && playerNetObj.IsLocalPlayer)
+        {
+            // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè‡ªæ©ŸãŒæ¥è§¦ã—ãŸå ´åˆã€ã‚µãƒ¼ãƒãƒ¼ã¸å›åã‚’ãƒªã‚¯ã‚¨ã‚¹ãƒˆ
+            _isCollected = true;
+            RequestCollectServerRpc(new NetworkObjectReference(playerNetObj));
         }
     }
 
     [Rpc(SendTo.Server)]
-    private void RequestDestroySoulServerRpc(NetworkObjectReference bulletRef)
+    private void RequestCollectServerRpc(NetworkObjectReference playerRef)
     {
-        if (bulletRef.TryGet(out NetworkObject netObj))
+        if (_isCollected) return;
+        _isCollected = true;
+
+        if (playerRef.TryGet(out NetworkObject playerNetObj))
         {
-            if (netObj.IsSpawned)
+            var soul = playerNetObj.GetComponent<SoulKeep>() ?? playerNetObj.GetComponentInChildren<SoulKeep>();
+            if (soul != null)
             {
-                netObj.Despawn(true);
+                soul.AdditionCoin();
             }
         }
-    }
 
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 }

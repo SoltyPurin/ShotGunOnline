@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class CoinControl : NetworkBehaviour
@@ -11,53 +12,80 @@ public class CoinControl : NetworkBehaviour
         Wait,
         Move
     }
+
     private CoinState _coinState = CoinState.Up;
+
     [SerializeField, Header("上昇値")]
     private float _increasedValue = 0.5f;
+
     [SerializeField, Header("最大上昇量")]
     private float _maxUpValue = 2f;
+
     [SerializeField, Header("飛び上がって何秒待つ？")]
-    private float _waitLimitTime = 3f;
-    [SerializeField,Header("プレイヤーに向かう速度")]
-    private float _absorbSpeed = 5;
+    private float _waitLimitTime = 1f;
+
+    [SerializeField, Header("プレイヤーに向かう速度")]
+    private float _absorbSpeed = 10f;
 
     [SerializeField, Header("上昇値をだんだん小さくしていく値")]
-    private float _risePowerDecay = 0.8f;
+    private float _risePowerDecay = 0.95f;
 
     [SerializeField, Header("どれくらい近づいたら消える？")]
-    private float _disappearDistance = 0.1f;
+    private float _disappearDistance = 0.8f;
 
     private float _initIncreasedValue = 0f;
     private float _initWaitTime = 0f;
-    /*
-     _playerObj プレイヤー
-    _targetDirection 向かう方向
-     */
+
     private GameObject _playerObj = default;
-    private Vector2 _targetDirection = default;
-
     private readonly string PLAYER_TAGNAME = "Player";
+    private bool _hasAbsorbed = false;
 
-    void Start()
+    // サーバー上での二重回収防止フラグ
+    private bool _serverAbsorbed = false;
+
+    public void SetTargetPlayer(GameObject target)
     {
-        GameObject[] nearObj = GameObject.FindGameObjectsWithTag(PLAYER_TAGNAME);
-        float distance = 100;
-        foreach(GameObject obj in nearObj)
+        _playerObj = target;
+        if (IsServer && target != null)
         {
-            float curDistance = Vector2.Distance(obj.transform.position, this.transform.position);
-            if (curDistance < distance)
+            var netObj = target.GetComponent<NetworkObject>() ?? target.GetComponentInParent<NetworkObject>();
+            if (netObj != null)
             {
-                distance = curDistance;
-                _playerObj = obj;
+                SetTargetClientRpc(new NetworkObjectReference(netObj));
             }
         }
-
-        //_playerObj = GameObject.FindGameObjectWithTag(PLAYER_TAGNAME);
     }
-    //左右に移動させる処理
-    void Update()
+
+    [ClientRpc]
+    private void SetTargetClientRpc(NetworkObjectReference targetRef)
     {
-        switch( _coinState )
+        if (targetRef.TryGet(out NetworkObject netObj))
+        {
+            _playerObj = netObj.gameObject;
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        // 追従移動はクライアント側で完全ローカル計算するため、NetworkTransformの強制位置上書きを無効化
+        var netTransform = GetComponent<NetworkTransform>();
+        if (netTransform != null)
+        {
+            netTransform.enabled = false;
+        }
+
+        if (_playerObj == null)
+        {
+            FindTargetPlayer();
+        }
+    }
+
+    private void Update()
+    {
+        // クライアント・サーバー問わず各端末のローカル画面でヌルヌル動かす
+        switch (_coinState)
         {
             case CoinState.Up:
                 UpMethod();
@@ -75,12 +103,12 @@ public class CoinControl : NetworkBehaviour
 
     private void UpMethod()
     {
-        if(_initIncreasedValue <= _maxUpValue)
+        if (_initIncreasedValue <= _maxUpValue)
         {
             Vector3 initPos = transform.position;
-            initPos.y += _increasedValue;
+            initPos.y += _increasedValue * (Time.deltaTime * 60f);
             transform.position = initPos;
-            _increasedValue *= _risePowerDecay;
+            _increasedValue *= Mathf.Pow(_risePowerDecay, Time.deltaTime * 60f);
             _initIncreasedValue += _increasedValue;
         }
         else
@@ -93,7 +121,7 @@ public class CoinControl : NetworkBehaviour
     {
         _waitLimitTime = waitTime;
         _initWaitTime += Time.deltaTime;
-        if( _waitLimitTime <= _initWaitTime)
+        if (_waitLimitTime <= _initWaitTime)
         {
             _coinState = CoinState.Move;
         }
@@ -101,16 +129,102 @@ public class CoinControl : NetworkBehaviour
 
     private void MoveMethod()
     {
-            Vector3 direction = _playerObj.transform.position - this.transform.position;
-            transform.position += direction * _absorbSpeed * Time.deltaTime;
+        if (_hasAbsorbed) return;
 
-            float distance = Vector3.Distance(_playerObj.transform.position, this.transform.position);
-            if (distance <= _disappearDistance)
+        if (_playerObj == null || !_playerObj.activeInHierarchy)
+        {
+            FindTargetPlayer();
+            if (_playerObj == null) return;
+        }
+
+        // プレイヤーに向かって加速度的に吸い込む
+        Vector3 direction = (_playerObj.transform.position - transform.position).normalized;
+        transform.position += direction * _absorbSpeed * Time.deltaTime;
+
+        float distance = Vector3.Distance(_playerObj.transform.position, transform.position);
+        if (distance <= _disappearDistance)
+        {
+            _hasAbsorbed = true;
+
+            var playerNetObj = _playerObj.GetComponent<NetworkObject>() ?? _playerObj.GetComponentInParent<NetworkObject>();
+
+            // サーバー上なら即座に取得・加算
+            if (IsServer)
             {
-                //SoulKeep soul = _playerObj.GetComponent<SoulKeep>();
-                //soul.AdditionCoin();
-                Destroy(this.gameObject);
+                ApplyAbsorb(playerNetObj);
+            }
+            else
+            {
+                // クライアント側で到達した場合、サーバーへ取得をリクエスト
+                if (playerNetObj != null)
+                {
+                    RequestAbsorbServerRpc(new NetworkObjectReference(playerNetObj));
+                }
+            }
         }
     }
 
+    [Rpc(SendTo.Server)]
+    private void RequestAbsorbServerRpc(NetworkObjectReference playerRef)
+    {
+        if (playerRef.TryGet(out NetworkObject playerNetObj))
+        {
+            ApplyAbsorb(playerNetObj);
+        }
+    }
+
+    private void ApplyAbsorb(NetworkObject playerNetObj)
+    {
+        if (!IsServer || _serverAbsorbed) return;
+        _serverAbsorbed = true;
+
+        if (playerNetObj != null)
+        {
+            SoulKeep soul = playerNetObj.GetComponent<SoulKeep>() ?? playerNetObj.GetComponentInChildren<SoulKeep>();
+            if (soul != null)
+            {
+                soul.AdditionCoin();
+            }
+        }
+
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void FindTargetPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYER_TAGNAME);
+        if (players == null || players.Length == 0) return;
+
+        // クライアント側では可能な限り自分（ローカルプレイヤー）を優先、無ければ最寄り
+        GameObject closest = null;
+        float minDst = float.MaxValue;
+        Vector3 curPos = transform.position;
+
+        foreach (var p in players)
+        {
+            if (p == null || !p.activeInHierarchy) continue;
+            var netObj = p.GetComponent<NetworkObject>() ?? p.GetComponentInParent<NetworkObject>();
+            if (netObj != null && netObj.IsLocalPlayer)
+            {
+                _playerObj = p;
+                return;
+            }
+
+            float dst = Vector3.Distance(curPos, p.transform.position);
+            if (dst < minDst)
+            {
+                minDst = dst;
+                closest = p;
+            }
+        }
+
+        _playerObj = closest;
+    }
 }

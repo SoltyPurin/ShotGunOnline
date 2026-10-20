@@ -3,78 +3,66 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ReleaseSoul : NetworkBehaviour
+public class ReleaseSoul : MonoBehaviour
 {
-    [SerializeField, Header("¶¬‚·‚éƒ\ƒEƒ‹‚ÌƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ã‚½ã‚¦ãƒ«ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _soulObject = default;
-    [SerializeField, Header("‰½ŒÂƒ\ƒEƒ‹‚ğo‚·‚©")]
+    [SerializeField, Header("å‡ºã™ã‚½ã‚¦ãƒ«ã®æ•°")]
     private int _releaseSoulCount = 7;
-    [SerializeField, Header("ƒoƒ‰‚Ü‚¢‚Ä‚©‚ç‰½•b‚Å‰ñû‚³‚¹‚é‚©")]
+    [SerializeField, Header("å‡ºç”Ÿã¾ã‚Œã¦ã‹ã‚‰ä½•ç§’ã§æ¶ˆãˆã‚‹ã‹")]
     private float _collectTime = 1;
 
     private SEManager _se = default;
-
     private readonly string SEMANAGER_TAG = "SEManager";
 
     private void Start()
     {
-        _se = GameObject.FindWithTag(SEMANAGER_TAG).GetComponent<SEManager>();
+        GameObject seObj = GameObject.FindWithTag(SEMANAGER_TAG);
+        if (seObj != null)
+        {
+            _se = seObj.GetComponent<SEManager>();
+        }
     }
+
     public void ReleaseProtocol()
     {
-        if (!IsServer)
-        {
-            return;
-        }
         for (int i = 0; i < _releaseSoulCount; i++)
         {
+            if (_soulObject == null) break;
+
             GameObject coin = Instantiate(_soulObject, transform.position, Quaternion.identity);
-            NetworkObject netCoin = coin.GetComponent<NetworkObject>();
-            netCoin.Spawn();
+
+            // NetworkObject ãŒä»˜ã„ã¦ã„ã‚‹å ´åˆã¯ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚¹ãƒãƒ¼ãƒ³
+            var netObj = coin.GetComponent<NetworkObject>();
+            if (netObj != null && NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+            {
+                if (!netObj.IsSpawned)
+                {
+                    netObj.Spawn();
+                }
+            }
+
             MoveCoin moveCoin = coin.GetComponent<MoveCoin>();
-            if(moveCoin != null )
+            if (moveCoin != null)
             {
-                //moveCoin.MoveStartClientRpc();
+                moveCoin.MoveStartClientRpc();
                 moveCoin.ChangeWaitTimeMethod(_collectTime);
-                Debug.Log("ƒ\ƒEƒ‹ˆÚ“®–½—ßÀs");
-            }
-            else
-            {
-                Debug.Log("ˆÚ“®ƒ\ƒEƒ‹‚ª–³‚¢‚æ");
             }
         }
 
-        NetworkObject netObj = this.GetComponent<NetworkObject>();
-        if (netObj != null && netObj.IsSpawned)
+        if (_se != null)
         {
-            if (IsServer)
-            {
-                netObj.Despawn(true); // ƒT[ƒo[‚Å Despawn ‚·‚ê‚Î‘SƒNƒ‰ƒCƒAƒ“ƒg‚©‚çÁ‚¦‚é
-            }
-            else
-            {
-                // ƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚ÍƒT[ƒo[‚ÖÁ‹ˆË—Š‚Ì ServerRpc ‚ğ‘—‚éi•K—v‚É‰‚¶‚Äj
-                RequestDestroySoulFloorServerRpc(netObj);
-            }
-        }
-        else if (IsServer)
-        {
-            Destroy(this.gameObject);
+            _se.PlayStepOnSoulFloor();
         }
 
-        _se.PlayStepOnSoulFloor();
-    }
-
-    [Rpc(SendTo.Server)]
-    public void RequestDestroySoulFloorServerRpc(NetworkObjectReference bulletRef)
-    {
-        if (bulletRef.TryGet(out NetworkObject netObj))
+        var floorNetObj = GetComponent<NetworkObject>();
+        if (floorNetObj != null && floorNetObj.IsSpawned)
         {
-            if (netObj.IsSpawned)
-            {
-                netObj.Despawn(true);
-            }
+            floorNetObj.Despawn();
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
-
 }
