@@ -1,60 +1,62 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class ArmorTakeDamage : EnemyTakeDamage
 {
-    [Header("ƒK[ƒh‚µ‚Ä‚é‚©‚Ì”»’f—p‚ÉƒXƒNƒŠƒvƒgİ’è")]
+    [Header("ã‚¬ãƒ¼ãƒ‰åˆ¤å®šç”¨ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     [SerializeField] protected ArmorKnockBack _armorKnockbackScript = default;
-    [Header("ƒK[ƒh‚µ‚½‚Æ‚«‚ÉH‚ç‚¤ƒ_ƒ[ƒW‚ÌæZ—p”š")]
+    [Header("ã‚¬ãƒ¼ãƒ‰æ™‚ã®è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸ä¹—ç®—ç”¨")]
     [SerializeField] protected float _guardMultiplier = 250;
-    [SerializeField, Header("ƒK[ƒh‚ÌƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("ã‚¬ãƒ¼ãƒ‰æ™‚ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     protected Animator _guardEffect = default;
 
-    [SerializeField,Header("ƒK[ƒh‚µ‚½‚Æ‚«‚ÌÅ’áƒ_ƒ[ƒW")]
+    [SerializeField, Header("ã‚¬ãƒ¼ãƒ‰æ™‚æœ€ä½ãƒ€ãƒ¡ãƒ¼ã‚¸")]
     protected float _guardMinDamage = 100;
-    //ƒ_ƒ[ƒW‚ğû—e‚·‚é•Ï”
+    // ãƒ€ãƒ¡ãƒ¼ã‚¸å—ä¿¡ç”¨å¤‰æ•°
     protected float _damage = 0;
 
-    /// <summary>
-    /// ”í’eƒ_ƒ[ƒWİ’èAƒEƒ‹ƒg‚©’Êí‚Åˆ—‚ğ•Ï‚¦‚é
-    /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
-    /// <param name="state">ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg</param>
-    public override void SetTakeDamege(float chargeTime,PlayerState state)
+    public override void Start()
     {
-        //ƒEƒ‹ƒg‚¾‚Á‚½‚ç‘¦€
+        base.Start();
+        SetMaxHP(JsonSaver.Instance.EnemyJson.ArmorHP);
+    }
+
+    /// <summary>
+    /// è¢«å¼¾ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†ã€ã‚¦ãƒ«ãƒˆæ™‚ã¯å³æ­»
+    /// </summary>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
+    /// <param name="state">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆ</param>
+    public override void SetTakeDamege(float chargeTime, PlayerState state)
+    {
+        // ã‚¦ãƒ«ãƒˆæ™‚ã¯å³æ­»
         if (state == PlayerState.Ultimate)
         {
+            _enemyHP.Value = 0;
             _hpUI.UpdateHP(0);
             StartCoroutine(DeathProtocol(2));
             return;
         }
-        //ŠO•”‚Ì•Ï”‚ğˆê’Uƒ[ƒJƒ‹‚Ì•Ï”‚É“¦‚ª‚·
+        // å‰æ–¹ã‹ã‚‰ã®æ”»æ’ƒï¼ˆã‚¬ãƒ¼ãƒ‰ï¼‰åˆ¤å®š
         bool isGuard = _armorKnockbackScript.IsFromFlont;
-        //ƒK[ƒh‚µ‚Ä‚¢‚½ê‡
+        // ã‚¬ãƒ¼ãƒ‰æ™‚
         if (isGuard) 
         {
-            //ƒK[ƒh‚Ìƒ_ƒ[ƒWİ’è‹y‚ÑƒK[ƒh‚ÌƒGƒtƒFƒNƒgÄ¶
             _damage = chargeTime * _guardMultiplier;
             _damage = Mathf.Max(_damage, _guardMinDamage);
             _guardEffect.SetTrigger("Damage");
         }
         else
         {
-            //ƒK[ƒh‚µ‚Ä‚È‚¢‚Æ‚«‚Ì”í’eƒ_ƒ[ƒWİ’è‹y‚ÑƒGƒtƒFƒNƒg
             _damage = chargeTime * _damageMultiplier;
             _damage = Mathf.Max(_damage, _minDamage);
             _damageAnimator.SetTrigger("Damage");
             _damageMaterial.Damage();
-            
         }
-        //hp‚©‚çƒ_ƒ[ƒW•ªˆø‚­
+        // HPæ›´æ–°
         _enemyHP.Value = (_enemyHP.Value - (int)_damage);
-        //HPƒo[‚ğXV
         _hpUI.UpdateHP(_enemyHP.Value);
         if (_enemyHP.Value <= 0)
         {
             StartCoroutine(DeathProtocol(chargeTime));
         }
     }
-
 }
