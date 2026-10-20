@@ -364,11 +364,32 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         //{
         //    _scoreManager.ScoreCalculation();
         //}
-        _scoreManager.ScoreCalculation();
+        if (IsServer)
+        {
+            //_scoreManager.ScoreCalculation();
+            int min = _scoreManager.Minute;
+            float sec = _scoreManager.Second;
+            SyncFinalScoreClientRpc(min, sec);
+        }
 
         _sceneTransitionManager.StartSceneTransition();
     }
 
+    /// <summary>
+    /// 全クライアント端末の GetScoreManager にクリアタイムを同期書き込みする RPC
+    /// </summary>
+    [ClientRpc]
+    private void SyncFinalScoreClientRpc(int minute, float seconds)
+    {
+        if (GetScoreManager._this != null)
+        {
+            GetScoreManager._this.GetScore(minute, seconds);
+        }
+        else if (_scoreManager != null)
+        {
+            _scoreManager.ScoreCalculation();
+        }
+    }
     private void TutorialWaveEnd()
     {
         _listEnd = true;

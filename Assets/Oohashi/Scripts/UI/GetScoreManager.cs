@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -49,12 +50,6 @@ public class GetScoreManager : MonoBehaviour
 
     }
     #endregion
-
-    private void Start()
-    {
-        _minuteScore = 0;
-    }
-
     /// <summary>
     /// 渡されたスコアを保存する(現在はint型の時間)
     /// </summary>
@@ -63,5 +58,6 @@ public class GetScoreManager : MonoBehaviour
     {
         _minuteScore = minute; 
         _secondScore = seconds;
+        Debug.Log("保存してある時間は " +  _minuteScore +"分： " + _secondScore);
     }
 }

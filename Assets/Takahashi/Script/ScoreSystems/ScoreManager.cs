@@ -22,7 +22,15 @@ public class ScoreManager : MonoBehaviour
 
     private const int SCORE_MULTIPLE = 30;
     private int _minute = 0;
+    public int Minute
+    {
+        get { return  _minute; }
+    }
     private float _second = 0;
+    public float Second
+    {
+        get { return _second; }
+    }
     private float _oldSecond = 0;
     private float _timer = 0;
 
@@ -132,11 +140,19 @@ public class ScoreManager : MonoBehaviour
     }
 
     /// <summary>
-    /// スコアを返すメソッド
+    /// スコアを保存するメソッド
     /// </summary>
-    /// <returns>スコアをそのまま返します。現在はタイマーの値をそのまま返しますよ</returns>
     public void ScoreCalculation()
     {
-        _getScoreManager.GetScore(_minute,_second);
+        //_getScoreManager.GetScore(_minute,_second);
+        if (_getScoreManager != null)
+        {
+            Debug.Log($"ScoreCalculation実行: {_minute}分 {_second}秒 を GetScoreManager に送ります");
+            _getScoreManager.GetScore(_minute, _second);
+        }
+        else
+        {
+            Debug.LogError("ScoreManager に _getScoreManager がセットされていません！");
+        }
     }
 }

@@ -156,7 +156,6 @@ public class ShootRange : MonoBehaviour
         //コライダー配列の中に入っているオブジェクトを探索
         foreach (Collider2D hit in hits)
         {
-            Debug.Log("範囲内にオブジェクト有");
             bool isHit = false;
             //ヒットしたオブジェクトを登録
             GameObject hitObject = hit.gameObject;
@@ -171,7 +170,6 @@ public class ShootRange : MonoBehaviour
             }
             else if (hitObject.CompareTag(BOSSTAGNAME))
             {
-                Debug.Log("範囲内にボスのタグ発見");
                 GameObject boss = hitObject;
                 BossStateManagement bossStateManagement = boss.GetComponent<BossStateManagement>();
                 isHit = true;
@@ -183,7 +181,6 @@ public class ShootRange : MonoBehaviour
             }
             else
             {
-                Debug.Log("範囲内に雑魚敵のタグ発見");
                 NormalHitObject(hitObject, chargeTime,isCritical);
                 isHit = true;
             }
