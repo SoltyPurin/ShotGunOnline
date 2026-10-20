@@ -67,6 +67,13 @@ public class PlayerHoleFall : EntityFall
     /// </summary>
     public override void Fall()
     {
+        // マルチプレイ時、自機（所有権を持つローカルプレイヤー）のみ落下・画面エフェクト・リスポーンを実行
+        NetworkObject netObj = GetComponent<NetworkObject>();
+        if (netObj != null && !netObj.IsOwner)
+        {
+            return;
+        }
+
         _knockBack.Fall();
         _damageKnockBack.Fall();
         if (_playerStateManager.PlayerState == PlayerState.Movie)
@@ -76,26 +83,18 @@ public class PlayerHoleFall : EntityFall
 
         if (!_damageKnockBack.IsInvincible)
         {
-            //無敵時間中でなければコインを減らす
+            // 無敵時間中でなければコイン減らす・被弾演出
             StartCoroutine(_damageKnockBack.DamagePerformance());
-        }
-
-        NetworkObject netObj = GetComponent<NetworkObject>();
-        if (netObj != null && !netObj.IsOwner)
-        {
-            return;
         }
 
         _rigidbody2D.simulated = false;
         _fadeAnimator.SetTrigger("FadeOut");
-        if(_seManager != null)
+        if (_seManager != null)
         {
             _seManager.PlayDropSound();
         }
         _animator.SetTrigger(FALLTRIGGER);
         _playerStateManager.FallState();
         StartCoroutine(MoveToRespawnPoint());
-
-
     }
 }
