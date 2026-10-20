@@ -20,13 +20,19 @@ public class NavMesh2DAgent : Unity.Netcode.NetworkBehaviour
     private float _repathTimer = 0f;
     private Vector2 _lastTargetPos = Vector2.positiveInfinity;
 
+    /// <summary>
+    /// クライアント側でもローカルに移動計算を行うか(雑魚敵のローカルシミュレーション用)
+    /// </summary>
+    public bool LocalSimulation { get; set; } = false;
+    private bool CanSimulate => IsServer || LocalSimulation;
+
     public Vector2 destination
     {
         get { return trace_area; }
         set
         {
             trace_area = value;
-            if (IsServer)
+            if (CanSimulate)
             {
                 UpdateMovement(value);
             }
@@ -59,7 +65,7 @@ public class NavMesh2DAgent : Unity.Netcode.NetworkBehaviour
     /// </summary>
     private void UpdateMovement(Vector2 target)
     {
-        if (!IsServer) return;
+        if (!CanSimulate) return;
         if (_enemyMove != null && _enemyMove.IsFloating) return;
 
         Vector2 current = transform.position;

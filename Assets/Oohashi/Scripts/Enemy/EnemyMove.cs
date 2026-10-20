@@ -63,12 +63,38 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     private float _findPlayerTimer = 0f;
     private const float FIND_PLAYER_INTERVAL = 0.5f;
 
+    [SerializeField, Header("クライアントで敵の移動をローカル計算する(雑魚敵向け)")]
+    private bool _localSimulation = false;
+    // ローカルシミュレーションを実際に行っているか
+    private bool _localSimulationActive = false;
+    private EnemyNetworkTransform _enemyNetworkTransform = default;
+
+    // サーバー位置とのずれがこの距離を超えたら徐々に補正する
+    private const float CLIENT_CORRECT_DISTANCE = 1.5f;
+    // サーバー位置とのずれがこの距離を超えたら即座に合わせる
+    private const float CLIENT_SNAP_DISTANCE = 5f;
+    private const float CLIENT_CORRECT_RATE = 4f;
+    // サーバー制御中(ノックバック等)にサーバー位置へ追従する速さ
+    private const float CLIENT_FOLLOW_RATE = 25f;
+
     public virtual void Start()
     {
         _agent = GetComponent<NavMesh2DAgent>();
         _rigidBody = GetComponent<Rigidbody2D>();
 
-        if (!IsServer && _agent != null)
+        _enemyNetworkTransform = GetComponent<EnemyNetworkTransform>();
+        // ローカルシミュレーションは、EnemyNetworkTransformが付いている場合のみ有効
+        _localSimulationActive = !IsServer && _localSimulation && _enemyNetworkTransform != null;
+
+        if (_localSimulationActive)
+        {
+            _enemyNetworkTransform.LocalSimulation = true;
+            if (_agent != null)
+            {
+                _agent.LocalSimulation = true;
+            }
+        }
+        else if (!IsServer && _agent != null)
         {
             _agent.enabled = false;
         }
@@ -115,9 +141,59 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// クライアント側のローカルシミュレーション。
+    /// 通常移動中はローカルで移動し、サーバー位置と大きくずれたときのみ補正する。
+    /// ノックバックや落下などサーバーが位置を確定する状態では、サーバー位置に追従する。
+    /// </summary>
+    private void ClientSimulate()
+    {
+        Vector2 serverPos = _enemyNetworkTransform.ServerPosition;
+        Vector3 curPos = transform.position;
+
+        bool serverControlled = _enemyState.Value != EnemyState.move || _isFloating;
+        if (serverControlled)
+        {
+            float follow = 1f - Mathf.Exp(-CLIENT_FOLLOW_RATE * Time.fixedDeltaTime);
+            Vector2 followed = Vector2.Lerp(curPos, serverPos, follow);
+            transform.position = new Vector3(followed.x, followed.y, curPos.z);
+            return;
+        }
+
+        _findPlayerTimer += Time.fixedDeltaTime;
+        if (_playerObject == null || !_playerObject.activeInHierarchy || _findPlayerTimer >= FIND_PLAYER_INTERVAL)
+        {
+            _findPlayerTimer = 0f;
+            FindPlayer();
+            if (_playerObject == null) return;
+        }
+
+        Moving();
+
+        curPos = transform.position;
+        float error = Vector2.Distance(curPos, serverPos);
+        if (error > CLIENT_SNAP_DISTANCE)
+        {
+            transform.position = new Vector3(serverPos.x, serverPos.y, curPos.z);
+        }
+        else if (error > CLIENT_CORRECT_DISTANCE)
+        {
+            float correct = 1f - Mathf.Exp(-CLIENT_CORRECT_RATE * Time.fixedDeltaTime);
+            Vector2 corrected = Vector2.Lerp(curPos, serverPos, correct);
+            transform.position = new Vector3(corrected.x, corrected.y, curPos.z);
+        }
+    }
+
     private void FixedUpdate()
     {
-        if (!IsServer) return;
+        if (!IsServer)
+        {
+            if (_localSimulationActive)
+            {
+                ClientSimulate();
+            }
+            return;
+        }
 
         _findPlayerTimer += Time.fixedDeltaTime;
         if (_playerObject == null || !_playerObject.activeInHierarchy || _findPlayerTimer >= FIND_PLAYER_INTERVAL)
