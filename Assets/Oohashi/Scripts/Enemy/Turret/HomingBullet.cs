@@ -1,19 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class HomingBullet : EnemyShotBullet
 {
-    #region Serialize•Ï”
-    [SerializeField, Header("oŒ»‚µ‚Ä‚©‚ç‰½•bŒã‚ÉƒvƒŒƒCƒ„[‚É”ò‚ñ‚Å‚¢‚­‚©")]
+    #region Serializeå¤‰æ•°
+    [SerializeField, Header("å‡ºã¦ã‹ã‚‰ä½•ç§’ã§ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«é£›ã‚“ã§ã„ãã‹")]
     private float _waitTime = 2f;
-    [SerializeField,Header("e’e‚ÌƒXƒvƒ‰ƒCƒg")]
+    [SerializeField, Header("å¼¾ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ")]
     private GameObject _bulletSprite = default;
-    [SerializeField, Header("‰½•bŒo‰ß‚µ‚½‚çÁ‚¦‚é‚©")]
+    [SerializeField, Header("ä½•ç§’ã§å¼¾ãŒæ¶ˆãˆã‚‹ã‹")]
     private float _destroyTime = 5;
     #endregion
-    #region •Ï”
+
+    #region å¤‰æ•°
     private GameObject _playerObject = default;
     private Vector2 _firstDirection = default;
     private float _initAliveTime = 0;
@@ -21,16 +21,21 @@ public class HomingBullet : EnemyShotBullet
     private float _smooth = 0.4f;
     #endregion
 
+    #region å®šæ•°
+    private readonly string PLAYER_TAG = "Player";
+    #endregion
+
     private void Start()
     {
         _smooth = JsonSaver.Instance.EnemyJson.BurretSmooth;
     }
+
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg‚Æ•ûŒü‚ğİ’è‚·‚é
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨æ–¹å‘ã‚’è¨­å®šã™ã‚‹
     /// </summary>
-    /// <param name="playerObj">ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg</param>
-    /// <param name="bulletDirection">Å‰‚É”ò‚ñ‚Ås‚­•ûŒü</param>
-    public override void DirectionSetting(GameObject playerObj,Vector2 bulletDirection)
+    /// <param name="playerObj">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+    /// <param name="bulletDirection">æœ€åˆã«é£›ã¶é€²è¡Œæ–¹å‘</param>
+    public override void DirectionSetting(GameObject playerObj, Vector2 bulletDirection)
     {
         _playerObject = playerObj;
         _firstDirection = bulletDirection;
@@ -41,9 +46,9 @@ public class HomingBullet : EnemyShotBullet
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ÉˆÚ“®ŠJn‚³‚¹‚éƒtƒ‰ƒO‚ğ—§‚Ä‚é
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã«ç§»å‹•é–‹å§‹ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
     /// </summary>
-    /// <returns>•Ï”‚Åİ’è‚µ‚½ŠÔ•ª‘Ò‚Â</returns>
+    /// <returns>è¨­å®šã—ãŸæ™‚é–“å¾…æ©Ÿ</returns>
     private IEnumerator WaitMoveToPlayer()
     {
         yield return new WaitForSeconds(_waitTime);
@@ -51,14 +56,36 @@ public class HomingBullet : EnemyShotBullet
     }
 
     /// <summary>
-    /// Å‰‚Íw’è‚³‚ê‚½•ûŒü‚É”ò‚ÑA‚»‚ÌŒãƒvƒŒƒCƒ„[‚Ì•ûŒü‚É”ò‚ñ‚Å‚¢‚­
+    /// æœ€ã‚‚è¿‘ã„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æ¤œç´¢ã™ã‚‹
+    /// </summary>
+    private GameObject FindNearestPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYER_TAG);
+        GameObject nearest = null;
+        float minDistance = float.MaxValue;
+        foreach (GameObject p in players)
+        {
+            if (p == null) continue;
+            float dist = Vector2.Distance(transform.position, p.transform.position);
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                nearest = p;
+            }
+        }
+        return nearest;
+    }
+
+    /// <summary>
+    /// æœ€åˆã¯æŒ‡å®šã•ã‚ŒãŸæ–¹å‘ã«é£›ã³ã€ãã®å¾Œãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã«é£›ã‚“ã§ã„ã
     /// </summary>
     public override void FixedUpdate()
     {
         _initAliveTime += Time.fixedDeltaTime;
-        if(_initAliveTime >= _destroyTime)
+        if (_initAliveTime >= _destroyTime)
         {
             Destroy(this.gameObject);
+            return;
         }
 
         if (!_canMoveToPlayer)
@@ -67,14 +94,25 @@ public class HomingBullet : EnemyShotBullet
             return;
         }
 
+        if (_playerObject == null)
+        {
+            _playerObject = FindNearestPlayer();
+            if (_playerObject == null)
+            {
+                MoveProtocol(_direction);
+                return;
+            }
+        }
+
         Vector3 playerObj = _playerObject.transform.position;
         Vector3 targetDir = (playerObj - this.transform.position).normalized;
         float t = _smooth * Time.fixedDeltaTime;
-        _direction = Vector3.Slerp(_direction, targetDir,t).normalized;
+        _direction = Vector3.Slerp(_direction, targetDir, t).normalized;
         MoveProtocol(_direction);
     }
+
     /// <summary>
-    /// ˆÚ“®‚Ìƒƒ\ƒbƒh
+    /// ç§»å‹•ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     /// <param name="direction"></param>
     private void MoveProtocol(Vector3 direction)

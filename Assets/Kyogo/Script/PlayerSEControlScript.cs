@@ -109,21 +109,24 @@ public class PlayerSEControlScript : NetworkBehaviour
     void Update()
     {
         //ボタン管理--------------------------------------------------------------------------------
-        //if(Gamepad.current == null)
-        //{
-        //    return;
-        //}
         if (!IsOwner)
         {
             return;
         }
-        if (Gamepad.current != null)
-        {
-            _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();//ゲームパッドのRTの押し込み具合を見ている
-        }
-        bool isrightTriggerInput = _rightTriggerValue >= 0.9f;//RTが強く（90%以上)押されているのかを判定する
-        _canShooting = (isrightTriggerInput || Input.GetButton(FIREBUTTONNAME));//True=Charge中
 
+        if (_inputPlayerShot != null)
+        {
+            _canShooting = _inputPlayerShot.IsPushShotButton;
+        }
+        else
+        {
+            if (Gamepad.current != null)
+            {
+                _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();//ゲームパッドのRTの押し込み具合を見ている
+            }
+            bool isrightTriggerInput = _rightTriggerValue >= 0.9f;//RTが強く（90%以上)押されているのかを判定する
+            _canShooting = (isrightTriggerInput || Input.GetButton(FIREBUTTONNAME));//True=Charge中
+        }
     }
 
     private void FixedUpdate()
@@ -140,49 +143,47 @@ public class PlayerSEControlScript : NetworkBehaviour
         //チャージ開始--------------------------------------------------------------------------------
 
         if (_canShooting && !charge_wait && !_inputPlayerShot.IsDecCharge
-            && _PlayerStateManager.PlayerState == PlayerState.Normal)
+            && _PlayerStateManager.PlayerState == PlayerState.Normal
+            && _inputPlayerShot.ShootState == ShootState.CanShoot)
         {
-            audioSource2.clip = chargeSE;
-            audioSource2.loop = false;
-            audioSource2.Play();
+            if (audioSource2 != null && chargeSE != null)
+            {
+                audioSource2.clip = chargeSE;
+                audioSource2.loop = false;
+                audioSource2.Play();
+            }
         }
 
-        //発射音の管理--------------------------------------------------------------------------------
-        bool canPlaySound = charge_wait && !_canShooting && !_inputPlayerShot.IsDecCharge && (_PlayerStateManager.PlayerState == PlayerState.Normal) && _inputPlayerShot.ShootState == ShootState.CanShoot;
-        if (canPlaySound)
+        // 射撃ボタンを離した際のチャージ音停止
+        if (!_canShooting && charge_wait)
         {
-            audioSource2.Stop();
-
-            if (currentCharge / 2 > Shotgun_Shot_Large)
+            if (audioSource2 != null)
             {
-                audioSource.PlayOneShot(shotSE_Large);      //大サイズ発射音
+                audioSource2.Stop();
             }
-            else if (currentCharge / 2 > Shotgun_Shot_Medium)
-            {
-                audioSource.PlayOneShot(shotSE_Medium);     //中サイズ発射音
-            }
-            else
-            {
-                audioSource.PlayOneShot(shotSE_Small);      //小サイズ発射音
-            }
-            //audioSource.Stop();
-            float pitchCorrection = 1f / _inputPlayerShot.BonusMultiplier;
-            audioSource.pitch = _inputPlayerShot.BonusMultiplier;
-            _mixer.SetFloat("Pitch", pitchCorrection);
-
-            _lastChargeValue = 0f;
         }
-        if (currentCharge >= 2 && !_isMaxPlaying)
+
+        // 最大チャージ待機音の管理
+        if (currentCharge >= 2f && !_isMaxPlaying && _canShooting)
         {
-            audioSource.PlayOneShot(chargeSE_MaxCharge);
-            audioSource_ChargeWait.clip = shotSE_WaitWithMaxCharge;
-            audioSource_ChargeWait.loop = true;
-            audioSource_ChargeWait.Play();
+            if (audioSource != null && chargeSE_MaxCharge != null)
+            {
+                audioSource.PlayOneShot(chargeSE_MaxCharge);
+            }
+            if (audioSource_ChargeWait != null && shotSE_WaitWithMaxCharge != null)
+            {
+                audioSource_ChargeWait.clip = shotSE_WaitWithMaxCharge;
+                audioSource_ChargeWait.loop = true;
+                audioSource_ChargeWait.Play();
+            }
             _isMaxPlaying = true;
         }
-        else if (currentCharge < 2 && _isMaxPlaying && !_inputPlayerShot.CanDecChargeValue)
+        else if ((currentCharge < 2f || !_canShooting) && _isMaxPlaying)
         {
-            audioSource_ChargeWait.Stop();
+            if (audioSource_ChargeWait != null)
+            {
+                audioSource_ChargeWait.Stop();
+            }
             _isMaxPlaying = false;
         }
         charge_wait = _canShooting;
@@ -270,7 +271,71 @@ public class PlayerSEControlScript : NetworkBehaviour
     {
         if (System.Array.Exists(HitTarget, tag => collision.gameObject.CompareTag(tag)))
         {
+            PlayDamageSE();
+        }
+    }
+
+    /// <summary>
+    /// 被ダメージ音を再生する
+    /// </summary>
+    public void PlayDamageSE()
+    {
+        if (audioSource != null && DamageSE != null)
+        {
             audioSource.PlayOneShot(DamageSE);
+        }
+    }
+
+    /// <summary>
+    /// 射撃音を再生する（InputPlayerShotから直接呼び出し）
+    /// </summary>
+    /// <param name="chargeValue">発射時のチャージ量</param>
+    /// <param name="isCritical">クリティカルまたは最大チャージフラグ</param>
+    public void PlayShotSE(float chargeValue, bool isCritical = false)
+    {
+        if (audioSource2 != null)
+        {
+            audioSource2.Stop(); // チャージ音を停止
+        }
+        if (audioSource_ChargeWait != null)
+        {
+            audioSource_ChargeWait.Stop(); // 最大チャージ待機音を停止
+            _isMaxPlaying = false;
+        }
+
+        AudioClip clipToPlay;
+        float normalizedCharge = chargeValue / 2f;
+
+        if (isCritical || normalizedCharge >= Shotgun_Shot_Large || chargeValue >= 1.8f)
+        {
+            clipToPlay = shotSE_Large;
+        }
+        else if (normalizedCharge >= Shotgun_Shot_Medium)
+        {
+            clipToPlay = shotSE_Medium;
+        }
+        else
+        {
+            clipToPlay = shotSE_Small;
+        }
+
+        if (audioSource != null && clipToPlay != null)
+        {
+            if (_inputPlayerShot != null && _inputPlayerShot.BonusMultiplier > 0.01f)
+            {
+                audioSource.pitch = _inputPlayerShot.BonusMultiplier;
+                if (_mixer != null)
+                {
+                    float pitchCorrection = 1f / _inputPlayerShot.BonusMultiplier;
+                    _mixer.SetFloat("Pitch", pitchCorrection);
+                }
+            }
+            else
+            {
+                audioSource.pitch = 1f;
+            }
+
+            audioSource.PlayOneShot(clipToPlay);
         }
     }
 

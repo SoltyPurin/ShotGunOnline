@@ -91,20 +91,28 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
 
     protected void FindPlayer()
     {
-        // ネットワーク上の全プレイヤーオブジェクトを探す
+        // ネットワーク上の全プレイヤーオブジェクトから最も近いプレイヤーを探す
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject nearestPlayer = null;
+        float minDistance = float.MaxValue;
+
         foreach (GameObject p in players)
         {
-            NetworkObject netObj = p.GetComponent<NetworkObject>();
-            if (netObj != null && netObj.IsLocalPlayer)
+            if (p == null) continue;
+            float dist = Vector2.Distance(transform.position, p.transform.position);
+            if (dist < minDistance)
             {
-                _playerObject = p;
-                _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
-                _target = _playerObject.transform;
-                break;
+                minDistance = dist;
+                nearestPlayer = p;
             }
         }
 
+        if (nearestPlayer != null)
+        {
+            _playerObject = nearestPlayer;
+            _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
+            _target = _playerObject.transform;
+        }
     }
     private void FixedUpdate()
     {

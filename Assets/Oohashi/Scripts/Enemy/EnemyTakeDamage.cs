@@ -103,6 +103,12 @@ public class EnemyTakeDamage : NetworkBehaviour
         {
             _damageMaterial.Damage();
         }
+        // ???????????????????????????????????????
+        var animManager = GetComponentInChildren<EnemyAnimationManager>();
+        if (animManager != null)
+        {
+            animManager.ForceKnockBack();
+        }
     }
 
     public override void OnNetworkSpawn()

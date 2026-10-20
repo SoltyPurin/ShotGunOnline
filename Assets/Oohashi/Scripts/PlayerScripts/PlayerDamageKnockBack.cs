@@ -88,6 +88,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     private PlayerTrenble _trenble = default;
 
     private PlayerKnockBack _knockBack = default;
+    private PlayerSEControlScript _playerSE = default;
+    private InputPlayerShot _inputPlayerShot = default;
     #endregion
 
     #region 定数
@@ -108,24 +110,49 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     private void Start()
     {
         //タグで探して登録
-        _seManager = GameObject.FindWithTag(SEMANAGERTAGNAME).GetComponent<SEManager>();
-        _hpSprite = GameObject.FindWithTag(HPSPRITETAGNAME).GetComponent<HPSprite>();
+        var seObj = GameObject.FindWithTag(SEMANAGERTAGNAME);
+        if (seObj != null) _seManager = seObj.GetComponent<SEManager>();
+
+        var hpObj = GameObject.FindWithTag(HPSPRITETAGNAME);
+        if (hpObj != null) _hpSprite = hpObj.GetComponent<HPSprite>();
+
         _knockBack = GetComponent<PlayerKnockBack>();
-        //オンライン版だとインスペクターに登録できないためここで探索
-        if (_damageVignette == null && _soulMeter == null && _scoreCircle == null)
-        {
-            _soulMeter = GameObject.Find("Soul_Bottle").GetComponent<SoulMeter>();
-            _damageVignette = GameObject.Find("PostManager").GetComponent<DamageVignett>();
-            _scoreCircle = GameObject.Find("RankGage").GetComponent<RealTimeScoreCircle>();
-        }
-        GameObject score = GameObject.FindWithTag(SCOREDATA);
+        _playerSE = GetComponent<PlayerSEControlScript>();
+        _inputPlayerShot = GetComponent<InputPlayerShot>();
         _trenble = GetComponent<PlayerTrenble>();
-        if(score != null)
+        _originForce = _force; //最初のforceを保存
+
+        GameObject score = GameObject.FindWithTag(SCOREDATA);
+        if (score != null)
         {
             _scoreData = score.GetComponent<ScoreData>();
         }
-        _originForce = _force; //最初のforceを保存
+
+        TryFindUIComponents();
     }
+
+    /// <summary>
+    /// HUD UIコンポーネントを安全に探索（ゲーム開始後にアクティブ化されるため遅延取得に対応）
+    /// </summary>
+    private void TryFindUIComponents()
+    {
+        if (_soulMeter == null)
+        {
+            var bottle = GameObject.Find("Soul_Bottle");
+            if (bottle != null) _soulMeter = bottle.GetComponent<SoulMeter>();
+        }
+        if (_damageVignette == null)
+        {
+            var postManager = GameObject.Find("PostManager");
+            if (postManager != null) _damageVignette = postManager.GetComponent<DamageVignett>();
+        }
+        if (_scoreCircle == null)
+        {
+            var rankGage = GameObject.Find("RankGage");
+            if (rankGage != null) _scoreCircle = rankGage.GetComponent<RealTimeScoreCircle>();
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!IsOwner) return;
@@ -152,9 +179,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             //吹き飛ぶ方向のメソッド呼び出し
             TriggerKnockBack(_contactNormal, _force, collision.gameObject);
-            //SetDirection(_contactNormal, _bossMirrorBulletForce, collision.gameObject);
             //ダメージのレバブルを設定
-            _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
+            if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
             Destroy(collision.gameObject);
         }
@@ -162,9 +188,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             //吹き飛ぶ方向のメソッド呼び出し
             TriggerKnockBack(_contactNormal, _force, collision.gameObject);
-            //SetDirection(_contactNormal, _force, collision.gameObject);
             //ダメージのレバブルを設定
-            _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
+            if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
             Destroy(collision.gameObject);
         }
@@ -172,51 +197,47 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             GameObject armor = collision.gameObject;
             ArmorMove armorMove = armor.GetComponent<ArmorMove>();
-            if (armorMove.InitState == ArmorState.Rush)
+            if (armorMove != null && armorMove.InitState == ArmorState.Rush)
             {
                 //ぶつかってきた方向を代入
-                _contactNormal = collision.contacts[0].normal;
+                _contactNormal = collision.contacts != null && collision.contacts.Length > 0 ? collision.contacts[0].normal : Vector2.up;
                 if (_hitStopCoroutine != null) StopCoroutine(_hitStopCoroutine);
                 _hitStopCoroutine = StartCoroutine(HitStop(collision, _contactNormal));
-                //StartCoroutine(HitStop(collision, _contactNormal));
                 //ダメージのレバブルを設定
-                _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
+                if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             }
             else
             {
                 //ぶつかってきた方向を代入
-                _contactNormal = collision.contacts[0].normal;
+                _contactNormal = collision.contacts != null && collision.contacts.Length > 0 ? collision.contacts[0].normal : Vector2.up;
                 //吹き飛ぶ方向のメソッド呼び出し
                 TriggerKnockBack(_contactNormal, _force, collision.gameObject);
-                //SetDirection(_contactNormal, _force, collision.gameObject);
                 //ダメージのレバブルを設定
-                _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
-
+                if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             }
         }
         else
         {
             //ぶつかってきた方向を代入
-            _contactNormal = collision.contacts[0].normal;
+            _contactNormal = collision.contacts != null && collision.contacts.Length > 0 ? collision.contacts[0].normal : Vector2.up;
             //吹き飛ぶ方向のメソッド呼び出し
             TriggerKnockBack(_contactNormal, _force, collision.gameObject);
-            //SetDirection(_contactNormal, _force, collision.gameObject);
             //ダメージのレバブルを設定
-            _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
+            if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
         }
     }
 
     private IEnumerator HitStop(Collision2D collision,Vector3 direction)
     {
-        _trenble.RushTrenble();
+        if (_trenble != null) _trenble.RushTrenble();
         yield return new WaitForSecondsRealtime(_armorHitStopTime);
-        ////吹き飛ぶ方向のメソッド呼び出し
-        //SetDirection(direction, _armorRushForce, collision.gameObject);
-        TriggerKnockBack(direction, _armorRushForce, collision.gameObject);
+        TriggerKnockBack(direction, _armorRushForce, collision != null ? collision.gameObject : null);
         _hitStopCoroutine = null;
         //ダメージのレバブルを設定
-        _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
-
+        if (_viblration != null && collision != null)
+        {
+            _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
+        }
     }
 
     /// <summary>
@@ -246,10 +267,20 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         float powValue = Mathf.Pow(power, 5f);
         _force = Mathf.Lerp(3, powValue, 0.5f);
 
-        if (IsOwner && _playerState != null)
+        if (_playerState != null)
         {
             _playerState.DamageKnockBackState();
         }
+    }
+
+    /// <summary>
+    /// サーバー側で敵の弾や爆発がクライアントに命中した際、クライアント実機上でダメージ処理を実行させるRPC
+    /// </summary>
+    [ClientRpc]
+    private void TakeDamageClientRpc(Vector3 direction, float power)
+    {
+        if (!IsOwner) return; // 所有権を持つクライアント端末でのみ実行
+        SetDirection(direction, power, null);
     }
 
     /// <summary>
@@ -258,51 +289,91 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     /// <returns>無敵時間待ってから無敵解除</returns>
     public IEnumerator DamagePerformance()
     {
-        _damageCount++;
-        _knockBack.TakeDamage();
-        // 金を落とす音とダメージ音を再生
-        _seManager.PlayMoneyDropSound();
-        _seManager.PlayEnemyDamageSound();
-
-        _damageVignette.Damage();
-        _hpSprite.ReduceHP();
-
-        if (_scoreData != null)
+        try
         {
-            _scoreData.TakeDamageCountPlus();
+            _damageCount++;
+            if (_knockBack != null)
+            {
+                _knockBack.TakeDamage();
+            }
+            
+            // プレイヤー被ダメージ音の再生
+            if (_playerSE != null)
+            {
+                _playerSE.PlayDamageSE();
+            }
+            else if (_seManager != null)
+            {
+                _seManager.PlayEnemyDamageSound();
+            }
+
+            // 金を落とす音を再生
+            if (_seManager != null)
+            {
+                _seManager.PlayMoneyDropSound();
+            }
+
+            TryFindUIComponents();
+
+            if (_damageVignette != null)
+            {
+                _damageVignette.Damage();
+            }
+
+            if (_hpSprite != null)
+            {
+                _hpSprite.ReduceHP();
+            }
+
+            if (_scoreData != null)
+            {
+                _scoreData.TakeDamageCountPlus();
+            }
+
+            if (_trenble != null)
+            {
+                _trenble.DamageTrenble();
+            }
+
+            // コインのドロップ情報通知・スポーン
+            if (IsServer)
+            {
+                SpawnCoinsServer();
+            }
+            else
+            {
+                RequestSpawnCoinsServerRpc();
+            }
+
+            yield return new WaitForSecondsRealtime(_invincibleTime);
         }
-
-        _trenble.DamageTrenble();
-
-        // コインの情報取得
-
-        if (IsServer)
+        finally
         {
-            SpawnCoinsServer();
-        }
-        else
-        {
-            RequestSpawnCoinsServerRpc();
-        }
+            // 何らかの例外が発生した場合でも確実に無敵状態を解除する
+            _isInvincible = false;
+            this.gameObject.layer = 8;
+            if (_spriteDirection != null)
+            {
+                switch (_spriteDirection.IsFront)
+                {
+                    case true:
+                        if (_frontPlayerSprite != null) _frontPlayerSprite.enabled = true;
+                        break;
 
-        yield return new WaitForSecondsRealtime(_invincibleTime);
-        //無敵解除
-        _isInvincible = false;
-        this.gameObject.layer = 8;
-        switch (_spriteDirection.IsFront)
-        {
-            case true:
-                _frontPlayerSprite.enabled = true;
-                break;
-
-            case false:
-                _backPlayerSprite.enabled = true;
-                break;
+                    case false:
+                        if (_backPlayerSprite != null) _backPlayerSprite.enabled = true;
+                        break;
+                }
+            }
+            else
+            {
+                if (_frontPlayerSprite != null) _frontPlayerSprite.enabled = true;
+                if (_backPlayerSprite != null) _backPlayerSprite.enabled = true;
+            }
         }
-
     }
 
-    [Rpc(SendTo.Server)]
+    [ServerRpc]
     private void RequestSpawnCoinsServerRpc()
     {
         SpawnCoinsServer();
@@ -313,6 +384,10 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     /// </summary>
     private void SpawnCoinsServer()
     {
+        if (_soulKeep == null)
+        {
+            _soulKeep = GetComponent<SoulKeep>();
+        }
         if (_soulKeep == null) return;
 
         int soul = _soulKeep.UseFullSoul;
@@ -330,6 +405,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             _soulKeep.ReduceCoin();
         }
 
+        if (_dropCoinObject == null) return;
+
         for (int i = 0; i < dropCoinCount; i++)
         {
             GameObject coin = Instantiate(_dropCoinObject, transform.position, Quaternion.identity);
@@ -340,6 +417,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             }
         }
     }
+
     /// <summary>
     /// 壁にぶつかった時に力を0にする
     /// </summary>
@@ -368,6 +446,14 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     /// <param name="power">吹き飛ぶ力</param>
     public void SetDirection(Vector3 direction, float power, GameObject collision)
     {
+        // サーバー上で、このプレイヤーのオーナーがリモートクライアントの場合、
+        // そのクライアント実機へ被ダメージ命令を送信する
+        if (IsServer && !IsOwner)
+        {
+            TakeDamageClientRpc(direction, power);
+            return;
+        }
+
         //無敵時間中は実行しない
         if (_isInvincible)
         {
@@ -376,14 +462,30 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         //無敵判定のフラグをON
         _isInvincible = true;
         this.gameObject.layer = 10;  
+
+        // チャージ中だった場合は即座にキャンセル
+        if (_inputPlayerShot != null)
+        {
+            _inputPlayerShot.CancelCharge();
+        }
+
         //ダメージの演出コルーチン呼び出し
         StartCoroutine(DamagePerformance());
+
+        Vector2 colPos = collision != null ? (Vector2)collision.transform.position : (Vector2)transform.position;
 
         //ノックバック中でなければ処理
         if (!_isKnockBacking)
         {
-            //前のステートを保存
-            _oldState = _playerState.PlayerState;
+            //前のステートを保存（既にDamageKnockBackでない場合のみ）
+            if (_playerState != null && _playerState.PlayerState != PlayerState.DamageKnockBack)
+            {
+                _oldState = _playerState.PlayerState;
+            }
+            if (IsOwner && _playerState != null)
+            {
+                _playerState.DamageKnockBackState();
+            }
             //ノックバックのフラグをON
             _isKnockBacking = true;
             //チャージ時間の乗を求める
@@ -391,13 +493,20 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //最低1からpowValueまでの間で線形補正を行い、チャージ値ごとの吹き飛ばしをなめらかに
             _force = Mathf.Lerp(3, powValue, 0.5f);
             _contactNormal = direction;
-            _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
+            if (_viblration != null) _viblration.ViblartionSettingLeftAndRight(colPos);
             //見てる方向と反対方向に力を加える
         }
         else
         {
-            //前のステートを保存
-            _oldState = _playerState.PlayerState;
+            //前のステートを保存（既にDamageKnockBackでない場合のみ）
+            if (_playerState != null && _playerState.PlayerState != PlayerState.DamageKnockBack)
+            {
+                _oldState = _playerState.PlayerState;
+            }
+            if (IsOwner && _playerState != null)
+            {
+                _playerState.DamageKnockBackState();
+            }
             //ノックバックのフラグをON
             _isKnockBacking = true;
             //乗算しないように強制的に1の力を与える
@@ -420,6 +529,10 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             StopCoroutine(_hitStopCoroutine);
             _hitStopCoroutine = null;
+        }
+        if (_inputPlayerShot != null)
+        {
+            _inputPlayerShot.CancelCharge();
         }
         _force = 0;
         _isKnockBacking = false;
