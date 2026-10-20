@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3995cd80fffe6174db12683e7132e211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _secondEffect: {fileID: 0}
   _agent: {fileID: 642626608985822722}
   _stateManagement: {fileID: 1443986990884562278}
@@ -180,7 +181,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _bombEnemy: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
-  _spawnPoint: {fileID: 0}
   _enemyList:
   - {fileID: 6475060805928063372, guid: 937520ba7fa6acb45bb35c6833671480, type: 3}
   - {fileID: 7256754549358920131, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6204341d764a4c4b9a3ab315039a332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _bossCollider: {fileID: 8819204074285814828}
   _shockWave: {fileID: 8398158926763634828, guid: d96435d7079f1074697ba65e6dab5220, type: 3}
   _shockHole: {fileID: 4940889591895875471, guid: c473a3fce8f71fa4fb235594f0314387, type: 3}
@@ -260,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb2dbff92b44879438f148fc8c59d124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _bossCollider: {fileID: 8819204074285814828}
 --- !u!114 &5066842935737198753
 MonoBehaviour:
@@ -312,6 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySprite: {fileID: 8899052208987868348}
   _spawnPoint: {fileID: 3663778663665680832}
   _enemyCollider: {fileID: 8819204074285814828}
@@ -335,6 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38fd673c801e44040b3acd84371414b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyKnockBack: {fileID: 7540622797953592042}
   _takeDamage: {fileID: 5664278761013691538}
 --- !u!114 &2991768862254151718
@@ -356,7 +360,7 @@ MonoBehaviour:
   _armorMove: {fileID: 0}
   _kyousei: {fileID: 8587264259570551082}
   _returnPointTransform: {fileID: 0}
-  _returnPointName: SpawonPoint2
+  _returnPointName: SpawnPoint2
   _spawnProtectTime: 2
 --- !u!114 &5236341858051466352
 MonoBehaviour:
@@ -1552,6 +1556,7 @@ GameObject:
   - component: {fileID: 2697460654164385791}
   - component: {fileID: 8587264259570551082}
   - component: {fileID: 1269876956176921208}
+  - component: {fileID: 8169927606953736269}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: BossSprite
@@ -1905,6 +1910,18 @@ MonoBehaviour:
       Synchronize: 1
       ParameterType: 4
   AnimatorParametersExpanded: 0
+--- !u!114 &8169927606953736269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5419467288907341210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6eb580cf86a66942bbcff6bb7669732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteTrackerDebug
 --- !u!1 &5799600748158442091
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyShotBullet : MonoBehaviour
+public class EnemyShotBullet : NetworkBehaviour
 {
 
     protected Vector2 _direction = default;
@@ -44,7 +45,8 @@ public class EnemyShotBullet : MonoBehaviour
             if(_lifetime >= _bulletLifeLimitTime)
             {
                 Instantiate(_deathEffect, transform.position, Quaternion.identity);
-                Destroy(this.gameObject);
+                GetComponent<NetworkObject>().Despawn(true);
+                //Destroy(this.gameObject);
             }
         }
     }
@@ -56,7 +58,36 @@ public class EnemyShotBullet : MonoBehaviour
             PlayerDamageKnockBack damageKnockBack = collision.GetComponent<PlayerDamageKnockBack>();
             damageKnockBack.SetDirection(_direction, _bulletBlowAway, this.gameObject);
             Instantiate(_deathEffect, transform.position, Quaternion.identity);
-            Destroy(this.gameObject);
+            NetworkObject netObj = this.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
+            {
+                if (IsServer)
+                {
+                    netObj.Despawn(true); // サーバーで Despawn すれば全クライアントから消える
+                }
+                else
+                {
+                    // クライアントからはサーバーへ消去依頼の ServerRpc を送る（必要に応じて）
+                    RequestDestroyBulletServerRpc(netObj);
+                }
+            }
+            else if (IsServer)
+            {
+                Destroy(this.gameObject);
+            }
+            //Destroy(this.gameObject);
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void RequestDestroyBulletServerRpc(NetworkObjectReference bulletRef)
+    {
+        if (bulletRef.TryGet(out NetworkObject netObj))
+        {
+            if (netObj.IsSpawned)
+            {
+                netObj.Despawn(true);
+            }
         }
     }
 

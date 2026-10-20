@@ -72,13 +72,17 @@ public class BossJumpAtack : BossColliderTriggerSW
     }
     public void MoveToJumpAtackPosition()
     {
+        if (!IsServer)
+        {
+            return;
+        }
         Vector3 targetPosition = new Vector3(
         _stateManagement.Player.transform.position.x,
         _stateManagement.Player.transform.position.y,
         transform.position.z);
 
         // Lerpで近づく
-        Vector3 newPos = Vector3.Lerp(transform.position, targetPosition, 0.1f);
+        Vector3 newPos = Vector3.Lerp(transform.root.position, targetPosition, 0.1f);
 
         // プレイヤーとの相対ベクトル
         Vector3 offset = newPos - targetPosition;

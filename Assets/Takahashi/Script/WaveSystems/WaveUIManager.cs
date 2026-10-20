@@ -35,7 +35,8 @@ public class WaveUIManager : NetworkBehaviour
         _waveTexts[2].text = " ";
     }
 
-    public void TextChange(string text, int count)
+    [ClientRpc]
+    public void TextChangeClientRpc(string text, int count)
     {
         if (_waveTexts[count] != null)
         {

@@ -103,12 +103,6 @@ public class MoveCoin : NetworkBehaviour
     {
         yield return new WaitForSeconds(_colliderActiveTime);
         EnableColliderClientRpc();
-        //BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
-        //boxCollider2D.enabled = true;
-        //if(_soulCollectRange != null)
-        //{
-        //    _soulCollectRange.EnableCollider();
-        //}
     }
 
     [ClientRpc]
@@ -147,12 +141,8 @@ public class MoveCoin : NetworkBehaviour
 
             if (_initAliveTime >= _destroyTime && IsServer)
             {
-                //Destroy(this.gameObject);
-                NetworkObject nObj = this.GetComponent<NetworkObject>();
-                if (nObj != null)
-                {
-                    nObj.Despawn();
-                }
+                GetComponent<NetworkObject>().Despawn(true);
+
             }
 
 
