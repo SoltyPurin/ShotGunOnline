@@ -21,6 +21,8 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     [SerializeField,Header("復帰ポイントの名前")]
     private string _returnPointName = default;
 
+    private BossStateManagement _state = default;
+
     //そのままだと登場した瞬間に落下死するので無理やりガードする
     [SerializeField, Header("登場直後の落下無効時間（秒）")]
     private float _spawnProtectTime = 2.0f;
@@ -35,6 +37,8 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     {
         // オブジェクトが有効化した時にタイマーリセット
         _spawnTimer = 0f;
+
+        _state = GetComponent<BossStateManagement>();
     }
 
     private void Update()
@@ -53,6 +57,7 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         {
             return;
         }
+        _state.FallStateChange(true);
         _seManager.PlayDropSound();
         _animator.SetTrigger(FALLTRIGGER);
         _enemyTakeDamage.FallDamage();
@@ -115,6 +120,8 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         {
             _kyousei.RotateReset();
         }
+
+        _state.FallStateChange(false);
     }
 
 }

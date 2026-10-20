@@ -141,14 +141,12 @@ public class BossStateManagement : EnemyMove
             _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         }
     }
-    private void OnDisable()
-    {
-        // enabled が false になった瞬間の呼び出し元（スタックトレース）をログに出力する
-        Debug.Log($"[{gameObject.name}] の {GetType().Name} が無効化されました！\n" +
-                  $"呼び出し元一覧:\n{System.Environment.StackTrace}");
-    }
     protected void BossStateChange()
     {
+        if(_currentState == BossState.Drop)
+        {
+            return;
+        }
 
         switch (_currentState)
         {
@@ -275,5 +273,20 @@ public class BossStateManagement : EnemyMove
         _randamRange = Random.Range(0, total);
     }
 
+    /// <summary>
+    /// 落下にステートを変える
+    /// </summary>
+    /// <param name="isFalling">trueで落下中、falseで落下解除</param>
+    public void FallStateChange(bool isFalling)
+    {
+        if (isFalling)
+        {
+            _currentState = BossState.Drop;
+        }
+        else
+        {
+            _currentState = BossState.Approach;
+        }
+    }
 
 }
