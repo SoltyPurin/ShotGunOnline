@@ -69,6 +69,9 @@ public class BossMachPunch : MonoBehaviour
         if (_punchArea != null) _punchArea.SetActive(false);
         if (_kaisin != null) _kaisin.SetActive(false);
 
+        BossZanzouken zanzou = GetComponent<BossZanzouken>();
+        if (zanzou != null) zanzou.DelGrow();
+
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             _stateManagement._currentState = BossStateManagement.BossState.Cooldown;

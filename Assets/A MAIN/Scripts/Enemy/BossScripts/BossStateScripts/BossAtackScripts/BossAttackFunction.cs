@@ -40,7 +40,6 @@ public class BossAttackFunction : MonoBehaviour
     /// </summary>
     public void AttackEnd()
     {
-        if (_stateManagement != null && !_stateManagement.IsServer) return;
 
         if (_stateManagement._currentState == BossStateManagement.BossState.JumpAtack)
         {
