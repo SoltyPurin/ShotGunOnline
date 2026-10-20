@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,6 +13,32 @@ public class EnemyTakeDamage : NetworkBehaviour
     public NetworkVariable<int> EnemyHP
     {
         get { return _enemyHP; }
+    }
+
+    protected NetworkVariable<int> _maxHP = new NetworkVariable<int>(
+        1000,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    public NetworkVariable<int> MaxHP
+    {
+        get { return _maxHP; }
+    }
+
+    /// <summary>
+    /// 最大HPと現在HPをまとめて設定し同期する
+    /// </summary>
+    public virtual void SetMaxHP(int hp)
+    {
+        if (IsServer)
+        {
+            _enemyHP.Value = hp;
+            _maxHP.Value = hp;
+        }
+        if (_hpUI != null)
+        {
+            _hpUI.Initialize(hp);
+        }
     }
 
     [SerializeField, Header("ダメージに乗算する値")]
@@ -117,11 +143,14 @@ public class EnemyTakeDamage : NetworkBehaviour
 
         if (_hpUI != null)
         {
-            // 初期値をUIに設定
-            _hpUI.Initialize(_enemyHP.Value);
+            // 初期値をUIに設定（_maxHPが設定されていればそれを優先）
+            int initialMax = _maxHP.Value > 0 ? _maxHP.Value : _enemyHP.Value;
+            _hpUI.Initialize(initialMax);
+            _hpUI.UpdateHP(_enemyHP.Value);
 
             // HPが変更された時に自動でUIを更新するイベントを登録（クライアント側でも発火）
             _enemyHP.OnValueChanged += OnHPChanged;
+            _maxHP.OnValueChanged += OnMaxHPChanged;
         }
     }
 
@@ -133,6 +162,17 @@ public class EnemyTakeDamage : NetworkBehaviour
         {
             // イベント解除（メモリリーク防止）
             _enemyHP.OnValueChanged -= OnHPChanged;
+            _maxHP.OnValueChanged -= OnMaxHPChanged;
+        }
+    }
+
+    // 最大HPが変わった時の処理
+    private void OnMaxHPChanged(int previousValue, int newValue)
+    {
+        if (_hpUI != null)
+        {
+            _hpUI.Initialize(newValue);
+            _hpUI.UpdateHP(_enemyHP.Value);
         }
     }
 
@@ -164,6 +204,7 @@ public class EnemyTakeDamage : NetworkBehaviour
             {
                 //体力を速攻0にする
                 _isDead = true;
+                _enemyHP.Value = 0;
                 _hpUI.UpdateHP(0);
                 float delayInSeconds = 1.0f;
                 float fakeCharge = delayInSeconds * _deathTimeMultiplier;
@@ -320,6 +361,7 @@ public class EnemyTakeDamage : NetworkBehaviour
             }
 
             _isDead = true;
+            _enemyHP.Value = 0;
             //轢殺演出再生
             PlayRoadKillEffectClientRpc();
             //_playTheSEManager.PlayRoadKill();

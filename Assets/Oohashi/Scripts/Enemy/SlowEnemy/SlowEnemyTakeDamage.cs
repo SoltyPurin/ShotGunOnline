@@ -1,20 +1,10 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 public class SlowEnemyTakeDamage : EnemyTakeDamage
 {
     public override void Start()
     {
         base.Start();
         JsonSaver.Instance.LoadAllConfigs(); 
-        if (IsServer || IsHost)
-        {
-            _enemyHP.Value = JsonSaver.Instance.EnemyJson.SlowHP;
-        }
-
-        if (_hpUI != null)
-        {
-            //ç≈èâÇ…HPï\é¶ÇÃÉoÅ[Ç…ç≈ëÂhpÇê›íË
-            _hpUI.Initialize(_enemyHP.Value);
-        }
-
+        SetMaxHP(JsonSaver.Instance.EnemyJson.SlowHP);
     }
 }

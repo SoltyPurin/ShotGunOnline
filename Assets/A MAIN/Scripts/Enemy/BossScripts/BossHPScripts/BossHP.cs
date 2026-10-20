@@ -1,37 +1,37 @@
-using System.Collections;
+ï»¿using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// ƒ{ƒX‚Ìó‚¯‚½ƒ_ƒ[ƒW‚ğŠÇ—‚·‚éƒƒ\ƒbƒh
+/// ï¿½{ï¿½Xï¿½Ìó‚¯‚ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½éƒï¿½\ï¿½bï¿½h
 /// </summary>
 public class BossHP : EnemyTakeDamage
 {
-    #region[•Ï”–¼]
-    //---GameObject,Script,Animator“™---------------------------------
-    [SerializeField, Header("€–S‚Ìƒ€[ƒr[")]
+    #region[ï¿½Ïï¿½ï¿½ï¿½]
+    //---GameObject,Script,Animatorï¿½ï¿½---------------------------------
+    [SerializeField, Header("ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½Ìƒï¿½ï¿½[ï¿½rï¿½[")]
     private GameObject _deathTimeline = default;
 
-    [SerializeField, Header("‰e")]
+    [SerializeField, Header("ï¿½e")]
     private GameObject _shadow = default;
 
-    [SerializeField, Header("”­Œõˆ—")]
+    [SerializeField, Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     private HitFlash _hitFlash = default;
 
-    [SerializeField, Header("Boss‚ÌStateŠÇ—‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("Bossï¿½ï¿½Stateï¿½Ç—ï¿½ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½vï¿½g")]
     private BossStateManagement _stateManagement = default;
 
-    [SerializeField, Header("G‹›“G¢Š«‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ï¿½Gï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½vï¿½g")]
     private SummonEnemy _summonEnemy = default;
 
-    [SerializeField, Header("Boss‚ÌAnimeŠÇ—‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("Bossï¿½ï¿½Animeï¿½Ç—ï¿½ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½vï¿½g")]
     private BossAnimeManager _animeManager = default;
 
-    [SerializeField, Header("ƒ{ƒX‚ÌUŒ‚—pƒAƒjƒ[ƒVƒ‡ƒ“")]
+    [SerializeField, Header("ï¿½{ï¿½Xï¿½ÌUï¿½ï¿½ï¿½pï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½")]
     private Animator _bossAnimator = default;
 
-    [SerializeField, Header("ƒRƒ‰ƒCƒ_[“o˜^")]
+    [SerializeField, Header("ï¿½Rï¿½ï¿½ï¿½Cï¿½_ï¿½[ï¿½oï¿½^")]
     private CircleCollider2D _collider = default;
 
     private GameObject[] _enemyObjects = default;
@@ -43,14 +43,14 @@ public class BossHP : EnemyTakeDamage
     private PlayBossDeadExplosion _deathExplosion = default;
     private BossHPGageAnimeCon _hPGageAnimeCon = default;
 
-    //---int,float‚È‚Ç‚Ì”’l---------------------------------
-    [SerializeField, Header("•KE‹Z‚Ìƒ_ƒ[ƒW")]
+    //---int,floatï¿½È‚Ç‚Ìï¿½ï¿½l---------------------------------
+    [SerializeField, Header("ï¿½Kï¿½Eï¿½Zï¿½Ìƒ_ï¿½ï¿½ï¿½[ï¿½W")]
     protected float _ultMultiplier = 1500;
 
-    [SerializeField, Header("—‰º‚Ìƒ_ƒ[ƒW")]
+    [SerializeField, Header("ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ_ï¿½ï¿½ï¿½[ï¿½W")]
     private int _fallDamage = 1000;
 
-    [SerializeField, Header("Šâ‚É‚Ô‚Â‚©‚Á‚½‚Ìƒ_ƒ[ƒW")]
+    [SerializeField, Header("ï¿½ï¿½É‚Ô‚Â‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ_ï¿½ï¿½ï¿½[ï¿½W")]
     private int _stoneDamage = 700;
 
     public int BossHPVariable
@@ -75,12 +75,9 @@ public class BossHP : EnemyTakeDamage
         base.Start();
 
         Scene currentScene = SceneManager.GetActiveScene();
-        if (IsServer)
-        {
-            _enemyHP.Value = JsonSaver.Instance.EnemyJson.BossHP;
-        }
-        float maxHp = JsonSaver.Instance.EnemyJson.BossHP;
-        _firstHP = maxHp;
+
+        SetMaxHP(JsonSaver.Instance.EnemyJson.BossHP);
+        _firstHP = JsonSaver.Instance.EnemyJson.BossHP;
         _halfFirstHP = _firstHP / 2;
 
         _isInvincible = false;
@@ -123,16 +120,16 @@ public class BossHP : EnemyTakeDamage
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        Debug.Log("”í’eŠÖ”ŒÄ‚Ño‚µ");
-        if (!IsServer) //IˆÈŠO‚Í‘¦ƒŠƒ^[ƒ“
+        Debug.Log("ï¿½ï¿½eï¿½Öï¿½ï¿½Ä‚Ñoï¿½ï¿½");
+        if (!IsServer) //ï¿½Iï¿½ÈŠOï¿½Í‘ï¿½ï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½
         {
             return;
         }
-        if (_isInvincible)//–³“Gó‘Ô‚È‚ç‘¦ƒŠƒ^[ƒ“
+        if (_isInvincible)//ï¿½ï¿½ï¿½Gï¿½ï¿½Ô‚È‚ç‘¦ï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½
         {
             return;
         }
-        Debug.Log("ƒ{ƒX”í’e");
+        Debug.Log("ï¿½{ï¿½Xï¿½ï¿½e");
         BossTakeDamageEffectClientRpc();
             //_damageAnimator.SetTrigger("Damage");
             //_hitFlash.DoFlash();
@@ -169,7 +166,7 @@ public class BossHP : EnemyTakeDamage
                     {
                         DeadBossProcess();
                     }
-            Debug.Log("c‚è‘Ì—Í" + _enemyHP);
+            Debug.Log("ï¿½cï¿½ï¿½Ì—ï¿½" + _enemyHP);
                 }
     }
 
@@ -239,7 +236,7 @@ public class BossHP : EnemyTakeDamage
             GameObject.Destroy(enemy2);
         }
         DeathObjectClientRpc();
-        // ƒlƒbƒgƒ[ƒNƒIƒuƒWƒFƒNƒg‚Ìê‡‚Í DespawnAƒ[ƒJƒ‹‚Ìê‡‚Í Destroy
+        // ï¿½lï¿½bï¿½gï¿½ï¿½ï¿½[ï¿½Nï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ìê‡ï¿½ï¿½ Despawnï¿½Aï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ìê‡ï¿½ï¿½ Destroy
         if (NetworkObject != null && NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

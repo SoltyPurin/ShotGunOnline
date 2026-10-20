@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,15 +7,6 @@ public class FatSlowTakeDamage : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        if (IsServer)
-        {
-            _enemyHP.Value = JsonSaver.Instance.EnemyJson.FatHP;
-        }
-        if (_hpUI != null)
-        {
-            //ç≈èâÇ…HPï\é¶ÇÃÉoÅ[Ç…ç≈ëÂhpÇê›íË
-            _hpUI.Initialize(_enemyHP.Value);
-        }
-
+        SetMaxHP(JsonSaver.Instance.EnemyJson.FatHP);
     }
 }
