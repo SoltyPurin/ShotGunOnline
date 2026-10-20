@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class BossFallToCliffAndHole : EnemyFallToCliff
@@ -11,7 +13,7 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     private ArmorMove _armorMove = default;
 
     [SerializeField, Header("Sprite矯正スクリプト")]
-    private KakudoKyousei _kyousei = default;
+    private KakudoAndZahyouKyousei _kyousei = default;
 
     [SerializeField, Header("復帰ポイント登録")]
     private GameObject _returnPointTransform = default;
@@ -60,7 +62,10 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
             {
                 _returnPointTransform = GameObject.Find(_returnPointName);
             }
-            StartCoroutine(HoleFallMethod());
+            if (IsServer)
+            {
+                StartCoroutine(HoleFallMethodServer());
+            }
             transform.rotation = Quaternion.identity;
         }
         if (_armorMove != null)
@@ -70,23 +75,41 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     }
 
     /// <summary>
-    /// 落とし穴に落ちた後エフェクトを再生するメソッド
+    /// 落とし穴に落ちた後エフェクトを再生するメソッド,
+    ///鯖で実行した後全クライアントに共有
     /// </summary>
     /// <returns></returns>
-    public IEnumerator HoleFallMethod()
+    public IEnumerator HoleFallMethodServer()
     {
         //Animator retAnim = _returnPointTransform.GetComponent<Animator>();
         //retAnim.SetTrigger(RETURNPOINT);
         yield return new WaitForSeconds(2f);
-        this.transform.position = _returnPointTransform.transform.position;
+        NetworkTransform netTransform = GetComponent<NetworkTransform>();
+        if (netTransform != null)
+        {
+            netTransform.Teleport(_returnPointTransform.transform.position, Quaternion.identity, transform.localScale);
+        }
+        else
+        {
+            transform.position = _returnPointTransform.transform.position;
+            transform.rotation = Quaternion.identity;
+        }
+        //this.transform.position = _returnPointTransform.transform.position;
         Debug.Log("ボスリターン");
+
+        PlayReturnEffectClientRpc(_returnPointTransform.transform.position);
+    }
+
+    [ClientRpc]
+    private void PlayReturnEffectClientRpc(Vector2 targetPos)
+    {
         if (_returnAnim != null)
         {
             _returnAnim.SetTrigger(RETURNFALL);
         }
-        _bombEffect.BombEffect(this.transform.position);
+        _bombEffect.BombEffect(targetPos);
 
-        this.transform.rotation = Quaternion.identity;
+        //this.transform.rotation = Quaternion.identity;
 
         if (_kyousei != null)
         {

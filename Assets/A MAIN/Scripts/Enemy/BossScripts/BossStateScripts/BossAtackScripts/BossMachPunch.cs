@@ -40,12 +40,16 @@ public class BossMachPunch : MonoBehaviour
 
     public void MachPunch()
     {
+        if (!Unity.Netcode.NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
         if (_stateManagement == null || _stateManagement.Player == null)
         {
             //Debug.LogWarning("BossMachPunch: Player または _stateManagement が null のため攻撃処理をスキップしました。");
             return;
         }
-        Vector3 _directionToPlayer = _stateManagement.Player.transform.position - this.gameObject.transform.position;
+        Vector3 _directionToPlayer = _stateManagement.Player.transform.position - this.gameObject.transform.root.position;
         _directionToPlayerNormalized = _directionToPlayer.normalized;
         _isTargeting = true;
         _punchArea.SetActive(true);
@@ -66,10 +70,14 @@ public class BossMachPunch : MonoBehaviour
 
     public void PunchToPlayer()
     {
+        if (!Unity.Netcode.NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
         if (_isTargeting)
         {
             _punchSpeed *= _attenuationRate; // 減衰率は調整可能
-            transform.position += _directionToPlayerNormalized * _punchSpeed * Time.deltaTime;
+            transform.root.position += _directionToPlayerNormalized * _punchSpeed * Time.deltaTime;
         }
     }
 

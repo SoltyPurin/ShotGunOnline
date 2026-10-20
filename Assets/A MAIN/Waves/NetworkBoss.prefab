@@ -148,7 +148,6 @@ Transform:
   m_Children:
   - {fileID: 5144768488054062825}
   - {fileID: 961980971548176815}
-  - {fileID: 6894842965704209594}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2814779266558285818
@@ -163,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 471865071
+  GlobalObjectIdHash: 1017916438
   InScenePlacedSourceGlobalObjectIdHash: 2488626245
   DeferredDespawnTick: 0
   Ownership: 1
@@ -485,60 +484,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isJumpDust: 1
---- !u!1 &3872393847471052200
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6894842965704209594}
-  - component: {fileID: 4688017347085706668}
-  m_Layer: 0
-  m_Name: SpawonPoint2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6894842965704209594
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3872393847471052200}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6727715949584306090}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &4688017347085706668
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3872393847471052200}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b99ec3ed1cdb1e34db4436cd17be0243, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3921636725877665419
 GameObject:
   m_ObjectHideFlags: 0
@@ -1521,6 +1466,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5144768488054062825}
+  - component: {fileID: 1837899475771312527}
   - component: {fileID: 2783376626226447012}
   - component: {fileID: 201154358090522836}
   - component: {fileID: 671552211685669313}
@@ -1574,6 +1520,18 @@ Transform:
   - {fileID: 728099044639430006}
   m_Father: {fileID: 6727715949584306090}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1837899475771312527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735347502137762513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6eb580cf86a66942bbcff6bb7669732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteTrackerDebug
 --- !u!114 &2783376626226447012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1586,7 +1544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 611267745
+  GlobalObjectIdHash: 1512561888
   InScenePlacedSourceGlobalObjectIdHash: 2488626245
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1637,6 +1595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3995cd80fffe6174db12683e7132e211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _secondEffect: {fileID: 0}
   _agent: {fileID: 554358067452611045}
   _stateManagement: {fileID: 201154358090522836}
@@ -1690,8 +1649,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85de9455678aea844b9ed55d88059685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _bombEnemy: {fileID: 904257301046165795, guid: e4c5c90b2c3320a4187e69aa43f61a23, type: 3}
-  _spawnPoint: {fileID: 3872393847471052200}
   _enemyList:
   - {fileID: 6475060805928063372, guid: 937520ba7fa6acb45bb35c6833671480, type: 3}
   - {fileID: 7256754549358920131, guid: ff4a2ca87682717429a58049636dc4bc, type: 3}
@@ -1708,6 +1667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6204341d764a4c4b9a3ab315039a332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _bossCollider: {fileID: 7918392674786281027}
   _shockWave: {fileID: 8398158926763634828, guid: d96435d7079f1074697ba65e6dab5220, type: 3}
   _shockHole: {fileID: 4940889591895875471, guid: c473a3fce8f71fa4fb235594f0314387, type: 3}
@@ -1771,6 +1731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb2dbff92b44879438f148fc8c59d124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _bossCollider: {fileID: 7918392674786281027}
 --- !u!114 &2312050397002780073
 MonoBehaviour:
@@ -1823,6 +1784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySprite: {fileID: 4038332556339167678}
   _spawnPoint: {fileID: 828315675549718872}
   _enemyCollider: {fileID: 7918392674786281027}
@@ -1846,6 +1808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38fd673c801e44040b3acd84371414b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyKnockBack: {fileID: 8431512640653060383}
   _takeDamage: {fileID: 7394126721215003732}
 --- !u!114 &195253677460110502
@@ -1860,12 +1823,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04f79a06c767a4141be8f0cf2840a99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _animator: {fileID: 7734049251641220326}
   _enemyTakeDamage: {fileID: 7394126721215003732}
   _returnAnim: {fileID: 7734049251641220326}
   _armorMove: {fileID: 0}
   _kyousei: {fileID: 3061139487866105975}
-  _returnPointTransform: {fileID: 3872393847471052200}
+  _returnPointTransform: {fileID: 0}
+  _returnPointName: SpawnPoint2
+  _spawnProtectTime: 2
 --- !u!114 &7730701731999936075
 MonoBehaviour:
   m_ObjectHideFlags: 0

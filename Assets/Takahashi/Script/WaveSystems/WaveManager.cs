@@ -231,8 +231,9 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         if (_waveList[index]._waveType == Wave.WaveEnemyType.Boss)
         {
             _isBossWave = true;
-            _uiManager.TextChange("BOSS", 0);
+            _uiManager.TextChangeClientRpc("BOSS", 0);
             _uiManager.HiddenText(0);
+            _bgmControll.BGM_Start(1);
         }
         else
         //普通のウェーブだった場合、現在ウェーブ数を表示する。
@@ -249,14 +250,14 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
                     //ウェーブ開始時テキストがあるなら、それを表示。無いなら現在のウェーブ数を表示。
                     if (_waveList[index].WaveStartText != "")
                     {
-                        _uiManager.TextChange(_waveList[index].WaveStartText, 0);
+                        _uiManager.TextChangeClientRpc(_waveList[index].WaveStartText, 0);
                     }
                     else
                     {
-                        _uiManager.TextChange("Wave " + waveCount, 0);
+                        _uiManager.TextChangeClientRpc("Wave " + waveCount, 0);
                     }
 
-                    _uiManager.TextChange(waveCount + " / " + _waveList.Count, 1);
+                    _uiManager.TextChangeClientRpc(waveCount + " / " + _waveList.Count, 1);
                     _uiManager.HiddenText(0);
                     _uiManager.HiddenText(1);
                     break;
