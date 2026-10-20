@@ -285,6 +285,9 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     {
         try
         {
+            // 自機（IsOwner）以外なら画面被弾エフェクトやHP減少を実行しない
+            if (!IsOwner) yield break;
+
             _damageCount++;
             if (_knockBack != null)
             {

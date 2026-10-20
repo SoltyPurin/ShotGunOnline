@@ -4,34 +4,34 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// �{�X�̎󂯂��_���[�W��Ǘ����郁�\�b�h
+/// ボスの受けたダメージを管理するメソッド
 /// </summary>
 public class BossHP : EnemyTakeDamage
 {
-    #region[�ϐ���]
-    //---GameObject,Script,Animator��---------------------------------
-    [SerializeField, Header("���S���̃��[�r�[")]
+    #region[変数名]
+    //---GameObject,Script,Animator等---------------------------------
+    [SerializeField, Header("死亡時のムービー")]
     private GameObject _deathTimeline = default;
 
-    [SerializeField, Header("�e")]
+    [SerializeField, Header("影")]
     private GameObject _shadow = default;
 
-    [SerializeField, Header("��������")]
+    [SerializeField, Header("発光処理")]
     private HitFlash _hitFlash = default;
 
-    [SerializeField, Header("Boss��State�Ǘ��̃X�N���v�g")]
+    [SerializeField, Header("BossのState管理のスクリプト")]
     private BossStateManagement _stateManagement = default;
 
-    [SerializeField, Header("�G���G�����̃X�N���v�g")]
+    [SerializeField, Header("雑魚敵召喚のスクリプト")]
     private SummonEnemy _summonEnemy = default;
 
-    [SerializeField, Header("Boss��Anime�Ǘ��̃X�N���v�g")]
+    [SerializeField, Header("ボスの攻撃用アニメーション")]
     private BossAnimeManager _animeManager = default;
 
-    [SerializeField, Header("�{�X�̍U���p�A�j���[�V����")]
+    [SerializeField, Header("BossのAnimator")]
     private Animator _bossAnimator = default;
 
-    [SerializeField, Header("�R���C�_�[�o�^")]
+    [SerializeField, Header("コライダー登録")]
     private CircleCollider2D _collider = default;
 
     private GameObject[] _enemyObjects = default;
@@ -43,14 +43,14 @@ public class BossHP : EnemyTakeDamage
     private PlayBossDeadExplosion _deathExplosion = default;
     private BossHPGageAnimeCon _hPGageAnimeCon = default;
 
-    //---int,float�Ȃǂ̐��l---------------------------------
-    [SerializeField, Header("�K�E�Z�̃_���[�W")]
+    //---int,floatなどの数値---------------------------------
+    [SerializeField, Header("必殺技のダメージ")]
     protected float _ultMultiplier = 1500;
 
-    [SerializeField, Header("�����̃_���[�W")]
+    [SerializeField, Header("落下のダメージ")]
     private int _fallDamage = 1000;
 
-    [SerializeField, Header("��ɂԂ��������̃_���[�W")]
+    [SerializeField, Header("岩にぶつかった時のダメージ")]
     private int _stoneDamage = 700;
 
     public int BossHPVariable
@@ -120,16 +120,14 @@ public class BossHP : EnemyTakeDamage
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        Debug.Log("��e�֐��Ăяo��");
-        if (!IsServer) //�I�ȊO�͑����^�[��
+        if (!IsServer) //鯖以外は即リターン
         {
             return;
         }
-        if (_isInvincible)//���G��ԂȂ瑦���^�[��
+        if (_isInvincible)//無敵状態なら即リターン
         {
             return;
         }
-        Debug.Log("�{�X��e");
         BossTakeDamageEffectClientRpc();
             //_damageAnimator.SetTrigger("Damage");
             //_hitFlash.DoFlash();
@@ -166,7 +164,6 @@ public class BossHP : EnemyTakeDamage
                     {
                         DeadBossProcess();
                     }
-            Debug.Log("�c��̗�" + _enemyHP);
                 }
     }
 
@@ -236,7 +233,7 @@ public class BossHP : EnemyTakeDamage
             GameObject.Destroy(enemy2);
         }
         DeathObjectClientRpc();
-        // �l�b�g���[�N�I�u�W�F�N�g�̏ꍇ�� Despawn�A���[�J���̏ꍇ�� Destroy
+        // ネットワークオブジェクトの場合は Despawn、ローカルの場合は Destroy
         if (NetworkObject != null && NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

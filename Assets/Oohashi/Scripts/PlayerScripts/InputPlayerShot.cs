@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -131,7 +131,13 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         _criticalGraceTime += MAXCHARGEVALUE;
         if (_bloom == null)
         {
-            _bloom = GameObject.Find("PostManager").GetComponent<BloomScript>();
+            var postManager = GameObject.Find("PostManager");
+            if (postManager != null) _bloom = postManager.GetComponent<BloomScript>();
+        }
+        if (_hitstop == null)
+        {
+            _hitstop = GetComponent<HitStop>();
+            if (_hitstop == null) _hitstop = GetComponentInChildren<HitStop>();
         }
     }
 
@@ -346,7 +352,12 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 {
                     float shotCharge = _chargeTime;
                     bool isCrit = _canCriticalShoot;
-                    bool isMaxCharge = shotCharge >= 2.0f;
+                    // 最大チャージ（2秒）の少し手前（1.9秒以上）で離しても最大チャージと判定する遊びを持たせる
+                    bool isMaxCharge = shotCharge >= (MAXCHARGEVALUE - 0.1f);
+                    if (isMaxCharge && shotCharge < MAXCHARGEVALUE)
+                    {
+                        shotCharge = MAXCHARGEVALUE;
+                    }
 
                     _initChargeTime = 0;
                     _canDecChargeValue = false;
