@@ -14,63 +14,58 @@ public enum EnemyState
 
 public class EnemyMove : Unity.Netcode.NetworkBehaviour
 {
-
     protected GameObject _playerObject = default;
-    protected  readonly string PLAYERTAGNAME = "Player";
+    protected readonly string PLAYERTAGNAME = "Player";
     protected Transform _target = default;
-    protected NavMesh2DAgent _agent; //NavMeshAgent2D���g�p���邽�߂̕ϐ�
+    protected NavMesh2DAgent _agent;
     private PlayerStateManager _playerStateManager;
-    [SerializeField, Header("�������ȊO�ł͕ύX���Ă��Ӗ��Ȃ�")]
-    protected float _moveSpeed = 5;//�ړ����x
-    public float MoveSpeed
-    {
-        get { return _moveSpeed; }
-    }
-    [SerializeField, Header("�v���C���[�Ǝ�鋗���A���b�N�I���ȊO���ς��Ă��Ӗ��Ȃ�")]
-    protected float _keepDistance = 0;
-    //�ړ��s�\�̃t���O
+
+    [SerializeField, Header("移動速度")]
+    protected float _moveSpeed = 5f;
+    public float MoveSpeed => _moveSpeed;
+
+    [SerializeField, Header("プレイヤーと保つ距離")]
+    protected float _keepDistance = 0f;
+
     protected bool _cantMove = false;
-    //���݂̃X�e�[�g
-    //protected EnemyState _enemyState = EnemyState.move;
+
     public EnemyState EnemyState
     {
-        get { return _enemyState.Value; }
-        set {
-            if (IsServer) // サーバー側でのみ書き込みを許可する安全対策
+        get => _enemyState.Value;
+        set
+        {
+            if (IsServer)
             {
                 _enemyState.Value = value;
             }
         }
-        //set { _enemyState.Value = value; }//���EnemyTakeDamage���p�������X�N���v�g�B���珑�������Ă�
     }
 
     protected NetworkVariable<EnemyState> _enemyState = new NetworkVariable<EnemyState>(
         EnemyState.move,
         NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server // 書き込みはサーバーのみ
+        NetworkVariableWritePermission.Server
     );
-    //����������
+
     protected Vector2 _direction = default;
-    public Vector2 Direction
-    {
-        get { return _direction; }
-    }
+    public Vector2 Direction => _direction;
+
     private bool _isFloating = false;
-    public bool IsFloating
-    {
-        get { return _isFloating; }
-    }
+    public bool IsFloating => _isFloating;
 
     private Rigidbody2D _rigidBody = default;
-
     private Vector2 _saveDirection = Vector2.zero;
 
-    [SerializeField, Header("�����")]
-    private float _inertiaStrangth = 4;
+    [SerializeField, Header("浮遊慣性")]
+    private float _inertiaStrangth = 4f;
+
+    // プレイヤーの再探索タイマー（定期的に最寄りプレイヤーをターゲットにする）
+    private float _findPlayerTimer = 0f;
+    private const float FIND_PLAYER_INTERVAL = 0.5f;
 
     public virtual void Start()
     {
-        _agent = GetComponent<NavMesh2DAgent>(); //agent��NavMeshAgent2D���擾
+        _agent = GetComponent<NavMesh2DAgent>();
         _rigidBody = GetComponent<Rigidbody2D>();
 
         if (!IsServer && _agent != null)
@@ -86,20 +81,25 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
 
     public void RoadKill()
     {
-        _enemyState.Value = EnemyState.roadKill;
+        if (IsServer)
+        {
+            _enemyState.Value = EnemyState.roadKill;
+        }
     }
 
     protected void FindPlayer()
     {
-        // ネットワーク上の全プレイヤーオブジェクトから最も近いプレイヤーを探す
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYERTAGNAME);
+        if (players == null || players.Length == 0) return;
+
         GameObject nearestPlayer = null;
         float minDistance = float.MaxValue;
+        Vector2 curPos = transform.position;
 
         foreach (GameObject p in players)
         {
-            if (p == null) continue;
-            float dist = Vector2.Distance(transform.position, p.transform.position);
+            if (p == null || !p.activeInHierarchy) continue;
+            float dist = Vector2.Distance(curPos, p.transform.position);
             if (dist < minDistance)
             {
                 minDistance = dist;
@@ -114,44 +114,36 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
             _target = _playerObject.transform;
         }
     }
+
     private void FixedUpdate()
     {
-        if (!IsServer)
+        if (!IsServer) return;
+
+        _findPlayerTimer += Time.fixedDeltaTime;
+        if (_playerObject == null || !_playerObject.activeInHierarchy || _findPlayerTimer >= FIND_PLAYER_INTERVAL)
         {
-            return;
-        }
-        if (_playerObject == null)
-        {
-            Debug.Log("プレイヤーが見当たらない");
+            _findPlayerTimer = 0f;
             FindPlayer();
-            return;
+            if (_playerObject == null) return;
         }
-        _cantMove = _enemyState.Value == EnemyState.knockback || _enemyState.Value == EnemyState.fall || _enemyState.Value == EnemyState.Wait;
-        if (_cantMove) 
-        {
-            return;
-        }
-        //if (this.IsServer)
-        //{
-            Moving();
-        //}
-        //else
-        //{
-        //    Debug.Log("IsServerがfalse");
-        //}
+
+        _cantMove = _enemyState.Value == EnemyState.knockback || 
+                    _enemyState.Value == EnemyState.fall || 
+                    _enemyState.Value == EnemyState.Wait;
+
+        if (_cantMove) return;
+
+        Moving();
     }
 
     public virtual void Moving()
     {
-        if(_target == null)
-        {
-            return;
-        }
-        if(_isFloating)
+        if (_target == null) return;
+
+        if (_isFloating)
         {
             float t = Time.fixedDeltaTime * _inertiaStrangth;
-            _rigidBody.linearVelocity = Vector2.Lerp(_rigidBody.linearVelocity,_saveDirection, t);
-
+            _rigidBody.linearVelocity = Vector2.Lerp(_rigidBody.linearVelocity, _saveDirection, t);
         }
         else
         {
@@ -159,10 +151,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
             {
                 _agent.destination = _target.position;
             }
-            _saveDirection = (_target.position - transform.position) * _moveSpeed;
-            //_agent.destination = _target.position; //agent�̖ړI�n��target�̍��W�ɂ���
-            //_saveDirection = (_target.position - transform.position) * _moveSpeed;
+            _saveDirection = ((Vector2)_target.position - (Vector2)transform.position).normalized * _moveSpeed;
         }
-
     }
 }
