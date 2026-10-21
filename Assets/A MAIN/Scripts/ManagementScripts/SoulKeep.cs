@@ -127,6 +127,7 @@ public class SoulKeep : NetworkBehaviour
             _vStock.Value++;
         }
 
+
         if (_vStock.Value >= 3)
         {
             _useFullSoul.Value = 0;
@@ -166,9 +167,54 @@ public class SoulKeep : NetworkBehaviour
 
     public void UseUltimate()
     {
-        if (!IsServer) return;
-        if (_vStock.Value <= 0) return;
+        //Debug.Log("ウルト使用");
+        //if (!IsServer) return;
+        //if (_vStock.Value <= 0) return;
 
-        _vStock.Value--;
+        //Debug.Log("Vスト消費");
+        //_vStock.Value--;
+
+        if (IsServer)
+        {
+            // ホスト（サーバー）自身なら直接消費実行
+            ExecuteUseUltimateServer();
+        }
+        else
+        {
+            // クライアントならサーバーへ消費リクエストを送信
+            RequestUseUltimateServerRpc();
+        }
     }
+
+    /// <summary>
+    /// クライアントからサーバーへウルト消費を依頼する RPC
+    /// </summary>
+    [Rpc(SendTo.Server)]
+    private void RequestUseUltimateServerRpc()
+    {
+        ExecuteUseUltimateServer();
+    }
+    /// <summary>
+    /// サーバー上で実際に VStock または 最大ソウルを消費する処理
+    /// </summary>
+    private void ExecuteUseUltimateServer()
+    {
+        // 1. Vストックがある場合は Vストックを 1 減らす
+        if (_vStock.Value > 0)
+        {
+            _vStock.Value--;
+            Debug.Log($"[サーバー] Vストック消費成功。残り: {_vStock.Value}");
+        }
+        //// 2. Vストックは 0 だが、ソウルが 10 以上溜まっている場合はソウルを消費
+        //else if (_useFullSoul.Value >= USEULTIMATE_NEEDSOUL)
+        //{
+        //    _useFullSoul.Value -= USEULTIMATE_NEEDSOUL;
+        //    Debug.Log($"[サーバー] 最大ソウル消費成功。残りソウル: {_useFullSoul.Value}");
+        //}
+        else
+        {
+            Debug.LogWarning("[サーバー] 消費できるVストックもソウルもありません");
+        }
+    }
+
 }
