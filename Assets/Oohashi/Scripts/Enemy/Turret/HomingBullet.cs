@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
+using System.Collections;
 using UnityEngine;
 
 public class HomingBullet : EnemyShotBullet
@@ -37,44 +35,22 @@ public class HomingBullet : EnemyShotBullet
         _smooth = JsonSaver.Instance.EnemyJson.BurretSmooth;
     }
 
-    ///// <summary>
-    ///// プレイヤーのオブジェクトと方向を設定する
-    ///// </summary>
-    ///// <param name="playerObj">プレイヤーのオブジェクト</param>
-    ///// <param name="bulletDirection">最初に飛ぶ進行方向</param>
-    //[ClientRpc]
-    //public override void DirectionSettingClientRpc(GameObject playerObj, Vector2 bulletDirection)
-    //{
-    //    _playerObject = playerObj;
-    //    _firstDirection = bulletDirection;
-    //    _direction = bulletDirection;
-    //    _canMove = true;
-    //    float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-    //    _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    //    StartCoroutine(WaitMoveToPlayer());
-    //}
-
     /// <summary>
-    /// 全クライアント端末上でホーミングパラメータと移動フラグ（_canMove = true）をセットアップ
+    /// プレイヤーのオブジェクトと方向を設定する
     /// </summary>
-    [ClientRpc]
-    protected override void SetDirectionClientRpc(NetworkObjectReference playerRef, Vector2 bulletDirection)
+    /// <param name="playerObj">プレイヤーのオブジェクト</param>
+    /// <param name="bulletDirection">最初に飛ぶ進行方向</param>
+    public override void DirectionSetting(GameObject playerObj, Vector2 bulletDirection)
     {
-        if (playerRef.TryGet(out NetworkObject pObj))
-        {
-            _playerObject = pObj.gameObject;
-        }
-
+        _playerObject = playerObj;
         _firstDirection = bulletDirection;
         _direction = bulletDirection;
-        _canMove = true; 
-
+        float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
         if (_bulletSprite != null)
         {
-            float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-            _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            _bulletSprite.transform.localRotation = Quaternion.identity;
         }
-
         StartCoroutine(WaitMoveToPlayer());
     }
 
@@ -114,31 +90,23 @@ public class HomingBullet : EnemyShotBullet
     /// </summary>
     public override void FixedUpdate()
     {
-        if (_isDestroyed || !_canMove)
-        {
-            return;
-        }
-
         _initAliveTime += Time.fixedDeltaTime;
         if (_initAliveTime >= _destroyTime)
         {
-            if (IsServer)
-            {
-                DestroyProtocol();
-            }
+            Destroy(this.gameObject);
             return;
         }
 
         if (!_canMoveToPlayer)
         {
-            transform.position += (Vector3)_firstDirection * _moveSpeed * Time.fixedDeltaTime;
+            MoveProtocol(_firstDirection);
             return;
         }
 
-        if (_playerObject == null)
+        if (_playerObject is null)
         {
             _playerObject = FindNearestPlayer();
-            if (_playerObject == null)
+            if (_playerObject is null)
             {
                 MoveProtocol(_direction);
                 return;
@@ -159,8 +127,18 @@ public class HomingBullet : EnemyShotBullet
 
         Vector3 playerObj = _playerObject.transform.position;
         Vector3 targetDir = (playerObj - this.transform.position).normalized;
-        float t = _smooth * Time.fixedDeltaTime;
-        _direction = Vector3.Slerp(_direction, targetDir, t).normalized;
+
+        if (targetDir.sqrMagnitude > 0.0001f)
+        {
+            // 2D平面上での滑らかな回転計算（Vector3.Slerpの逆ベクトル特異点・反転バグを回避）
+            float currentAngle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;
+            float t = _smooth * Time.fixedDeltaTime;
+            float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, t);
+            float rad = newAngle * Mathf.Deg2Rad;
+            _direction = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+        }
+
         MoveProtocol(_direction);
     }
 
@@ -171,7 +149,11 @@ public class HomingBullet : EnemyShotBullet
     private void MoveProtocol(Vector3 direction)
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        if (_bulletSprite != null)
+        {
+            _bulletSprite.transform.localRotation = Quaternion.identity;
+        }
         transform.position += direction * _moveSpeed * Time.fixedDeltaTime;
     }
 }
