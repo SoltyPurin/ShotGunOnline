@@ -174,6 +174,24 @@ public class SoulKeep : NetworkBehaviour
 
     public void UseUltimate()
     {
+        if (IsServer)
+        {
+            ConsumeUltimate();
+        }
+        else if (IsOwner)
+        {
+            RequestUseUltimateServerRpc();
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void RequestUseUltimateServerRpc()
+    {
+        ConsumeUltimate();
+    }
+
+    private void ConsumeUltimate()
+    {
         if (!IsServer) return;
         if (_vStock.Value <= 0) return;
 
