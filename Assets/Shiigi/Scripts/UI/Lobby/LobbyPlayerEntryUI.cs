@@ -1,4 +1,4 @@
-using Unity.Services.Multiplayer;
+﻿using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +11,18 @@ public class LobbyPlayerEntryUI : MonoBehaviour
     [SerializeField] private Color _readyColor;
     [SerializeField] private Color _waitingColor;
 
-    public void Setup(IPlayer player, bool isHost)
+    public void Setup(IReadOnlyPlayer player, bool isHost)
     {
+        // Relay接続が完了しているか確認（ホストは常に接続済み扱い）
+        bool isRelayConnected = SessionPlayerPropertyHelper.IsPlayerRelayConnected(player, isHost);
+
+        if (!isRelayConnected)
+        {
+            _playerNameText.text = "接続中...";
+            _statusImage.color = _waitingColor;
+            return;
+        }
+
         // プレイヤーIDの簡易表示(名前システム作るまでのプレースホルダ)
         string playerName = player.Id;
         if (playerName.Length > 8)
