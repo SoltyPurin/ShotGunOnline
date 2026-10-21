@@ -47,7 +47,7 @@ public class LobbyRoomUI : MonoBehaviour
             var entry = Instantiate(_playerEntryPrefab, _playerContainer);
             var isHost = session.Host == player.Id;
 
-            entry.Setup(player as IPlayer, isHost);
+            entry.Setup(player, isHost);
             _spawnedEntries.Add(entry);
         }
 
