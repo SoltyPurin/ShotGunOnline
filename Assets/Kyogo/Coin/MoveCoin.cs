@@ -79,11 +79,13 @@ public class MoveCoin : NetworkBehaviour
 
             _canMove = true;
             StartCoroutine(ActiveHitjudgment());
+            MoveStartClientRpc();
         }
     }
     [ClientRpc]
     public void MoveStartClientRpc()
     {
+        Debug.Log("ソウル移動開始");
         _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
 
         _xDirection = Random.Range(_moveMinusLimit, _movePlusLimit);

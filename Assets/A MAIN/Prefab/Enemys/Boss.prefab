@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2864902951
+  GlobalObjectIdHash: 1809219503
   InScenePlacedSourceGlobalObjectIdHash: 2864902951
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1550,7 +1550,6 @@ GameObject:
   - component: {fileID: 9041773520295559204}
   - component: {fileID: 2752926525503953099}
   - component: {fileID: 3371607090533896664}
-  - component: {fileID: 205394124563913785}
   - component: {fileID: 7606108870998117993}
   - component: {fileID: 4831732766042087874}
   - component: {fileID: 2697460654164385791}
@@ -1573,7 +1572,7 @@ Transform:
   m_GameObject: {fileID: 5419467288907341210}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.05000019, y: 3.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 7.8655725, y: 7.8655725, z: 7.8655725}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1677,96 +1676,6 @@ MonoBehaviour:
   _jumpAtack: {fileID: 1951691338035842005}
   _machPunch: {fileID: 6312797784455878236}
   _bossCollider: {fileID: 0}
---- !u!114 &205394124563913785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5419467288907341210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: 6986b009b27caa2448702ab9565d012e, type: 2}
-    - {fileID: 11400000, guid: 87f708c36ef74fc459abfdee44ab1a76, type: 2}
-    - {fileID: 11400000, guid: 27e5e403b5128b84d939dc34f335e643, type: 2}
-    - {fileID: 11400000, guid: 4ec71e949f81274489dc13d2f65e0aed, type: 2}
-    - {fileID: 11400000, guid: 0ad1f91ffe449ac48aea3ac62c7d8bda, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: EnedMovieScript, Assembly-CSharp
-          m_MethodName: PopEndReset
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: EnedMovieScript, Assembly-CSharp
-          m_MethodName: EnemyDelete
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: EnedMovieScript, Assembly-CSharp
-          m_MethodName: BeShake
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: EnedMovieScript, Assembly-CSharp
-          m_MethodName: FinShake
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: EnedMovieScript, Assembly-CSharp
-          m_MethodName: CanvasSettrue
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &7606108870998117993
 MonoBehaviour:
   m_ObjectHideFlags: 0

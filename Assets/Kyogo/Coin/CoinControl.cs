@@ -40,7 +40,19 @@ public class CoinControl : NetworkBehaviour
 
     void Start()
     {
-        _playerObj = GameObject.FindGameObjectWithTag(PLAYER_TAGNAME);
+        GameObject[] nearObj = GameObject.FindGameObjectsWithTag(PLAYER_TAGNAME);
+        float distance = 100;
+        foreach(GameObject obj in nearObj)
+        {
+            float curDistance = Vector2.Distance(obj.transform.position, this.transform.position);
+            if (curDistance < distance)
+            {
+                distance = curDistance;
+                _playerObj = obj;
+            }
+        }
+
+        //_playerObj = GameObject.FindGameObjectWithTag(PLAYER_TAGNAME);
     }
     //左右に移動させる処理
     void Update()

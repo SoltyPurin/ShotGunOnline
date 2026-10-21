@@ -17,9 +17,11 @@ public class KakudoAndZahyouKyousei : MonoBehaviour
 
     private void Update()
     {
-        if(_state.CurrentState != BossStateManagement.BossState.JumpAtack)
-        {
-            this.transform.localPosition = Vector3.zero;
-        }
+        //if (_state.CurrentState != BossStateManagement.BossState.JumpAtack)
+        //{
+        //    this.transform.localPosition = Vector3.zero;
+        //}
+        this.transform.localPosition = Vector3.zero;
+
     }
 }

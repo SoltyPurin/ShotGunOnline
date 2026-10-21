@@ -1717,7 +1717,7 @@ Transform:
   m_GameObject: {fileID: 623822937}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 655, z: 0}
+  m_LocalPosition: {x: 0, y: 675, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6441,7 +6441,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: _waveList.Array.size
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: _bossTransitionInterval
