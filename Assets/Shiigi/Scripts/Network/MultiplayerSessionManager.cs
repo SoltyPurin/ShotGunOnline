@@ -1,9 +1,10 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Services.Multiplayer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// マルチプレイセッション関連機能のエントリポイント（ファサード）クラス。
@@ -15,12 +16,17 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     private const float HeartbeatInterval = 2f;
     private const float HeartbeatTimeout = 10f;
 
+    [Header("シーン設定")]
+    [Tooltip("タイトルシーンの名前。このシーンに遷移した際に自動切断されます")]
+    [SerializeField] private string _titleSceneName = "Title";
+
     public static MultiplayerSessionManager Instance { get; private set; }
 
     private IUnityServicesInitializer _servicesInitializer;
     private ILobbySessionService _sessionService;
     private SessionHeartbeatMonitor _heartbeatMonitor;
     private NetworkSceneTransitionHandler _sceneTransitionHandler;
+    private bool _isDisconnecting;
 
     public ISession CurrentSession => _sessionService?.CurrentSession;
     public bool IsInitialized => _servicesInitializer != null && _servicesInitializer.IsInitialized;
@@ -72,6 +78,16 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         }
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+    }
+
     private void EnsureSubsystemsInitialized()
     {
         if (_servicesInitializer != null) return;
@@ -105,6 +121,71 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     private void Update()
     {
         _heartbeatMonitor?.Tick(Time.unscaledTime, NetworkManager.Singleton);
+    }
+
+    /// <summary>
+    /// シーン読み込み完了時にタイトル画面へ戻ったかどうかを検知
+    /// </summary>
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == _titleSceneName)
+        {
+            HandleTitleSceneLoaded();
+        }
+    }
+
+    /// <summary>
+    /// タイトル画面に戻った時の自動切断処理
+    /// </summary>
+    private async void HandleTitleSceneLoaded()
+    {
+        // ポーズ画面などから遷移した際に時間停止状態が残らないよう復帰
+        Time.timeScale = 1.0f;
+
+        var isSessionActive = CurrentSession != null;
+        var isNetworkActive = NetworkManager.Singleton != null &&
+            (NetworkManager.Singleton.IsListening || NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient);
+
+        if (isSessionActive || isNetworkActive)
+        {
+            Debug.Log("[MSM]: タイトル画面への遷移を検知しました。ルームおよびRelay(NetworkManager)を切断します。");
+            await DisconnectAndCleanupAsync();
+        }
+    }
+
+    /// <summary>
+    /// ルームおよびRelay(NetworkManager)接続を切断し、ネットワーク関連オブジェクトをクリーンアップする
+    /// </summary>
+    public async UniTask DisconnectAndCleanupAsync()
+    {
+        if (_isDisconnecting) return;
+        _isDisconnecting = true;
+
+        try
+        {
+            EnsureSubsystemsInitialized();
+            await _sessionService.LeaveRoomSessionAsync();
+
+            // タイトル画面では不要になったNetworkManagerを破棄し、次回ロビー入室時に新規生成されるようにする
+            if (NetworkManager.Singleton != null)
+            {
+                if (NetworkManager.Singleton.IsListening)
+                {
+                    NetworkManager.Singleton.Shutdown();
+                }
+                Destroy(NetworkManager.Singleton.gameObject);
+            }
+
+            Debug.Log("[MSM]: ルームおよびRelayの切断とクリーンアップが完了しました。");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[MSM]: 切断クリーンアップ処理中にエラーが発生しました: {ex.Message}");
+        }
+        finally
+        {
+            _isDisconnecting = false;
+        }
     }
 
     private void SubscribeNetworkEvents()
