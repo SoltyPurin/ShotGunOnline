@@ -224,20 +224,35 @@ public class LobbySessionService : ILobbySessionService
 
     public async UniTask LeaveRoomSessionAsync()
     {
-        if (_currentSession == null) return;
-
         try
         {
             _onSessionLeaving?.Invoke();
-            _currentSession.Changed -= HandleSessionChanged;
-            await _currentSession.LeaveAsync();
-            _currentSession = null;
 
-            NetworkManager.Singleton?.Shutdown();
+            if (_currentSession != null)
+            {
+                _currentSession.Changed -= HandleSessionChanged;
+                try
+                {
+                    await _currentSession.LeaveAsync();
+                }
+                catch (Exception sessionEx)
+                {
+                    Debug.LogWarning($"[MSM]: セッション退出APIで例外が発生しました (クリーンアップを継続します): {sessionEx.Message}");
+                }
+            }
         }
         catch (Exception ex)
         {
-            Debug.LogError($"ルーム退出時にエラーが発生しました: {ex.Message}");
+            Debug.LogError($"ルーム退出処理でエラーが発生しました: {ex.Message}");
+        }
+        finally
+        {
+            _currentSession = null;
+
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            {
+                NetworkManager.Singleton.Shutdown();
+            }
         }
     }
 

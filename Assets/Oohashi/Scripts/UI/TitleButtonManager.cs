@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Playables;
@@ -48,6 +49,21 @@ public class TitleButtonManager : MonoBehaviour
     private void Start()
     {
         Time.timeScale = 1;
+
+        // タイトル画面表示時のフェイルセーフ: 万一マルチプレイセッションまたはRelayが残っている場合は自動切断
+        if (MultiplayerSessionManager.Instance != null)
+        {
+            if (MultiplayerSessionManager.Instance.CurrentSession != null ||
+                (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening))
+            {
+                _ = MultiplayerSessionManager.Instance.DisconnectAndCleanupAsync();
+            }
+        }
+        else if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            NetworkManager.Singleton.Shutdown();
+            Destroy(NetworkManager.Singleton.gameObject);
+        }
     }
 
     public void GameStart()

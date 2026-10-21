@@ -1,4 +1,4 @@
-using DG.Tweening.Core.Easing;
+﻿using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,13 +25,27 @@ public class PauseButton : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         SceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(CUSHION_SCENE);
+        if (Application.CanStreamedLevelBeLoaded(CUSHION_SCENE))
+        {
+            SceneManager.LoadScene(CUSHION_SCENE);
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneName);
+        }
     }
 
     public void ReturnTitle()
     {
+        Time.timeScale = 1.0f;
         SceneName = "Title";
-        SceneManager.LoadScene(CUSHION_SCENE);
-
+        if (Application.CanStreamedLevelBeLoaded(CUSHION_SCENE))
+        {
+            SceneManager.LoadScene(CUSHION_SCENE);
+        }
+        else
+        {
+            SceneManager.LoadScene("Title");
+        }
     }
 }
