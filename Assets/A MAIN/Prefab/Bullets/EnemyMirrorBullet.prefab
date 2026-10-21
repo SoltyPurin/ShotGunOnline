@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 2746143338622733194}
   - component: {fileID: 2735799207203771273}
   - component: {fileID: 1779448153658672906}
-  - component: {fileID: 1627158472138492452}
   - component: {fileID: -6256158654668216510}
+  - component: {fileID: 1627158472138492452}
   - component: {fileID: 6528731050031725792}
   m_Layer: 6
   m_Name: EnemyMirrorBullet
@@ -182,23 +182,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1627158472138492452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8398158926763634828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ee7252947bab6b42b02fcf47ac9528c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moveSpeed: 10
-  _bulletLifeLimitTime: 2
-  _bulletBlowAway: 2
-  _bullet: {fileID: 8398158926763634828}
-  _deathEffect: {fileID: 8288716771856988079, guid: 802abd74e23dbc54d96d61bb1e103f38, type: 3}
 --- !u!114 &-6256158654668216510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +208,24 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &1627158472138492452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398158926763634828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ee7252947bab6b42b02fcf47ac9528c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _moveSpeed: 10
+  _bulletLifeLimitTime: 2
+  _bulletBlowAway: 2
+  _bullet: {fileID: 8398158926763634828}
+  _deathEffect: {fileID: 8288716771856988079, guid: 802abd74e23dbc54d96d61bb1e103f38, type: 3}
 --- !u!114 &6528731050031725792
 MonoBehaviour:
   m_ObjectHideFlags: 0

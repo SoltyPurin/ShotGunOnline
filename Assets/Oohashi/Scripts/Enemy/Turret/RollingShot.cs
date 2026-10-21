@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class RollingShot : MonoBehaviour
+public class RollingShot : NetworkBehaviour
 {
     #region Serialize変数
     [SerializeField, Header("何秒に一回攻撃するか")]
@@ -50,6 +51,10 @@ public class RollingShot : MonoBehaviour
 
     private void Update()
     {
+        if (!IsServer)
+        {
+            return;
+        }
         if (_initRollingWaitTime > _rollingTimeing)
         {
             _initRollingWaitTime = 0;
@@ -61,6 +66,8 @@ public class RollingShot : MonoBehaviour
                 float angleRad = angleDeg * Mathf.Deg2Rad; // ラジアンに変換
                 Vector2 bulletDirection = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
                 GameObject obj = Instantiate(_bulletObj, transform.position, Quaternion.identity);
+                NetworkObject nBullet = obj.GetComponent<NetworkObject>();
+                nBullet.Spawn();
                 HomingBullet homing = obj.GetComponent<HomingBullet>();
                 homing.DirectionSetting(_playerObject, bulletDirection);
             }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class HomingBullet : EnemyShotBullet
@@ -30,18 +31,44 @@ public class HomingBullet : EnemyShotBullet
         _smooth = JsonSaver.Instance.EnemyJson.BurretSmooth;
     }
 
+    ///// <summary>
+    ///// プレイヤーのオブジェクトと方向を設定する
+    ///// </summary>
+    ///// <param name="playerObj">プレイヤーのオブジェクト</param>
+    ///// <param name="bulletDirection">最初に飛ぶ進行方向</param>
+    //[ClientRpc]
+    //public override void DirectionSettingClientRpc(GameObject playerObj, Vector2 bulletDirection)
+    //{
+    //    _playerObject = playerObj;
+    //    _firstDirection = bulletDirection;
+    //    _direction = bulletDirection;
+    //    _canMove = true;
+    //    float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+    //    _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+    //    StartCoroutine(WaitMoveToPlayer());
+    //}
+
     /// <summary>
-    /// プレイヤーのオブジェクトと方向を設定する
+    /// 全クライアント端末上でホーミングパラメータと移動フラグ（_canMove = true）をセットアップ
     /// </summary>
-    /// <param name="playerObj">プレイヤーのオブジェクト</param>
-    /// <param name="bulletDirection">最初に飛ぶ進行方向</param>
-    public override void DirectionSetting(GameObject playerObj, Vector2 bulletDirection)
+    [ClientRpc]
+    protected override void SetDirectionClientRpc(NetworkObjectReference playerRef, Vector2 bulletDirection)
     {
-        _playerObject = playerObj;
+        if (playerRef.TryGet(out NetworkObject pObj))
+        {
+            _playerObject = pObj.gameObject;
+        }
+
         _firstDirection = bulletDirection;
         _direction = bulletDirection;
-        float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-        _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        _canMove = true; // ★ これで全クライアント上で移動許可が降りる！
+
+        if (_bulletSprite != null)
+        {
+            float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+            _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
+
         StartCoroutine(WaitMoveToPlayer());
     }
 
@@ -81,10 +108,18 @@ public class HomingBullet : EnemyShotBullet
     /// </summary>
     public override void FixedUpdate()
     {
+        if (_isDestroyed || !_canMove)
+        {
+            return;
+        }
+
         _initAliveTime += Time.fixedDeltaTime;
         if (_initAliveTime >= _destroyTime)
         {
-            Destroy(this.gameObject);
+            if (IsServer)
+            {
+                DestroyProtocol();
+            }
             return;
         }
 

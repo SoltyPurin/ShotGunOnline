@@ -205,7 +205,8 @@ public class ShootRange : MonoBehaviour
         else //反射弾じゃなかったとき
         {
             Instantiate(_destroyEffect, hitObject.transform.position, Quaternion.identity);
-            Destroy(hitObject);
+            EnemyShotBullet eBullet = hitObject.GetComponent<EnemyShotBullet>();
+            eBullet.DestroyProtocol();
         }
     }
 
@@ -230,7 +231,6 @@ public class ShootRange : MonoBehaviour
     /// <param name="chargeTime">チャージ時間</param>
     private void BossHitObject(GameObject hitObject, float chargeTime)
     {
-        Debug.Log("ボスにヒット");
         BossHP bossHP = hitObject.GetComponent<BossHP>();
         BossKnockBack knockback = hitObject.GetComponent<BossKnockBack>();
         if (knockback != null)
@@ -257,9 +257,6 @@ public class ShootRange : MonoBehaviour
         ArmorTakeDamage armorTakeDamage = hitObject.GetComponent<ArmorTakeDamage>();
         if (armorKnockback != null)
         {
-            //armorKnockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, PlayerState.Normal,isCritical,false);
-            //armorTakeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
-
             armorKnockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isCritical, false);
             armorTakeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
 
@@ -280,8 +277,6 @@ public class ShootRange : MonoBehaviour
 
             knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isSpecial, false);
             takeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
-            //knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime,isSpecial,false);
-            //takeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
         }
     }
 
