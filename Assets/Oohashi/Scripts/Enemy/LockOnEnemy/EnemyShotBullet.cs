@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,27 +25,66 @@ public class EnemyShotBullet : MonoBehaviour
     [SerializeField, Header("弾の死亡エフェクト")]
     private GameObject _deathEffect = default;
 
+    private Vector3 _lastPosition = default;
+    private bool _hasLastPosition = false;
+
     /// <summary>
     /// プレイヤーの方向に飛ばすために回転する
     /// </summary>
+    /// <param name="playerObj"></param>
     /// <param name="bulletDirection"></param>
-    public virtual void DirectionSetting(GameObject playerObj,Vector2 bulletDirection)
+    public virtual void DirectionSetting(GameObject playerObj, Vector2 bulletDirection)
     {
         _direction = bulletDirection;
         float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-        _bullet.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        if (_bullet != null)
+        {
+            _bullet.transform.localRotation = Quaternion.identity;
+        }
         _canMove = true;
     }
+
     public virtual void FixedUpdate()
     {
         if (_canMove)
         {
             transform.position += (Vector3)_direction * _moveSpeed * Time.fixedDeltaTime;
             _lifetime += Time.fixedDeltaTime;
-            if(_lifetime >= _bulletLifeLimitTime)
+            if (_lifetime >= _bulletLifeLimitTime)
             {
-                Instantiate(_deathEffect, transform.position, Quaternion.identity);
+                if (_deathEffect != null)
+                {
+                    Instantiate(_deathEffect, transform.position, Quaternion.identity);
+                }
                 Destroy(this.gameObject);
+            }
+        }
+    }
+
+    protected virtual void LateUpdate()
+    {
+        // クライアント側（ホスト/サーバー以外）ではNetworkTransformによる同期移動中、向きを実際の移動方向に合わせて補正する
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && !NetworkManager.Singleton.IsServer)
+        {
+            NetworkObject netObj = GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
+            {
+                if (_hasLastPosition)
+                {
+                    Vector3 delta = transform.position - _lastPosition;
+                    if (delta.sqrMagnitude > 0.0001f)
+                    {
+                        float angle = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
+                        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+                        if (_bullet != null)
+                        {
+                            _bullet.transform.localRotation = Quaternion.identity;
+                        }
+                    }
+                }
+                _lastPosition = transform.position;
+                _hasLastPosition = true;
             }
         }
     }
@@ -66,9 +105,11 @@ public class EnemyShotBullet : MonoBehaviour
             {
                 damageKnockBack.SetDirection(_direction, _bulletBlowAway, this.gameObject);
             }
-            Instantiate(_deathEffect, transform.position, Quaternion.identity);
+            if (_deathEffect != null)
+            {
+                Instantiate(_deathEffect, transform.position, Quaternion.identity);
+            }
             Destroy(this.gameObject);
         }
     }
-
 }
