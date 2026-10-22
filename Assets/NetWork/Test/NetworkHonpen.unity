@@ -4255,6 +4255,10 @@ PrefabInstance:
       propertyPath: _inputChangeState
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8195249648040295254, guid: eb697a877257c5c468e362d6fa3d84c2, type: 3}
+      propertyPath: m_Text
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

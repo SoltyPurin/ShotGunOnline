@@ -49,13 +49,15 @@ public class ScoreUIManager : MonoBehaviour
     /// <param name="time">時間</param>
     /// <param name="damage">緋弾のランク</param>
     /// <param name="total">合計のランク</param>
-    public void PopText(float time,int damage,string total)
+    [ClientRpc]
+    public void PopTextClientRpc(float time,int damage,string total,int wave)
     {
         if(_itemText == null)
         {
             return;
         }
-        int nowWave = _waveManager.WaveIndex + 1;
+        int nowWave = wave + 1;
+        Debug.Log("現在のウェーブは" + nowWave);
 
         _scoreText[0].text = time.ToString("F1");
         _scoreText[1].text = damage.ToString();

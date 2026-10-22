@@ -43,10 +43,10 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     }
 
     [SerializeField, Min(0), Header("ウェーブの番号")]
-    private int _waveIndex = 0;
+    private NetworkVariable<int> _waveIndex = new NetworkVariable<int>(0);
     public int WaveIndex
     {
-        get { return _waveIndex; }
+        get { return _waveIndex.Value; }
     }
 
     [SerializeField, Header("取得系")]
@@ -162,7 +162,7 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         {
             return;
         }
-        Wave cloneWave = Instantiate(_waveList[_waveIndex]);
+        Wave cloneWave = Instantiate(_waveList[_waveIndex.Value]);
             _cloneList.Add(cloneWave);
 
 
@@ -209,11 +209,11 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
 
         if (_waveType != WaveType.Tutorial)
         {
-            _uiManager.SetFirstEnemyCounter(_waveList[_waveIndex].ObjList.Count);
+            _uiManager.SetFirstEnemyCounter(_waveList[_waveIndex.Value].ObjList.Count);
             _uiManager.ReMoveRank();
         }
         //ウェーブのオート遷移が有効なら演出を出す。
-        if (_waveList[_waveIndex].AutoTransition)
+        if (_waveList[_waveIndex.Value].AutoTransition)
         {
             StartWaveProduction(index);
         }
@@ -310,14 +310,15 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     /// </summary>
     private void NextWave()
     {
+        Debug.Log("ウェーブの数更新");
         //ウェーブがまだ残っているなら次のウェーブへ
-        if (_waveIndex < (_waveList.Count - 1))
+        if (_waveIndex.Value < (_waveList.Count - 1))
         {
             //それぞれの指標をプラスする
-            _waveIndex++;
+            _waveIndex.Value++;
             _cloneIndex++;
 
-            _waveTransition.StartTransition(_waveList[_waveIndex]._waveType);
+            _waveTransition.StartTransition(_waveList[_waveIndex.Value]._waveType);
             _nowTransitionState = TransitionState.Transition;
         }
         //残っていないなら終了
@@ -350,7 +351,7 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     {
         if (_waveTransition.EndTransition())
         {
-            StartWave(_waveIndex);
+            StartWave(_waveIndex.Value);
             _nowTransitionState = TransitionState.Wave;
         }
     }

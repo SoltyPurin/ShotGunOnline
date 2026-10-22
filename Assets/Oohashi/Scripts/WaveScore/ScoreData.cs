@@ -139,7 +139,14 @@ public class ScoreData : MonoBehaviour
 
         _scoreList[_initListIndex] = _total;
 
-        _scoreUIManager.PopText(clearTime, hitCount, _scoreCharList[_initListIndex]);
+        int waveIndex = 0;
+        WaveManager waveManager = FindAnyObjectByType<WaveManager>();
+        if (waveManager)
+        {
+            waveIndex = waveManager.WaveIndex;
+        }
+        Debug.Log("取得したウェーブのインデックスは" + waveIndex);
+        _scoreUIManager.PopTextClientRpc(clearTime, hitCount, _scoreCharList[_initListIndex],waveIndex);
 
 
         _initListIndex++;
