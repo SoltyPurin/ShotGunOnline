@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -60,6 +61,12 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
     private bool _canPlayWait = true;
 
+    //操作してる側から書き込める変数
+    private NetworkVariable<float> _netAnimSpeed = new NetworkVariable<float>(
+        0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
     private void Start()
     {
         if (Gamepad.current != null)
@@ -105,6 +112,38 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         _isAlive = false;
     }
 
+    private void Update()
+    {
+        // 被弾ノックバック中、またはショットガンの反動ノックバック中は歩き/待機アニメの適用を一時停止
+        bool isDamageKb = _playerStateManger != null && _playerStateManger.PlayerState == PlayerState.DamageKnockBack;
+        bool isShotKb = _playerKnockBack != null && _playerKnockBack.IsKnockBacking;
+
+        if (isDamageKb || isShotKb)
+        {
+            return;
+        }
+        //結局アップデートで常に値を計算し続けてアニメーションを再生させる処理にした
+        float animSpeed = _netAnimSpeed.Value;
+        if (animSpeed > 0.01f)
+        {
+            if (_playerAnimation != null)
+            {
+                _playerAnimation.Run(animSpeed);
+            }
+            _canPlayWait = true;
+        }
+        else
+        {
+            if (_canPlayWait)
+            {
+                if (_playerAnimation != null)
+                {
+                    _playerAnimation.Wait();
+                }
+                _canPlayWait = false;
+            }
+        }
+    }
     private void FixedUpdate()
     {
         //死亡判定に入ったら操作を一切無効化
@@ -172,6 +211,9 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
             _input = input;
             _moveDirection = new Vector3(input.x, input.y);
+
+            float currentInputSpeed = Mathf.Max(Mathf.Abs(_input.x), Mathf.Abs(_input.y));
+            _netAnimSpeed.Value = currentInputSpeed;
             Move();
         }
         else
@@ -184,15 +226,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             }
         }
     }
-    [Unity.Netcode.ServerRpc]
-    private void SetMoveInputServerRpc(float x, float y)
-    {
-        //左スティック取得
-        _input = new Vector2(x, y);
-        //Vector3型に変換
-        this._moveDirection = new Vector3(x, y);
 
-    }
 
     private void Move()
     {

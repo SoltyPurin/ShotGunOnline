@@ -77,6 +77,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3217341497461414544, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1226228160968541146}
+    - targetCorrespondingSourceObject: {fileID: 924683203893201400, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2616380029032371717}
+    - targetCorrespondingSourceObject: {fileID: 9137419643439796164, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6523482409647505233}
     - targetCorrespondingSourceObject: {fileID: 4321757205769193734, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4485261077887412082}
@@ -107,6 +113,51 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 792759558995403580, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
   m_PrefabInstance: {fileID: 584641290513440215}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &344580752744600623 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 924683203893201400, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2616380029032371717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344580752744600623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 5861378587512089645}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: KnockBack
+      NameHash: -1905554100
+      Synchronize: 1
+      ParameterType: 4
+    - name: Wait
+      NameHash: -572773157
+      Synchronize: 1
+      ParameterType: 4
+    - name: Run
+      NameHash: 1748754976
+      Synchronize: 1
+      ParameterType: 4
+    - name: RunSpeed
+      NameHash: -162882405
+      Synchronize: 1
+      ParameterType: 1
+    - name: Damage
+      NameHash: 375673178
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
 --- !u!95 &738508258631914734 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 153867301247437113, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
@@ -428,7 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1109276146
+  GlobalObjectIdHash: 2960477856
   InScenePlacedSourceGlobalObjectIdHash: 1109276146
   DeferredDespawnTick: 0
   Ownership: 1
@@ -590,6 +641,51 @@ MonoBehaviour:
       ParameterType: 9
     - name: Wait
       NameHash: -572773157
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!1 &8562384022053032467 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9137419643439796164, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+  m_PrefabInstance: {fileID: 584641290513440215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6523482409647505233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8562384022053032467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 224444105699311339}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: KnockBack
+      NameHash: -1905554100
+      Synchronize: 1
+      ParameterType: 4
+    - name: Run
+      NameHash: 1748754976
+      Synchronize: 1
+      ParameterType: 4
+    - name: Wait
+      NameHash: -572773157
+      Synchronize: 1
+      ParameterType: 4
+    - name: RunSpeed
+      NameHash: -162882405
+      Synchronize: 1
+      ParameterType: 1
+    - name: Damage
+      NameHash: 375673178
       Synchronize: 1
       ParameterType: 9
   AnimatorParametersExpanded: 0
