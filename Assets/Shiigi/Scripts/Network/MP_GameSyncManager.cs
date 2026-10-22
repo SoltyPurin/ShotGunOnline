@@ -78,7 +78,9 @@ public class MP_GameSyncManager : NetworkBehaviour
         {
             // バックグラウンド復帰時にホストの現在のフェーズと同期を取る
             Debug.Log($"[MP_GameSyncManager] ウィンドウ復帰を検知。現在のフェーズ: {CurrentPhase.Value}");
-            if (CurrentPhase.Value == GamePhase.Playing && MP_GameManager.Instance != null && MP_GameManager.Instance.CurrentState != MP_GameManager.GameState.Playing)
+            if (CurrentPhase.Value == GamePhase.Playing &&
+                MP_GameManager.Instance != null &&
+                MP_GameManager.Instance.CurrentState == MP_GameManager.GameState.WaitingForPlayers)
             {
                 Debug.Log("[MP_GameSyncManager] ホストはプレイ中のため、遅れてゲーム開始処理を実行します。");
                 NotifyPhase(GamePhase.Playing);
