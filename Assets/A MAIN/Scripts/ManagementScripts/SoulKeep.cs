@@ -69,8 +69,9 @@ public class SoulKeep : NetworkBehaviour
                     _soulMeter = bottleObj.GetComponent<SoulMeter>();
                 }
             }
-            UpdateSoulUI(_useFullSoul.Value);
-            UpdateVStockUI(_vStock.Value);
+            RefreshAll();
+            //UpdateSoulUI(_useFullSoul.Value);
+            //UpdateVStockUI(_vStock.Value);
         }
     }
 
@@ -83,12 +84,14 @@ public class SoulKeep : NetworkBehaviour
 
     private void OnVStockChanged(int prevValue, int newValue)
     {
-        UpdateVStockUI(newValue);
+        RefreshAll();
+        //UpdateVStockUI(newValue);
     }
 
     private void OnSoulChanged(int prevValue, int newValue)
     {
-        UpdateSoulUI(newValue);
+        RefreshAll();
+        //UpdateSoulUI(newValue);
     }
 
     // UI更新はすべて NetworkVariable の変更通知（OnValueChanged）経由で実行
@@ -130,6 +133,7 @@ public class SoulKeep : NetworkBehaviour
 
         if (_vStock.Value >= 3)
         {
+
             _useFullSoul.Value = 0;
         }
     }
@@ -151,6 +155,18 @@ public class SoulKeep : NetworkBehaviour
             }
         }
     }
+
+    private void RefreshAll()
+    {
+        if (_soulMeter == null) return;
+
+        //Vストックが3つなら表示用に10を渡す。それ以外は現在の値を渡す
+        int displaySoulCount = (VStock >= 3) ? 10 : _useFullSoul.Value;
+
+        _soulMeter.UpdateVStockDisplay(VStock);
+        _soulMeter.SetCount(displaySoulCount);
+        _soulMeter.AddMeter(displaySoulCount);
+    }
     public void ReduceCoin()
     {
         if (!IsServer) return; // サーバー限定
@@ -167,12 +183,6 @@ public class SoulKeep : NetworkBehaviour
 
     public void UseUltimate()
     {
-        //Debug.Log("ウルト使用");
-        //if (!IsServer) return;
-        //if (_vStock.Value <= 0) return;
-
-        //Debug.Log("Vスト消費");
-        //_vStock.Value--;
 
         if (IsServer)
         {
@@ -205,12 +215,6 @@ public class SoulKeep : NetworkBehaviour
             _vStock.Value--;
             Debug.Log($"[サーバー] Vストック消費成功。残り: {_vStock.Value}");
         }
-        //// 2. Vストックは 0 だが、ソウルが 10 以上溜まっている場合はソウルを消費
-        //else if (_useFullSoul.Value >= USEULTIMATE_NEEDSOUL)
-        //{
-        //    _useFullSoul.Value -= USEULTIMATE_NEEDSOUL;
-        //    Debug.Log($"[サーバー] 最大ソウル消費成功。残りソウル: {_useFullSoul.Value}");
-        //}
         else
         {
             Debug.LogWarning("[サーバー] 消費できるVストックもソウルもありません");
