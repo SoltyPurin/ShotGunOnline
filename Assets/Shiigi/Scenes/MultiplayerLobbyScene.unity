@@ -11930,6 +11930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f2c52117f50484781e89da9c53d046, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MultiplayerSessionManager
+  _titleSceneName: Title
 --- !u!4 &1718969596
 Transform:
   m_ObjectHideFlags: 0
