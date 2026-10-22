@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class HomingBullet : EnemyShotBullet
@@ -36,7 +38,7 @@ public class HomingBullet : EnemyShotBullet
     }
 
     /// <summary>
-    /// プレイヤーのオブジェクトと方向を設定する
+    /// プレイヤーのオブジェクトと方向を設定する（サーバー側）
     /// </summary>
     /// <param name="playerObj">プレイヤーのオブジェクト</param>
     /// <param name="bulletDirection">最初に飛ぶ進行方向</param>
@@ -44,13 +46,37 @@ public class HomingBullet : EnemyShotBullet
     {
         _playerObject = playerObj;
         _firstDirection = bulletDirection;
+        base.DirectionSetting(playerObj, bulletDirection);
+
+        // ネットワーク非稼働時（オフライン時）のみローカルでコルーチンを開始
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
+        {
+            StartCoroutine(WaitMoveToPlayer());
+        }
+    }
+
+    /// <summary>
+    /// 全クライアント端末上でホーミングパラメータと移動フラグ（_canMove = true）をセットアップ
+    /// </summary>
+    [ClientRpc]
+    protected override void SetDirectionClientRpc(NetworkObjectReference playerRef, Vector2 bulletDirection)
+    {
+        if (playerRef.TryGet(out NetworkObject pObj))
+        {
+            _playerObject = pObj.gameObject;
+        }
+
+        _firstDirection = bulletDirection;
         _direction = bulletDirection;
+        _canMove = true;
+
         float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
         if (_bulletSprite != null)
         {
             _bulletSprite.transform.localRotation = Quaternion.identity;
         }
+
         StartCoroutine(WaitMoveToPlayer());
     }
 
@@ -90,10 +116,18 @@ public class HomingBullet : EnemyShotBullet
     /// </summary>
     public override void FixedUpdate()
     {
+        if (_isDestroyed || !_canMove)
+        {
+            return;
+        }
+
         _initAliveTime += Time.fixedDeltaTime;
         if (_initAliveTime >= _destroyTime)
         {
-            Destroy(this.gameObject);
+            if (IsServer)
+            {
+                DestroyProtocol();
+            }
             return;
         }
 
@@ -155,5 +189,14 @@ public class HomingBullet : EnemyShotBullet
             _bulletSprite.transform.localRotation = Quaternion.identity;
         }
         transform.position += direction * _moveSpeed * Time.fixedDeltaTime;
+    }
+
+    protected override void DisableBulletLocal()
+    {
+        base.DisableBulletLocal();
+        if (_bulletSprite != null)
+        {
+            _bulletSprite.SetActive(false);
+        }
     }
 }
