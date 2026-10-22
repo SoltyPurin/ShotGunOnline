@@ -42,7 +42,19 @@ public class KeepDistanceMove : EnemyMove
         base.Start();
         if(_playerObject == null)
         {
-            _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
+            GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYERTAGNAME);
+            float minDistance = float.MaxValue;
+            foreach (GameObject p in players)
+            {
+                if (p == null) continue;
+                float dist = Vector2.Distance(transform.position, p.transform.position);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    _playerObject = p;
+                }
+            }
+
         }
         _direction = (_playerObject.transform.position - transform.position).normalized;
 
@@ -85,14 +97,14 @@ public class KeepDistanceMove : EnemyMove
                     GameObject bullet = Instantiate(_bulletObject, transform.position, Quaternion.identity);
                     //GameObjectからスクリプトを取得
                     EnemyShotBullet scriptOfBullet = bullet.GetComponent<EnemyShotBullet>();
-                    //方向を計算
-                    _direction = (_playerObject.transform.position - transform.position).normalized;
-                    //銃弾に方向を渡す
-                    scriptOfBullet.DirectionSetting(this.gameObject, _direction);
                     //ネットワークのコンポーネントを取得
                     NetworkObject nBullet = bullet.GetComponent<NetworkObject>();
                     //ネットワーク上にスポーンさせる
                     nBullet.Spawn();
+                    //方向を計算
+                    _direction = (_playerObject.transform.position - transform.position).normalized;
+                    //銃弾に方向を渡す
+                    scriptOfBullet.DirectionSetting(this.gameObject, _direction);
                     //音を再生
                     _seManager.PlayEnemyShotSound();
                     //停止時間をリセット

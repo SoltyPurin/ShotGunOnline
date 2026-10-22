@@ -61,7 +61,7 @@ public class HomingBullet : EnemyShotBullet
 
         _firstDirection = bulletDirection;
         _direction = bulletDirection;
-        _canMove = true; // ★ これで全クライアント上で移動許可が降りる！
+        _canMove = true; 
 
         if (_bulletSprite != null)
         {
