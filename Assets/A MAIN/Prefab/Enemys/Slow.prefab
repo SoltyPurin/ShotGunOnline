@@ -557,7 +557,7 @@ MonoBehaviour:
   _moveSpeed: 3
   _keepDistance: 0
   _inertiaStrangth: 1
-  _localSimulation: 0
+  _localSimulation: 1
 --- !u!114 &9053223308237228765
 MonoBehaviour:
   m_ObjectHideFlags: 0
