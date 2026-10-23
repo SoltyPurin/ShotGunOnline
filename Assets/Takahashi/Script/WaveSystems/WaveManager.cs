@@ -423,18 +423,16 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     /// <summary>
     /// クライアントが被弾した際、全プレイヤーのタイマーとScoreDataにペナルティを同期する
     /// </summary>
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    //[ServerRpc(InvokePermission = RpcInvokePermission.Everyone)]
     public void NotifyTakeDamageServerRpc()
     {
-        NotifyTakeDamageClientRpc();
-    }
-
-    [ClientRpc]
-    public void NotifyTakeDamageClientRpc()
-    {
+        Debug.Log("サーバー通して被弾回数増やすよ");
         if (ScoreData._scoreData != null)
         {
-            ScoreData._scoreData.TakeDamageCountPlusLocal();
+            Debug.Log("ヌルチェック問題ないから通すよ");
+            ScoreData._scoreData.AddDamageCount();
         }
     }
+
 }
