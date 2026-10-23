@@ -139,6 +139,11 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _hitstop = GetComponent<HitStop>();
             if (_hitstop == null) _hitstop = GetComponentInChildren<HitStop>();
         }
+        if (_inputChengeState == null)
+        {
+            _inputChengeState = GetComponent<InputChangeState>();
+            if (_inputChengeState == null) _inputChengeState = GetComponentInChildren<InputChangeState>();
+        }
     }
 
     public void DeathMethod()
@@ -259,6 +264,15 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         _canDecChargeValue = false;
         _isDecChargeTime = false;
 
+        if (_showUltCharge)
+        {
+            if (_inputChengeState != null)
+            {
+                _inputChengeState.ShowUltCharge(false);
+            }
+            _showUltCharge = false;
+        }
+
         if (this.IsOwner && IsSpawned)
         {
             _netIsPushShootButton.Value = false;
@@ -307,6 +321,16 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         {
             _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
             return;
+        }
+
+        // ウルト以外のステートになった場合、ウルトチャージエフェクト（青い丸）を確実に非表示にする
+        if (_stateManager != null && _stateManager.PlayerState != PlayerState.Ultimate && _showUltCharge)
+        {
+            if (_inputChengeState != null)
+            {
+                _inputChengeState.ShowUltCharge(false);
+            }
+            _showUltCharge = false;
         }
 
         // 被弾ノックバック中・落下中はチャージをキャンセルして早期リターン
