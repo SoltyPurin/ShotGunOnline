@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -16,8 +16,12 @@ public class LobbySessionService : ILobbySessionService
     private readonly IUnityServicesInitializer _servicesInitializer;
     private readonly Action _onSessionConnected;
     private readonly Action _onSessionLeaving;
+    private readonly Action _onUnexpectedDisconnect;
 
     private ISession _currentSession;
+    private bool _isSessionConnected;
+    private bool _isLeavingIntentionally;
+
     public ISession CurrentSession => _currentSession;
 
     public event Action OnSessionChanged;
@@ -25,11 +29,13 @@ public class LobbySessionService : ILobbySessionService
     public LobbySessionService(
         IUnityServicesInitializer servicesInitializer,
         Action onSessionConnected = null,
-        Action onSessionLeaving = null)
+        Action onSessionLeaving = null,
+        Action onUnexpectedDisconnect = null)
     {
         _servicesInitializer = servicesInitializer ?? throw new ArgumentNullException(nameof(servicesInitializer));
         _onSessionConnected = onSessionConnected;
         _onSessionLeaving = onSessionLeaving;
+        _onUnexpectedDisconnect = onUnexpectedDisconnect;
     }
 
     public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers)
@@ -42,6 +48,8 @@ public class LobbySessionService : ILobbySessionService
 
         try
         {
+            _isSessionConnected = false;
+            _isLeavingIntentionally = false;
             ConfigureWebSocketTransport();
 
             // Relay接続が完了するまでは一覧に表示されないよう非公開(IsPrivate = true)で作成
@@ -55,7 +63,7 @@ public class LobbySessionService : ILobbySessionService
             .WithNetworkOptions(new NetworkOptions { RelayProtocol = RelayProtocol.WSS });
 
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
-            _currentSession.Changed += HandleSessionChanged;
+            SubscribeSessionEvents(_currentSession);
 
             if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
             {
@@ -84,6 +92,7 @@ public class LobbySessionService : ILobbySessionService
             hostSession.IsPrivate = false;
             await hostSession.SavePropertiesAsync();
 
+            _isSessionConnected = true;
             _onSessionConnected?.Invoke();
             Debug.Log("[MSM]: ホストとして接続完了、ルーム一覧に公開しました (WSS)");
 
@@ -128,13 +137,15 @@ public class LobbySessionService : ILobbySessionService
 
         try
         {
+            _isSessionConnected = false;
+            _isLeavingIntentionally = false;
             ConfigureWebSocketTransport();
 
             var joinOptions = new JoinSessionOptions()
                 .WithNetworkOptions(new NetworkOptions { RelayProtocol = RelayProtocol.WSS });
 
             _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id, joinOptions);
-            _currentSession.Changed += HandleSessionChanged;
+            SubscribeSessionEvents(_currentSession);
 
             if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
             {
@@ -158,6 +169,7 @@ public class LobbySessionService : ILobbySessionService
                 await _currentSession.SaveCurrentPlayerDataAsync();
             }
 
+            _isSessionConnected = true;
             _onSessionConnected?.Invoke();
             Debug.Log("[MSM]: クライアントとして接続完了 (WSS)");
 
@@ -224,13 +236,16 @@ public class LobbySessionService : ILobbySessionService
 
     public async UniTask LeaveRoomSessionAsync()
     {
+        _isLeavingIntentionally = true;
+        _isSessionConnected = false;
+
         try
         {
             _onSessionLeaving?.Invoke();
 
             if (_currentSession != null)
             {
-                _currentSession.Changed -= HandleSessionChanged;
+                UnsubscribeSessionEvents(_currentSession);
                 try
                 {
                     await _currentSession.LeaveAsync();
@@ -253,6 +268,8 @@ public class LobbySessionService : ILobbySessionService
             {
                 NetworkManager.Singleton.Shutdown();
             }
+
+            _isLeavingIntentionally = false;
         }
     }
 
@@ -276,8 +293,61 @@ public class LobbySessionService : ILobbySessionService
         }
     }
 
+    private void SubscribeSessionEvents(ISession session)
+    {
+        if (session == null) return;
+        UnsubscribeSessionEvents(session);
+        session.Changed += HandleSessionChanged;
+        session.Deleted += HandleSessionDeleted;
+        session.RemovedFromSession += HandleRemovedFromSession;
+    }
+
+    private void UnsubscribeSessionEvents(ISession session)
+    {
+        if (session == null) return;
+        session.Changed -= HandleSessionChanged;
+        session.Deleted -= HandleSessionDeleted;
+        session.RemovedFromSession -= HandleRemovedFromSession;
+    }
+
     private void HandleSessionChanged()
     {
         OnSessionChanged?.Invoke();
+
+        // クライアント側でセッションからホストがいなくなった場合を検知
+        if (_isSessionConnected && !_isLeavingIntentionally && _currentSession != null && !_currentSession.IsHost)
+        {
+            var hostId = _currentSession.Host;
+            if (string.IsNullOrEmpty(hostId) || _currentSession.GetPlayer(hostId) == null)
+            {
+                Debug.LogWarning("[MSM]: セッションからホストが退出したことを検知しました。");
+                NotifyUnexpectedDisconnect();
+            }
+        }
+    }
+
+    private void HandleSessionDeleted()
+    {
+        if (_isSessionConnected && !_isLeavingIntentionally)
+        {
+            Debug.LogWarning("[MSM]: セッションが削除されたことを検知しました。");
+            NotifyUnexpectedDisconnect();
+        }
+    }
+
+    private void HandleRemovedFromSession()
+    {
+        if (_isSessionConnected && !_isLeavingIntentionally)
+        {
+            Debug.LogWarning("[MSM]: セッションから切断・除外されたことを検知しました。");
+            NotifyUnexpectedDisconnect();
+        }
+    }
+
+    private void NotifyUnexpectedDisconnect()
+    {
+        if (!_isSessionConnected || _isLeavingIntentionally) return;
+        _isSessionConnected = false;
+        _onUnexpectedDisconnect?.Invoke();
     }
 }

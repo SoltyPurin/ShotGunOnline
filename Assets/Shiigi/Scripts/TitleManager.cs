@@ -39,6 +39,6 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     private void InitializeScreen()
     {
-        Screen.SetResolution(1920, 1080, true);
+        Screen.SetResolution(1920, 1080, false);
     }
 }

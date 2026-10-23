@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ConfirmDialogUI : MonoBehaviour
@@ -12,11 +13,18 @@ public class ConfirmDialogUI : MonoBehaviour
 
     public async UniTask<bool> ShowAsync(string message)
     {
+        _utcs?.TrySetCanceled();
+
         _messageText.text = message;
         gameObject.SetActive(true);
 
         _yesButton.onClick.RemoveAllListeners();
         _noButton.onClick.RemoveAllListeners();
+
+        if (EventSystem.current != null && _yesButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(_yesButton.gameObject);
+        }
 
         _utcs = new UniTaskCompletionSource<bool>();
 

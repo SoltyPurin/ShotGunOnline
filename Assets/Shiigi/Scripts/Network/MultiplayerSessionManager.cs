@@ -7,7 +7,7 @@ using UnityEngine;
 
 /// <summary>
 /// マルチプレイセッション関連機能のエントリポイント（ファサード）クラス。
-/// 認証初期化・ルーム管理・ハートビート監視・シーン遷移の各単一責務クラスを統合・調整します。
+/// 認証初期化・ルーム管理・ハートビート監視・シーン遷移・切断エラーハンドリングの各単一責務クラスを統合・調整します。
 /// </summary>
 public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 {
@@ -15,12 +15,16 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     private const float HeartbeatInterval = 2f;
     private const float HeartbeatTimeout = 10f;
 
+    [Header("通信エラー表示設定 (未設定時はロビーのConfirmDialogUIを自動複製)")]
+    [SerializeField] private ConfirmDialogUI _errorDialogPrefab;
+
     public static MultiplayerSessionManager Instance { get; private set; }
 
     private IUnityServicesInitializer _servicesInitializer;
     private ILobbySessionService _sessionService;
     private SessionHeartbeatMonitor _heartbeatMonitor;
     private NetworkSceneTransitionHandler _sceneTransitionHandler;
+    private SessionDisconnectHandler _disconnectHandler;
     private bool _isDisconnecting;
 
     public ISession CurrentSession => _sessionService?.CurrentSession;
@@ -79,19 +83,26 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 
         _servicesInitializer = new UnityServicesInitializer();
         _sceneTransitionHandler = new NetworkSceneTransitionHandler(GameSceneName);
+        _disconnectHandler = new SessionDisconnectHandler(
+            transform,
+            DisconnectAndCleanupAsync,
+            _errorDialogPrefab);
         _sessionService = new LobbySessionService(
             _servicesInitializer,
             onSessionConnected: SubscribeNetworkEvents,
-            onSessionLeaving: HandleSessionLeaving);
+            onSessionLeaving: HandleSessionLeaving,
+            onUnexpectedDisconnect: () => _disconnectHandler.NotifyUnexpectedDisconnect());
         _heartbeatMonitor = new SessionHeartbeatMonitor(
             () => _sessionService.CurrentSession,
             HeartbeatInterval,
-            HeartbeatTimeout);
+            HeartbeatTimeout,
+            onHostTimeout: () => _disconnectHandler.NotifyUnexpectedDisconnect());
     }
 
     private async void Start()
     {
         EnsureSubsystemsInitialized();
+        _disconnectHandler?.TryCacheDialogFromScene();
         await _servicesInitializer.InitializeAsync();
     }
 
@@ -125,6 +136,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         try
         {
             EnsureSubsystemsInitialized();
+            UnsubscribeNetworkEvents();
 
             if (hasActiveSession)
             {
@@ -162,6 +174,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 
         _sceneTransitionHandler?.SubscribeEvents(networkManager);
         _heartbeatMonitor?.SubscribeMessaging(networkManager.CustomMessagingManager);
+        _disconnectHandler?.SubscribeEvents(networkManager);
     }
 
     private void UnsubscribeNetworkEvents()
@@ -171,6 +184,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 
         _sceneTransitionHandler?.UnsubscribeEvents(networkManager);
         _heartbeatMonitor?.UnsubscribeMessaging(networkManager.CustomMessagingManager);
+        _disconnectHandler?.UnsubscribeEvents(networkManager);
     }
 
     private void HandleSessionLeaving()
