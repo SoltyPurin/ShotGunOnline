@@ -67,6 +67,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
@@ -122,7 +123,7 @@ MonoBehaviour:
     _waveObj: {fileID: 587187548067331536}
   - _generateFrame: 50
     _waveObj: {fileID: 7361942092124180866}
-  _difficulty: 3
+  _difficulty: 1
   _autoTransition: 1
   _waveStartText: ' '
 --- !u!1 &8323167358284565216

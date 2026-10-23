@@ -40,7 +40,7 @@ public class PlayerKnockBack : NetworkBehaviour
     private bool _isInputLeftStick = false; //左スティックを入力してるかどうか
 
     //定数
-    private readonly float KNOCKBACK_FORCE = 7.0f;
+    private readonly float KNOCKBACK_FORCE = 5.0f;
 
 
     public bool IsInputLeftStick
@@ -115,7 +115,11 @@ public class PlayerKnockBack : NetworkBehaviour
         {
             if (_animation != null)
             {
-                _animation.KnockBack();
+                if (_force.Value >= KNOCKBACK_FORCE)
+                {
+                    _animation.KnockBack();
+                }
+
             }
         }
     }

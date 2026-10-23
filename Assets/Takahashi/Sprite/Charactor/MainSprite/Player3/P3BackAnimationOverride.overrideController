@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: P3BackAnimationOverride
+  m_Controller: {fileID: 9100000, guid: 48d0a1b823bb83c459b860ca95d4c638, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 6157f1893d2787f4e998dd76b7175e6f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bc0d386af7513624d9944852c336c469, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 37b48bbb0ed223a40b71110f303f88cc, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ab23077d6f295e4498aaa79b1aea01f0, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6356998344f4c6b4c9acfbc3abfe97b3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6cb6715a417b5094ba6af76e19955929, type: 2}

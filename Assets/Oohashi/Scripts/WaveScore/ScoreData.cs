@@ -100,24 +100,31 @@ public class ScoreData : MonoBehaviour
     /// </summary>
     public void TakeDamageCountPlus()
     {
+        Debug.Log("被弾回数増えるメソッド呼び出し");
         WaveManager waveManager = FindAnyObjectByType<WaveManager>();
-        if(waveManager != null)
+        if (waveManager != null)
         {
+            Debug.Log("ウェーブマネージャーあったよ");
+
             waveManager.NotifyTakeDamageServerRpc();
         }
         else
         {
-            TakeDamageCountPlusLocal();
+            AddDamageCount();
         }
     }
 
     /// <summary>
-    /// ローカルのスコア及びタイマーの加算
+    /// サーバー（ホスト）側で ServerRpc 受領後に呼ばれる、純粋な加算処理
     /// </summary>
-    public void TakeDamageCountPlusLocal()
+    public void AddDamageCount()
     {
         _damageTakenCount++;
-        _enemyCountAndCreateTime.TakeDamage();
+        if (_enemyCountAndCreateTime != null)
+        {
+            _enemyCountAndCreateTime.TakeDamage();
+        }
+
     }
 
     public void SetScore(int timeScore, int hitCount,float clearTime)
@@ -152,6 +159,8 @@ public class ScoreData : MonoBehaviour
         _initListIndex++;
 
         _total = 0;
+
+        _damageTakenCount = 0;
 
     }
 
