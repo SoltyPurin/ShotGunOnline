@@ -34,6 +34,9 @@ public class MultiPlayResultImageChanger : MonoBehaviour
             case 4:
                 _changeingImage.sprite = _fourPlayerSprite;
                 break;
+            default:
+                _changeingImage.sprite = _fourPlayerSprite;
+                break;
         }
     }
 }

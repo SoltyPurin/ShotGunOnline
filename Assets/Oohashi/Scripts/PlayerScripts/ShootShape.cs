@@ -75,10 +75,10 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
 
     private void Update()
     {
-        //if (this.IsOwner)
-        //{
+        if (this.IsOwner)
+        {
 
-        if(_playerState.PlayerState == PlayerState.Ultimate)
+            if (_playerState.PlayerState == PlayerState.Ultimate)
         {
             return; //ウルト状態だったら処理しない
         }
@@ -167,66 +167,68 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
 
         _meshFilter.sharedMesh = _innerMesh;
 
-    //}
     }
+}
 
 
 
     public void UltShape(Vector3 direction)
     {
-        //プレイヤーの向いてる方に回転
-        Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _notShootTimeDirection);
-
-        //Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _gunBurrel.transform.right);
-
-        _lenderer.startWidth = 0.1f;//線の幅
-        _lenderer.endWidth = 0.1f;//線の幅
-        float radius = 15;       // 射程固定
-        float maxAngle = 80f;     // 前方90度以内だけ
-        float width = radius * Mathf.Tan(Mathf.Deg2Rad * (maxAngle / 2));
-
-
-        _lenderer.positionCount = 4; //頂点の数、終点と始点をつなげるために4個用意
-
-        Vector3 bottom = new Vector3(0, 0, 0);//左下
-        Vector3 leftTop = new Vector3(-width, radius, 0);//左上
-        Vector3 rightTop = new Vector3(width, radius, 0);//右上
-
-        bottom = rotation * bottom + transform.position;
-        leftTop = rotation * leftTop + transform.position;
-        rightTop = rotation * rightTop + transform.position;
-
-        _lenderer.SetPosition(0, bottom);
-        _lenderer.SetPosition(1, leftTop);
-        _lenderer.SetPosition(2, rightTop);
-        _lenderer.SetPosition(3, bottom); // 戻る
-
-        Vector3 localBottom = rotation * Vector3.zero;
-        Vector3 localLeftTop = rotation * new Vector3(-width / 2, radius / 2, 0);
-        Vector3 localRightTop = rotation * new Vector3(width / 2, radius / 2, 0);
-
-        _vertices[0] = localBottom;
-        _vertices[1] = localLeftTop;
-        _vertices[2] = localRightTop;
-
-
-        _innerMesh.vertices = _vertices;
-
-        _innerMesh.subMeshCount = 1;
-
-        _innerMesh.SetTriangles(_triangles, 0);
-
-        _innerMesh.uv = new Vector2[]
+        if (IsOwner)
         {
+            //プレイヤーの向いてる方に回転
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _notShootTimeDirection);
+
+            //Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _gunBurrel.transform.right);
+
+            _lenderer.startWidth = 0.1f;//線の幅
+            _lenderer.endWidth = 0.1f;//線の幅
+            float radius = 15;       // 射程固定
+            float maxAngle = 80f;     // 前方90度以内だけ
+            float width = radius * Mathf.Tan(Mathf.Deg2Rad * (maxAngle / 2));
+
+
+            _lenderer.positionCount = 4; //頂点の数、終点と始点をつなげるために4個用意
+
+            Vector3 bottom = new Vector3(0, 0, 0);//左下
+            Vector3 leftTop = new Vector3(-width, radius, 0);//左上
+            Vector3 rightTop = new Vector3(width, radius, 0);//右上
+
+            bottom = rotation * bottom + transform.position;
+            leftTop = rotation * leftTop + transform.position;
+            rightTop = rotation * rightTop + transform.position;
+
+            _lenderer.SetPosition(0, bottom);
+            _lenderer.SetPosition(1, leftTop);
+            _lenderer.SetPosition(2, rightTop);
+            _lenderer.SetPosition(3, bottom); // 戻る
+
+            Vector3 localBottom = rotation * Vector3.zero;
+            Vector3 localLeftTop = rotation * new Vector3(-width / 2, radius / 2, 0);
+            Vector3 localRightTop = rotation * new Vector3(width / 2, radius / 2, 0);
+
+            _vertices[0] = localBottom;
+            _vertices[1] = localLeftTop;
+            _vertices[2] = localRightTop;
+
+
+            _innerMesh.vertices = _vertices;
+
+            _innerMesh.subMeshCount = 1;
+
+            _innerMesh.SetTriangles(_triangles, 0);
+
+            _innerMesh.uv = new Vector2[]
+            {
             _vertices[0],
             _vertices[1],
             _vertices[2]
-        };
+            };
 
-        _meshRenderer.sharedMaterial = _innerMaterial;
+            _meshRenderer.sharedMaterial = _innerMaterial;
 
-        _meshFilter.sharedMesh = _innerMesh;
-
+            _meshFilter.sharedMesh = _innerMesh;
+        }
 
     }
 }
