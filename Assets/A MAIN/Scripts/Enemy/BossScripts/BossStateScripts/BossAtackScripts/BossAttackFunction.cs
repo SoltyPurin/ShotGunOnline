@@ -1,62 +1,97 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ƒ{ƒX‚Ì‹ßÚUŒ‚‚ªƒAƒjƒ[ƒVƒ‡ƒ“‚ÅŠÇ—‚³‚ê‚Ä‚½‚Ì‚Å‚»‚ê‚É‘Î‰‚³‚¹‚é‚½‚ß‚¾‚¯‚ÌƒNƒ‰ƒX
-/// iƒAƒjƒ[ƒ^[‚ª‚Â‚¢‚Ä‚éƒIƒuƒWƒFƒNƒg‚É•t‚¯‚Ä‚Ëj
+/// ãƒœã‚¹ã®å„æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹çµ±æ‹¬ã‚¯ãƒ©ã‚¹
+/// ï¼ˆã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã¯ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã§ã‚‚ç™ºç«ã™ã‚‹ãŸã‚ã€ã‚µãƒ¼ãƒãƒ¼å´ã§ã®ã¿å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ï¼‰
 /// </summary>
 public class BossAttackFunction : MonoBehaviour
 {
-    #region[•Ï”–¼]
-    //---GameObject,Script,Animator“™---------------------------------
-    [SerializeField, Header("Boss‚ÌState‚ğæ“¾")]
+    #region[å¤‰æ•°å]
+    //---GameObject,Script,Animatorç­‰---------------------------------
+    [SerializeField, Header("Bossã®Stateç®¡ç†")]
     private BossStateManagement _stateManagement = default;
-    [SerializeField, Header("JumpAtack‚ğæ“¾")]
+    [SerializeField, Header("JumpAtackç®¡ç†")]
     private BossJumpAtack _jumpAtack = default;
-    [SerializeField, Header("MachPunch‚ğæ“¾")]
+    [SerializeField, Header("MachPunchç®¡ç†")]
     private BossMachPunch _machPunch = default;
-    [SerializeField, Header("Boss‚ÌƒRƒ‰ƒCƒ_[æ“¾")]
+    [SerializeField, Header("Bossã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼")]
     private Collider2D _bossCollider = default;
 
     #endregion
 
+    private void Start()
+    {
+        if (_stateManagement == null)
+        {
+            _stateManagement = GetComponentInParent<BossStateManagement>();
+        }
+        if (_jumpAtack == null)
+        {
+            _jumpAtack = GetComponentInParent<BossJumpAtack>();
+        }
+        if (_machPunch == null)
+        {
+            _machPunch = GetComponentInParent<BossMachPunch>();
+        }
+    }
+
     /// <summary>
-    /// ‹ßÚUŒ‚‘S‘Ì‚ğI—¹‚³‚¹‚éƒƒ\ƒbƒh
+    /// å„æ”»æ’ƒçµ‚äº†ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void AttackEnd()
     {
+
         if (_stateManagement._currentState == BossStateManagement.BossState.JumpAtack)
         {
-            _jumpAtack.JumpAttackEnd();
+            if (_jumpAtack != null) _jumpAtack.JumpAttackEnd();
         }
         else if (_stateManagement._currentState == BossStateManagement.BossState.Punch)
         {
-            _machPunch.PunchEnd();
+            if (_machPunch != null) _machPunch.PunchEnd();
         }
     }
-    /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ö‚ÌUŒ‚”»’è‚ğoŒ»‚³‚¹‚éƒƒ\ƒbƒh
-    /// </summary>
 
+    /// <summary>
+    /// ã‚¸ãƒ£ãƒ³ãƒ—ç€åœ°æ™‚ã®åˆ¤å®šãƒ»è¡æ’ƒæ³¢ç™ºç”Ÿï¼ˆâ€»ã‚µãƒ¼ãƒãƒ¼ã®ã¿ClientRpcã‚’é€ä¿¡ï¼‰
+    /// </summary>
     public void JumpAtackAreaPop()
     {
-        _jumpAtack.JumpLandClientRpc();
+        // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®ã¿ ClientRpc ã‚’é€ä¿¡ã™ã‚‹ï¼ˆã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã§å‘¼ã¶ã¨ä¾‹å¤–ç™ºç”Ÿï¼‰
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            if (_jumpAtack != null) _jumpAtack.JumpLandClientRpc();
+        }
     }
 
     public void JumpAimStart()
     {
-        _jumpAtack.AimStart();
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            if (_jumpAtack != null) _jumpAtack.AimStart();
+        }
     }
+
     public void JumpAimEnd()
     {
-        _jumpAtack.AimEnd();
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            if (_jumpAtack != null) _jumpAtack.AimEnd();
+        }
     }
 
     public void StartPunch()
     {
-        _machPunch.MachPunch();
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            if (_machPunch != null) _machPunch.MachPunch();
+        }
     }
+
     public void EndPunchTargeting()
     {
-        _machPunch.EndTargeting();
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            if (_machPunch != null) _machPunch.EndTargeting();
+        }
     }
 }

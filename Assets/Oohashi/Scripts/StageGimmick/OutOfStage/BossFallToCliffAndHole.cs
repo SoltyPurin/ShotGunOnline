@@ -6,38 +6,35 @@ using UnityEngine;
 
 public class BossFallToCliffAndHole : EnemyFallToCliff
 {
-    [SerializeField, Header("•œ‹A—pƒAƒjƒ[ƒ^[“o˜^")]
+    [SerializeField, Header("å¾©å¸°ç”¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼ç™»éŒ²")]
     private Animator _returnAnim = default;
 
-    [SerializeField, Header("‚‚¿‚ÌƒXƒNƒŠƒvƒg“o˜^")]
+    [SerializeField, Header("ã‚¢ãƒ¼ãƒãƒ¼ãƒ ãƒ¼ãƒ–ç™»éŒ²")]
     private ArmorMove _armorMove = default;
 
-    [SerializeField, Header("Sprite‹¸³ƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("Spriteè£œæ­£ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private KakudoAndZahyouKyousei _kyousei = default;
 
-    [SerializeField, Header("•œ‹Aƒ|ƒCƒ“ƒg“o˜^")]
+    [SerializeField, Header("å¾©å¸°ãƒã‚¤ãƒ³ãƒˆç™»éŒ²")]
     private GameObject _returnPointTransform = default;
 
-    [SerializeField,Header("•œ‹Aƒ|ƒCƒ“ƒg‚Ì–¼‘O")]
-    private string _returnPointName = default;
+    [SerializeField, Header("å¾©å¸°ãƒã‚¤ãƒ³ãƒˆã®åå‰")]
+    private string _returnPointName = "SpawnPoint2";
 
     private BossStateManagement _state = default;
 
-    //‚»‚Ì‚Ü‚Ü‚¾‚Æ“oê‚µ‚½uŠÔ‚É—‰º€‚·‚é‚Ì‚Å–³—‚â‚èƒK[ƒh‚·‚é
-    [SerializeField, Header("“oê’¼Œã‚Ì—‰º–³ŒøŠÔi•bj")]
+    // ç™»å ´ç›´å¾Œã®è½ä¸‹é˜²æ­¢ã‚¬ãƒ¼ãƒ‰
+    [SerializeField, Header("ç™»å ´ç›´å¾Œã®ç„¡æ•µæ™‚é–“ï¼ˆç§’ï¼‰")]
     private float _spawnProtectTime = 2.0f;
     private float _spawnTimer = 0f;
 
-    //---ƒAƒjƒ[ƒ^[‚ÌƒgƒŠƒK[---//
+    //---ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼---//
     private readonly string FALLTRIGGER = "Fall";
     private readonly string RETURNFALL = "IsFall";
 
-
     private void OnEnable()
     {
-        // ƒIƒuƒWƒFƒNƒg‚ª—LŒø‰»‚µ‚½‚Éƒ^ƒCƒ}[ƒŠƒZƒbƒg
         _spawnTimer = 0f;
-
         _state = GetComponent<BossStateManagement>();
     }
 
@@ -48,8 +45,9 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
             _spawnTimer += Time.deltaTime;
         }
     }
+
     /// <summary>
-    /// —‰ºˆ—‚ğs‚¤
+    /// è½ä¸‹å®Ÿè¡Œ
     /// </summary>
     public override void FallMethod()
     {
@@ -57,71 +55,171 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         {
             return;
         }
-        _state.FallStateChange(true);
-        _seManager.PlayDropSound();
-        _animator.SetTrigger(FALLTRIGGER);
-        _enemyTakeDamage.FallDamage();
+
+        if (_state == null)
+        {
+            _state = GetComponent<BossStateManagement>();
+        }
+
+        if (_state != null)
+        {
+            _state.FallStateChange(true);
+        }
+
+        if (_seManager != null)
+        {
+            _seManager.PlayDropSound();
+        }
+
+        if (_animator != null)
+        {
+            _animator.SetTrigger(FALLTRIGGER);
+        }
+
+        if (_enemyTakeDamage != null)
+        {
+            _enemyTakeDamage.FallDamage();
+        }
+
         if (this.gameObject.activeInHierarchy)
         {
-            if(_returnPointTransform == null)
+            FindReturnPoint();
+
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
             {
-                _returnPointTransform = GameObject.Find(_returnPointName);
+                if (IsServer)
+                {
+                    PlayFallPerformanceClientRpc();
+                    StartCoroutine(HoleFallMethodServer());
+                }
             }
-            if (IsServer)
+            else
             {
                 StartCoroutine(HoleFallMethodServer());
             }
+
             transform.rotation = Quaternion.identity;
         }
+
         if (_armorMove != null)
         {
             _armorMove.ContactWithSomethingDuring();
         }
     }
 
+    [ClientRpc]
+    private void PlayFallPerformanceClientRpc()
+    {
+        if (IsServer) return; // ã‚µãƒ¼ãƒãƒ¼å´ã§ã¯æ—¢ã«å†ç”Ÿæ¸ˆã¿
+
+        if (_state != null)
+        {
+            _state.FallStateChange(true);
+        }
+
+        if (_seManager != null)
+        {
+            _seManager.PlayDropSound();
+        }
+
+        if (_animator != null)
+        {
+            _animator.SetTrigger(FALLTRIGGER);
+        }
+    }
+
     /// <summary>
-    /// —‚Æ‚µŒŠ‚É—‚¿‚½ŒãƒGƒtƒFƒNƒg‚ğÄ¶‚·‚éƒƒ\ƒbƒh,
-    ///I‚ÅÀs‚µ‚½Œã‘SƒNƒ‰ƒCƒAƒ“ƒg‚É‹¤—L
+    /// å¤–éƒ¨ã‚¹ã‚¯ãƒªãƒ—ãƒˆï¼ˆEnemyFall / MediumArmorTakeDamageï¼‰ã‹ã‚‰æ–‡å­—åˆ— "HoleFallMethod" ã§å‘¼ã°ã‚Œã‚‹äº’æ›ç”¨ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
-    /// <returns></returns>
+    public IEnumerator HoleFallMethod()
+    {
+        FallMethod();
+        yield break;
+    }
+
+    /// <summary>
+    /// å¾©å¸°ãƒã‚¤ãƒ³ãƒˆã‚’åå‰ã‹ã‚‰å®‰å…¨ã«å–å¾—ï¼ˆã‚¹ãƒšãƒ«ãƒŸã‚¹ã‚„ã‚·ãƒ¼ãƒ³ã”ã¨ã®å·®ç•°ã«å¯¾å¿œï¼‰
+    /// </summary>
+    private void FindReturnPoint()
+    {
+        if (_returnPointTransform != null) return;
+
+        if (!string.IsNullOrEmpty(_returnPointName))
+        {
+            _returnPointTransform = GameObject.Find(_returnPointName);
+        }
+
+        if (_returnPointTransform == null)
+        {
+            _returnPointTransform = GameObject.Find("SpawnPoint2") 
+                ?? GameObject.Find("SpawonPoint2") 
+                ?? GameObject.Find("BossReturnPoint") 
+                ?? GameObject.Find("SpawnPoint");
+        }
+    }
+
+    /// <summary>
+    /// è½ä¸‹å¾Œã«å¾©å¸°åœ°ç‚¹ã¸ãƒ†ãƒ¬ãƒãƒ¼ãƒˆãƒ»ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå†ç”Ÿã™ã‚‹ã‚µãƒ¼ãƒãƒ¼å‡¦ç†
+    /// </summary>
     public IEnumerator HoleFallMethodServer()
     {
-        //Animator retAnim = _returnPointTransform.GetComponent<Animator>();
-        //retAnim.SetTrigger(RETURNPOINT);
         yield return new WaitForSeconds(2f);
+
+        FindReturnPoint();
+
+        Vector3 returnPos = _returnPointTransform != null 
+            ? _returnPointTransform.transform.position 
+            : new Vector3(0, 0, 0);
+
         NetworkTransform netTransform = GetComponent<NetworkTransform>();
         if (netTransform != null)
         {
-            netTransform.Teleport(_returnPointTransform.transform.position, Quaternion.identity, transform.localScale);
+            netTransform.Teleport(returnPos, Quaternion.identity, transform.localScale);
         }
         else
         {
-            transform.position = _returnPointTransform.transform.position;
+            transform.position = returnPos;
             transform.rotation = Quaternion.identity;
         }
-        //this.transform.position = _returnPointTransform.transform.position;
-        Debug.Log("ƒ{ƒXƒŠƒ^[ƒ“");
 
-        PlayReturnEffectClientRpc(_returnPointTransform.transform.position);
+        Debug.Log("ãƒœã‚¹ãƒªã‚¿ãƒ¼ãƒ³: " + returnPos);
+
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            PlayReturnEffectClientRpc(returnPos);
+        }
+        else
+        {
+            PlayReturnEffectLocal(returnPos);
+        }
     }
 
     [ClientRpc]
     private void PlayReturnEffectClientRpc(Vector2 targetPos)
     {
+        PlayReturnEffectLocal(targetPos);
+    }
+
+    private void PlayReturnEffectLocal(Vector2 targetPos)
+    {
         if (_returnAnim != null)
         {
             _returnAnim.SetTrigger(RETURNFALL);
         }
-        _bombEffect.BombEffect(targetPos);
 
-        //this.transform.rotation = Quaternion.identity;
+        if (_bombEffect != null)
+        {
+            _bombEffect.BombEffect(targetPos);
+        }
 
         if (_kyousei != null)
         {
             _kyousei.RotateReset();
         }
 
-        _state.FallStateChange(false);
+        if (_state != null)
+        {
+            _state.FallStateChange(false);
+        }
     }
-
 }

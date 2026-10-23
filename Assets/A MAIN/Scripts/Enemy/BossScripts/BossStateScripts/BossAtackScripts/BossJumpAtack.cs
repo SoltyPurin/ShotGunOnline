@@ -1,18 +1,18 @@
-using Unity.Netcode;
+ï»¿using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// ƒ{ƒX‚ÌƒWƒƒƒ“ƒvUŒ‚‚ğŠÇ—‚·‚éƒƒ\ƒbƒh
+/// ãƒœã‚¹ã®ã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒã‚’ç®¡ç†ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
 /// </summary>
 public class BossJumpAtack : BossColliderTriggerSW
 {
-    #region[•Ï”–¼]
-    //---GameObject,Script,Animator“™---------------------------------
-    [SerializeField, Header("ÕŒ‚”g‚ÌƒIƒuƒWƒFƒNƒg")]
+    #region[å¤‰æ•°å]
+    //---GameObject,Script,Animatorç­‰---------------------------------
+    [SerializeField, Header("è¡æ’ƒæ³¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     protected GameObject _shockWave;
-    [SerializeField, Header("’nŠ„‚ê")]
+    [SerializeField, Header("ç©´ã‚ã‘")]
     protected GameObject _shockHole;
-    [SerializeField, Header("»šº")]
+    [SerializeField, Header("åœŸç…™")]
     protected GameObject _dustFromJumpAttack;
     [SerializeField]
     private GameObject _jumpAtackArea = default;
@@ -29,78 +29,109 @@ public class BossJumpAtack : BossColliderTriggerSW
     private void Start()
     {
         _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        _mainCameraShake = _mainCamera.GetComponent<BossJumpAtackShake>();
+        if (_mainCamera != null)
+        {
+            _mainCameraShake = _mainCamera.GetComponent<BossJumpAtackShake>();
+        }
+        if (_stateManagement == null)
+        {
+            _stateManagement = GetComponent<BossStateManagement>();
+        }
     }
 
     public void JumpAtackToPlayer()
     {
-        _bossCollider.isTrigger = true;
+        if (_bossCollider != null)
+        {
+            _bossCollider.isTrigger = true;
+        }
     }
 
-    //’…’n‚Ì“–‚½‚è”»’è”­¶
+    // ç€åœ°æ™‚ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå†ç”Ÿï¼ˆå…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¸é€šçŸ¥ï¼‰
     [ClientRpc]
     public void JumpLandClientRpc()
     {
-        _mainCameraShake.Shake();
-        _jumpAtackArea.SetActive(true);
-        _dustFromJumpAttack.SetActive(true);
+        if (_mainCameraShake != null)
+        {
+            _mainCameraShake.Shake();
+        }
+        if (_jumpAtackArea != null) _jumpAtackArea.SetActive(true);
+        if (_dustFromJumpAttack != null) _dustFromJumpAttack.SetActive(true);
+
         Vector3 shockHolePos = new Vector3(transform.position.x, transform.position.y - 2, 0);
-        Instantiate(_shockHole, shockHolePos, Quaternion.identity);
+        if (_shockHole != null)
+        {
+            Instantiate(_shockHole, shockHolePos, Quaternion.identity);
+        }
 
         if (IsServer && _stateManagement != null && _stateManagement._changed)
         {
-            if (_stateManagement._changed)
+            for (int i = 0; i < _shockLangeList.Length; i++)
             {
-                for (int i = 0; i < _shockLangeList.Length; i++)
-                {
-                    _jumpAtackWaveDirection = (_stateManagement.Player.transform.position - transform.position).normalized;
-                    Vector2 rotatedDir = Quaternion.AngleAxis(_shockLangeList[i], Vector3.forward) * _jumpAtackWaveDirection;
-                    EnemyShotBullet shotBullet = Instantiate(_shockWave, transform.position, Quaternion.identity).GetComponent<EnemyShotBullet>();
-                    NetworkObject nBullet = shotBullet.GetComponent<NetworkObject>();
-                    shotBullet.transform.localScale = new Vector3(3, 3, 1);
-                    shotBullet.DirectionSetting(this.gameObject, rotatedDir);
-                    nBullet.Spawn();
-                }
+                if (_stateManagement.Player == null) break;
+                _jumpAtackWaveDirection = (_stateManagement.Player.transform.position - transform.position).normalized;
+                Vector2 rotatedDir = Quaternion.AngleAxis(_shockLangeList[i], Vector3.forward) * _jumpAtackWaveDirection;
+                EnemyShotBullet shotBullet = Instantiate(_shockWave, transform.position, Quaternion.identity).GetComponent<EnemyShotBullet>();
+                NetworkObject nBullet = shotBullet.GetComponent<NetworkObject>();
+                shotBullet.transform.localScale = new Vector3(3, 3, 1);
+                shotBullet.DirectionSetting(this.gameObject, rotatedDir);
+                nBullet.Spawn();
             }
         }
-        _bossCollider.isTrigger = false;
+        if (_bossCollider != null)
+        {
+            _bossCollider.isTrigger = false;
+        }
     }
+
     public void JumpAttackEnd()
     {
-        _jumpAtackArea.SetActive(false);
-        _stateManagement._currentState = BossStateManagement.BossState.Cooldown;
+        if (_jumpAtackArea != null) _jumpAtackArea.SetActive(false);
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            _stateManagement._currentState = BossStateManagement.BossState.Cooldown;
+        }
     }
+
+    /// <summary>
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã¸ã‚¸ãƒ£ãƒ³ãƒ—ç§»å‹•ï¼ˆâ€»ã‚µãƒ¼ãƒãƒ¼å´ã®ã¿å®Ÿè¡Œã—ã€ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¯NetworkTransformã§åŒæœŸã™ã‚‹ï¼‰
+    /// </summary>
     public void MoveToJumpAtackPosition()
     {
-        if (!IsServer)
-        {
-            return;
-        }
+        // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã§ã¯ä½ç½®ã‚’ç›´æ¥æ›¸ãæ›ãˆãªã„ï¼ˆNetworkTransformã¨ç«¶åˆã—ã¦ä½ç½®ã‚ºãƒ¬ã‚’èµ·ã“ã™ã®ã‚’é˜²ãï¼‰
+        if (_stateManagement != null && !_stateManagement.IsServer) return;
+        if (_stateManagement == null || _stateManagement.Player == null) return;
+
         Vector3 targetPosition = new Vector3(
-        _stateManagement.Player.transform.position.x,
-        _stateManagement.Player.transform.position.y,
-        transform.position.z);
+            _stateManagement.Player.transform.position.x,
+            _stateManagement.Player.transform.position.y,
+            transform.position.z);
 
-        // Lerp‚Å‹ß‚Ã‚­
-        Vector3 newPos = Vector3.Lerp(transform.root.position, targetPosition, 0.1f);
+        // Lerpã§ç§»å‹•
+        Vector3 newPos = Vector3.Lerp(transform.position, targetPosition, 0.1f);
 
-        // ƒvƒŒƒCƒ„[‚Æ‚Ì‘Š‘ÎƒxƒNƒgƒ‹
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰ã®è·é›¢ã‚’åˆ¶é™
         Vector3 offset = newPos - targetPosition;
-
-        // Å‘å‹——£‚ğ§ŒÀ
         float maxDistance = 15.0f;
         offset = Vector3.ClampMagnitude(offset, maxDistance);
 
-        // §ŒÀ‚ğŠ|‚¯‚½ˆÊ’u‚ÉXV
+        // ä½ç½®æ›´æ–°
         transform.position = targetPosition + offset;
-
     }
+
     public void AimStart()
     {
-        _stateManagement._aimFall = false;
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            _stateManagement._aimFall = false;
+        }
     }
+
     public void AimEnd()
     {
-        _stateManagement._aimFall = true;
+        if (_stateManagement != null && _stateManagement.IsServer)
+        {
+            _stateManagement._aimFall = true;
+        }
     }
 }

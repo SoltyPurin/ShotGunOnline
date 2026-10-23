@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class EnemyShotBullet : NetworkBehaviour
 {
-
     protected Vector2 _direction = default;
 
     protected bool _canMove = false;
@@ -16,70 +15,130 @@ public class EnemyShotBullet : NetworkBehaviour
 
     private float _lifetime = 0.0f;
 
-    [SerializeField, Header("e’e‚Ì‚Á”ò‚Ñ")]
+    [SerializeField, Header("å¼¾ã®å¨åŠ›")]
     private float _bulletBlowAway = 2f;
 
-    [SerializeField, Header("e’e‚ÌƒXƒvƒ‰ƒCƒg")]
-    private GameObject _bullet = default;
+    [SerializeField, Header("å¼¾ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ")]
+    protected GameObject _bullet = default;
 
-    [SerializeField, Header("’eÁ–Å‚ÌƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("å¼¾ã®æ­»äº¡ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private GameObject _deathEffect = default;
 
-    // ”jŠüˆ—’†‚©‚Ç‚¤‚©‚ğ”»’è‚·‚éƒtƒ‰ƒO
     protected bool _isDestroyed = false;
 
-    ///// <summary>
-    ///// ƒvƒŒƒCƒ„[‚Ì‚¢‚é•ûŒü‚É”ò‚Î‚·‚½‚ß‚É‰ñ“]‚³‚¹‚é
-    ///// </summary>
-    ///// <param name="bulletDirection"></param>
-    //[ClientRpc]
-    //public virtual void DirectionSettingClientRpc(GameObject playerObj,Vector2 bulletDirection)
-    //{
-    //    _direction = bulletDirection;
-    //    float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-    //    _bullet.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    //    _canMove = true;
-    //}
+    private Vector3 _lastPosition = default;
+    private bool _hasLastPosition = false;
+
+    private NetworkObjectReference _pendingPlayerRef;
+    private Vector2 _pendingDirection;
+    private bool _hasPendingRpc = false;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        // Spawnå‰ã«DirectionSettingãŒå‘¼ã°ã‚Œã¦ã„ãŸå ´åˆã€Spawnå®Œäº†æ™‚ã«å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¸RPCã‚’é€ä¿¡
+        if (IsServer && _hasPendingRpc)
+        {
+            _hasPendingRpc = false;
+            SetDirectionClientRpc(_pendingPlayerRef, _pendingDirection);
+        }
+    }
 
     /// <summary>
-    /// ƒT[ƒo[ã‚ÅŒÄ‚Ño‚µA‘S’[––iƒNƒ‰ƒCƒAƒ“ƒgŠÜ‚Şj‚Ö•ûŒü‚ÆˆÚ“®‹–‰Âi_canMovej‚ğ“¯Šú‚·‚é
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã«é£›ã°ã™ãŸã‚ã«å›è»¢ã™ã‚‹ï¼ˆã‚µãƒ¼ãƒãƒ¼ä¸Šã§å‘¼ã³å‡ºã—ã€å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¸åŒæœŸï¼‰
     /// </summary>
+    /// <param name="playerObj"></param>
+    /// <param name="bulletDirection"></param>
     public virtual void DirectionSetting(GameObject playerObj, Vector2 bulletDirection)
     {
-        if (!IsServer) return;
+        _direction = bulletDirection;
+        float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        if (_bullet != null)
+        {
+            _bullet.transform.localRotation = Quaternion.identity;
+        }
+        _canMove = true;
 
-        NetworkObject playerNetObj = playerObj != null ? playerObj.GetComponent<NetworkObject>() : null;
-        SetDirectionClientRpc(playerNetObj != null ? playerNetObj : default, bulletDirection);
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            if (!IsServer) return;
+
+            NetworkObject netObj = GetComponent<NetworkObject>();
+            NetworkObject playerNetObj = playerObj != null ? playerObj.GetComponent<NetworkObject>() : null;
+            NetworkObjectReference pRef = playerNetObj != null ? playerNetObj : default;
+
+            if (netObj != null && netObj.IsSpawned)
+            {
+                SetDirectionClientRpc(pRef, bulletDirection);
+            }
+            else
+            {
+                _pendingPlayerRef = pRef;
+                _pendingDirection = bulletDirection;
+                _hasPendingRpc = true;
+            }
+        }
     }
 
     [ClientRpc]
     protected virtual void SetDirectionClientRpc(NetworkObjectReference playerRef, Vector2 bulletDirection)
     {
         _direction = bulletDirection;
-        _canMove = true;
-
+        float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
         if (_bullet != null)
         {
-            float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-            _bullet.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            _bullet.transform.localRotation = Quaternion.identity;
         }
+        _canMove = true;
     }
+
     public virtual void FixedUpdate()
     {
         if (_isDestroyed || !_canMove)
         {
             return;
         }
-        if (_canMove)
+
+        transform.position += (Vector3)_direction * _moveSpeed * Time.fixedDeltaTime;
+        _lifetime += Time.fixedDeltaTime;
+        if (_lifetime >= _bulletLifeLimitTime)
         {
-            transform.position += (Vector3)_direction * _moveSpeed * Time.fixedDeltaTime;
-            _lifetime += Time.fixedDeltaTime;
-            if(_lifetime >= _bulletLifeLimitTime)
+            if (_deathEffect != null)
             {
                 Instantiate(_deathEffect, transform.position, Quaternion.identity);
-                //GetComponent<NetworkObject>().Despawn(true);
-                //Destroy(this.gameObject);
+            }
+            if (IsServer)
+            {
                 DestroyProtocol();
+            }
+        }
+    }
+
+    protected virtual void LateUpdate()
+    {
+        // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ï¼ˆãƒ›ã‚¹ãƒˆ/ã‚µãƒ¼ãƒãƒ¼ä»¥å¤–ï¼‰ã§ã¯NetworkTransformã«ã‚ˆã‚‹åŒæœŸç§»å‹•ä¸­ã€å‘ãã‚’å®Ÿéš›ã®ç§»å‹•æ–¹å‘ã«åˆã‚ã›ã¦è£œæ­£ã™ã‚‹
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && !NetworkManager.Singleton.IsServer)
+        {
+            NetworkObject netObj = GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
+            {
+                if (_hasLastPosition)
+                {
+                    Vector3 delta = transform.position - _lastPosition;
+                    if (delta.sqrMagnitude > 0.0001f)
+                    {
+                        float angle = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
+                        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+                        if (_bullet != null)
+                        {
+                            _bullet.transform.localRotation = Quaternion.identity;
+                        }
+                    }
+                }
+                _lastPosition = transform.position;
+                _hasLastPosition = true;
             }
         }
     }
@@ -90,15 +149,32 @@ public class EnemyShotBullet : NetworkBehaviour
         {
             return;
         }
+
         if (collision.gameObject.CompareTag("Player"))
         {
+            // ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤æ™‚ã€ä»–äººã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã¯å½“ãŸã‚Šåˆ¤å®šã‚’è¡Œã‚ãªã„ï¼ˆå„ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã§è‡ªæ©Ÿã®è¢«å¼¾ã®ã¿åˆ¤å®šï¼‰
+            NetworkObject netObj = collision.GetComponent<NetworkObject>();
+            if (netObj != null && !netObj.IsOwner)
+            {
+                return;
+            }
+
             PlayerDamageKnockBack damageKnockBack = collision.GetComponent<PlayerDamageKnockBack>();
-            damageKnockBack.SetDirection(_direction, _bulletBlowAway, this.gameObject);
-            Instantiate(_deathEffect, transform.position, Quaternion.identity);
+            if (damageKnockBack != null)
+            {
+                damageKnockBack.SetDirection(_direction, _bulletBlowAway, this.gameObject);
+            }
+            if (_deathEffect != null)
+            {
+                Instantiate(_deathEffect, transform.position, Quaternion.identity);
+            }
             DestroyProtocol();
         }
     }
 
+    /// <summary>
+    /// å¼¾ã®æ¶ˆæ»…å‡¦ç†ï¼ˆã‚µãƒ¼ãƒãƒ¼ãªã‚‰Despawnã€ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãªã‚‰ServerRpcè¦æ±‚ã€ç”»é¢ä¸Šã¯å³åº§ã«ç„¡åŠ¹åŒ–ï¼‰
+    /// </summary>
     public virtual void DestroyProtocol()
     {
         if (_isDestroyed)
@@ -109,17 +185,16 @@ public class EnemyShotBullet : NetworkBehaviour
 
         DisableBulletLocal();
         DisableBulletClientRpc();
-        Debug.Log("e’eíœŒÄ‚Ño‚µ");
-        NetworkObject netObj = this.GetComponent<NetworkObject>();
+
+        NetworkObject netObj = GetComponent<NetworkObject>();
         if (netObj != null && netObj.IsSpawned)
         {
             if (IsServer)
             {
-                netObj.Despawn(true); // ƒT[ƒo[‚Å Despawn ‚·‚ê‚Î‘SƒNƒ‰ƒCƒAƒ“ƒg‚©‚çÁ‚¦‚é
+                netObj.Despawn(true);
             }
             else
             {
-                // ƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚ÍƒT[ƒo[‚ÖÁ‹ˆË—Š‚Ì ServerRpc ‚ğ‘—‚éi•K—v‚É‰‚¶‚Äj
                 RequestDestroyBulletServerRpc(netObj);
             }
         }
@@ -129,19 +204,13 @@ public class EnemyShotBullet : NetworkBehaviour
         }
     }
 
-    /// <summary>
-    /// ‘SƒNƒ‰ƒCƒAƒ“ƒg’[––ã‚Å“–‚½‚è”»’è‚ÆŒ©‚½–Ú‚ğ‘¦À‚ÉƒIƒt‚É‚·‚é RPC
-    /// </summary>
     [ClientRpc]
     private void DisableBulletClientRpc()
     {
         DisableBulletLocal();
     }
 
-    /// <summary>
-    /// ƒ[ƒJƒ‹’[––ã‚Ì“–‚½‚è”»’èEˆÚ“®EƒXƒvƒ‰ƒCƒg‚ğ‘¦À‚É’â~‚·‚é
-    /// </summary>
-    private void DisableBulletLocal()
+    protected virtual void DisableBulletLocal()
     {
         _isDestroyed = true;
         _canMove = false;
@@ -169,5 +238,4 @@ public class EnemyShotBullet : NetworkBehaviour
             }
         }
     }
-
 }

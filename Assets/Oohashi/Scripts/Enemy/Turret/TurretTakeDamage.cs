@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,15 +7,6 @@ public class TurretTakeDamage : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        if (IsServer)
-        {
-            _enemyHP.Value = JsonSaver.Instance.EnemyJson.TurretHP;
-        }
-        if (_hpUI != null)
-        {
-            //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
-            _hpUI.Initialize(_enemyHP.Value);
-        }
-
+        SetMaxHP(JsonSaver.Instance.EnemyJson.TurretHP);
     }
 }

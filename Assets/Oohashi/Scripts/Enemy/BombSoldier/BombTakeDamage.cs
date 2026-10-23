@@ -1,33 +1,24 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BombTakeDamage : EnemyTakeDamage
 {
-    [SerializeField,Header("”š”­ƒvƒƒgƒRƒ‹‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½gï¿½Rï¿½ï¿½ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½vï¿½g")]
     private BombProtocol _bombProtocol = default;
-    //”š”­‚µ‚½‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½O
     private bool _hasExploted = false;
 
     public override void Start()
     {
         base.Start();
-        if (IsServer)
-        {
-            _enemyHP.Value = JsonSaver.Instance.EnemyJson.BombHP;
-        }
-        if (_hpUI != null)
-        {
-            //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
-            _hpUI.Initialize(_enemyHP.Value);
-        }
-
+        SetMaxHP(JsonSaver.Instance.EnemyJson.BombHP);
     }
 
     /// <summary>
-    /// ”š”­‚Ìƒ_ƒ[ƒW‚ğİ’è
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½İ’ï¿½
     /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
+    /// <param name="chargeTime">ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½</param>
     public override void SetExplosionDamgage(float chargeTime)
     {
         if (_hasExploted) return;
@@ -43,9 +34,9 @@ public class BombTakeDamage : EnemyTakeDamage
     }
 
     /// <summary>
-    /// €–S‚ÌƒRƒ‹[ƒ`ƒ“
+    /// ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½
     /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
+    /// <param name="chargeTime">ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½</param>
     /// <returns></returns>
     public override IEnumerator DeathProtocol(float chargeTime)
     {
@@ -53,7 +44,7 @@ public class BombTakeDamage : EnemyTakeDamage
         float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
         _playTheSEManager.PlayEnemyDeathSound();
         ComboCounter counter = GameObject.FindWithTag(COMBOCOUNTER_TAGNAME).GetComponent<ComboCounter>();
-        //ƒRƒ“ƒ{ƒJƒEƒ“ƒ^[‚Éƒvƒ‰ƒX
+        //ï¿½Rï¿½ï¿½ï¿½{ï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½[ï¿½Éƒvï¿½ï¿½ï¿½X
         counter.ComboPlus();
         yield return new WaitForSeconds(timeLeftUntilDeath);
         _bombProtocol.BombCircleCheck();
@@ -64,14 +55,14 @@ public class BombTakeDamage : EnemyTakeDamage
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ÉÚG
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÉÚG
     /// </summary>
     public void PlayerCollision()
     {
         Destroy(this.gameObject);
     }
     /// <summary>
-    /// ”š”­‚Å‚Í‚È‚¢’Êí‚Ì€–S
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Å‚Í‚È‚ï¿½ï¿½Êï¿½Ìï¿½ï¿½S
     /// </summary>
     public void NormalDeath()
     {

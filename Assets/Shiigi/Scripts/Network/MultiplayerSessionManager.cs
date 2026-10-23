@@ -7,7 +7,7 @@ using UnityEngine;
 
 /// <summary>
 /// マルチプレイセッション関連機能のエントリポイント（ファサード）クラス。
-/// 認証初期化・ルーム管理・ハートビート監視・シーン遷移の各単一責務クラスを統合・調整します。
+/// 認証初期化・ルーム管理・ハートビート監視・シーン遷移・切断エラーハンドリングの各単一責務クラスを統合・調整します。
 /// </summary>
 public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 {
@@ -15,12 +15,17 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     private const float HeartbeatInterval = 2f;
     private const float HeartbeatTimeout = 10f;
 
+    [Header("通信エラー表示設定 (未設定時はロビーのConfirmDialogUIを自動複製)")]
+    [SerializeField] private ConfirmDialogUI _errorDialogPrefab;
+
     public static MultiplayerSessionManager Instance { get; private set; }
 
     private IUnityServicesInitializer _servicesInitializer;
     private ILobbySessionService _sessionService;
     private SessionHeartbeatMonitor _heartbeatMonitor;
     private NetworkSceneTransitionHandler _sceneTransitionHandler;
+    private SessionDisconnectHandler _disconnectHandler;
+    private bool _isDisconnecting;
 
     public ISession CurrentSession => _sessionService?.CurrentSession;
     public bool IsInitialized => _servicesInitializer != null && _servicesInitializer.IsInitialized;
@@ -78,19 +83,26 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 
         _servicesInitializer = new UnityServicesInitializer();
         _sceneTransitionHandler = new NetworkSceneTransitionHandler(GameSceneName);
+        _disconnectHandler = new SessionDisconnectHandler(
+            transform,
+            DisconnectAndCleanupAsync,
+            _errorDialogPrefab);
         _sessionService = new LobbySessionService(
             _servicesInitializer,
             onSessionConnected: SubscribeNetworkEvents,
-            onSessionLeaving: HandleSessionLeaving);
+            onSessionLeaving: HandleSessionLeaving,
+            onUnexpectedDisconnect: () => _disconnectHandler.NotifyUnexpectedDisconnect());
         _heartbeatMonitor = new SessionHeartbeatMonitor(
             () => _sessionService.CurrentSession,
             HeartbeatInterval,
-            HeartbeatTimeout);
+            HeartbeatTimeout,
+            onHostTimeout: () => _disconnectHandler.NotifyUnexpectedDisconnect());
     }
 
     private async void Start()
     {
         EnsureSubsystemsInitialized();
+        _disconnectHandler?.TryCacheDialogFromScene();
         await _servicesInitializer.InitializeAsync();
     }
 
@@ -107,6 +119,54 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         _heartbeatMonitor?.Tick(Time.unscaledTime, NetworkManager.Singleton);
     }
 
+    /// <summary>
+    /// ルームおよびRelay(NetworkManager)接続が存在する場合に切断し、ネットワーク関連オブジェクトをクリーンアップする
+    /// </summary>
+    public async UniTask DisconnectAndCleanupAsync()
+    {
+        if (_isDisconnecting) return;
+
+        var hasActiveSession = CurrentSession != null;
+        var hasNetworkManager = NetworkManager.Singleton != null;
+
+        if (!hasActiveSession && !hasNetworkManager) return;
+
+        _isDisconnecting = true;
+
+        try
+        {
+            EnsureSubsystemsInitialized();
+            UnsubscribeNetworkEvents();
+
+            if (hasActiveSession)
+            {
+                Debug.Log("[MSM]: ルームセッションから退出します。");
+                await _sessionService.LeaveRoomSessionAsync();
+            }
+
+            // タイトル画面等では不要になったNetworkManagerを破棄し、次回ロビー入室時に新規生成されるようにする
+            if (NetworkManager.Singleton != null)
+            {
+                if (NetworkManager.Singleton.IsListening || NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient)
+                {
+                    Debug.Log("[MSM]: NetworkManager(Relay)をシャットダウンします。");
+                    NetworkManager.Singleton.Shutdown();
+                }
+                Destroy(NetworkManager.Singleton.gameObject);
+            }
+
+            Debug.Log("[MSM]: ルームおよびRelayの切断とクリーンアップが完了しました。");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[MSM]: 切断クリーンアップ処理中にエラーが発生しました: {ex.Message}");
+        }
+        finally
+        {
+            _isDisconnecting = false;
+        }
+    }
+
     private void SubscribeNetworkEvents()
     {
         var networkManager = NetworkManager.Singleton;
@@ -114,6 +174,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 
         _sceneTransitionHandler?.SubscribeEvents(networkManager);
         _heartbeatMonitor?.SubscribeMessaging(networkManager.CustomMessagingManager);
+        _disconnectHandler?.SubscribeEvents(networkManager);
     }
 
     private void UnsubscribeNetworkEvents()
@@ -123,6 +184,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 
         _sceneTransitionHandler?.UnsubscribeEvents(networkManager);
         _heartbeatMonitor?.UnsubscribeMessaging(networkManager.CustomMessagingManager);
+        _disconnectHandler?.UnsubscribeEvents(networkManager);
     }
 
     private void HandleSessionLeaving()

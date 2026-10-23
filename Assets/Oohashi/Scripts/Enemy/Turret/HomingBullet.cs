@@ -12,6 +12,10 @@ public class HomingBullet : EnemyShotBullet
     private GameObject _bulletSprite = default;
     [SerializeField, Header("何秒で弾が消えるか")]
     private float _destroyTime = 5;
+    [SerializeField, Header("この距離(m)以内に入ったら誘導を切って直進する")]
+    private float _stopHomingDistance = 1.8f;
+    [SerializeField, Header("誘導を継続する最大時間(秒)")]
+    private float _maxHomingDuration = 2.5f;
     #endregion
 
     #region 変数
@@ -20,6 +24,8 @@ public class HomingBullet : EnemyShotBullet
     private float _initAliveTime = 0;
     private bool _canMoveToPlayer = false;
     private float _smooth = 0.4f;
+    private float _homingTimer = 0f;
+    private bool _isHomingExpired = false;
     #endregion
 
     #region 定数
@@ -31,22 +37,23 @@ public class HomingBullet : EnemyShotBullet
         _smooth = JsonSaver.Instance.EnemyJson.BurretSmooth;
     }
 
-    ///// <summary>
-    ///// プレイヤーのオブジェクトと方向を設定する
-    ///// </summary>
-    ///// <param name="playerObj">プレイヤーのオブジェクト</param>
-    ///// <param name="bulletDirection">最初に飛ぶ進行方向</param>
-    //[ClientRpc]
-    //public override void DirectionSettingClientRpc(GameObject playerObj, Vector2 bulletDirection)
-    //{
-    //    _playerObject = playerObj;
-    //    _firstDirection = bulletDirection;
-    //    _direction = bulletDirection;
-    //    _canMove = true;
-    //    float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-    //    _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    //    StartCoroutine(WaitMoveToPlayer());
-    //}
+    /// <summary>
+    /// プレイヤーのオブジェクトと方向を設定する（サーバー側）
+    /// </summary>
+    /// <param name="playerObj">プレイヤーのオブジェクト</param>
+    /// <param name="bulletDirection">最初に飛ぶ進行方向</param>
+    public override void DirectionSetting(GameObject playerObj, Vector2 bulletDirection)
+    {
+        _playerObject = playerObj;
+        _firstDirection = bulletDirection;
+        base.DirectionSetting(playerObj, bulletDirection);
+
+        // ネットワーク非稼働時（オフライン時）のみローカルでコルーチンを開始
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
+        {
+            StartCoroutine(WaitMoveToPlayer());
+        }
+    }
 
     /// <summary>
     /// 全クライアント端末上でホーミングパラメータと移動フラグ（_canMove = true）をセットアップ
@@ -61,12 +68,13 @@ public class HomingBullet : EnemyShotBullet
 
         _firstDirection = bulletDirection;
         _direction = bulletDirection;
-        _canMove = true; 
+        _canMove = true;
 
+        float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
         if (_bulletSprite != null)
         {
-            float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-            _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            _bulletSprite.transform.localRotation = Quaternion.identity;
         }
 
         StartCoroutine(WaitMoveToPlayer());
@@ -125,24 +133,46 @@ public class HomingBullet : EnemyShotBullet
 
         if (!_canMoveToPlayer)
         {
-            transform.position += (Vector3)_firstDirection * _moveSpeed * Time.fixedDeltaTime;
+            MoveProtocol(_firstDirection);
             return;
         }
 
-        if (_playerObject == null)
+        if (_playerObject is null)
         {
             _playerObject = FindNearestPlayer();
-            if (_playerObject == null)
+            if (_playerObject is null)
             {
                 MoveProtocol(_direction);
                 return;
             }
         }
 
+        _homingTimer += Time.fixedDeltaTime;
+
+        // 追尾時間切れ、または一定距離まで近づいたら誘導を解除して直進させる
+        // （接近時の急旋回による理不尽なヒットを防ぎ、すれ違い回避を可能にする）
+        float distanceToPlayer = Vector2.Distance(transform.position, _playerObject.transform.position);
+        if (_isHomingExpired || _homingTimer >= _maxHomingDuration || distanceToPlayer <= _stopHomingDistance)
+        {
+            _isHomingExpired = true;
+            MoveProtocol(_direction);
+            return;
+        }
+
         Vector3 playerObj = _playerObject.transform.position;
         Vector3 targetDir = (playerObj - this.transform.position).normalized;
-        float t = _smooth * Time.fixedDeltaTime;
-        _direction = Vector3.Slerp(_direction, targetDir, t).normalized;
+
+        if (targetDir.sqrMagnitude > 0.0001f)
+        {
+            // 2D平面上での滑らかな回転計算（Vector3.Slerpの逆ベクトル特異点・反転バグを回避）
+            float currentAngle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;
+            float t = _smooth * Time.fixedDeltaTime;
+            float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, t);
+            float rad = newAngle * Mathf.Deg2Rad;
+            _direction = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+        }
+
         MoveProtocol(_direction);
     }
 
@@ -153,7 +183,20 @@ public class HomingBullet : EnemyShotBullet
     private void MoveProtocol(Vector3 direction)
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        _bulletSprite.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        if (_bulletSprite != null)
+        {
+            _bulletSprite.transform.localRotation = Quaternion.identity;
+        }
         transform.position += direction * _moveSpeed * Time.fixedDeltaTime;
+    }
+
+    protected override void DisableBulletLocal()
+    {
+        base.DisableBulletLocal();
+        if (_bulletSprite != null)
+        {
+            _bulletSprite.SetActive(false);
+        }
     }
 }

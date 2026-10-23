@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -48,6 +48,7 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
     private OpeningCutsceneController _cutsceneController;
     private NetworkPlayerSpawner _playerSpawner;
     private LocalPlayerStateLocker _localPlayerLocker;
+    private Coroutine _cutsceneCoroutine;
 
     public IReadOnlyList<NetworkObject> Players
     {
@@ -135,14 +136,27 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
     public void OnGameStart()
     {
         EnsureSubsystemsInitialized();
+
+        if (_currentState == GameState.OpeningMovie || _currentState == GameState.Playing)
+        {
+            Debug.Log($"[MP_GameManager] OnGameStart が呼ばれましたが、既に {_currentState} 状態のためスキップします。");
+            return;
+        }
+
         SetState(GameState.OpeningMovie);
+
         Debug.Log("[MP_GameManager] シーン読み込み完了。開始ムービーを再生します");
 
-        StartCoroutine(_cutsceneController.PlaySequenceRoutine(StartGamePlay));
+        if (_cutsceneCoroutine != null)
+        {
+            StopCoroutine(_cutsceneCoroutine);
+        }
+        _cutsceneCoroutine = StartCoroutine(_cutsceneController.PlaySequenceRoutine(StartGamePlay));
     }
 
     private void StartGamePlay()
     {
+        _cutsceneCoroutine = null;
         SetState(GameState.Playing);
         Debug.Log("[MP_GameManager] ムービー終了。プレイヤーをスポーンしてゲーム開始！");
 

@@ -246,8 +246,8 @@ GameObject:
   - component: {fileID: -1428554344482203738}
   - component: {fileID: 421867950241314720}
   - component: {fileID: 4298116033007233985}
-  - component: {fileID: -3758931674677339092}
-  - component: {fileID: -503724356228763256}
+  - component: {fileID: -6142111436434923201}
+  - component: {fileID: -4835396303287756106}
   m_Layer: 6
   m_Name: LockOn
   m_TagString: Enemy
@@ -294,6 +294,7 @@ MonoBehaviour:
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
+  <InScenePlaced>k__BackingField: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
@@ -317,6 +318,7 @@ MonoBehaviour:
   _moveSpeed: 5
   _keepDistance: 15
   _inertiaStrangth: 1
+  _localSimulation: 0
   _reStartDistance: 15
   _leaveDistance: 5
   _leaveStopDistance: 10
@@ -333,6 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e1365c95c720d438b6bd9f95d5e04b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyMove: {fileID: 6268448899009020845}
   _critStiffnessTime: 0.3
   _ultStiffnessTime: 0.5
@@ -351,6 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df7fb730a0101be4dabaf0d5e98fa8cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _damageMultiplier: 500
   _minDamage: 200
   _explosionMultiplier: 1000
@@ -457,6 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec17062087d9f4e45bf3ec0e52c0ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySpawnAnim: {fileID: 2563539108696474514}
 --- !u!114 &7238766385490616969
 MonoBehaviour:
@@ -470,6 +475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcab6997c6189f344879b8cf5c2bd82c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemyKnockBack: {fileID: 7896783381490843358}
   _takeDamage: {fileID: 2888480740247798293}
 --- !u!114 &2563539108696474514
@@ -484,6 +490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6767786df29404b89d320358a801cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _enemySprite: {fileID: 6700641465877687873}
   _spawnPoint: {fileID: 6067933495444837109}
   _enemyCollider: {fileID: 2173504733802726376}
@@ -507,6 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d99d32877c183a4fb72311fd6a243b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _animator: {fileID: 6078562185235508865}
   _enemyTakeDamage: {fileID: 2888480740247798293}
 --- !u!114 &3755577388421811161
@@ -521,6 +529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6cab3b03ecebf4bbb10469fd71e009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   Coin: {fileID: 7710591009316209668, guid: e6e11fcddb633f9468c5548d6cfa901b, type: 3}
 --- !u!114 &5819158504252392668
 MonoBehaviour:
@@ -534,8 +543,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 082ac80cfb81880419ab6502534b8754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   _moveSpeed: 5
   _stoppingDistance: 15
+  _repathInterval: 0.15
 --- !u!114 &428126014061828270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -590,7 +601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d043e683b9e9e4040ac921c1d3733bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-3758931674677339092
+--- !u!114 &-6142111436434923201
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -599,9 +610,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6475060805928063372}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c3e1f5a9b2d4e8fa1c6d0b3e5f79a24, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyNetworkTransform
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
   AutoOwnerAuthorityTickOffset: 1
@@ -636,7 +647,7 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &-503724356228763256
+--- !u!114 &-4835396303287756106
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

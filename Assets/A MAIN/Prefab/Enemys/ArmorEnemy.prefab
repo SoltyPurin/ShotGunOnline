@@ -495,8 +495,8 @@ MonoBehaviour:
   PositionInterpolationType: 0
   RotationInterpolationType: 0
   ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
+  PositionLerpSmoothing: 0.1
+  PositionMaxInterpolationTime: 0.2
   RotationLerpSmoothing: 1
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
@@ -523,6 +523,25 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+
+--- !u!114 &9beceb8f87354bbd80077821b554f6cd
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2645171049969206999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dd05dcf52c37ae408e477e990e881e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _predictionBlend: 0.7
+  _maxPredictionTime: 0.5
+  _bufferDelay: 0.1
+  _enableBuffering: 1
+  _enablePrediction: 1
+
 --- !u!114 &478602780100564945
 MonoBehaviour:
   m_ObjectHideFlags: 0

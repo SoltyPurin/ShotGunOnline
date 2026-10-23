@@ -40,31 +40,31 @@ public class KeepDistanceMove : EnemyMove
     public override void Start()
     {
         base.Start();
-        if(_playerObject == null)
+        if (_playerObject == null)
         {
-            GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYERTAGNAME);
-            float minDistance = float.MaxValue;
-            foreach (GameObject p in players)
-            {
-                if (p == null) continue;
-                float dist = Vector2.Distance(transform.position, p.transform.position);
-                if (dist < minDistance)
-                {
-                    minDistance = dist;
-                    _playerObject = p;
-                }
-            }
-
+            FindPlayer();
         }
-        _direction = (_playerObject.transform.position - transform.position).normalized;
+        if (_playerObject != null)
+        {
+            _direction = (_playerObject.transform.position - transform.position).normalized;
+        }
 
         GameObject seManagerObject = GameObject.FindWithTag("SEManager");
-        _seManager = seManagerObject.GetComponent<SEManager>();
+        if (seManagerObject != null)
+        {
+            _seManager = seManagerObject.GetComponent<SEManager>();
+        }
         _timeUntilNextShot = JsonSaver.Instance.EnemyJson.TimeUntilNextShot;
     } 
     public override void Moving()
     {
-        if(_target == null)
+        if (_playerObject == null)
+        {
+            FindPlayer();
+            if (_playerObject == null) return;
+        }
+
+        if (_target == null)
         {
             _target = _playerObject.transform;
             return;
@@ -74,7 +74,7 @@ public class KeepDistanceMove : EnemyMove
         {
             case MoveState.Approach:
 
-                if(_target == null)
+                if (_target == null)
                 {
                     return;
                 }
@@ -93,20 +93,32 @@ public class KeepDistanceMove : EnemyMove
                 //停止時間が射撃時間を上回ったら射撃
                 if (_stoppingTime >= _timeUntilNextShot)
                 {
+                    if (_playerObject == null)
+                    {
+                        FindPlayer();
+                    }
+                    if (_playerObject == null) break;
+
                     //銃弾を生成
                     GameObject bullet = Instantiate(_bulletObject, transform.position, Quaternion.identity);
                     //GameObjectからスクリプトを取得
                     EnemyShotBullet scriptOfBullet = bullet.GetComponent<EnemyShotBullet>();
+                    //方向を計算
+                    _direction = (_playerObject.transform.position - transform.position).normalized;
+                    //銃弾に方向を渡す（ターゲットとなるプレイヤーを渡す）
+                    scriptOfBullet.DirectionSetting(_playerObject, _direction);
                     //ネットワークのコンポーネントを取得
                     NetworkObject nBullet = bullet.GetComponent<NetworkObject>();
                     //ネットワーク上にスポーンさせる
-                    nBullet.Spawn();
-                    //方向を計算
-                    _direction = (_playerObject.transform.position - transform.position).normalized;
-                    //銃弾に方向を渡す
-                    scriptOfBullet.DirectionSetting(this.gameObject, _direction);
+                    if (nBullet != null)
+                    {
+                        nBullet.Spawn();
+                    }
                     //音を再生
-                    _seManager.PlayEnemyShotSound();
+                    if (_seManager != null)
+                    {
+                        _seManager.PlayEnemyShotSound();
+                    }
                     //停止時間をリセット
                     _stoppingTime = 0.0f;
                 }
@@ -118,16 +130,16 @@ public class KeepDistanceMove : EnemyMove
                 }
 
                 //プレイヤーが近づいてきたら移動
-                if(distance <= _leaveDistance)
+                if (distance <= _leaveDistance)
                 {
                     _initState = MoveState.Leave;
                 }
-                    break;
+                break;
 
             case MoveState.Leave:
 
                 _direction = (_playerObject.transform.position - transform.position).normalized * -1;
-                transform.position += (Vector3)_direction * _moveSpeed *3 * Time.fixedDeltaTime;
+                transform.position += (Vector3)_direction * _moveSpeed * 3 * Time.fixedDeltaTime;
 
                 if (distance > _leaveStopDistance)
                 {
@@ -138,7 +150,3 @@ public class KeepDistanceMove : EnemyMove
         }
     }
 }
-
-
-
-

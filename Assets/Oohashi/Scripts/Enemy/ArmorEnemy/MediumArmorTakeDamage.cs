@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Unity.Netcode;
@@ -6,24 +6,24 @@ using UnityEngine;
 
 public class MediumArmorTakeDamage : ArmorTakeDamage
 {
-    #region Serialize•Ï”
-    [SerializeField, Header("Šâ‚Å‹ò‚ç‚¤ƒ_ƒ[ƒW")]
+    #region Serializeï¿½Ïï¿½
+    [SerializeField, Header("ï¿½ï¿½Å‹ï¿½ç‚¤ï¿½_ï¿½ï¿½ï¿½[ï¿½W")]
     private float _stoneTakeDamage = 700;
-    [SerializeField, Header("ƒEƒ‹ƒg‚Å‹ò‚ç‚¤ƒ_ƒ[ƒW")]
+    [SerializeField, Header("ï¿½Eï¿½ï¿½ï¿½gï¿½Å‹ï¿½ç‚¤ï¿½_ï¿½ï¿½ï¿½[ï¿½W")]
     private float _ultDamage = 1500;
-    [SerializeField, Header("—‰º‚Å‹ò‚ç‚¤ƒ_ƒ[ƒW")]
+    [SerializeField, Header("ï¿½ï¿½ï¿½ï¿½ï¿½Å‹ï¿½ç‚¤ï¿½_ï¿½ï¿½ï¿½[ï¿½W")]
     private float _fallTakeDamage = 700;
-    [SerializeField, Header("ƒXƒe[ƒW‚É–ß‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ï¿½Xï¿½eï¿½[ï¿½Wï¿½É–ß‚ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½g")]
     private BossFallToCliffAndHole _bossFall = default;
     #endregion
 
-    #region ’è”
+    #region ï¿½è”
 
     private readonly string DAMAGEEFFECTTRIGERNAME = "Damage";
     private readonly string FALLCOROUTINENAME = "HoleFallMethod";
     #endregion
 
-    #region •Ï”
+    #region ï¿½Ïï¿½
 
     private Vector2 _returnPosition = new Vector2(0, 10);
 
@@ -35,29 +35,23 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     {
         base.Start();
         _cameraSW = GetComponent<MidiumCameraSW>();
-        _enemyHP.Value = JsonSaver.Instance.EnemyJson.ArmorHP;
-        if (_hpUI != null)
-        {
-            //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
-            _hpUI.Initialize(_enemyHP.Value);
-        }
-
+        SetMaxHP(JsonSaver.Instance.EnemyJson.ArmorHP);
     }
     /// <summary>
-    /// ’†ƒ{ƒX‚ÍƒEƒ‹ƒg€‚È‚È‚¢‚Ì‚Åˆ—‚ª•Ê
+    /// ï¿½ï¿½ï¿½{ï¿½Xï¿½ÍƒEï¿½ï¿½ï¿½gï¿½ï¿½ï¿½È‚È‚ï¿½ï¿½Ì‚Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
-    /// <param name="state">ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg</param>
+    /// <param name="chargeTime">ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="state">ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒXï¿½eï¿½[ï¿½g</param>
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        //ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg‚ªƒEƒ‹ƒg‚¾‚Á‚½‚çƒ_ƒ[ƒW‚ğƒEƒ‹ƒgƒ_ƒ[ƒW‚ÉØ‚è‘Ö‚¦‚é
-        //‚±‚ê‚ÍƒK[ƒh•s‰Â”\
+        //ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒXï¿½eï¿½[ï¿½gï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½Eï¿½ï¿½ï¿½gï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÉØ‚ï¿½Ö‚ï¿½ï¿½ï¿½
+        //ï¿½ï¿½ï¿½ï¿½ÍƒKï¿½[ï¿½hï¿½sï¿½Â”\
         if (state == PlayerState.Ultimate)
         {
             _damage = _ultDamage;
         }
         bool isGuard = _armorKnockbackScript.IsFromFlont;
-        //ƒK[ƒh‚µ‚½ê‡‚Ìˆ—
+        //ï¿½Kï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ìï¿½ï¿½ï¿½
         if (isGuard)
         {
             _damage = chargeTime * _guardMultiplier;
@@ -65,7 +59,7 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
             //_guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
             TakeDamageEffectClientRpc(true);
         }
-        else //‘¤–Ê‚È‚Ç‚©‚çUŒ‚‚µ‚½ê‡‚Ìˆ—
+        else //ï¿½ï¿½ï¿½Ê‚È‚Ç‚ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ìï¿½ï¿½ï¿½
         {
             _damage = chargeTime * _damageMultiplier;
             _damage = Mathf.Max(_damage, _minDamage);
@@ -74,7 +68,7 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
             TakeDamageEffectClientRpc(false);
 
         }
-        //HP‚©‚çƒ_ƒ[ƒW•ªˆø‚¢‚Ä‘ã“üAHPƒo[‚ğXV
+        //HPï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‘ï¿½ï¿½ï¿½AHPï¿½oï¿½[ï¿½ï¿½Xï¿½V
         _enemyHP.Value = (_enemyHP.Value - (int)_damage);
         _hpUI.UpdateHP(_enemyHP.Value);
         if (_enemyHP.Value <= 0)
@@ -85,9 +79,9 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     }
 
     /// <summary>
-    /// ”í’e‚Ì‰‰o‚ğÄ¶‚·‚éƒƒ\ƒbƒh
+    /// ï¿½ï¿½eï¿½ï¿½ï¿½Ì‰ï¿½ï¿½oï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½éƒï¿½\ï¿½bï¿½h
     /// </summary>
-    /// <param name="isGuard">ƒK[ƒh‚µ‚½‚©‚Ç‚¤‚©</param>
+    /// <param name="isGuard">ï¿½Kï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½</param>
     [ClientRpc]
     private void TakeDamageEffectClientRpc(bool isGuard)
     {
@@ -102,16 +96,16 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     }
 
     /// <summary>
-    /// Šâ‚ÉÚG‚µ‚½‚Æ‚«‚Ìƒƒ\ƒbƒhA’Êí‚Æˆá‚¢ˆêŒ‚‚Å‚Í€‚È‚È‚¢
+    /// ï¿½ï¿½ÉÚGï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Ìƒï¿½ï¿½\ï¿½bï¿½hï¿½Aï¿½Êï¿½Æˆá‚¢ï¿½êŒ‚ï¿½Å‚Íï¿½ï¿½È‚È‚ï¿½
     /// </summary>
     public override void ContactStoneMethod()
     {
-        //ƒ_ƒ[ƒW‚ÉŠâ‚ÌÚGƒ_ƒ[ƒW‚ğ‘ã“ü
+        //ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÉŠï¿½ÌÚGï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½
         _damage = _stoneTakeDamage;
-        //hp‚ğŒ¸‚ç‚µ‚Ähpƒo[‚ğXV
+        //hpï¿½ï¿½ï¿½ï¿½ç‚µï¿½ï¿½hpï¿½oï¿½[ï¿½ï¿½Xï¿½V
         _enemyHP.Value = (_enemyHP.Value - (int)_damage);
         _hpUI.UpdateHP(_enemyHP.Value);
-        //‘Ì—Í‚ª0‚É‚È‚Á‚½‚ç1•bŒã‚É€–S‚ÌƒRƒ‹[ƒ`ƒ“Às
+        //ï¿½Ì—Í‚ï¿½0ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½bï¿½ï¿½Éï¿½ï¿½Sï¿½ÌƒRï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½s
         if (_enemyHP.Value <= 0)
         {
             StartCoroutine(DeathProtocol(1));
@@ -119,21 +113,21 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     }
 
     /// <summary>
-    /// —‰º‚Ìƒ_ƒ[ƒW
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ_ï¿½ï¿½ï¿½[ï¿½W
     /// </summary>
     public override void FallDamage()
     {
-        //ƒXƒe[ƒg‚ğ—‰º’†‚É‚·‚é
+        //ï¿½Xï¿½eï¿½[ï¿½gï¿½ğ—‰ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½
         _enemyMove.EnemyState = EnemyState.fall;
-        //hp‚©‚ç—‰ºƒ_ƒ[ƒW‚ğˆø‚¢‚Ä‘Ì—Íƒo[‚ğXV
+        //hpï¿½ï¿½ï¿½ç—ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‘Ì—Íƒoï¿½[ï¿½ï¿½Xï¿½V
         _enemyHP.Value -= (int)_fallTakeDamage;
         _hpUI.UpdateHP(_enemyHP.Value);
-        //—‰º‚ÌŒø‰Ê‰¹–Â‚ç‚·
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ÌŒï¿½ï¿½Ê‰ï¿½ï¿½Â‚ç‚·
         //_playTheSEManager.PlayDropSound();
         FallSoundClientRpc();
-        //•œ‹A‚ÌƒRƒ‹[ƒ`ƒ“‹N“®
+        //ï¿½ï¿½ï¿½Aï¿½ÌƒRï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½Nï¿½ï¿½
         _bossFall.StartCoroutine(FALLCOROUTINENAME);
-        //ƒXƒe[ƒW‚É–ß‚é
+        //ï¿½Xï¿½eï¿½[ï¿½Wï¿½É–ß‚ï¿½
         StartCoroutine(ReturnStage());
         if (_enemyHP.Value <= 0)
         {
@@ -147,15 +141,15 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
         _playTheSEManager.PlayDropSound();
     }
     /// <summary>
-    /// ƒXƒe[ƒW‚É–ß‚Á‚Ä‚­‚éƒRƒ‹[ƒ`ƒ“
+    /// ï¿½Xï¿½eï¿½[ï¿½Wï¿½É–ß‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½
     /// </summary>
-    /// <returns>ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶ŠÔ•ª‘Ò‚Â</returns>
+    /// <returns>ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÌÄï¿½ï¿½ï¿½ï¿½Ô•ï¿½ï¿½Ò‚ï¿½</returns>
     private IEnumerator ReturnStage()
     {
         yield return new WaitForSeconds(2);
-        //ˆÚ“®‚ÌƒXƒe[ƒg‚É•ÏX
+        //ï¿½Ú“ï¿½ï¿½ÌƒXï¿½eï¿½[ï¿½gï¿½É•ÏX
         _enemyMove.EnemyState = EnemyState.move;
-        //•œŠˆ’n“_‚É–ß‚·
+        //ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½É–ß‚ï¿½
         this.transform.position = _returnPosition;
 
     }
