@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 792759558995403580, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 5f9816d527185a14ba202dc089716582, type: 2}
     - target: {fileID: 5148643399998201332, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,6 +52,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6434197884105224698, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 6a1ea86f7f2dccc4fa980eb703c29ec1, type: 2}
     - target: {fileID: 7818330625537861996, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       propertyPath: m_Name
       value: NetWork Player Variant
@@ -479,7 +487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2960477856
+  GlobalObjectIdHash: 2295983606
   InScenePlacedSourceGlobalObjectIdHash: 1109276146
   DeferredDespawnTick: 0
   Ownership: 1
@@ -510,9 +518,13 @@ MonoBehaviour:
   _backPlayerAnimator: {fileID: 224444105699311339}
   _frontSkinOverrideControllers:
   - {fileID: 22100000, guid: d8b82d0c59729694495294c95290638b, type: 2}
+  - {fileID: 22100000, guid: 6a1ea86f7f2dccc4fa980eb703c29ec1, type: 2}
+  - {fileID: 22100000, guid: 42d47376544fade42a9b79a6916b9faa, type: 2}
   - {fileID: 22100000, guid: f184b98f08a3dae4cab9f47de2c0eca0, type: 2}
   _backSkinOverrideControllers:
   - {fileID: 22100000, guid: 202965c12078cba448c3b22cf21b6b66, type: 2}
+  - {fileID: 22100000, guid: 5f9816d527185a14ba202dc089716582, type: 2}
+  - {fileID: 22100000, guid: c57c9cf96f2c443499f42cd19f32e707, type: 2}
   - {fileID: 22100000, guid: 5d4844c6791911f4093d5dc501e27d83, type: 2}
 --- !u!114 &7871845393043077033
 MonoBehaviour:
