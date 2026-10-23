@@ -175,12 +175,20 @@ public class InputChangeState : NetworkBehaviour
     /// </summary>
     public void ToNormalAnimation()
     {
-        if (_toNormal == null) return;
-        _toNormal.transform.position = this.transform.position;
-        _toNormalAnim.SetTrigger("Change");
-        _ultAura.SetActive(false);
+        if (_toNormal != null)
+        {
+            _toNormal.transform.position = this.transform.position;
+            if (_toNormalAnim != null)
+            {
+                _toNormalAnim.SetTrigger("Change");
+            }
+        }
+        if (_ultAura != null)
+        {
+            _ultAura.SetActive(false);
+        }
 
-        if (_ultCharge.activeInHierarchy)
+        if (_ultCharge != null && _ultCharge.activeInHierarchy)
         {
             ShowUltCharge(false);
         }
@@ -205,7 +213,13 @@ public class InputChangeState : NetworkBehaviour
 
     public void ShowUltCharge(bool ultBool)
     {
-        _ultCharge.SetActive(ultBool);
-        _showUltChargeEffect.SetTrigger("Trigger");
+        if (_ultCharge != null)
+        {
+            _ultCharge.SetActive(ultBool);
+        }
+        if (ultBool && _showUltChargeEffect != null)
+        {
+            _showUltChargeEffect.SetTrigger("Trigger");
+        }
     }
 }
