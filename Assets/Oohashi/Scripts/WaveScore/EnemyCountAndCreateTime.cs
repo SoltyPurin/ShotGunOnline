@@ -180,15 +180,6 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
         }
     }
 
-    //private void FindPlayerAndTimerStart()
-    //{
-    //    _player = GameObject.FindWithTag("Player");
-    //    if(_player != null )
-    //    {
-    //        _realTimeCircle.StartTimer();
-    //    }
-    //}
-
     public void TimerStart()
     {
         _canCountTimer = true;
@@ -251,7 +242,7 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
         WaveManager waveManager = FindAnyObjectByType<WaveManager>();
         if (waveManager != null)
         {
-            waveManager.SyncScoreClientRpc(_timeRank, _playerDamage.DamageCount, _currentWaveTime);
+            waveManager.SyncScoreClientRpc(_timeRank, _scoreData.DamageTakenCount, _currentWaveTime);
         }
         //_scoreData.SetScore(_timeRank, _playerDamage.DamageCount, _initWaveTime);
         _playerDamage.ResetDamageCount();

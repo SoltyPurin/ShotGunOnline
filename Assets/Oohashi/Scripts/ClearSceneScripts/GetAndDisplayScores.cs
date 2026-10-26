@@ -168,7 +168,8 @@ public class GetAndDisplayScores : NetworkBehaviour
             }
         }
 
-        _hitsTakenText.text = _scoreData.DamageTakenCount.ToString();
+        //_hitsTakenText.text = _scoreData.DamageTakenCount.ToString();
+        _hitsTakenText.text = _scoreData.TotalTakenDamage.ToString();
 
         Destroy(scoreObject);
     }

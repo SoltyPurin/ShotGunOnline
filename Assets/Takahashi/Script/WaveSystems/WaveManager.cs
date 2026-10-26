@@ -361,16 +361,12 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         _listEnd = true;
         _scoreManager.TextAlpha(true);
 
-        //if (_waveType != WaveType.Tutorial)
-        //{
-        //    _scoreManager.ScoreCalculation();
-        //}
         if (IsServer)
         {
-            //_scoreManager.ScoreCalculation();
             int min = _scoreManager.Minute;
             float sec = _scoreManager.Second;
-            SyncFinalScoreClientRpc(min, sec);
+            int totalDamage = ScoreData._scoreData != null ? ScoreData._scoreData.TotalTakenDamage : 0;
+            SyncFinalScoreClientRpc(min, sec,totalDamage);
         }
 
         _sceneTransitionManager.StartSceneTransition();
@@ -380,7 +376,7 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     /// 全クライアント端末の GetScoreManager にクリアタイムを同期書き込みする RPC
     /// </summary>
     [ClientRpc]
-    private void SyncFinalScoreClientRpc(int minute, float seconds)
+    private void SyncFinalScoreClientRpc(int minute, float seconds,int totalDamageCount)
     {
         if (GetScoreManager._this != null)
         {
@@ -389,6 +385,11 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         else if (_scoreManager != null)
         {
             _scoreManager.ScoreCalculation();
+        }
+
+        if (ScoreData._scoreData != null)
+        {
+            ScoreData._scoreData.SyncTotalDamageFromHost(totalDamageCount);
         }
     }
     private void TutorialWaveEnd()

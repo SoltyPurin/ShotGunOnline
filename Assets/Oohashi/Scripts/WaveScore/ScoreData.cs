@@ -43,9 +43,16 @@ public class ScoreData : MonoBehaviour
     }
 
     private int _damageTakenCount = 0;
+
     public int DamageTakenCount
     {
         get { return _damageTakenCount;}
+    }
+
+    private int _totalTakenDamage = 0;
+    public int TotalTakenDamage
+    {
+        get { return _totalTakenDamage;}
     }
     #endregion
     #region 定数
@@ -120,11 +127,7 @@ public class ScoreData : MonoBehaviour
     public void AddDamageCount()
     {
         _damageTakenCount++;
-        //if (_enemyCountAndCreateTime != null)
-        //{
-        //    _enemyCountAndCreateTime.TakeDamage();
-        //}
-
+        _totalTakenDamage++;
     }
 
     public void SetScore(int timeScore, int hitCount,float clearTime)
@@ -160,9 +163,17 @@ public class ScoreData : MonoBehaviour
 
         _total = 0;
 
+
+        //_shownDamageCount = _damageTakenCount;
         _damageTakenCount = 0;
 
     }
 
-
+    /// <summary>
+    /// ホストから最終リザルト用に通算被弾数を全端末へ同期させるためのメソッド
+    /// </summary>
+    public void SyncTotalDamageFromHost(int totalDamage)
+    {
+        _totalTakenDamage = totalDamage;
+    }
 }
