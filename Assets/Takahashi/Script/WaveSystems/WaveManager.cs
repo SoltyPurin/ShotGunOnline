@@ -403,7 +403,8 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     /// 敵の数が変動した時にカウントを変えるスクリプト
     /// </summary>
     /// <param name="count">敵の数</param>
-    public void SetChangeCount(int count)
+    [ClientRpc]
+    public void SetChangeCountClientRpc(int count)
     {
         _uiManager.SetEnemyCounter(count);
     }

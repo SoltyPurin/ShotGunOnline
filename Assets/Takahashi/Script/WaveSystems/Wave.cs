@@ -180,7 +180,7 @@ public class Wave : NetworkBehaviour
             // 【安全対策】Nullチェックを追加してクラッシュを防ぐ
             if (_waveManager != null)
             {
-                _waveManager.SetChangeCount(_prevEnemyCount);
+                _waveManager.SetChangeCountClientRpc(_prevEnemyCount);
             }
         }
         

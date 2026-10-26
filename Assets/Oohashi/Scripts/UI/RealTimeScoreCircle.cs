@@ -142,6 +142,7 @@ public class RealTimeScoreCircle : MonoBehaviour
 
     public void Trenble()
     {
+        transform.DOKill();
         transform.DOShakePosition(duration: 1,
         strength: 50,
         vibrato: 50,
