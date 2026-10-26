@@ -425,6 +425,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e955f465a5f49df4f846abcd3910be61, type: 3}
+--- !u!1 &102240374 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7527235993068047507, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+  m_PrefabInstance: {fileID: 1125572586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &109682019
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2907,7 +2912,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5269334230982165910, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 650
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
       propertyPath: _camera
@@ -2920,6 +2925,10 @@ PrefabInstance:
     - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
       propertyPath: _respawnPoints.Array.size
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: _p1RespawnPoints.Array.size
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
       propertyPath: '_respawnPoints.Array.data[2]'
@@ -2945,6 +2954,30 @@ PrefabInstance:
       propertyPath: '_respawnPoints.Array.data[7]'
       value: 
       objectReference: {fileID: 1125572589}
+    - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: '_p1RespawnPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 102240374}
+    - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: '_p1RespawnPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 102240374}
+    - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: '_p1RespawnPoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 102240374}
+    - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: '_p1RespawnPoints.Array.data[3]'
+      value: 
+      objectReference: {fileID: 102240374}
+    - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: '_p1RespawnPoints.Array.data[4]'
+      value: 
+      objectReference: {fileID: 102240374}
+    - target: {fileID: 8223858844256562551, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
+      propertyPath: '_p1RespawnPoints.Array.data[5]'
+      value: 
+      objectReference: {fileID: 102240374}
     - target: {fileID: 9018824588410538708, guid: f81a328744fc6d842b66c259f7088e02, type: 3}
       propertyPath: m_LocalPosition.y
       value: 597.9
