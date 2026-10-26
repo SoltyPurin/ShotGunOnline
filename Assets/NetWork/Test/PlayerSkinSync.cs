@@ -1,3 +1,4 @@
+using NUnit.Framework.Api;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ public class PlayerSkinSync : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
+    private PlayerNumberSave _numberSave = default;
+
     public override void OnNetworkSpawn()
     {
         // 1. 値が変更・同期されたときに全端末で見た目を更新するイベント登録
@@ -32,9 +35,12 @@ public class PlayerSkinSync : NetworkBehaviour
             int assignedSkinId = (int)(OwnerClientId % (ulong)_frontSkinOverrideControllers.Length);
             _skinId.Value = assignedSkinId;
         }
+        _numberSave = this.GetComponent<PlayerNumberSave>();
 
         // 3. スポーンした時点の見た目を適用
         ApplySkin(_skinId.Value);
+
+
     }
 
     private void OnSkinIdChanged(int previousValue, int newValue)
@@ -56,6 +62,7 @@ public class PlayerSkinSync : NetworkBehaviour
             {
                 _flontPlayerAnimator.runtimeAnimatorController = _frontSkinOverrideControllers[skinId];
                 _backPlayerAnimator.runtimeAnimatorController = _backSkinOverrideControllers[skinId];
+                _numberSave.SetPlayerNumber(skinId);
             }
         }
     }
