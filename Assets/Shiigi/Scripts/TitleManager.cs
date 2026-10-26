@@ -12,7 +12,7 @@ public class TitleManager : MonoBehaviour
         Time.timeScale = 1.0f;
 
         CleanupNetworkSession();
-        InitializeScreen();
+        // InitializeScreen();
     }
 
     /// <summary>

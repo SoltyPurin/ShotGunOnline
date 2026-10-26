@@ -16,10 +16,13 @@ public class LocalPlayerStateLocker
     /// </summary>
     public void TryFindAndLockLocalPlayer()
     {
-        if (_localPlayerState != null) return;
+        if (_localPlayerState == null)
+        {
+            _localPlayerState = FindLocalPlayerStateManager();
+        }
 
-        _localPlayerState = FindLocalPlayerStateManager();
-        if (_localPlayerState != null)
+        // プレイヤースポーン時のOnNetworkSpawn等でNormalStateに書き換えられた場合でも再度MovieStateでロックする
+        if (_localPlayerState != null && _localPlayerState.PlayerState != PlayerState.Movie)
         {
             _localPlayerState.MovieState();
         }
@@ -64,4 +67,3 @@ public class LocalPlayerStateLocker
         return null;
     }
 }
-
