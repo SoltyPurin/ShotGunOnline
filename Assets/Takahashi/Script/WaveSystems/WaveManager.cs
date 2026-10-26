@@ -427,11 +427,27 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     //[ServerRpc(InvokePermission = RpcInvokePermission.Everyone)]
     public void NotifyTakeDamageServerRpc()
     {
-        Debug.Log("サーバー通して被弾回数増やすよ");
         if (ScoreData._scoreData != null)
         {
-            Debug.Log("ヌルチェック問題ないから通すよ");
             ScoreData._scoreData.AddDamageCount();
+        }
+        ApplyDamagePenaltyClientRpc();
+    }
+
+    /// <summary>
+    /// 全プレイヤー端末のタイマーを減算させる ClientRpc
+    /// </summary>
+    [ClientRpc]
+    private void ApplyDamagePenaltyClientRpc()
+    {
+        EnemyCountAndCreateTime timer = FindAnyObjectByType<EnemyCountAndCreateTime>();
+        if (timer != null)
+        {
+            timer.TakeDamage();
+        }
+        else
+        {
+            Debug.Log("タイマーないよ");
         }
     }
 

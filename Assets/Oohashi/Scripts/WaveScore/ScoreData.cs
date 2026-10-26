@@ -120,10 +120,10 @@ public class ScoreData : MonoBehaviour
     public void AddDamageCount()
     {
         _damageTakenCount++;
-        if (_enemyCountAndCreateTime != null)
-        {
-            _enemyCountAndCreateTime.TakeDamage();
-        }
+        //if (_enemyCountAndCreateTime != null)
+        //{
+        //    _enemyCountAndCreateTime.TakeDamage();
+        //}
 
     }
 
