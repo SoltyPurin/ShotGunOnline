@@ -6,8 +6,26 @@ using UnityEngine;
 
 public class PlayerRespawn : NetworkBehaviour
 {
-    [SerializeField,Header("リスポーンポイントを登録するリスト")]
-    private List<GameObject> _respawnPoints = new List<GameObject>();
+    [SerializeField, Header("プレイヤー1のリスポーン地点の親オブジェクト")]
+    private GameObject _p1RespawnPointParent = default;
+    //親オブジェクトだけ登録させて実際のポイント登録はクラス内部で行う
+    private List<GameObject> _p1RespawnPoints = new List<GameObject>();
+
+    [SerializeField,Header("プレイヤー2のリスポーン地点の親オブジェクト")]
+    private GameObject _p2RespawnPointParent = default;
+
+    private List<GameObject> _p2RespawnPoints = new List<GameObject>();
+
+
+    [SerializeField,Header("プレイヤー3のリスポーン地点の親オブジェクト")]
+    private GameObject _p3RespawnPointParent = default;
+
+    private List<GameObject> _p3RespawnPoints = new List<GameObject>();
+
+    [SerializeField, Header("プレイヤー4のリスポーン地点の親オブジェクト")]
+    private GameObject _p4RespawnPointParent = default;
+
+    private List<GameObject> _p4RespawnPoints = new List<GameObject>();
 
     [SerializeField, Header("カメラのオブジェクト")]
     private GameObject _camera = default;
@@ -21,8 +39,36 @@ public class PlayerRespawn : NetworkBehaviour
     }
 
     [SerializeField, Header("プレイヤーのオブジェクト")]
-    private GameObject _playerObject = default;
+    private List<GameObject> _playerObjects = new List<GameObject>();
 
+    public void Start()
+    {
+        GameObject[] pObjs = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject obj in pObjs)
+        {
+            _playerObjects.Add(obj);
+        }
+
+        GetChildRespawnPoints(_p1RespawnPointParent, _p1RespawnPoints);
+        GetChildRespawnPoints(_p2RespawnPointParent, _p2RespawnPoints);
+        GetChildRespawnPoints(_p3RespawnPointParent, _p3RespawnPoints);
+        GetChildRespawnPoints(_p4RespawnPointParent, _p4RespawnPoints);
+    }
+
+    /// <summary>
+    /// 親オブジェクトの直下にある子オブジェクトだけをリストに登録する共通メソッド
+    /// </summary>
+    private void GetChildRespawnPoints(GameObject parentObj, List<GameObject> targetList)
+    {
+        targetList.Clear();
+        if (parentObj == null) return;
+
+        // transform を foreach で回すと「直下の子オブジェクト」だけを取得できる（親自身は含まれない）
+        foreach (Transform child in parentObj.transform)
+        {
+            targetList.Add(child.gameObject);
+        }
+    }
     /// <summary>
     /// 現在のウェーブのインデックスを加算
     /// </summary>
@@ -58,32 +104,34 @@ public class PlayerRespawn : NetworkBehaviour
 
     private void DoLocalRespawn(int respawnIndex)
     {
-        if (_respawnPoints == null || _respawnPoints.Count == 0)
+        #region ヌルチェック
+        if (_p1RespawnPoints == null || _p1RespawnPoints.Count == 0)
         {
             Debug.LogWarning("[PlayerRespawn] _respawnPoints が設定されていません。");
             return;
         }
 
-        if (respawnIndex < 0 || respawnIndex >= _respawnPoints.Count)
+        if (respawnIndex < 0 || respawnIndex >= _p1RespawnPoints.Count)
         {
             Debug.LogWarning($"[PlayerRespawn] respawnIndex ({respawnIndex}) が範囲外です。");
-            respawnIndex = Mathf.Clamp(respawnIndex, 0, _respawnPoints.Count - 1);
+            respawnIndex = Mathf.Clamp(respawnIndex, 0, _p1RespawnPoints.Count - 1);
         }
-
-        GameObject targetObj = _respawnPoints[respawnIndex];
-        if (targetObj == null)
+        if(_playerObjects.Count == 0)
         {
-            Debug.LogWarning($"[PlayerRespawn] _respawnPoints[{respawnIndex}] が null です。");
-            return;
+            Debug.Log("プレイヤーが登録されてない");
+            GameObject[] pObjs = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject obj in pObjs)
+            {
+                _playerObjects.Add(obj);
+            }
         }
+        #endregion
 
-        Vector2 basePoint = targetObj.transform.position;
 
         // ネットワークプレイヤーを探索
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         bool localPlayerFound = false;
 
-        foreach (GameObject p in players)
+        foreach (GameObject p in _playerObjects)
         {
             if (p == null) continue;
 
@@ -92,13 +140,36 @@ public class PlayerRespawn : NetworkBehaviour
             {
                 localPlayerFound = true;
 
+                PlayerNumberSave numberSave = p.GetComponent<PlayerNumberSave>();
+
                 // プレイヤー同士が重なりすぎないよう、ClientIdに応じて左右に少しオフセット
                 float offsetX = 0f;
                 if (NetworkManager.Singleton != null)
                 {
                     offsetX = (NetworkManager.Singleton.LocalClientId % 2 == 0) ? -0.8f : 0.8f;
                 }
-                Vector2 targetPos = basePoint + new Vector2(offsetX, 0f);
+
+                Vector2 targetPos = Vector2.zero;
+
+                Debug.Log("このクライアントの番号は" + numberSave.MyNumber);
+                switch (numberSave.MyNumber)
+                {
+                    case 0:
+                        targetPos = _p1RespawnPoints[respawnIndex].transform.position;
+                        break;
+                    case 1:
+                        targetPos = _p2RespawnPoints[respawnIndex].transform.position;
+                        Debug.Log("スポーン座標は" + targetPos.x + "," +  targetPos.y);
+                        break;
+
+                    case 2:
+                        targetPos = _p3RespawnPoints[respawnIndex].transform.position;
+                        break;
+
+                    case 3:
+                        targetPos = _p4RespawnPoints[respawnIndex].transform.position;
+                        break;
+                }
 
                 // 慣性リセット
                 Rigidbody2D rb = p.GetComponent<Rigidbody2D>();
@@ -128,18 +199,18 @@ public class PlayerRespawn : NetworkBehaviour
         // オフラインまたは非ネットワーク環境時のフォールバック
         if (!localPlayerFound)
         {
-            if (_playerObject != null)
+            if (_playerObjects != null)
             {
-                _playerObject.transform.position = basePoint;
+                _playerObjects[0].transform.position = _p1RespawnPoints[respawnIndex].transform.position;
             }
             else
             {
-                foreach (GameObject p in players)
+                foreach (GameObject p in _playerObjects)
                 {
-                    if (p != null) p.transform.position = basePoint;
+                    if (p != null) p.transform.position = _p1RespawnPoints[respawnIndex].transform.position;
                 }
             }
-            MoveCamera(basePoint);
+            MoveCamera(_p1RespawnPoints[respawnIndex].transform.position);
         }
     }
 
@@ -179,9 +250,9 @@ public class PlayerRespawn : NetworkBehaviour
             // 落下したプレイヤーの所有者（自機）のみが自身のテレポートとカメラ移動を実行する
             if (netObj.IsOwner)
             {
-                if (_respawnPoints != null && _currentRespawnIndex >= 0 && _currentRespawnIndex < _respawnPoints.Count)
+                if (_p1RespawnPoints != null && _currentRespawnIndex >= 0 && _currentRespawnIndex < _p1RespawnPoints.Count)
                 {
-                    Vector2 respawnPoint = _respawnPoints[_currentRespawnIndex].transform.position;
+                    Vector2 respawnPoint = _p1RespawnPoints[_currentRespawnIndex].transform.position;
                     NetworkTransform netPlayer = netObj.GetComponent<NetworkTransform>();
                     if (netPlayer != null)
                     {
