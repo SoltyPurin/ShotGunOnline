@@ -29,14 +29,9 @@ public class SoulKeep : NetworkBehaviour
 
     private void Start()
     {
-        // 自身のプレイヤー（ローカル）である場合のみUIを取得
-        if (IsOwner && _soulMeter == null)
+        if (IsOwner)
         {
-            GameObject bottleObj = GameObject.Find("Soul_Bottle");
-            if (bottleObj != null)
-            {
-                _soulMeter = bottleObj.GetComponent<SoulMeter>();
-            }
+            ResolveSoulMeter();
         }
     }
 
@@ -49,14 +44,7 @@ public class SoulKeep : NetworkBehaviour
         // 操作するプレイヤー（IsOwner）の画面のUIを設定
         if (IsOwner)
         {
-            if (_soulMeter == null)
-            {
-                GameObject bottleObj = GameObject.Find("Soul_Bottle");
-                if (bottleObj != null)
-                {
-                    _soulMeter = bottleObj.GetComponent<SoulMeter>();
-                }
-            }
+            ResolveSoulMeter();
             UpdateSoulUI(_useFullSoul.Value);
             UpdateVStockUI(_vStock.Value);
         }
@@ -69,28 +57,45 @@ public class SoulKeep : NetworkBehaviour
         base.OnNetworkDespawn();
     }
 
+    /// <summary>
+    /// 自端末（IsOwner）のソウルメーターUI参照を安全に解決する。
+    /// ゲーム開始前の非アクティブ状態（HUD Canvas）も含めて検索し、必要に応じて遅延取得する。
+    /// </summary>
+    private SoulMeter ResolveSoulMeter()
+    {
+        if (_soulMeter != null) return _soulMeter;
+        if (!IsOwner) return null;
+
+        _soulMeter = UnityEngine.Object.FindAnyObjectByType<SoulMeter>(FindObjectsInactive.Include);
+        return _soulMeter;
+    }
+
     private void OnVStockChanged(int prevValue, int newValue)
     {
+        if (!IsOwner) return;
         UpdateVStockUI(newValue);
     }
 
     private void OnSoulChanged(int prevValue, int newValue)
     {
+        if (!IsOwner) return;
         UpdateSoulUI(newValue);
     }
 
     // UI更新はすべて NetworkVariable の変更通知（OnValueChanged）経由で実行
     private void UpdateSoulUI(int soulValue)
     {
-        if (_soulMeter == null) return;
-        _soulMeter.SetCount(soulValue);
-        _soulMeter.AddMeter(soulValue);
+        var meter = ResolveSoulMeter();
+        if (meter == null) return;
+        meter.SetCount(soulValue);
+        meter.AddMeter(soulValue);
     }
 
     private void UpdateVStockUI(int vStockValue)
     {
-        if (_soulMeter == null) return;
-        _soulMeter.UpdateVStockDisplay(vStockValue);
+        var meter = ResolveSoulMeter();
+        if (meter == null) return;
+        meter.UpdateVStockDisplay(vStockValue);
     }
 
     /// <summary>
@@ -151,6 +156,11 @@ public class SoulKeep : NetworkBehaviour
         // 操作しているプレイヤー（IsOwner）の画面のUIのみポップアップ表示
         if (IsOwner)
         {
+            if (_soulCountUI == null)
+            {
+                _soulCountUI = GetComponentInChildren<SoulCountUI>(true);
+            }
+
             if (_soulCountUI != null)
             {
                 _soulCountUI.SoulPlus();
