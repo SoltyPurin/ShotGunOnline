@@ -11,15 +11,41 @@ public class ConfirmDialogUI : MonoBehaviour
 
     private UniTaskCompletionSource<bool> _utcs;
 
-    public async UniTask<bool> ShowAsync(string message)
+    public async UniTask<bool> ShowAsync(string message, bool showNoButton = true, string yesButtonText = null)
     {
         _utcs?.TrySetCanceled();
 
-        _messageText.text = message;
+        if (_messageText != null)
+        {
+            _messageText.text = message;
+        }
+
         gameObject.SetActive(true);
 
-        _yesButton.onClick.RemoveAllListeners();
-        _noButton.onClick.RemoveAllListeners();
+        if (_yesButton != null)
+        {
+            _yesButton.onClick.RemoveAllListeners();
+
+            if (!string.IsNullOrEmpty(yesButtonText))
+            {
+                var textComp = _yesButton.GetComponentInChildren<Text>();
+                if (textComp != null)
+                {
+                    textComp.text = yesButtonText;
+                }
+            }
+
+            // 背後UIや他ボタンへのキーボード/ゲームパッドのフォーカス移動を防止
+            var nav = _yesButton.navigation;
+            nav.mode = showNoButton ? Navigation.Mode.Automatic : Navigation.Mode.None;
+            _yesButton.navigation = nav;
+        }
+
+        if (_noButton != null)
+        {
+            _noButton.onClick.RemoveAllListeners();
+            _noButton.gameObject.SetActive(showNoButton);
+        }
 
         if (EventSystem.current != null && _yesButton != null)
         {
@@ -28,17 +54,23 @@ public class ConfirmDialogUI : MonoBehaviour
 
         _utcs = new UniTaskCompletionSource<bool>();
 
-        _yesButton.onClick.AddListener(() =>
+        if (_yesButton != null)
         {
-            gameObject.SetActive(false);
-            _utcs.TrySetResult(true);
-        });
+            _yesButton.onClick.AddListener(() =>
+            {
+                gameObject.SetActive(false);
+                _utcs.TrySetResult(true);
+            });
+        }
 
-        _noButton.onClick.AddListener(() =>
+        if (_noButton != null)
         {
-            gameObject.SetActive(false);
-            _utcs.TrySetResult(false);
-        });
+            _noButton.onClick.AddListener(() =>
+            {
+                gameObject.SetActive(false);
+                _utcs.TrySetResult(false);
+            });
+        }
 
         return await _utcs.Task;
     }

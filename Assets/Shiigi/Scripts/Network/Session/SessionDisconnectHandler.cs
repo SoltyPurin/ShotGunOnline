@@ -19,6 +19,7 @@ public class SessionDisconnectHandler
     private readonly string _titleSceneName;
     private readonly string _errorMessage;
 
+    private GameObject _canvasObj;
     private ConfirmDialogUI _dialogInstance;
     private bool _isMonitoring;
     private bool _isHandlingDisconnect;
@@ -131,22 +132,33 @@ public class SessionDisconnectHandler
                 return;
             }
 
+            // 各種ゲーム入力を無効化し、時間を停止してダイアログ表示する
+            DisableAllGameInputs();
+            Time.timeScale = 0f;
             TryCacheDialogFromScene();
-
-            // 先にセッションおよびNetworkManagerをクリーンアップして以降の通信処理を停止
             await _cleanupSessionAsync();
 
-            // ロビーと同じ ConfirmDialogUI ポップアップを表示してボタン押下を待機
+            if (_canvasObj != null)
+            {
+                _canvasObj.SetActive(true);
+            }
+
             if (_dialogInstance != null)
             {
-                await _dialogInstance.ShowAsync(_errorMessage);
+                await _dialogInstance.ShowAsync(_errorMessage, showNoButton: false, yesButtonText: "OK");
             }
             else
             {
                 Debug.LogWarning("[MSM]: ConfirmDialogUI が見つからないため、そのままタイトルへ遷移します。");
             }
 
+            // ダイアログ終了後、時間を復元してタイトルへ遷移
+            if (_canvasObj != null)
+            {
+                _canvasObj.SetActive(false);
+            }
             Time.timeScale = 1.0f;
+
             if (SceneManager.GetActiveScene().name != _titleSceneName)
             {
                 SceneManager.LoadScene(_titleSceneName);
@@ -155,12 +167,80 @@ public class SessionDisconnectHandler
         catch (Exception ex)
         {
             Debug.LogError($"[MSM]: 通信エラー切断処理中に例外が発生しました: {ex.Message}");
+            if (_canvasObj != null)
+            {
+                _canvasObj.SetActive(false);
+            }
             Time.timeScale = 1.0f;
             SceneManager.LoadScene(_titleSceneName);
         }
         finally
         {
             _isHandlingDisconnect = false;
+        }
+    }
+
+    /// <summary>
+    /// シーン内のすべてのプレイヤー操作およびポーズメニュー入力を停止する
+    /// </summary>
+    private static void DisableAllGameInputs()
+    {
+        try
+        {
+            // プレイヤーの操作スクリプトおよび物理移動を遮断
+            var playerObjs = GameObject.FindGameObjectsWithTag("Player");
+            foreach (var player in playerObjs)
+            {
+                if (player == null) continue;
+
+                var stateManager = player.GetComponent<PlayerStateManager>();
+                if (stateManager != null)
+                {
+                    try
+                    {
+                        if (stateManager.IsOwner)
+                        {
+                            stateManager.MovieState();
+                        }
+                    }
+                    catch
+                    {
+                        // 切断時のNetworkVariable書き込み例外を安全に吸収
+                    }
+                }
+
+                var move = player.GetComponent<PlayerMove>();
+                if (move != null) move.enabled = false;
+
+                var shot = player.GetComponent<InputPlayerShot>();
+                if (shot != null) shot.enabled = false;
+
+                var aiming = player.GetComponent<PlayerAiming>();
+                if (aiming != null) aiming.enabled = false;
+
+                var ult = player.GetComponent<InputChangeState>();
+                if (ult != null) ult.enabled = false;
+
+                var rb = player.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector2.zero;
+                }
+            }
+
+            // ポーズメニューのキー・ボタン入力を無効化
+            var pauseInputs = UnityEngine.Object.FindObjectsByType<InputPause>(FindObjectsSortMode.None);
+            foreach (var pause in pauseInputs)
+            {
+                if (pause != null)
+                {
+                    pause.enabled = false;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[MSM]: ゲーム入力無効化中に警告: {ex.Message}");
         }
     }
 
@@ -183,6 +263,20 @@ public class SessionDisconnectHandler
 
         canvasObj.AddComponent<GraphicRaycaster>();
 
+        // 全画面ブロッカー (黒半透明で背後のクリックを防ぐオーバーレイ)
+        var blockerObj = new GameObject("ScreenBlocker", typeof(RectTransform), typeof(Image));
+        blockerObj.transform.SetParent(canvasObj.transform, false);
+        var blockerRect = blockerObj.GetComponent<RectTransform>();
+        blockerRect.anchorMin = Vector2.zero;
+        blockerRect.anchorMax = Vector2.one;
+        blockerRect.sizeDelta = Vector2.zero;
+        blockerRect.anchoredPosition = Vector2.zero;
+        blockerRect.pivot = new Vector2(0.5f, 0.5f);
+
+        var blockerImage = blockerObj.GetComponent<Image>();
+        blockerImage.color = new Color(0f, 0f, 0f, 0.6f);
+        blockerImage.raycastTarget = true;
+
         // MultiplayerLobbyScene の LobbyUIManager と同じレイアウト枠 (SizeDelta: -300, -100) を再現
         var frameObj = new GameObject("DialogFrame", typeof(RectTransform));
         var frameRect = frameObj.GetComponent<RectTransform>();
@@ -196,5 +290,8 @@ public class SessionDisconnectHandler
         _dialogInstance = UnityEngine.Object.Instantiate(sourceDialog, frameRect, false);
         _dialogInstance.name = "ConfirmDialogOverlay_Persistent";
         _dialogInstance.gameObject.SetActive(false);
+
+        _canvasObj = canvasObj;
+        _canvasObj.SetActive(false); // エラー発生時まで非表示にしておく
     }
 }
