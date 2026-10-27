@@ -588,8 +588,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneControlledPlayer
   _skinSprites:
-  - DownSprite: {fileID: 1603890381311791203, guid: 46341f9d84c9323488ba89d966f2f7a6, type: 3}
-    KnockBackSprite: {fileID: -1547069928409185021, guid: 8155ae1f426e2e54caad96be1cfcbf20, type: 3}
+  - DownSprite: {fileID: 21300000, guid: 46341f9d84c9323488ba89d966f2f7a6, type: 3}
+    KnockBackSprite: {fileID: 21300000, guid: 8155ae1f426e2e54caad96be1cfcbf20, type: 3}
     IdleSprite: {fileID: 6454490000420998888, guid: 2d0d57473ee9718459509d2a70859d2b, type: 3}
   - DownSprite: {fileID: -631024619280411251, guid: cba84f42772ea1c469b2a5030c038976, type: 3}
     KnockBackSprite: {fileID: -1943734555730276401, guid: 50041678caffcbc47891a2651fe16c1b, type: 3}

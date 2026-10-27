@@ -37,14 +37,19 @@ public class CutsceneControlledPlayer : MonoBehaviour
     [SerializeField] private GameObject _lineRendererObject;
     [SerializeField] private GameObject _playerUIObject;
     [SerializeField] private SpriteRenderer _frontSpriteRenderer;
+    [SerializeField] private SpriteRenderer _backSpriteRenderer;
     [SerializeField] private Animator _frontSpriteAnimator;
 
     private NetworkObject _networkObject;
     private NetworkTransform[] _networkTransforms;
+    private NetworkAnimator[] _networkAnimators;
+    private Animator[] _allAnimators;
     private Rigidbody2D _rigidbody2D;
     private Rigidbody _rigidbody;
 
     private bool[] _networkTransformEnabledCache;
+    private bool[] _networkAnimatorEnabledCache;
+    private bool[] _animatorEnabledCache;
     private bool _rigidbody2DSimulatedCache;
     private bool _rigidbodyKinematicCache;
 
@@ -84,6 +89,8 @@ public class CutsceneControlledPlayer : MonoBehaviour
     {
         _networkObject = GetComponent<NetworkObject>();
         _networkTransforms = GetComponentsInChildren<NetworkTransform>(true);
+        _networkAnimators = GetComponentsInChildren<NetworkAnimator>(true);
+        _allAnimators = GetComponentsInChildren<Animator>(true);
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _rigidbody = GetComponent<Rigidbody>();
 
@@ -106,6 +113,15 @@ public class CutsceneControlledPlayer : MonoBehaviour
             {
                 _frontSpriteRenderer = frontObj.GetComponent<SpriteRenderer>();
                 _frontSpriteAnimator = frontObj.GetComponent<Animator>();
+            }
+        }
+
+        if (_backSpriteRenderer == null)
+        {
+            var backObj = transform.Find("PlayerSprites/SpriteManager/BackSprite");
+            if (backObj != null)
+            {
+                _backSpriteRenderer = backObj.GetComponent<SpriteRenderer>();
             }
         }
 
@@ -203,10 +219,44 @@ public class CutsceneControlledPlayer : MonoBehaviour
             }
         }
 
-        // FrontSpriteのAnimatorを無効化（ムービー中のスプライト切り替えとの競合を防ぐ）
-        if (_frontSpriteAnimator != null)
+        // ネットワーク経由でのアニメーション強制上書きを防ぐため、NetworkAnimator を停止
+        if (_networkAnimators == null || _networkAnimators.Length == 0)
         {
-            _frontSpriteAnimator.enabled = false;
+            _networkAnimators = GetComponentsInChildren<NetworkAnimator>(true);
+        }
+        _networkAnimatorEnabledCache = new bool[_networkAnimators.Length];
+        for (int i = 0; i < _networkAnimators.Length; i++)
+        {
+            if (_networkAnimators[i] != null)
+            {
+                _networkAnimatorEnabledCache[i] = _networkAnimators[i].enabled;
+                _networkAnimators[i].enabled = false;
+            }
+        }
+
+        // 全 Animator を一時停止（スプライトの自動上書き・競合を防ぐ）
+        if (_allAnimators == null || _allAnimators.Length == 0)
+        {
+            _allAnimators = GetComponentsInChildren<Animator>(true);
+        }
+        _animatorEnabledCache = new bool[_allAnimators.Length];
+        for (int i = 0; i < _allAnimators.Length; i++)
+        {
+            var anim = _allAnimators[i];
+            if (anim != null)
+            {
+                _animatorEnabledCache[i] = anim.enabled;
+                // TimelineでルートTransformを制御するAnimator以外をすべて停止
+                if (anim != _cutsceneAnimator)
+                {
+                    anim.enabled = false;
+                }
+            }
+        }
+
+        if (_backSpriteRenderer != null)
+        {
+            _backSpriteRenderer.enabled = false;
         }
 
         // 先頭フレーム（倒れ状態）を即座に反映
@@ -235,9 +285,20 @@ public class CutsceneControlledPlayer : MonoBehaviour
             if (_lineRendererObject != null && _lineRendererObject.activeSelf) _lineRendererObject.SetActive(false);
             if (_playerUIObject != null && _playerUIObject.activeSelf) _playerUIObject.SetActive(false);
 
-            if (_frontSpriteRenderer != null && skin.DownSprite != null)
+            if (_frontSpriteRenderer != null)
             {
-                _frontSpriteRenderer.sprite = skin.DownSprite;
+                if (skin.DownSprite != null)
+                {
+                    _frontSpriteRenderer.sprite = skin.DownSprite;
+                }
+                else
+                {
+                    Debug.LogWarning($"[CutsceneControlledPlayer] スロット {_assignedSlotIndex} の DownSprite が未設定または Missing です。");
+                }
+            }
+            if (_backSpriteRenderer != null && _backSpriteRenderer.enabled)
+            {
+                _backSpriteRenderer.enabled = false;
             }
 
             if (timelineTime >= shakeStartTime && _playerSpritesTransform != null)
@@ -318,9 +379,31 @@ public class CutsceneControlledPlayer : MonoBehaviour
         }
 
         // Animator を再開（PlayerAnimation / PlayerSkinSync へ制御を戻す）
-        if (_frontSpriteAnimator != null)
+        if (_allAnimators != null && _animatorEnabledCache != null)
+        {
+            for (int i = 0; i < _allAnimators.Length; i++)
+            {
+                if (_allAnimators[i] != null && i < _animatorEnabledCache.Length)
+                {
+                    _allAnimators[i].enabled = _animatorEnabledCache[i];
+                }
+            }
+        }
+        else if (_frontSpriteAnimator != null)
         {
             _frontSpriteAnimator.enabled = true;
+        }
+
+        // NetworkAnimator を復旧
+        if (_networkAnimators != null && _networkAnimatorEnabledCache != null)
+        {
+            for (int i = 0; i < _networkAnimators.Length; i++)
+            {
+                if (_networkAnimators[i] != null && i < _networkAnimatorEnabledCache.Length)
+                {
+                    _networkAnimators[i].enabled = _networkAnimatorEnabledCache[i];
+                }
+            }
         }
 
         // NetworkTransform を復旧
