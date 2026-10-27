@@ -37,10 +37,10 @@ public class DebugGameAutoStarter : MonoBehaviour
 
         Debug.Log("[DebugGameAutoStarter] エディタ単体再生を検知。ローカルHostとして即座にゲームを開始します。");
 
-        // 1. ローカルHostとしてサーバー兼クライアントを起動
+        // ローカルHostとしてサーバー兼クライアントを起動
         NetworkManager.Singleton.StartHost();
 
-        // 2. MP_GameManager にゲーム開始シーケンスを実行させる
+        // MP_GameManager にゲーム開始シーケンスを実行させる
         if (MP_GameManager.Instance != null)
         {
             MP_GameManager.Instance.OnGameStart();
