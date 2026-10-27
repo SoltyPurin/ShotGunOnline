@@ -154,10 +154,10 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
     private IEnumerator TimerFlagStart(bool isBossWave)
     {
         yield return new WaitForSeconds(1);
-        if (!isBossWave)
-        {
+        //if (!isBossWave)
+        //{
             _canCountTimer = true;
-        }
+        //}
 
     }
 
