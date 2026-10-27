@@ -109,10 +109,8 @@ public class EnemyShotBullet : NetworkBehaviour
             {
                 Instantiate(_deathEffect, transform.position, Quaternion.identity);
             }
-            if (IsServer)
-            {
-                DestroyProtocol();
-            }
+
+            DestroyProtocol();
         }
     }
 
