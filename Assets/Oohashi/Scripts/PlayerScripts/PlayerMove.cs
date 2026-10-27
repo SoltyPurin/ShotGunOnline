@@ -92,10 +92,27 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
         if (IsOwner)
         {
-            // 自機の操作状態を Normal（操作可能）にする
+            // 開始ムービー・待機中等の場合はMovieState（操作ロック）を維持し、それ以外ならNormalStateにする
+            bool isOpeningCutscene = false;
+            if (MP_GameManager.Instance != null)
+            {
+                var s = MP_GameManager.Instance.CurrentState;
+                if (s == MP_GameManager.GameState.WaitingForPlayers || s == MP_GameManager.GameState.OpeningMovie)
+                {
+                    isOpeningCutscene = true;
+                }
+            }
+
             if (_playerStateManger != null)
             {
-                _playerStateManger.NormalState();
+                if (isOpeningCutscene)
+                {
+                    _playerStateManger.MovieState();
+                }
+                else
+                {
+                    _playerStateManger.NormalState();
+                }
             }
 
             // メインカメラを探して自機を追従ターゲットに設定する

@@ -204,6 +204,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
                 case PlayerState.DamageKnockBack:
                 case PlayerState.Fall:
+                case PlayerState.Movie:
                     currentPushState = false;
                     break;
             }
@@ -334,7 +335,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         }
 
         // 被弾ノックバック中・落下中はチャージをキャンセルして早期リターン
-        if (_stateManager.PlayerState == PlayerState.DamageKnockBack || _stateManager.PlayerState == PlayerState.Fall)
+        if (_stateManager.PlayerState == PlayerState.DamageKnockBack || _stateManager.PlayerState == PlayerState.Fall || _stateManager.PlayerState == PlayerState.Movie)
         {
             CancelCharge();
             return;
