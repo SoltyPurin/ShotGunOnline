@@ -22,6 +22,13 @@ public class SessionDisconnectHandler
     private ConfirmDialogUI _dialogInstance;
     private bool _isMonitoring;
     private bool _isHandlingDisconnect;
+    private bool _isApplicationQuitting;
+
+    public void NotifyApplicationQuitting()
+    {
+        _isApplicationQuitting = true;
+        _isMonitoring = false;
+    }
 
     public SessionDisconnectHandler(
         Transform persistentRoot,
@@ -50,7 +57,7 @@ public class SessionDisconnectHandler
     /// </summary>
     public void TryCacheDialogFromScene()
     {
-        if (_dialogInstance != null) return;
+        if (_isApplicationQuitting || !Application.isPlaying || _dialogInstance != null) return;
 
         var sceneDialog = UnityEngine.Object.FindAnyObjectByType<ConfirmDialogUI>(FindObjectsInactive.Include);
         if (sceneDialog != null)
@@ -85,13 +92,13 @@ public class SessionDisconnectHandler
 
     public void NotifyUnexpectedDisconnect()
     {
-        if (!_isMonitoring || _isHandlingDisconnect) return;
+        if (_isApplicationQuitting || !Application.isPlaying || !_isMonitoring || _isHandlingDisconnect) return;
         HandleUnexpectedDisconnectAsync().Forget();
     }
 
     private void HandleClientDisconnected(ulong clientId)
     {
-        if (!_isMonitoring || _isHandlingDisconnect) return;
+        if (_isApplicationQuitting || !Application.isPlaying || !_isMonitoring || _isHandlingDisconnect) return;
 
         var networkManager = NetworkManager.Singleton;
         // クライアント側で切断コールバックが発火した場合はホスト（サーバー）との接続切断を意味する
@@ -104,7 +111,7 @@ public class SessionDisconnectHandler
 
     private void HandleTransportFailure()
     {
-        if (!_isMonitoring || _isHandlingDisconnect) return;
+        if (_isApplicationQuitting || !Application.isPlaying || !_isMonitoring || _isHandlingDisconnect) return;
 
         Debug.LogWarning("[MSM]: ネットワークトランスポート障害が発生しました。");
         HandleUnexpectedDisconnectAsync().Forget();
@@ -159,7 +166,7 @@ public class SessionDisconnectHandler
 
     private void CreatePersistentDialogInstance(ConfirmDialogUI sourceDialog)
     {
-        if (sourceDialog == null || _persistentRoot == null || _dialogInstance != null) return;
+        if (_isApplicationQuitting || !Application.isPlaying || sourceDialog == null || _persistentRoot == null || _dialogInstance != null) return;
 
         // 最前面に表示するための専用Canvasを構築
         var canvasObj = new GameObject("DisconnectErrorCanvas");
