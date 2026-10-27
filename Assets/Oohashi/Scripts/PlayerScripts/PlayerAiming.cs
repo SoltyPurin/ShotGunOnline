@@ -2,11 +2,11 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-//–{“–‚É‚²‚ß‚ñ‚È‚³‚¢‚±‚±‚Í‚ ‚Ü‚è‚ÉŒ³‚ª“ï‰ğ‚·‚¬‚½‚½‚ßAIƒtƒ‹ƒo[ƒXƒg‚Å‹Lq‚µ‚Ü‚µ‚½B
+//æœ¬å½“ã«ã”ã‚ã‚“ãªã•ã„ã“ã“ã¯ã‚ã¾ã‚Šã«å…ƒãŒé›£è§£ã™ããŸãŸã‚AIãƒ•ãƒ«ãƒãƒ¼ã‚¹ãƒˆã§è¨˜è¿°ã—ã¾ã—ãŸã€‚
 public class PlayerAiming : NetworkBehaviour
 {
-    // ƒGƒCƒ€‚Ì•ûŒüƒxƒNƒgƒ‹‚ğ“¯Šú‚·‚éƒlƒbƒgƒ[ƒN•Ï”‚ğ’è‹`
-    // (Owner‚ª‘‚«‚İ‰Â”\A‘Sˆõ‚ª“Ç‚İ‚İ‰Â”\‚Éİ’è)
+    // ã‚¨ã‚¤ãƒ ã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’åŒæœŸã™ã‚‹ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å¤‰æ•°ã‚’å®šç¾©
+    // (OwnerãŒæ›¸ãè¾¼ã¿å¯èƒ½ã€å…¨å“¡ãŒèª­ã¿è¾¼ã¿å¯èƒ½ã«è¨­å®š)
     private NetworkVariable<Vector3> _netAimDirection = new NetworkVariable<Vector3>(
         Vector3.right,
         NetworkVariableReadPermission.Everyone,
@@ -14,46 +14,97 @@ public class PlayerAiming : NetworkBehaviour
     );
     public Vector3 Direction
     {
-        get { return _netAimDirection.Value; } //direction‚ğæ“¾‚Å‚«‚é‚æ‚¤‚É‚·‚é
+        get { return _netAimDirection.Value; } //directionã‚’å–å¾—ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
     }
 
 
-    [SerializeField, Header("Œ¸Z’†‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é")]
+    [SerializeField, Header("æ¸›ç®—ä¸­ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹")]
     private InputPlayerShot _inputShot = default;
+
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆç®¡ç†")]
+    private PlayerStateManager _playerStateManager = default;
+
+    [SerializeField, Header("ã‚«ãƒƒãƒˆã‚·ãƒ¼ãƒ³åˆ¶å¾¡ï¼ˆä»»æ„ï¼‰")]
+    private CutsceneControlledPlayer _cutscenePlayer = default;
 
     private Vector2 _rightStickInput;
     private Gamepad _gamePad;
 
-    [Header("ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒgæ“¾")]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå–å¾—")]
     [SerializeField] private GameObject _playerObject = default;
-    [SerializeField, Header("Lerp‚Ì•â³’l")]
+    [SerializeField, Header("Lerpã®è£œæ­£å€¤")]
     private float _correctionValue = 1f;
 
-    [Header("Œ‚‚Á‚Ä‚È‚¢‚Æ‚«‚ÌŒü‚¢‚Ä‚é•ûŒü•\¦")]
+    [Header("æ’ƒã£ã¦ãªã„ã¨ãã®å‘ã„ã¦ã‚‹æ–¹å‘è¡¨ç¤º")]
     [SerializeField] private ShootShape _shape = default;
 
     private Vector3 _prevDirection = Vector3.right;
+    private bool _useMouseAim = false;
 
 
     private void Awake()
     {
-        if (_playerObject == null) return;
         if (Gamepad.current != null)
         {
             _gamePad = Gamepad.current;
         }
+
+        if (_playerStateManager == null)
+        {
+            _playerStateManager = GetComponent<PlayerStateManager>();
+        }
+
+        if (_cutscenePlayer == null)
+        {
+            _cutscenePlayer = GetComponent<CutsceneControlledPlayer>();
+        }
+    }
+
+    /// <summary>
+    /// ã‚¨ã‚¤ãƒ æ“ä½œãƒ»è¦–ç‚¹ç§»å‹•ãŒå¯èƒ½ã‹ã©ã†ã‹ã‚’åˆ¤å®š
+    /// ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã®Play Directorå†ç”Ÿä¸­ã‚„ãƒ ãƒ¼ãƒ“ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆä¸­ã¯æ“ä½œã‚’ç¦æ­¢ã™ã‚‹
+    /// </summary>
+    public bool CanAim()
+    {
+        // 1. PlayerStateManager ãŒ Movie ã‚¹ãƒ†ãƒ¼ãƒˆã®å ´åˆã¯æ“ä½œä¸å¯
+        if (_playerStateManager != null && _playerStateManager.PlayerState == PlayerState.Movie)
+        {
+            return false;
+        }
+
+        // 2. CutsceneControlledPlayer ãŒã‚«ãƒƒãƒˆã‚·ãƒ¼ãƒ³å®Ÿè¡Œä¸­ã®å ´åˆã¯æ“ä½œä¸å¯
+        if (_cutscenePlayer != null && _cutscenePlayer.IsInCutscene)
+        {
+            return false;
+        }
+
+        // 3. MP_GameManager ãŒã‚²ãƒ¼ãƒ é–‹å§‹å‰ï¼ˆå¾…æ©Ÿä¸­ã¾ãŸã¯é–‹å§‹ãƒ ãƒ¼ãƒ“ãƒ¼ä¸­ï¼‰ã®å ´åˆã¯æ“ä½œä¸å¯
+        if (MP_GameManager.Instance != null)
+        {
+            var state = MP_GameManager.Instance.CurrentState;
+            if (state == MP_GameManager.GameState.WaitingForPlayers || state == MP_GameManager.GameState.OpeningMovie)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void Update()
     {
-        // “ü—Í‚Ìæ“¾‚Íu‘€ì‚µ‚Ä‚¢‚é(Owner)v‚És‚¤
+        // å…¥åŠ›ã®å–å¾—ã¯ã€Œæ“ä½œã—ã¦ã„ã‚‹æ™‚(Owner)ã€ã‹ã¤ã€Œã‚¨ã‚¤ãƒ æ“ä½œå¯èƒ½ãªæ™‚ã€ã«è¡Œã†
         if (this.IsOwner)
         {
+            if (!CanAim())
+            {
+                _rightStickInput = Vector2.zero;
+                return;
+            }
+
             InputAiming();
         }
     }
-
-    private bool _useMouseAim = false;
 
     private void InputAiming()
     {
@@ -76,61 +127,80 @@ public class PlayerAiming : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        // ‘€ì‚µ‚Ä‚¢‚é‘¤iOwnerj‚Ìê‡‚Ìˆ—
+        if (_playerObject == null) return;
+
+        // æ“ä½œã—ã¦ã„ã‚‹å´ï¼ˆOwnerï¼‰ã®å ´åˆã®å‡¦ç†
         if (this.IsOwner)
         {
-            if (!_useMouseAim)
+            if (CanAim())
             {
-                if (_rightStickInput.sqrMagnitude > 0.04f)
+                if (!_useMouseAim)
                 {
-                    _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
-                }
-            }
-            else
-            {
-                // ƒ}ƒEƒX‚Å‚ÌÆ€
-                if (Camera.main != null)
-                {
-                    Vector3 mousePos = Vector3.zero;
-                    if (Mouse.current != null)
+                    if (_rightStickInput.sqrMagnitude > 0.04f)
                     {
-                        mousePos = Mouse.current.position.ReadValue();
-                    }
-                    else
-                    {
-                        mousePos = Input.mousePosition;
-                    }
-                    Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z - transform.position.z)));
-                    Vector3 playerPos = transform.position;
-                    Vector3 diff = worldMousePos - playerPos;
-                    diff.z = 0;
-                    if (diff.sqrMagnitude > 0.01f)
-                    {
-                        _prevDirection = diff.normalized;
+                        _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
                     }
                 }
-            }
+                else
+                {
+                    // ãƒã‚¦ã‚¹ã§ã®ç…§æº–
+                    if (Camera.main != null)
+                    {
+                        Vector3 mousePos = Vector3.zero;
+                        if (Mouse.current != null)
+                        {
+                            mousePos = Mouse.current.position.ReadValue();
+                        }
+                        else
+                        {
+                            mousePos = Input.mousePosition;
+                        }
+                        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z - transform.position.z)));
+                        Vector3 playerPos = transform.position;
+                        Vector3 diff = worldMousePos - playerPos;
+                        diff.z = 0;
+                        if (diff.sqrMagnitude > 0.01f)
+                        {
+                            _prevDirection = diff.normalized;
+                        }
+                    }
+                }
 
-            // ƒlƒbƒgƒ[ƒN•Ï”‚ÉŒ»İ‚ÌŒü‚«‚ğ“ü—Íi©“®“I‚ÉƒzƒXƒgEƒNƒ‰ƒCƒAƒ“ƒg‘Sˆõ‚É“¯Šúj
-            _netAimDirection.Value = _prevDirection;
+                // ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å¤‰æ•°ã«ç¾åœ¨ã®å‘ãã‚’å…¥åŠ›ï¼ˆè‡ªå‹•çš„ã«ãƒ›ã‚¹ãƒˆãƒ»ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå…¨å“¡ã«åŒæœŸï¼‰
+                _netAimDirection.Value = _prevDirection;
+            }
         }
 
-        // yƒzƒXƒgEƒNƒ‰ƒCƒAƒ“ƒg‘Sˆõ‚ª‹¤’Ê‚ÅÀs‚·‚ézˆ—
-        // “¯Šú‚³‚ê‚Ä“Í‚¢‚½uƒGƒCƒ€•ûŒüv‚Ìƒf[ƒ^‚ğg‚Á‚ÄAŠe‰æ–Ê‚Ìƒ[ƒJƒ‹‚Å‘Ì‚ÆƒGƒCƒ€”ÍˆÍ‚ğ“®‚©‚·
+        // ãƒ ãƒ¼ãƒ“ãƒ¼ãƒ»ã‚«ãƒƒãƒˆã‚·ãƒ¼ãƒ³å†ç”Ÿä¸­ã¯å‘ãã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆï¼ˆå³å‘ãæ°´å¹³ï¼‰ã«ç¶­æŒã—ã€è¦–ç‚¹ç§»å‹•ã•ã›ãªã„
+        if (!CanAim())
+        {
+            _playerObject.transform.rotation = Quaternion.identity;
+            if (_shape != null)
+            {
+                _shape.NotShootTimeDirection = Vector3.right;
+            }
+            return;
+        }
+
+        // ã€ãƒ›ã‚¹ãƒˆãƒ»ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå…¨å“¡ãŒå…±é€šã§å®Ÿè¡Œã™ã‚‹ã€‘å‡¦ç†
+        // åŒæœŸã•ã‚Œã¦å±Šã„ãŸã€Œã‚¨ã‚¤ãƒ æ–¹å‘ã€ã®ãƒ‡ãƒ¼ã‚¿ã‚’ä½¿ã£ã¦ã€å„ç”»é¢ã®ãƒ­ãƒ¼ã‚«ãƒ«ã§ä½“ã¨ã‚¨ã‚¤ãƒ ç¯„å›²ã‚’å‹•ã‹ã™
         Vector3 currentAimDir = _netAimDirection.Value;
 
         if (currentAimDir.sqrMagnitude > 0.001f)
         {
-            // ‘ÌiƒOƒ‰ƒtƒBƒbƒNj‚Ì‰ñ“]ˆ—
+            // ä½“ï¼ˆã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ï¼‰ã®å›è»¢å‡¦ç†
             Quaternion pRotate = _playerObject.transform.rotation;
             float angle = Mathf.Atan2(currentAimDir.y, currentAimDir.x) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-            // Lerp‚ÅŠŠ‚ç‚©‚É‰ñ“]i‘¼l‚Ì‰æ–Ê‚Å‚àƒJƒN‚Â‚©‚¸‚ÉãY—í‚É‰ñ‚è‚Ü‚·j
+            // Lerpã§æ»‘ã‚‰ã‹ã«å›è»¢ï¼ˆä»–äººã®ç”»é¢ã§ã‚‚ã‚«ã‚¯ã¤ã‹ãšã«ç¶ºéº—ã«å›ã‚Šã¾ã™ï¼‰
             _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
 
-            // ƒGƒCƒ€”ÍˆÍiŒ©‚½–Ú‚Ì‰‰oj‚ÌXV
-            // i‘Sˆõ‚ª“¯‚¶ƒf[ƒ^‚ğó‚¯æ‚Á‚Ä‚¢‚é‚Ì‚ÅA•¡G‚Èelse•ªŠò‚â‹tZ‚ª•s—v‚É‚È‚è‚Ü‚·j
-            _shape.NotShootTimeDirection = currentAimDir;
+            // ã‚¨ã‚¤ãƒ ç¯„å›²ï¼ˆè¦‹ãŸç›®ã®æ¼”å‡ºï¼‰ã®æ›´æ–°
+            // ï¼ˆå…¨å“¡ãŒåŒã˜ãƒ‡ãƒ¼ã‚¿ã‚’å—ã‘å–ã£ã¦ã„ã‚‹ã®ã§ã€è¤‡é›‘ãªelseåˆ†å²ã‚„é€†ç®—ãŒä¸è¦ã«ãªã‚Šã¾ã™ï¼‰
+            if (_shape != null)
+            {
+                _shape.NotShootTimeDirection = currentAimDir;
+            }
         }
     }
 }

@@ -78,7 +78,7 @@ PrefabInstance:
       addedObject: {fileID: 7871845393043077033}
     - targetCorrespondingSourceObject: {fileID: 7818330625537861996, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -7979154476122460737}
+      addedObject: {fileID: -3582617886731947600}
     - targetCorrespondingSourceObject: {fileID: 1352574616777809253, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7848662483795459245}
@@ -575,7 +575,7 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &-7979154476122460737
+--- !u!114 &-3582617886731947600
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -584,9 +584,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 7250050344265823419}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5c08160d46c39043b371b1912ddd864, type: 3}
+  m_Script: {fileID: 11500000, guid: 6e6ebf1cf5e673645bb2bc1f700c9387, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerNumberSave
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneControlledPlayer
+  _skinSprites:
+  - DownSprite: {fileID: 21300000, guid: 46341f9d84c9323488ba89d966f2f7a6, type: 3}
+    KnockBackSprite: {fileID: 21300000, guid: 8155ae1f426e2e54caad96be1cfcbf20, type: 3}
+    IdleSprite: {fileID: 6454490000420998888, guid: 2d0d57473ee9718459509d2a70859d2b, type: 3}
+  - DownSprite: {fileID: -631024619280411251, guid: cba84f42772ea1c469b2a5030c038976, type: 3}
+    KnockBackSprite: {fileID: -1943734555730276401, guid: 50041678caffcbc47891a2651fe16c1b, type: 3}
+    IdleSprite: {fileID: 9113291519894422807, guid: 625f572dfe5350e4b951424dc3efecdf, type: 3}
+  - DownSprite: {fileID: 8323674538039191748, guid: 7c9c4616bcb0c2141a03322aaad6854a, type: 3}
+    KnockBackSprite: {fileID: 8915040596024188383, guid: d4a797bf00f278f488e2bf181bcb942f, type: 3}
+    IdleSprite: {fileID: -4912019858324938879, guid: 3789fcca39309214e85ad681a75f47b6, type: 3}
+  - DownSprite: {fileID: -8560152775907755022, guid: b03f4715185cb9640b8184ae979c3f5e, type: 3}
+    KnockBackSprite: {fileID: -8209726490841238937, guid: 2cbe84aff2bfeda408439f9700fb640c, type: 3}
+    IdleSprite: {fileID: -6268037493484981051, guid: e86d30af9fbba43438a11ede285f1b9f, type: 3}
 --- !u!1 &7506001819700656733 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6933217705799788426, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}

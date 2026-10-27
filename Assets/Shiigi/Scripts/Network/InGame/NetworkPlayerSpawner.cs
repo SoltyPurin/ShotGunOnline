@@ -17,6 +17,27 @@ public class NetworkPlayerSpawner
         _playerPrefab = playerPrefab;
     }
 
+    /// <summary>
+    /// 自端末に出現しているプレイヤーオブジェクトを OwnerClientId の昇順で取得する（ホスト・クライアントどちらでも使用可）
+    /// </summary>
+    public static List<NetworkObject> CollectSpawnedPlayerObjects(NetworkManager networkManager)
+    {
+        var result = new List<NetworkObject>();
+        var spawnManager = networkManager != null ? networkManager.SpawnManager : null;
+        if (spawnManager == null) return result;
+
+        foreach (var netObj in spawnManager.SpawnedObjectsList)
+        {
+            if (netObj != null && netObj.IsPlayerObject)
+            {
+                result.Add(netObj);
+            }
+        }
+
+        result.Sort((a, b) => a.OwnerClientId.CompareTo(b.OwnerClientId));
+        return result;
+    }
+
     public void RegisterPlayer(NetworkObject player)
     {
         if (player != null && !_players.Contains(player))

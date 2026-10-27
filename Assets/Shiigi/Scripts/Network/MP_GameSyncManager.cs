@@ -100,9 +100,28 @@ public class MP_GameSyncManager : NetworkBehaviour
         {
             Debug.Log("[MP_GameSyncManager] 全プレイヤーのシーン読み込みが完了。開始シーケンスを開始します");
 
-            // Playingに変更（全クライアントへ自動同期される）
-            CurrentPhase.Value = GamePhase.Playing;
+            // プレイヤー生成と全員の準備完了（全プレイヤーの出現）を待ってから Playing に変更する
+            var openingSync = MP_OpeningSyncManager.Instance;
+            if (openingSync != null)
+            {
+                openingSync.BeginOpeningOnServer(SetPlayingPhase);
+            }
+            else
+            {
+                Debug.LogWarning("[MP_GameSyncManager] MP_OpeningSyncManager が見つからないため、準備完了を待たずに開始します。");
+                SetPlayingPhase();
+            }
         }
+    }
+
+    /// <summary>
+    /// Playingに変更（全クライアントへ自動同期される）
+    /// </summary>
+    private void SetPlayingPhase()
+    {
+        if (!IsServer || !IsSpawned) return;
+
+        CurrentPhase.Value = GamePhase.Playing;
     }
 
     /// <summary>

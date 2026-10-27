@@ -6,32 +6,30 @@ using UnityEngine;
 
 public class PlayerRespawn : NetworkBehaviour
 {
-    [SerializeField, Header("プレイヤー1のリスポーン地点の親オブジェクト")]
+    [SerializeField, Header("ウェーブごとのステージ移動・リスポーン先リスト")]
+    private List<GameObject> _respawnPoints = new List<GameObject>();
+
+    [SerializeField, Header("プレイヤー1のリスポーン地点の親オブジェクト（個別指定時）")]
     private GameObject _p1RespawnPointParent = default;
-    //親オブジェクトだけ登録させて実際のポイント登録はクラス内部で行う
     private List<GameObject> _p1RespawnPoints = new List<GameObject>();
 
-    [SerializeField,Header("プレイヤー2のリスポーン地点の親オブジェクト")]
+    [SerializeField, Header("プレイヤー2のリスポーン地点の親オブジェクト（個別指定時）")]
     private GameObject _p2RespawnPointParent = default;
-
     private List<GameObject> _p2RespawnPoints = new List<GameObject>();
 
-
-    [SerializeField,Header("プレイヤー3のリスポーン地点の親オブジェクト")]
+    [SerializeField, Header("プレイヤー3のリスポーン地点の親オブジェクト（個別指定時）")]
     private GameObject _p3RespawnPointParent = default;
-
     private List<GameObject> _p3RespawnPoints = new List<GameObject>();
 
-    [SerializeField, Header("プレイヤー4のリスポーン地点の親オブジェクト")]
+    [SerializeField, Header("プレイヤー4のリスポーン地点の親オブジェクト（個別指定時）")]
     private GameObject _p4RespawnPointParent = default;
-
     private List<GameObject> _p4RespawnPoints = new List<GameObject>();
 
     [SerializeField, Header("カメラのオブジェクト")]
     private GameObject _camera = default;
 
-    //現在のリスポーンポイントのインデックス
-    private int _currentRespawnIndex = 0; 
+    // 現在のリスポーンポイントのインデックス（ウェーブ進行度）
+    private int _currentRespawnIndex = 0;
 
     public int RespawnIndex
     {
@@ -43,10 +41,14 @@ public class PlayerRespawn : NetworkBehaviour
 
     public void Start()
     {
-        GameObject[] pObjs = GameObject.FindGameObjectsWithTag("Player");
-        foreach(GameObject obj in pObjs)
+        // _respawnPoints がインスペクター未設定の場合、自身の子オブジェクト（First, Second, ...）を自動登録
+        if (_respawnPoints == null || _respawnPoints.Count == 0)
         {
-            _playerObjects.Add(obj);
+            _respawnPoints = new List<GameObject>();
+            foreach (Transform child in transform)
+            {
+                _respawnPoints.Add(child.gameObject);
+            }
         }
 
         GetChildRespawnPoints(_p1RespawnPointParent, _p1RespawnPoints);
@@ -63,22 +65,23 @@ public class PlayerRespawn : NetworkBehaviour
         targetList.Clear();
         if (parentObj == null) return;
 
-        // transform を foreach で回すと「直下の子オブジェクト」だけを取得できる（親自身は含まれない）
         foreach (Transform child in parentObj.transform)
         {
             targetList.Add(child.gameObject);
         }
     }
+
     /// <summary>
-    /// 現在のウェーブのインデックスを加算
+    /// 現在のウェーブのインデックスを加算（次のステージエリアへ進む）
     /// </summary>
     public void CountUp()
     {
         _currentRespawnIndex++;
+        Debug.Log($"[PlayerRespawn] CountUp 実行。現在のステージIndex: {_currentRespawnIndex}");
     }
 
     /// <summary>
-    /// リストに登録されているリスポーンポイントにリスポーンする
+    /// リストに登録されているリスポーンポイントにリスポーン・テレポートする
     /// </summary>
     public void Respawn()
     {
@@ -104,34 +107,11 @@ public class PlayerRespawn : NetworkBehaviour
 
     private void DoLocalRespawn(int respawnIndex)
     {
-        #region ヌルチェック
-        if (_p1RespawnPoints == null || _p1RespawnPoints.Count == 0)
-        {
-            Debug.LogWarning("[PlayerRespawn] _respawnPoints が設定されていません。");
-            return;
-        }
-
-        if (respawnIndex < 0 || respawnIndex >= _p1RespawnPoints.Count)
-        {
-            Debug.LogWarning($"[PlayerRespawn] respawnIndex ({respawnIndex}) が範囲外です。");
-            respawnIndex = Mathf.Clamp(respawnIndex, 0, _p1RespawnPoints.Count - 1);
-        }
-        if(_playerObjects.Count == 0)
-        {
-            Debug.Log("プレイヤーが登録されてない");
-            GameObject[] pObjs = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject obj in pObjs)
-            {
-                _playerObjects.Add(obj);
-            }
-        }
-        #endregion
-
-
-        // ネットワークプレイヤーを探索
+        // 自端末のプレイヤーオブジェクトを取得してテレポート
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         bool localPlayerFound = false;
 
-        foreach (GameObject p in _playerObjects)
+        foreach (GameObject p in players)
         {
             if (p == null) continue;
 
@@ -139,37 +119,7 @@ public class PlayerRespawn : NetworkBehaviour
             if (netObj != null && netObj.IsOwner)
             {
                 localPlayerFound = true;
-
-                PlayerNumberSave numberSave = p.GetComponent<PlayerNumberSave>();
-
-                // プレイヤー同士が重なりすぎないよう、ClientIdに応じて左右に少しオフセット
-                float offsetX = 0f;
-                if (NetworkManager.Singleton != null)
-                {
-                    offsetX = (NetworkManager.Singleton.LocalClientId % 2 == 0) ? -0.8f : 0.8f;
-                }
-
-                Vector2 targetPos = Vector2.zero;
-
-                Debug.Log("このクライアントの番号は" + numberSave.MyNumber);
-                switch (numberSave.MyNumber)
-                {
-                    case 0:
-                        targetPos = _p1RespawnPoints[respawnIndex].transform.position;
-                        break;
-                    case 1:
-                        targetPos = _p2RespawnPoints[respawnIndex].transform.position;
-                        Debug.Log("スポーン座標は" + targetPos.x + "," +  targetPos.y);
-                        break;
-
-                    case 2:
-                        targetPos = _p3RespawnPoints[respawnIndex].transform.position;
-                        break;
-
-                    case 3:
-                        targetPos = _p4RespawnPoints[respawnIndex].transform.position;
-                        break;
-                }
+                Vector2 targetPos = GetRespawnPosition(netObj, respawnIndex);
 
                 // 慣性リセット
                 Rigidbody2D rb = p.GetComponent<Rigidbody2D>();
@@ -199,19 +149,78 @@ public class PlayerRespawn : NetworkBehaviour
         // オフラインまたは非ネットワーク環境時のフォールバック
         if (!localPlayerFound)
         {
-            if (_playerObjects != null)
+            Vector2 fallbackPos = GetRespawnPosition(null, respawnIndex);
+            if (players.Length > 0 && players[0] != null)
             {
-                _playerObjects[0].transform.position = _p1RespawnPoints[respawnIndex].transform.position;
+                players[0].transform.position = fallbackPos;
+            }
+            MoveCamera(fallbackPos);
+        }
+    }
+
+    /// <summary>
+    /// プレイヤー情報とステージIndexに応じたリスポーン位置を取得する
+    /// </summary>
+    public Vector2 GetRespawnPosition(NetworkObject netObj, int index)
+    {
+        int playerNumber = 0;
+        if (netObj != null)
+        {
+            PlayerNumberSave numberSave = netObj.GetComponent<PlayerNumberSave>();
+            if (numberSave != null)
+            {
+                playerNumber = numberSave.MyNumber;
             }
             else
             {
-                foreach (GameObject p in _playerObjects)
-                {
-                    if (p != null) p.transform.position = _p1RespawnPoints[respawnIndex].transform.position;
-                }
+                playerNumber = (int)(netObj.OwnerClientId % 4);
             }
-            MoveCamera(_p1RespawnPoints[respawnIndex].transform.position);
         }
+
+        // 1. 各プレイヤー個別のリスポーンリストがあれば最優先で使用
+        List<GameObject> dedicatedList = playerNumber switch
+        {
+            0 => _p1RespawnPoints,
+            1 => _p2RespawnPoints,
+            2 => _p3RespawnPoints,
+            3 => _p4RespawnPoints,
+            _ => _p1RespawnPoints
+        };
+
+        if (dedicatedList != null && dedicatedList.Count > 0)
+        {
+            int clampedIndex = Mathf.Clamp(index, 0, dedicatedList.Count - 1);
+            if (dedicatedList[clampedIndex] != null)
+            {
+                return dedicatedList[clampedIndex].transform.position;
+            }
+        }
+
+        // 2. 本線: ウェーブごとのステージ移動先リスト (_respawnPoints: First, Second, Third...) を使用
+        if (_respawnPoints != null && _respawnPoints.Count > 0)
+        {
+            int clampedIndex = Mathf.Clamp(index, 0, _respawnPoints.Count - 1);
+            if (_respawnPoints[clampedIndex] != null)
+            {
+                Vector2 basePos = _respawnPoints[clampedIndex].transform.position;
+                // プレイヤー同士が重なりすぎないよう、プレイヤー番号に応じて左右に少しオフセット
+                float offsetX = (playerNumber % 2 == 0 ? -1f : 1f) * (playerNumber < 2 ? 0.8f : 1.6f);
+                return basePos + new Vector2(offsetX, 0f);
+            }
+        }
+
+        // 3. Stage 0 のフォールバック: シーンの StageSpawnPoints
+        if (index == 0 && StageSpawnPoints.Instance != null)
+        {
+            Transform stageSpawn = StageSpawnPoints.Instance.GetSpawnPoint(playerNumber);
+            if (stageSpawn != null)
+            {
+                return stageSpawn.position;
+            }
+        }
+
+        // 4. 最終フォールバック
+        return transform.position;
     }
 
     private void MoveCamera(Vector2 pos)
@@ -250,27 +259,27 @@ public class PlayerRespawn : NetworkBehaviour
             // 落下したプレイヤーの所有者（自機）のみが自身のテレポートとカメラ移動を実行する
             if (netObj.IsOwner)
             {
-                if (_p1RespawnPoints != null && _currentRespawnIndex >= 0 && _currentRespawnIndex < _p1RespawnPoints.Count)
+                // 現在のウェーブのステージ位置を取得
+                Vector2 respawnPoint = GetRespawnPosition(netObj, _currentRespawnIndex);
+
+                NetworkTransform netPlayer = netObj.GetComponent<NetworkTransform>();
+                if (netPlayer != null)
                 {
-                    Vector2 respawnPoint = _p1RespawnPoints[_currentRespawnIndex].transform.position;
-                    NetworkTransform netPlayer = netObj.GetComponent<NetworkTransform>();
-                    if (netPlayer != null)
-                    {
-                        netPlayer.Teleport(respawnPoint, Quaternion.identity, netObj.transform.localScale);
-                    }
-                    else
-                    {
-                        netObj.transform.position = respawnPoint;
-                    }
-
-                    Rigidbody2D rb = netObj.GetComponent<Rigidbody2D>();
-                    if (rb != null)
-                    {
-                        rb.linearVelocity = Vector2.zero;
-                    }
-
-                    MoveCamera(respawnPoint);
+                    netPlayer.Teleport(respawnPoint, Quaternion.identity, netObj.transform.localScale);
                 }
+                else
+                {
+                    netObj.transform.position = respawnPoint;
+                }
+
+                Rigidbody2D rb = netObj.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector2.zero;
+                }
+
+                MoveCamera(respawnPoint);
+                Debug.Log($"[PlayerRespawn] 落下プレイヤー ({netObj.name}) を現在のステージ {_currentRespawnIndex} (位置: {respawnPoint}) に復帰させました。");
             }
         }
     }

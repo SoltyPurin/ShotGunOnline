@@ -114,6 +114,12 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        UnsubscribeNetworkEvents();
+        _disconnectHandler?.NotifyApplicationQuitting();
+    }
+
     private void Update()
     {
         _heartbeatMonitor?.Tick(Time.unscaledTime, NetworkManager.Singleton);
