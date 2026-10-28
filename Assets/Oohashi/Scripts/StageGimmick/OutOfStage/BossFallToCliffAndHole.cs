@@ -32,10 +32,19 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     private readonly string FALLTRIGGER = "Fall";
     private readonly string RETURNFALL = "IsFall";
 
+    private void Start()
+    {
+        _state = GetComponent<BossStateManagement>();
+        FindReturnPoint();
+    }
+
     private void OnEnable()
     {
         _spawnTimer = 0f;
-        _state = GetComponent<BossStateManagement>();
+        if (_state == null)
+        {
+            _state = GetComponent<BossStateManagement>();
+        }
     }
 
     private void Update()
@@ -52,6 +61,12 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     public override void FallMethod()
     {
         if (_spawnTimer < _spawnProtectTime)
+        {
+            return;
+        }
+
+        // 既に死亡している場合は処理しない
+        if (_enemyTakeDamage != null && _enemyTakeDamage.IsDead)
         {
             return;
         }
@@ -79,6 +94,11 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         if (_enemyTakeDamage != null)
         {
             _enemyTakeDamage.FallDamage();
+            // 落下ダメージで死亡した場合は復帰コルーチンを実行しない
+            if (_enemyTakeDamage.IsDead)
+            {
+                return;
+            }
         }
 
         if (this.gameObject.activeInHierarchy)
@@ -164,6 +184,9 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     public IEnumerator HoleFallMethodServer()
     {
         yield return new WaitForSeconds(2f);
+
+        if (this == null || !gameObject.activeInHierarchy) yield break;
+        if (_enemyTakeDamage != null && _enemyTakeDamage.IsDead) yield break;
 
         FindReturnPoint();
 

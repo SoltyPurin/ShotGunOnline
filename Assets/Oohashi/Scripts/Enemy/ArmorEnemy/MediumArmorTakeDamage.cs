@@ -1,34 +1,30 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
 public class MediumArmorTakeDamage : ArmorTakeDamage
 {
-    #region Serialize�ϐ�
-    [SerializeField, Header("��ŋ�炤�_���[�W")]
+    #region Serialize変数
+    [SerializeField, Header("岩接触時のダメージ")]
     private float _stoneTakeDamage = 700;
-    [SerializeField, Header("�E���g�ŋ�炤�_���[�W")]
+    [SerializeField, Header("アルティメット時のダメージ")]
     private float _ultDamage = 1500;
-    [SerializeField, Header("�����ŋ�炤�_���[�W")]
+    [SerializeField, Header("落下時のダメージ")]
     private float _fallTakeDamage = 700;
-    [SerializeField, Header("�X�e�[�W�ɖ߂�X�N���v�g")]
+    [SerializeField, Header("ステージに復帰するスクリプト")]
     private BossFallToCliffAndHole _bossFall = default;
     #endregion
 
-    #region �萔
-
+    #region 定数
     private readonly string DAMAGEEFFECTTRIGERNAME = "Damage";
     private readonly string FALLCOROUTINENAME = "HoleFallMethod";
     #endregion
 
-    #region �ϐ�
-
+    #region 変数
     private Vector2 _returnPosition = new Vector2(0, 10);
-
     private MidiumCameraSW _cameraSW = default;
-
+    private bool _isFalling = false;
     #endregion
 
     public override void Start()
@@ -37,55 +33,56 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
         _cameraSW = GetComponent<MidiumCameraSW>();
         SetMaxHP(JsonSaver.Instance.EnemyJson.ArmorHP);
     }
+
     /// <summary>
-    /// ���{�X�̓E���g���ȂȂ��̂ŏ�������
+    /// 被弾ダメージ処理、ウルト時は即死ダメージ
     /// </summary>
-    /// <param name="chargeTime">�`���[�W����</param>
-    /// <param name="state">�v���C���[�̃X�e�[�g</param>
+    /// <param name="chargeTime">チャージ時間</param>
+    /// <param name="state">プレイヤーステート</param>
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        //�v���C���[�̃X�e�[�g���E���g��������_���[�W��E���g�_���[�W�ɐ؂�ւ���
-        //����̓K�[�h�s�\
+        if (!IsServer || _isDead) return;
+
+        // プレイヤーステートがウルトならウルトダメージに切り替え
         if (state == PlayerState.Ultimate)
         {
             _damage = _ultDamage;
         }
+
         bool isGuard = _armorKnockbackScript.IsFromFlont;
-        //�K�[�h�����ꍇ�̏���
+        // ガード時の処理
         if (isGuard)
         {
             _damage = chargeTime * _guardMultiplier;
             _damage = Mathf.Max(_damage, _guardMinDamage);
-            //_guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
             TakeDamageEffectClientRpc(true);
         }
-        else //���ʂȂǂ���U�������ꍇ�̏���
+        else // 正面以外から攻撃を受けた場合の処理
         {
             _damage = chargeTime * _damageMultiplier;
             _damage = Mathf.Max(_damage, _minDamage);
-            //_damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
-            //_damageMaterial.Damage();
             TakeDamageEffectClientRpc(false);
-
         }
-        //HP����_���[�W�������đ���AHP�o�[��X�V
+
+        // HPからダメージを減算しHPバー更新
         _enemyHP.Value = (_enemyHP.Value - (int)_damage);
         _hpUI.UpdateHP(_enemyHP.Value);
         if (_enemyHP.Value <= 0)
         {
+            _isDead = true;
             StartCoroutine(DeathProtocol(chargeTime));
         }
-
     }
 
     /// <summary>
-    /// ��e���̉��o��Đ����郁�\�b�h
+    /// 被弾時の演出を再生するメソッド
     /// </summary>
-    /// <param name="isGuard">�K�[�h�������ǂ���</param>
+    /// <param name="isGuard">ガード成功か</param>
     [ClientRpc]
     private void TakeDamageEffectClientRpc(bool isGuard)
     {
-        if (isGuard) {
+        if (isGuard)
+        {
             _guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
         }
         else
@@ -96,68 +93,79 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     }
 
     /// <summary>
-    /// ��ɐڐG�����Ƃ��̃��\�b�h�A�ʏ�ƈႢ�ꌂ�ł͎��ȂȂ�
+    /// 岩に接触したときのメソッド
     /// </summary>
     public override void ContactStoneMethod()
     {
-        //�_���[�W�Ɋ�̐ڐG�_���[�W����
+        if (!IsServer || _isDead) return;
+
         _damage = _stoneTakeDamage;
-        //hp����炵��hp�o�[��X�V
         _enemyHP.Value = (_enemyHP.Value - (int)_damage);
         _hpUI.UpdateHP(_enemyHP.Value);
-        //�̗͂�0�ɂȂ�����1�b��Ɏ��S�̃R���[�`�����s
+
         if (_enemyHP.Value <= 0)
         {
+            _isDead = true;
             StartCoroutine(DeathProtocol(1));
         }
     }
 
     /// <summary>
-    /// �����̃_���[�W
+    /// 落下時のダメージ処理（EnemyUnderRay等の毎フレーム重複呼び出しを防止）
     /// </summary>
     public override void FallDamage()
     {
-        //�X�e�[�g�𗎉����ɂ���
+        if (!IsServer || _isDead || _isFalling) return;
+
+        _isFalling = true;
         _enemyMove.EnemyState = EnemyState.fall;
-        //hp���痎���_���[�W������đ̗̓o�[��X�V
         _enemyHP.Value -= (int)_fallTakeDamage;
         _hpUI.UpdateHP(_enemyHP.Value);
-        //�����̌��ʉ��炷
-        //_playTheSEManager.PlayDropSound();
+
         FallSoundClientRpc();
-        //���A�̃R���[�`���N��
-        _bossFall.StartCoroutine(FALLCOROUTINENAME);
-        //�X�e�[�W�ɖ߂�
-        StartCoroutine(ReturnStage());
+
         if (_enemyHP.Value <= 0)
         {
+            _isDead = true;
             StartCoroutine(DeathProtocol(1));
+        }
+        else
+        {
+            // 生存時のみ穴からの復帰演出・復帰処理を行う
+            if (_bossFall != null)
+            {
+                _bossFall.StartCoroutine(FALLCOROUTINENAME);
+            }
+            StartCoroutine(ReturnStage());
         }
     }
 
     [ClientRpc]
     private void FallSoundClientRpc()
     {
-        _playTheSEManager.PlayDropSound();
+        if (_playTheSEManager != null)
+        {
+            _playTheSEManager.PlayDropSound();
+        }
     }
+
     /// <summary>
-    /// �X�e�[�W�ɖ߂��Ă���R���[�`��
+    /// ステージに復帰するコルーチン
     /// </summary>
-    /// <returns>�A�j���[�V�����̍Đ����ԕ��҂�</returns>
     private IEnumerator ReturnStage()
     {
         yield return new WaitForSeconds(2);
-        //�ړ��̃X�e�[�g�ɕύX
         _enemyMove.EnemyState = EnemyState.move;
-        //�����n�_�ɖ߂�
-        this.transform.position = _returnPosition;
-
+        transform.position = _returnPosition;
+        _isFalling = false;
     }
 
     public override IEnumerator DeathProtocol(float chargeTime)
     {
-        _cameraSW.SwitchOff();
+        if (_cameraSW != null)
+        {
+            _cameraSW.SwitchOff();
+        }
         return base.DeathProtocol(chargeTime);
     }
-
 }
