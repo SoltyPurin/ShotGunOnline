@@ -21,13 +21,13 @@ public class DetectOnPlayer : NetworkBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = _notSteppedOnSprite;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    public virtual void OnTriggerEnter2D(Collider2D collision)
     {
         _spriteRenderer.sprite = _steppedOnSprite;
         _isStepped.Value = true;
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    public virtual void OnTriggerExit2D(Collider2D collision)
     {
         _isStepped.Value = false;
         _spriteRenderer.sprite = _notSteppedOnSprite;
