@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,16 +18,20 @@ public class CreateRoomDialogUI : MonoBehaviour
     [SerializeField] private Dropdown _maxPlayersDropDown;
     [SerializeField] private Button _confirmCreateButton;
     [SerializeField] private Button _cancelDialogButton;
+    [SerializeField] private Color _blockerColor = new Color(0f, 0f, 0f, 0.5f);
 
     [SerializeField][Range(2,8)] private List<int> _maxPlayerOptions = new() { 2, 3, 4 };
 
     private UniTaskCompletionSource<CreateRoomResult> _utcs;
+    private GameObject _blocker;
 
     /// <summary>
     /// ダイアログを表示し、ユーザーが決定またはキャンセルするまで待機
     /// </summary>
     public async UniTask<CreateRoomResult> ShowAsync()
     {
+        EnsureBlocker();
+
         // ダイアログを表示
         gameObject.SetActive(true);
 
@@ -64,6 +68,19 @@ public class CreateRoomDialogUI : MonoBehaviour
         });
 
         return await _utcs.Task;
+    }
+
+    private void EnsureBlocker()
+    {
+        if (_blocker == null)
+        {
+            _blocker = UIBlockerHelper.EnsureBlocker(transform, _blockerColor);
+        }
+        else
+        {
+            _blocker.SetActive(true);
+            _blocker.transform.SetAsFirstSibling();
+        }
     }
 
     /// <summary>

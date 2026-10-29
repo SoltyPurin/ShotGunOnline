@@ -3,17 +3,25 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// 確認・エラー表示用のモーダルダイアログUI
+/// 表示時に全画面ブロック用UIを生成し、背後UIのボタン押下を遮断します。
+/// </summary>
 public class ConfirmDialogUI : MonoBehaviour
 {
     [SerializeField] private Text _messageText;
     [SerializeField] private Button _yesButton;
     [SerializeField] private Button _noButton;
+    [SerializeField] private Color _blockerColor = new Color(0f, 0f, 0f, 0.5f);
 
     private UniTaskCompletionSource<bool> _utcs;
+    private GameObject _blocker;
 
     public async UniTask<bool> ShowAsync(string message, bool showNoButton = true, string yesButtonText = null)
     {
         _utcs?.TrySetCanceled();
+
+        EnsureBlocker();
 
         if (_messageText != null)
         {
@@ -73,5 +81,18 @@ public class ConfirmDialogUI : MonoBehaviour
         }
 
         return await _utcs.Task;
+    }
+
+    private void EnsureBlocker()
+    {
+        if (_blocker == null)
+        {
+            _blocker = UIBlockerHelper.EnsureBlocker(transform, _blockerColor);
+        }
+        else
+        {
+            _blocker.SetActive(true);
+            _blocker.transform.SetAsFirstSibling();
+        }
     }
 }
