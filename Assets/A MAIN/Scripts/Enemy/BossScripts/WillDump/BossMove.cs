@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -12,14 +12,14 @@ public class BossMove : EnemyMove
     }
     public enum BossState
     {
-        Stop,//Ÿ‚Ìs“®‚ğvl
-        Approach,//ƒvƒŒƒCƒ„[‚ÉÚ‹ß
-        Shot,//‰“‹——£UŒ‚
-        JumpAtack,//‹ß‹——£UŒ‚
-        SpecialMove,//•KE‹Z
-        Cooldown,//UŒ‚Œã‚ÌŒãŒ„
-        Stun,//ƒXƒ^ƒ“ó‘Ô
-        Drop //—‰º’†
+        Stop,//æ¬¡ã®è¡Œå‹•ã‚’æ€è€ƒ
+        Approach,//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«æ¥è¿‘
+        Shot,//é è·é›¢æ”»æ’ƒ
+        JumpAtack,//è¿‘è·é›¢æ”»æ’ƒ
+        SpecialMove,//å¿…æ®ºæŠ€
+        Cooldown,//æ”»æ’ƒå¾Œã®å¾Œéš™
+        Stun,//ã‚¹ã‚¿ãƒ³çŠ¶æ…‹
+        Drop //è½ä¸‹ä¸­
     }
     protected BossForm _initBossForm = BossForm.First;
     protected BossState _currentState = BossState.Cooldown;
@@ -39,40 +39,40 @@ public class BossMove : EnemyMove
     protected bool _isSecondForm = false;
 
 
-    [SerializeField, Header("ƒ{ƒX‚ÌUŒ‚—pƒAƒjƒ[ƒ^[")]
+    [SerializeField, Header("ãƒœã‚¹ã®æ”»æ’ƒç”¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     protected Animator _bossAnimator;
 
-    [SerializeField, Header("ƒ{ƒX‚ªÚ‹ß‚ğs‚¤‹——£")]
+    [SerializeField, Header("ãƒœã‚¹ãŒæ¥è¿‘ã‚’è¡Œã†è·é›¢")]
     protected float _needApproachDistance = 7;
 
-    [SerializeField, Header("ƒ{ƒX‚ªJumpAtack‚ğs‚¤‹——£")]
+    [SerializeField, Header("ãƒœã‚¹ãŒJumpAtackã‚’è¡Œã†è·é›¢")]
     protected float _jumpAtackDistance = 7;
 
-    [SerializeField, Header("ƒ{ƒX‚ª‰“‹——£UŒ‚‚ğs‚¤‹——£")]
+    [SerializeField, Header("ãƒœã‚¹ãŒé è·é›¢æ”»æ’ƒã‚’è¡Œã†è·é›¢")]
     protected float _shotDistance = 7;
 
-    [SerializeField, Header("e’e‚ÌƒIƒuƒWƒFƒNƒg‚ğ“ü‚ê‚é”z—ñ")]
+    [SerializeField, Header("éŠƒå¼¾ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å…¥ã‚Œã‚‹é…åˆ—")]
     protected GameObject[] _bulletObject = new GameObject[3];
 
-    [SerializeField, Header("ÕŒ‚”g‚ÌƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("è¡æ’ƒæ³¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     protected GameObject _shockWave;
 
-    [SerializeField, Header("’…’n‚Ì“–‚½‚è”»’èƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ç€åœ°æ™‚ã®å½“ãŸã‚Šåˆ¤å®šã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     protected GameObject _jumpAtackArea;
 
-    [SerializeField, Header("•KE‹Z‚Ìe’e")]
+    [SerializeField, Header("å¿…æ®ºæŠ€ã®éŠƒå¼¾")]
     protected GameObject _specialMoveBullet;
 
-    [SerializeField, Header("ŠeƒAƒNƒVƒ‡ƒ“Œã‚ÌŒ„")]
+    [SerializeField, Header("å„ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¾Œã®éš™")]
     protected float _actionCoolTime = 1.0f;
 
-    [SerializeField, Header("‰“‹——£UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€")]
+    [SerializeField, Header("é è·é›¢æ”»æ’ƒã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ")]
     protected float _shotCoolTime = 1.0f;
 
-    [SerializeField, Header("ÚG”»’è‚ÌƒRƒ‰ƒCƒ_[")]
+    [SerializeField, Header("æ¥è§¦åˆ¤å®šã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼")]
     protected CircleCollider2D _circleCollider2D = default;
 
-    [SerializeField, Header("JumpAtack‚Ì‰ñ”")]
+    [SerializeField, Header("JumpAtackã®å›æ•°")]
     protected int _jumpAtackCount;
 
     private PlayTheBombEffect _playTheBombEffect = default;
@@ -96,12 +96,12 @@ public class BossMove : EnemyMove
     {
         _shotCoolTimer = _shotCoolTime;
         _playTheBombEffect = GameObject.FindWithTag("EffectManager").GetComponent<PlayTheBombEffect>();
-        _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);//ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg‚ğ’Tõ‚µ‚Ä‘ã“ü
+        _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¢ç´¢ã—ã¦ä»£å…¥
         _target = _playerObject.transform;
-        //Å‰‚ÉƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒvZ‚µ‚Ä‚İ‚é
+        //æœ€åˆã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’è¨ˆç®—ã—ã¦ã¿ã‚‹
         _direction = (_playerObject.transform.position - transform.position).normalized;
         _bossHP = gameObject.GetComponent<BossHP>();
-        _agent = GetComponent<NavMesh2DAgent>(); //agent‚ÉNavMeshAgent2D‚ğæ“¾
+        _agent = GetComponent<NavMesh2DAgent>(); //agentã«NavMeshAgent2Dã‚’å–å¾—
     }
 
     public void ChangeBossForm()
@@ -114,9 +114,9 @@ public class BossMove : EnemyMove
     {
         _enemyToPlayerDistance = Vector2.Distance(_playerObject.transform.position,
             this.transform.position);
-        _shotCoolTimer += Time.fixedDeltaTime;//Œ‚‚Á‚½Œã‚ÌŒãŒ„ŠÔŒv‘ª
+        _shotCoolTimer += Time.fixedDeltaTime;//æ’ƒã£ãŸå¾Œã®å¾Œéš™æ™‚é–“è¨ˆæ¸¬
 
-        // ’Êí‚Ìó‘Ôˆ—
+        // é€šå¸¸ã®çŠ¶æ…‹å‡¦ç†
         StateAction();
 
     }
@@ -148,7 +148,7 @@ public class BossMove : EnemyMove
                     _currentState = BossState.Approach;
                 }
 
-                break;//‰Šúó‘Ô
+                break;//åˆæœŸçŠ¶æ…‹
 
             case BossState.Approach:
 
@@ -163,12 +163,12 @@ public class BossMove : EnemyMove
                     return;
                 }
 
-                break;//Ú‹ß
+                break;//æ¥è¿‘
 
             case BossState.Shot:
                 ShotToPlayer();
                 _currentState = BossState.Cooldown;
-                break;//‰“‹——£UŒ‚
+                break;//é è·é›¢æ”»æ’ƒ
 
             case BossState.JumpAtack:
 
@@ -184,18 +184,18 @@ public class BossMove : EnemyMove
                 {
                     JumpAtackToPlayer();
                 }
-                break;//‹ß‹——£UŒ‚
+                break;//è¿‘è·é›¢æ”»æ’ƒ
 
             case BossState.SpecialMove:
                 Moving();
                 SpecialMoveToPlayer();
-                break;//•KE‹Z
+                break;//å¿…æ®ºæŠ€
 
             case BossState.Cooldown:
-                _actionCoolTimer += Time.fixedDeltaTime;//ƒAƒNƒVƒ‡ƒ“Œã‚ÌŒãŒ„ŠÔŒv‘ª
+                _actionCoolTimer += Time.fixedDeltaTime;//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¾Œã®å¾Œéš™æ™‚é–“è¨ˆæ¸¬
                 if (_actionCoolTimer > _actionCoolTime)
                 {
-                    _actionCoolTimer = 0;//ƒAƒNƒVƒ‡ƒ“Œã‚ÌŒãŒ„ŠÔƒŠƒZƒbƒg
+                    _actionCoolTimer = 0;//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¾Œã®å¾Œéš™æ™‚é–“ãƒªã‚»ãƒƒãƒˆ
                     _currentState = BossState.Stop;
                 }
 
@@ -233,13 +233,13 @@ public class BossMove : EnemyMove
         _circleCollider2D.isTrigger = true;
     }
 
-    public void JumpLand()//’…’n‚Ì“–‚½‚è”»’è”­¶
+    public void JumpLand()//ç€åœ°æ™‚ã®å½“ãŸã‚Šåˆ¤å®šç™ºç”Ÿ
     {
         _jumpAtackArea.SetActive(true);
         _isFollow = false;
     }
 
-    public void OnAttackEnd()//Animation‚ÌI—¹Œã‚ÉState‘JˆÚ
+    public void OnAttackEnd()//Animationã®çµ‚äº†å¾Œã«Stateé·ç§»
     {
         _hasTriggerSpecialMove = false;
         if (_currentState == BossState.JumpAtack)
@@ -269,7 +269,7 @@ public class BossMove : EnemyMove
     }
 
 
-    public virtual void ShotToPlayer()//’Êí‚Ì‰“‹——£UŒ‚
+    public virtual void ShotToPlayer()//é€šå¸¸ã®é è·é›¢æ”»æ’ƒ
     {
         if (EnemyState == EnemyState.knockback)
         {
@@ -287,7 +287,7 @@ public class BossMove : EnemyMove
         _shotCoolTimer = 0;
     }
 
-    public void SpecialMoveToPlayer()//•KE‹Z”­“®
+    public void SpecialMoveToPlayer()//å¿…æ®ºæŠ€ç™ºå‹•
     {
         if (!_hasTriggerSpecialMove)
         {
@@ -321,19 +321,19 @@ public class BossMove : EnemyMove
         _specialMoveCoroutine = null;
     }
 
-    public void SpecialChargeReady()//•KE‹Z”­Ë
+    public void SpecialChargeReady()//å¿…æ®ºæŠ€ç™ºå°„
     {
         _direction = (_playerObject.transform.position - transform.position).normalized;
         Vector2 shotPosition = new Vector2(transform.position.x - 8, transform.position.y);
         EnemyShotBullet shotBullet = Instantiate(_specialMoveBullet, shotPosition, Quaternion.identity).GetComponent<EnemyShotBullet>();
         shotBullet.transform.localScale = new Vector3(8, 8, 1);
         SpriteRenderer renderer = shotBullet.GetComponent<SpriteRenderer>();
-        renderer.color = Color.red; // Ô‚É‚·‚é
+        renderer.color = Color.red; // èµ¤ã«ã™ã‚‹
         shotBullet.DirectionSetting(this.gameObject, _direction);
 
     }
 
-    public void StunBoss()//ƒXƒ^ƒ“ó‘Ô
+    public void StunBoss()//ã‚¹ã‚¿ãƒ³çŠ¶æ…‹
     {
         _bossAnimator.SetTrigger("IsStun");
     }
@@ -351,7 +351,7 @@ public class BossMove : EnemyMove
 
         if (_currentState == BossState.SpecialMove)
         {
-            //print("“–‚½‚Á‚½");
+            //print("å½“ãŸã£ãŸ");
 
             if (_specialMoveCoroutine != null)
             {

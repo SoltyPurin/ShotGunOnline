@@ -3,48 +3,45 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class WaveTransitionAnim : MonoBehaviour
+public class WaveTransitionAnim : NetworkBehaviour
 {
-    #region y•Ï”z
-    [SerializeField, Header("ƒEƒF[ƒu‚Ì”‚ğæ“¾‚·‚é‚½‚ß‚ÌƒXƒNƒŠƒvƒg")]
+    #region ã€å¤‰æ•°ã€‘
+    [SerializeField, Header("ã‚¦ã‚§ãƒ¼ãƒ–ã®æ•°ã‚’å–å¾—ã™ã‚‹ãŸã‚ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private WaveManager _waveManager = default;
 
-    [SerializeField, Header("ƒEƒF[ƒu‘JˆÚ‚ÌƒXƒe[ƒg‚ğŠÄ‹‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç›£è¦–ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private WaveTransition _waveTransition = default;
 
-    [SerializeField, Header("ƒAƒjƒ[ƒ^[")]
+    [SerializeField, Header("ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     private Animator _animator = default;
 
-    [SerializeField, Header("ƒ}ƒbƒv‚ÌƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ãƒãƒƒãƒ—ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _mapObj = default;
 
-    [SerializeField, Header("‚‚ê–‹")]
+    [SerializeField, Header("å‚ã‚Œå¹•")]
     private GameObject _blackLine = default;
 
-    [SerializeField, Header("ˆÃˆÅ‚ÌƒCƒ[ƒW")]
+    [SerializeField, Header("æš—é—‡ã®ã‚¤ãƒ¡ãƒ¼ã‚¸")]
     private GameObject _blackImage = default;
 
-    [SerializeField, Header("ƒJƒƒ‰")]
-    private GameObject _camera = default;
-
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒgŠÇ—")]
-    private PlayerStateManager _stateManager = default;
+    [SerializeField,Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆç®¡ç†")]
+    private List<PlayerStateManager> _stateManager = new List<PlayerStateManager>();
     [SerializeField]
     private InputChangeState _inputChangeState = default;
 
-    //ˆê‰ñ‚ÌƒEƒF[ƒu‘JˆÚ‚Åˆê‰ñ‚¾‚¯ƒRƒ‹[ƒ`ƒ“‚ğ‘–‚ç‚¹‚é
+    //ä¸€å›ã®ã‚¦ã‚§ãƒ¼ãƒ–é·ç§»ã§ä¸€å›ã ã‘ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’èµ°ã‚‰ã›ã‚‹
     private bool _isTransitionRunning = false;
 
-    // —§‚¿ã‚ª‚èŒŸo—p
+    // ç«‹ã¡ä¸ŠãŒã‚Šæ¤œå‡ºç”¨
     private bool _wasWaveChangeMoment = default;
 
-    private Coroutine _runningRoutine;    // Às’†ƒnƒ“ƒhƒ‹
+    private Coroutine _runningRoutine;    // å®Ÿè¡Œä¸­ãƒãƒ³ãƒ‰ãƒ«
 
     private bool _checkOnce = false;
 
     #endregion
 
-    #regiony’è”z
+    #regionã€å®šæ•°ã€‘
     private readonly string FIRST = "First";
 
     private readonly string SECOND = "Second";
@@ -60,6 +57,7 @@ public class WaveTransitionAnim : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsServer) return;
         //this.transform.position = Vector2.zero;
         bool now = _waveTransition.IsWaveChangeMoment;
         if (!_wasWaveChangeMoment && now)
@@ -71,16 +69,17 @@ public class WaveTransitionAnim : MonoBehaviour
         if (_waveTransition.EndTransition() && !_checkOnce)
         {
             _checkOnce = true;
-            DeActiveBalls();
+            DeActiveBallsClientRpc();
         }
 
             _wasWaveChangeMoment = now;
     }
 
     /// <summary>
-    /// ”’‹Ê’B‚ğ”ñ•\¦‚É‚·‚é
+    /// ç™½ç‰é”ã‚’éè¡¨ç¤ºã«ã™ã‚‹
     /// </summary>
-    private void DeActiveBalls()
+    [ClientRpc]
+    private void DeActiveBallsClientRpc()
     {
         _mapObj.SetActive(false);
         _blackImage.SetActive(false);
@@ -93,15 +92,28 @@ public class WaveTransitionAnim : MonoBehaviour
         {
             return;
         }
-        if(_stateManager == null)
-        {
-            _stateManager = GameObject.FindWithTag("Player").GetComponent<PlayerStateManager>();
-        }
-        _stateManager.MovieState();
+        SetPlayersMovieStateClientRpc();
 
         _runningRoutine = StartCoroutine(TriggerReset(newIndex));
 
         }
+
+    /// <summary>
+    /// å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç«¯æœ«ã§å„è‡ªæ©Ÿãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ MovieState ã«å¤‰æ›´ã™ã‚‹ RPC
+    /// </summary>
+    [ClientRpc]
+    private void SetPlayersMovieStateClientRpc()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
+        {
+            PlayerStateManager state = p.GetComponent<PlayerStateManager>();
+            if (state != null && state.IsOwner)
+            {
+                state.MovieState();
+            }
+        }
+    }
 
     private IEnumerator TriggerReset(int curIndex)
     {
@@ -109,15 +121,22 @@ public class WaveTransitionAnim : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        PlayAnimationClientRpc(curIndex);
+
+        StartCoroutine(PlayerCanMove());
+    }
+    [ClientRpc]
+    private void PlayAnimationClientRpc(int curIndex)
+    {
         _blackImage.SetActive(true);
         _mapObj.SetActive(true);
         _blackLine.SetActive(true);
 
         try
         {
-            yield return null;
-            switch(curIndex)
+            switch (curIndex)
             {
+                case 0:
                 case 1:
                     _animator.SetTrigger(FIRST);
                     break;
@@ -151,55 +170,74 @@ public class WaveTransitionAnim : MonoBehaviour
         }
 
         _checkOnce = false;
-
-        StartCoroutine(PlayerCanMove());
     }
 
     private IEnumerator PlayerCanMove()
     {
         yield return new WaitForSeconds(2.5f);
-        //ƒIƒ“ƒ‰ƒCƒ“”Å
-        if (_stateManager == null || _inputChangeState == null)
+        SetPlayersNormalStateClientRpc();
+    }
+
+    [ClientRpc]
+    private void SetPlayersNormalStateClientRpc()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject p in players)
         {
-            Debug.Log("ƒ}ƒ‹ƒ`ƒvƒŒƒC");
-            PlayerStateManager[] states = FindObjectsByType<PlayerStateManager>();
-            InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
-            foreach(PlayerStateManager state in states)
+            if (p == null) continue;
+
+            PlayerStateManager state = p.GetComponent<PlayerStateManager>();
+            InputChangeState inputState = p.GetComponent<InputChangeState>();
+
+            if (state != null && state.IsOwner)
             {
-                if(state == null)
-                {
-                    continue;
-                }
-                if (state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
-                {
-                    if (netObj.IsLocalPlayer)
-                    {
-                        state.NormalState();
-                        break; 
-                    }
-                }
+                state.NormalState();
             }
-            foreach(InputChangeState state in inputStates)
+            if (inputState != null && inputState.IsOwner)
             {
-                if(state == null)
-                {
-                    continue ;
-                }
-                if(state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
-                {
-                    if (netObj.IsLocalPlayer)
-                    {
-                        state.ToNormalAnimation();
-                        break;
-                    }
-                }
+                inputState.ToNormalAnimation();
             }
         }
-        else //ƒ\ƒƒvƒŒƒC”Å
-        {
-            Debug.Log("ƒ\ƒƒvƒŒƒC");
-            _stateManager.NormalState();
-            _inputChangeState.ToNormalAnimation();
-        }
+        ////ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ç‰ˆ
+        //if (_stateManager == null || _inputChangeState == null)
+        //{
+        //    InputChangeState[] inputStates = FindObjectsByType<InputChangeState>();
+        //    foreach (PlayerStateManager state in _stateManager)
+        //    {
+        //        if (state == null)
+        //        {
+        //            continue;
+        //        }
+        //        if (state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
+        //        {
+        //            if (netObj.IsLocalPlayer)
+        //            {
+        //                state.NormalState();
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    foreach (InputChangeState state in inputStates)
+        //    {
+        //        if (state == null)
+        //        {
+        //            continue;
+        //        }
+        //        if (state.TryGetComponent<Unity.Netcode.NetworkObject>(out NetworkObject netObj))
+        //        {
+        //            if (netObj.IsLocalPlayer)
+        //            {
+        //                state.ToNormalAnimation();
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+        //else //ã‚½ãƒ­ãƒ—ãƒ¬ã‚¤ç‰ˆ
+        //{
+        //    Debug.Log("ã‚½ãƒ­ãƒ—ãƒ¬ã‚¤");
+        //    _stateManager[0].NormalState();
+        //    _inputChangeState.ToNormalAnimation();
+        //}
     }
 }

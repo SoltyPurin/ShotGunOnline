@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// ƒQ[ƒ€ŠJn‚Ì‰‰o‚ğÀs‚·‚éƒXƒNƒŠƒvƒg
-/// yì¬ÒFûü‹´‰pmz
+/// ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã®æ¼”å‡ºã‚’å®Ÿè¡Œã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+/// ã€ä½œæˆè€…ï¼šé«™æ©‹è‹±å£«ã€‘
 /// </summary>
 public class GameStarter : MonoBehaviour
 {
-    [SerializeField, Header("æ“¾Œn")]
+    [SerializeField, Header("å–å¾—ç³»")]
     private WaveManager _waveManager = default;
     [SerializeField]
     private PlayerStateManager _playerStateManager = default;
@@ -17,20 +17,24 @@ public class GameStarter : MonoBehaviour
     [SerializeField]
     private GameObject _StarterCanvas = default;
 
-    [SerializeField, Header("ƒ^ƒCƒ€ƒ‰ƒCƒ“")]
-    private PlayableDirector _playerDirector = default;
-
     private void GetPlayer()
     {
-        // ƒlƒbƒgƒ[ƒNã‚Ì‘SƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚ğ’T‚·
+        // ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ä¸Šã®å…¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¢ã™
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject p in players)
         {
             NetworkObject netObj = p.GetComponent<NetworkObject>();
             if (netObj != null && netObj.IsLocalPlayer)
             {
-                _playerStateManager.MovieState();
-                _canvas.SetActive(false);
+                _playerStateManager = p.GetComponent<PlayerStateManager>();
+                if (_playerStateManager != null)
+                {
+                    _playerStateManager.MovieState();
+                }
+                if (_canvas != null)
+                {
+                    _canvas.SetActive(false);
+                }
 
                 break;
             }
@@ -47,13 +51,13 @@ public class GameStarter : MonoBehaviour
         }
     }
     /// <summary>
-    /// TimeLine“à‚ÅÀs‚·‚éƒƒ\ƒbƒhAƒ€[ƒr[I—¹ƒEƒF[ƒu‚ğŠJn‚·‚éB
+    /// TimeLineå†…ã§å®Ÿè¡Œã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã€ãƒ ãƒ¼ãƒ“ãƒ¼çµ‚äº†æ™‚ã‚¦ã‚§ãƒ¼ãƒ–ã‚’é–‹å§‹ã™ã‚‹ã€‚
     /// </summary>
     public void TimelineEnd()
     {
-        _canvas.SetActive(true);
-        _StarterCanvas.SetActive(false);
-        _waveManager.StartWave(0);
-        _playerStateManager.NormalState();
+        if (_canvas != null) _canvas.SetActive(true);
+        if (_StarterCanvas != null) _StarterCanvas.SetActive(false);
+        if (_waveManager != null) _waveManager.StartWave(0);
+        if (_playerStateManager != null) _playerStateManager.NormalState();
     }
 }

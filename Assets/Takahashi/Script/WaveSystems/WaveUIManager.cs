@@ -1,11 +1,12 @@
 using NUnit.Framework;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 ///ウェーブ中に出てくるUIのアニメーションや文言を管理するクラス
 /// </summary>
-public class WaveUIManager : MonoBehaviour
+public class WaveUIManager : NetworkBehaviour
 {
     [SerializeField, Header("表示用テキスト")]
     private Text[] _waveTexts = new Text[3];
@@ -34,7 +35,8 @@ public class WaveUIManager : MonoBehaviour
         _waveTexts[2].text = " ";
     }
 
-    public void TextChange(string text, int count)
+    [ClientRpc]
+    public void TextChangeClientRpc(string text, int count)
     {
         if (_waveTexts[count] != null)
         {
@@ -50,7 +52,8 @@ public class WaveUIManager : MonoBehaviour
         }
     }
 
-    public void FadeOutImage()
+    [ClientRpc]
+    public void FadeOutImageClientRpc()
     {
         if(_fadeAnimator != null)
         {

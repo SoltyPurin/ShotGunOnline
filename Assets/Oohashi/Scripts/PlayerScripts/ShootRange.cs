@@ -93,16 +93,6 @@ public class ShootRange : MonoBehaviour
         _viewMaxAngle = _maxAngle;
     }
 
-    public void StartCharge()
-    {
-        //if (!_canCharge)
-        //{
-        //    return;
-        //}
-        //_chargeStartTime = Time.time;
-        //_canCharge = false;
-    }
-
     /// <summary>
     /// 最大射角及び射程距離を計算するメソッド
     /// </summary>
@@ -119,6 +109,7 @@ public class ShootRange : MonoBehaviour
         //float halfAngleRad = Mathf.Deg2Rad * (_maxAngle / 2);
         if (chargeTime < 2)
         {
+            _didSwingStart = false;
             //チャージ2秒未満の場合は最大角度から最低角度まで下げていく
             _viewMaxAngle = Mathf.Lerp(_originMaxAngle, _minAngle, _t) ;
             //_viewMaxAngle = _maxAngle;
@@ -134,12 +125,6 @@ public class ShootRange : MonoBehaviour
             float elapsed = Time.time - _swingStartTime;
 
             _viewMaxAngle = _minAngle + Mathf.PingPong(elapsed * _swingTime, _swingWidth);
-            //_viewMaxAngle = _minAngle + Mathf.PingPong(Time.time * _swingTime, _swingWidth);
-            //2秒以上だったら最低角度をピンポンで大きくしたり小さくしたりする
-            //_minAngle += Mathf.PingPong(Time.time * _swingTime, _swingWidth);
-            //_maxAngle = _minAngle + Mathf.PingPong(_chargeStartTime * _swingTime, _swingWidth); 
-            //_viewMaxAngle = _minAngle;
-            //halfAngleRad = Mathf.Deg2Rad * (_minAngle / 2);
         }
         //半分の角度の値を度からラジアンに変換して渡す
         //当たり判定の横幅を設定
@@ -171,6 +156,7 @@ public class ShootRange : MonoBehaviour
         //コライダー配列の中に入っているオブジェクトを探索
         foreach (Collider2D hit in hits)
         {
+            Debug.Log("範囲内にオブジェクト有");
             bool isHit = false;
             //ヒットしたオブジェクトを登録
             GameObject hitObject = hit.gameObject;
@@ -185,10 +171,11 @@ public class ShootRange : MonoBehaviour
             }
             else if (hitObject.CompareTag(BOSSTAGNAME))
             {
+                Debug.Log("範囲内にボスのタグ発見");
                 GameObject boss = hitObject;
                 BossStateManagement bossStateManagement = boss.GetComponent<BossStateManagement>();
                 isHit = true;
-                BossHitObject(hitObject, chargeTime);
+                BossHitObject(hitObject, chargeTime, isCritical);
             }
             else if (hitObject.CompareTag(NORMALBULLETTAGNAME) || hitObject.CompareTag(MIRRORBULLETTAGNAME))
             {
@@ -196,6 +183,7 @@ public class ShootRange : MonoBehaviour
             }
             else
             {
+                Debug.Log("範囲内に雑魚敵のタグ発見");
                 NormalHitObject(hitObject, chargeTime,isCritical);
                 isHit = true;
             }
@@ -234,7 +222,8 @@ public class ShootRange : MonoBehaviour
         SetKnockBackStone stoneBlowAway = hitObject.GetComponent<SetKnockBackStone>();
         if (stoneBlowAway != null)
         {
-            stoneBlowAway.SetDirectionAndForce((Vector2)transform.position, chargeTime,false,false);
+            //stoneBlowAway.SetDirectionAndForce((Vector2)transform.position, chargeTime,false,false);
+            stoneBlowAway.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, false, false);
         }
     }
     /// <summary>
@@ -242,15 +231,21 @@ public class ShootRange : MonoBehaviour
     /// </summary>
     /// <param name="hitObject">ボスのオブジェクト</param>
     /// <param name="chargeTime">チャージ時間</param>
-    private void BossHitObject(GameObject hitObject, float chargeTime)
+    private void BossHitObject(GameObject hitObject, float chargeTime, bool isCritical)
     {
+        Debug.Log("ボスにヒット");
         BossHP bossHP = hitObject.GetComponent<BossHP>();
         BossKnockBack knockback = hitObject.GetComponent<BossKnockBack>();
         if (knockback != null)
         {
-            knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, false, false);
-            bossHP.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+            knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isCritical, false);
         }
+        if (bossHP != null)
+        {
+            bossHP.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
+        }
+
+        PlayLocalHitFeedback(hitObject, chargeTime, isCritical);
     }
     /// <summary>
     /// 盾持ちに当たったときのメソッド
@@ -258,15 +253,17 @@ public class ShootRange : MonoBehaviour
     /// <param name="hitObject">盾持ちのオブジェクト</param>
     /// <param name="chargeTime">チャージ時間</param>
     /// <param name="isCritical">クリティカルかどうか</param>
-    private void ArmorHitObject(GameObject hitObject, float chargeTime,bool isCritical)
+    private void ArmorHitObject(GameObject hitObject, float chargeTime, bool isCritical)
     {
         ArmorKnockBack armorKnockback = hitObject.GetComponent<ArmorKnockBack>();
         ArmorTakeDamage armorTakeDamage = hitObject.GetComponent<ArmorTakeDamage>();
         if (armorKnockback != null)
         {
-            armorKnockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, PlayerState.Normal,isCritical,false);
-            armorTakeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+            armorKnockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isCritical, false);
+            armorTakeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
         }
+
+        PlayLocalHitFeedback(hitObject, chargeTime, isCritical);
     }
 
     /// <summary>
@@ -274,14 +271,43 @@ public class ShootRange : MonoBehaviour
     /// </summary>
     /// <param name="hitObject">当たったオブジェクト</param>
     /// <param name="chargeTime">チャージ時間</param>
-    private void NormalHitObject(GameObject hitObject, float chargeTime,bool isSpecial)
+    private void NormalHitObject(GameObject hitObject, float chargeTime, bool isSpecial)
     {
         EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
         if (knockback != null)
         {
-            knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime,isSpecial,false);
-            takeDamage.SetTakeDamege(chargeTime, _stateManager.PlayerState);
+            knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isSpecial, false);
+            takeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
+        }
+
+        PlayLocalHitFeedback(hitObject, chargeTime, isSpecial);
+    }
+
+    /// <summary>
+    /// クライアント側でもヒット瞬間に手応え（硬直・振動・エフェクト）を感じられるようローカル即時先行再生
+    /// </summary>
+    private void PlayLocalHitFeedback(GameObject hitObject, float chargeTime, bool isCritical)
+    {
+        if (hitObject == null) return;
+
+        DamageEffect damageEffect = hitObject.GetComponentInChildren<DamageEffect>();
+        if (damageEffect != null)
+        {
+            damageEffect.PlayAnim();
+        }
+
+        TrenbleEnemy trenble = hitObject.GetComponent<TrenbleEnemy>();
+        if (trenble != null)
+        {
+            if (isCritical)
+            {
+                trenble.TrenbleProtocol(0.3f);
+            }
+            else
+            {
+                trenble.NormalTrenbleProtocol(0.1f, chargeTime);
+            }
         }
     }
 

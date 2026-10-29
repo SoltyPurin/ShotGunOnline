@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class BossAtackAnimeEnd : BossColliderTriggerSW
@@ -59,6 +60,8 @@ public class BossAtackAnimeEnd : BossColliderTriggerSW
             transform.position,
             Quaternion.identity).GetComponent<EnemyShotBullet>();
 
+        NetworkObject nBullet = shotBullet.GetComponent<NetworkObject>();
+        nBullet.Spawn();
         shotBullet.transform.localScale = _bulletSize;
 
         SpriteRenderer shotRenderer = shotBullet.GetComponent<SpriteRenderer>();

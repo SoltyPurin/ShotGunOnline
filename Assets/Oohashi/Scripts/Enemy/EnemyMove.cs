@@ -12,54 +12,92 @@ public enum EnemyState
     Wait
 }
 
-public class EnemyMove : MonoBehaviour
+public class EnemyMove : Unity.Netcode.NetworkBehaviour
 {
-
     protected GameObject _playerObject = default;
-    protected  readonly string PLAYERTAGNAME = "Player";
+    protected readonly string PLAYERTAGNAME = "Player";
     protected Transform _target = default;
-    protected NavMesh2DAgent _agent; //NavMeshAgent2D���g�p���邽�߂̕ϐ�
+    protected NavMesh2DAgent _agent;
     private PlayerStateManager _playerStateManager;
-    [SerializeField, Header("�������ȊO�ł͕ύX���Ă��Ӗ��Ȃ�")]
-    protected float _moveSpeed = 5;//�ړ����x
-    public float MoveSpeed
-    {
-        get { return _moveSpeed; }
-    }
-    [SerializeField, Header("�v���C���[�Ǝ�鋗���A���b�N�I���ȊO���ς��Ă��Ӗ��Ȃ�")]
-    protected float _keepDistance = 0;//�v���C���[�Ǝ�鋗��
-    //�ړ��s�\�̃t���O
+
+    [SerializeField, Header("移動速度")]
+    protected float _moveSpeed = 5f;
+    public float MoveSpeed => _moveSpeed;
+
+    [SerializeField, Header("プレイヤーと保つ距離")]
+    protected float _keepDistance = 0f;
+
     protected bool _cantMove = false;
-    //���݂̃X�e�[�g
-    protected EnemyState _enemyState = EnemyState.move;
+
     public EnemyState EnemyState
     {
-        get { return _enemyState; }
-        set { _enemyState = value; }//���EnemyTakeDamage���p�������X�N���v�g�B���珑�������Ă�
+        get => _enemyState.Value;
+        set
+        {
+            if (IsServer)
+            {
+                _enemyState.Value = value;
+            }
+        }
     }
-    //����������
+
+    protected NetworkVariable<EnemyState> _enemyState = new NetworkVariable<EnemyState>(
+        EnemyState.move,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
     protected Vector2 _direction = default;
-    public Vector2 Direction
-    {
-        get { return _direction; }
-    }
+    public Vector2 Direction => _direction;
+
     private bool _isFloating = false;
-    public bool IsFloating
-    {
-        get { return _isFloating; }
-    }
+    public bool IsFloating => _isFloating;
 
     private Rigidbody2D _rigidBody = default;
-
     private Vector2 _saveDirection = Vector2.zero;
 
-    [SerializeField, Header("�����")]
-    private float _inertiaStrangth = 4;
+    [SerializeField, Header("浮遊慣性")]
+    private float _inertiaStrangth = 4f;
+
+    // プレイヤーの再探索タイマー（定期的に最寄りプレイヤーをターゲットにする）
+    private float _findPlayerTimer = 0f;
+    private const float FIND_PLAYER_INTERVAL = 0.5f;
+
+    [SerializeField, Header("クライアントで敵の移動をローカル計算する(雑魚敵向け)")]
+    private bool _localSimulation = false;
+    // ローカルシミュレーションを実際に行っているか
+    private bool _localSimulationActive = false;
+    private EnemyNetworkTransform _enemyNetworkTransform = default;
+
+    // サーバー位置とのずれがこの距離を超えたら徐々に補正する
+    private const float CLIENT_CORRECT_DISTANCE = 1.5f;
+    // サーバー位置とのずれがこの距離を超えたら即座に合わせる
+    private const float CLIENT_SNAP_DISTANCE = 5f;
+    private const float CLIENT_CORRECT_RATE = 4f;
+    // サーバー制御中(ノックバック等)にサーバー位置へ追従する速さ
+    private const float CLIENT_FOLLOW_RATE = 25f;
 
     public virtual void Start()
     {
-        _agent = GetComponent<NavMesh2DAgent>(); //agent��NavMeshAgent2D���擾
+        _agent = GetComponent<NavMesh2DAgent>();
         _rigidBody = GetComponent<Rigidbody2D>();
+
+        _enemyNetworkTransform = GetComponent<EnemyNetworkTransform>();
+        // ローカルシミュレーションは、EnemyNetworkTransformが付いている場合のみ有効
+        _localSimulationActive = !IsServer && _localSimulation && _enemyNetworkTransform != null;
+
+        if (_localSimulationActive)
+        {
+            _enemyNetworkTransform.LocalSimulation = true;
+            if (_agent != null)
+            {
+                _agent.LocalSimulation = true;
+            }
+        }
+        else if (!IsServer && _agent != null)
+        {
+            _agent.enabled = false;
+        }
     }
 
     public void ChangeFloat(bool value)
@@ -69,59 +107,127 @@ public class EnemyMove : MonoBehaviour
 
     public void RoadKill()
     {
-        _enemyState = EnemyState.roadKill;
+        if (IsServer)
+        {
+            _enemyState.Value = EnemyState.roadKill;
+        }
     }
 
     protected void FindPlayer()
     {
-        // ネットワーク上の全プレイヤーオブジェクトを探す
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYERTAGNAME);
+        if (players == null || players.Length == 0) return;
+
+        GameObject nearestPlayer = null;
+        float minDistance = float.MaxValue;
+        Vector2 curPos = transform.position;
+
         foreach (GameObject p in players)
         {
-            NetworkObject netObj = p.GetComponent<NetworkObject>();
-            if (netObj != null && netObj.IsLocalPlayer)
+            if (p == null || !p.activeInHierarchy) continue;
+            float dist = Vector2.Distance(curPos, p.transform.position);
+            if (dist < minDistance)
             {
-                _playerObject = p;
-                _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
-                _target = _playerObject.transform;
-                break;
+                minDistance = dist;
+                nearestPlayer = p;
             }
         }
 
+        if (nearestPlayer != null)
+        {
+            _playerObject = nearestPlayer;
+            _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
+            _target = _playerObject.transform;
+        }
     }
+
+    /// <summary>
+    /// クライアント側のローカルシミュレーション。
+    /// 通常移動中はローカルで移動し、サーバー位置と大きくずれたときのみ補正する。
+    /// ノックバックや落下などサーバーが位置を確定する状態では、サーバー位置に追従する。
+    /// </summary>
+    private void ClientSimulate()
+    {
+        Vector2 serverPos = _enemyNetworkTransform.ServerPosition;
+        Vector3 curPos = transform.position;
+
+        bool serverControlled = _enemyState.Value != EnemyState.move || _isFloating;
+        if (serverControlled)
+        {
+            float follow = 1f - Mathf.Exp(-CLIENT_FOLLOW_RATE * Time.fixedDeltaTime);
+            Vector2 followed = Vector2.Lerp(curPos, serverPos, follow);
+            transform.position = new Vector3(followed.x, followed.y, curPos.z);
+            return;
+        }
+
+        _findPlayerTimer += Time.fixedDeltaTime;
+        if (_playerObject == null || !_playerObject.activeInHierarchy || _findPlayerTimer >= FIND_PLAYER_INTERVAL)
+        {
+            _findPlayerTimer = 0f;
+            FindPlayer();
+            if (_playerObject == null) return;
+        }
+
+        Moving();
+
+        curPos = transform.position;
+        float error = Vector2.Distance(curPos, serverPos);
+        if (error > CLIENT_SNAP_DISTANCE)
+        {
+            transform.position = new Vector3(serverPos.x, serverPos.y, curPos.z);
+        }
+        else if (error > CLIENT_CORRECT_DISTANCE)
+        {
+            float correct = 1f - Mathf.Exp(-CLIENT_CORRECT_RATE * Time.fixedDeltaTime);
+            Vector2 corrected = Vector2.Lerp(curPos, serverPos, correct);
+            transform.position = new Vector3(corrected.x, corrected.y, curPos.z);
+        }
+    }
+
     private void FixedUpdate()
     {
-        if (_playerObject == null)
+        if (!IsServer)
         {
+            if (_localSimulationActive)
+            {
+                ClientSimulate();
+            }
+            return;
+        }
+
+        _findPlayerTimer += Time.fixedDeltaTime;
+        if (_playerObject == null || !_playerObject.activeInHierarchy || _findPlayerTimer >= FIND_PLAYER_INTERVAL)
+        {
+            _findPlayerTimer = 0f;
             FindPlayer();
-            return;
+            if (_playerObject == null) return;
         }
-        _cantMove = _enemyState == EnemyState.knockback || _enemyState == EnemyState.fall || _enemyState == EnemyState.Wait;
-        if (_cantMove) //�m�b�N�o�b�N���܂��͗������͈ړ����Ȃ��悤�ɂ���
-        {
-            return;
-        }
-        Moving();//�ړ��̃��\�b�h�Ăяo��
+
+        _cantMove = _enemyState.Value == EnemyState.knockback || 
+                    _enemyState.Value == EnemyState.fall || 
+                    _enemyState.Value == EnemyState.Wait;
+
+        if (_cantMove) return;
+
+        Moving();
     }
 
     public virtual void Moving()
     {
-        if(_target == null)
-        {
-            return;
-        }
-        if(_isFloating)
-        {
-            Debug.Log("��������b�I");
-            float t = Time.fixedDeltaTime * _inertiaStrangth;
-            _rigidBody.linearVelocity = Vector2.Lerp(_rigidBody.linearVelocity,_saveDirection, t);
+        if (_target == null) return;
 
+        if (_isFloating)
+        {
+            float t = Time.fixedDeltaTime * _inertiaStrangth;
+            _rigidBody.linearVelocity = Vector2.Lerp(_rigidBody.linearVelocity, _saveDirection, t);
         }
         else
         {
-            _agent.destination = _target.position; //agent�̖ړI�n��target�̍��W�ɂ���
-            _saveDirection = (_target.position - transform.position) * _moveSpeed;
+            if (_agent != null && _agent.isActiveAndEnabled)
+            {
+                _agent.destination = _target.position;
+            }
+            _saveDirection = ((Vector2)_target.position - (Vector2)transform.position).normalized * _moveSpeed;
         }
-
     }
 }

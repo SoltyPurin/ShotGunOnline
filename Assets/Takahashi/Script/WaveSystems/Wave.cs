@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
 /// 1つのウェーブに出現するオブジェクトを管理するクラスで、オブジェクトと出現タイミングを設定できる。
 /// 使う際には空オブジェクトにこれをアタッチし、子オブジェクトに敵を配置、その敵をリストに追加しよう。
 /// </summary>
-public class Wave : MonoBehaviour
+public class Wave : NetworkBehaviour
 {
     #region 【Structs】
 
@@ -143,10 +144,10 @@ public class Wave : MonoBehaviour
         }
 
         //自動スタートが有効ならウェーブの状態を変更しスタート可能に
-        if (_autoTransition)
-        {
+        //if (_autoTransition)
+        //{
             _nowState = Transition.Gimmick;
-        }
+        //}
 
         _waveManager = FindFirstObjectByType<WaveManager>();
         _prevEnemyCount = EnemyCount();
@@ -155,6 +156,10 @@ public class Wave : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsServer)
+        {
+            return;
+        }
         //現在のウェーブの状態に応じ処理を変更する。
         switch (_nowState)
         {
@@ -171,7 +176,12 @@ public class Wave : MonoBehaviour
         if(_prevEnemyCount != _initEnemyCount)
         {
             _initEnemyCount = _prevEnemyCount;
-            _waveManager.SetChangeCount(_prevEnemyCount);
+            //_waveManager.SetChangeCount(_prevEnemyCount);
+            // 【安全対策】Nullチェックを追加してクラッシュを防ぐ
+            if (_waveManager != null)
+            {
+                _waveManager.SetChangeCountClientRpc(_prevEnemyCount);
+            }
         }
         
     }
@@ -213,27 +223,86 @@ public class Wave : MonoBehaviour
     /// </summary>
     private void GimmickSetTrue()
     {
-        //ギミックが存在しないならステートを変更し早期リターン
-        if(_gimmickList.Count <= 0)
+        // ギミックが存在しないならステートを変更し早期リターン
+        if (_gimmickList.Count <= 0)
         {
             _nowState = Transition.Enemy;
             return;
         }
 
-        //タイマーを加算
+        // タイマーを加算
         _gimmickFrame++;
 
-        //generateFrame分時間が経ったら有効化して次へ
-        while(_gimmickFrame >= _gimmickList[_nowGimmick]._generateFrame)
+        // generateFrame分時間が経ったら有効化して次へ
+        while (_gimmickFrame >= _gimmickList[_nowGimmick]._generateFrame)
         {
-            //リスト内にギミックが存在するなら、ギミックを出現させる。
-            if (_gimmickList[_nowGimmick]._waveGimmick != null)
+            WaveGimmick waveGimmickObj = _gimmickList[_nowGimmick]._waveGimmick;
+
+            if (waveGimmickObj != null)
             {
-                _gimmickList[_nowGimmick]._waveGimmick.gameObject.SetActive(true);
-                _gimmickList[_nowGimmick]._waveGimmick.GimmickPopAnm();
+                // 1. シーン上のダミーからプレハブ名を整形・取得
+                string cleanedName = System.Text.RegularExpressions.Regex.Replace(waveGimmickObj.name, @"\s*\(\d+\)", "");
+                string targetPrefabName = cleanedName.Replace("(Clone)", "").Trim();
+                GameObject prefabToSpawn = null;
+
+                // 2. NetworkManager の登録リストから「本物の岩プレハブ」を探す
+                if (Unity.Netcode.NetworkManager.Singleton != null)
+                {
+                    foreach (Unity.Netcode.NetworkPrefabsList prefabList in Unity.Netcode.NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
+                    {
+                        foreach (Unity.Netcode.NetworkPrefab networkPrefab in prefabList.PrefabList)
+                        {
+                            if (networkPrefab.Prefab != null && networkPrefab.Prefab.name == targetPrefabName)
+                            {
+                                prefabToSpawn = networkPrefab.Prefab;
+                                break;
+                            }
+                        }
+                        if (prefabToSpawn != null) break;
+                    }
+                }
+
+                // 3. プレハブが見つかったら、ダミーと同じ座標・回転で生成してスポーン
+                if (prefabToSpawn != null)
+                {
+                    GameObject spawnedGimmick = Instantiate(
+                        prefabToSpawn,
+                        waveGimmickObj.transform.position,
+                        waveGimmickObj.transform.rotation
+                    );
+
+                    // ネットワーク上に一斉スポーン（クライアント側にも自動同期生成）
+                    NetworkObject netObj = spawnedGimmick.GetComponent<NetworkObject>();
+                    if (netObj != null)
+                    {
+                        netObj.transform.SetParent(null); // 親子関係を解消
+                        netObj.Spawn();
+                    }
+
+                    // 4. 生成された本物のギミックの出現アニメーションを再生
+                    WaveGimmick newGimmick = spawnedGimmick.GetComponent<WaveGimmick>();
+                    if (newGimmick != null)
+                    {
+                        newGimmick.GimmickPopAnm();
+
+                        // リスト内の参照を、新しく生まれた本物に差し替える
+                        _gimmickList[_nowGimmick] = new GimmickData
+                        {
+                            _generateFrame = _gimmickList[_nowGimmick]._generateFrame,
+                            _waveGimmick = newGimmick
+                        };
+                    }
+
+                    // 5. サーバー側で不要になった配置用ダミーを破棄
+                    Destroy(waveGimmickObj.gameObject);
+                }
+                else
+                {
+                    Debug.LogError($"[Wave] NetworkManager にプレハブ '{targetPrefabName}' が登録されていません！");
+                }
             }
 
-            //次のギミックへ移動
+            // 次のギミックへ移動
             NextGimmick();
 
             if (_nowState != Transition.Gimmick)
@@ -244,32 +313,89 @@ public class Wave : MonoBehaviour
     }
 
     /// <summary>
-    /// 敵の有効化用メソッド
+    /// 敵の有効化用メソッド、同じ座標にネットワーク対応の敵を出現させて元の敵を削除
     /// </summary>
     private void ObjSetTrue()
     {
-        //敵が存在しないならウェーブ終了可能、ステートを変更し早期リターン
-        if( _objList.Count <= 0)
+        // 敵が存在しないならウェーブ終了可能、ステートを変更し早期リターン
+        if (_objList.Count <= 0)
         {
             _waveEnd = true;
             _nowState = Transition.End;
             return;
         }
-
-        //タイマーを加算
+        int whileCount = 0;
+        // タイマーを加算
         _objFrame++;
 
-        //generateFrame以上の時間が経ったらオブジェクトを有効化
-        while(_objFrame >= _objList[_nowObj]._generateFrame)
+        // generateFrame以上の時間が経ったらオブジェクトを有効化
+        while (_objFrame >= _objList[_nowObj]._generateFrame)
         {
-            //リスト内に敵が存在するなら出現させる。
-            if (_objList[_nowObj]._waveObj != null)
+            WaveObj waveChildEnemy = _objList[_nowObj]._waveObj;
+
+            if (waveChildEnemy != null)
             {
-                _objList[_nowObj]._waveObj.gameObject.SetActive(true);
-                _objList[_nowObj]._waveObj.PopAnim();
+                // 1. 配置されている子供の敵の名前を取得
+                //string targetPrefabName = waveChildEnemy.name.Replace("(Clone)", "").Trim();
+                string cleanedName = System.Text.RegularExpressions.Regex.Replace(waveChildEnemy.name, @"\s*\(\d+\)", "");
+                string targetPrefabName = cleanedName.Replace("(Clone)", "").Trim();
+                GameObject prefabToSpawn = null;
+
+                // 2. ネットワークマネージャーの登録リストから「本物のプレハブ」を探す
+                if (Unity.Netcode.NetworkManager.Singleton != null)
+                {
+                    foreach (Unity.Netcode.NetworkPrefabsList prefabList in Unity.Netcode.NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
+                    {
+                        foreach (Unity.Netcode.NetworkPrefab networkPrefab in prefabList.PrefabList)
+                        {
+                            if (networkPrefab.Prefab != null && networkPrefab.Prefab.name == targetPrefabName)
+                            {
+                                prefabToSpawn = networkPrefab.Prefab;
+                                break;
+                            }
+                        }
+                        if (prefabToSpawn != null) break;
+                    }
+                }
+
+                // 3. 本物のプレハブが見つかったら、ダミーと同じ位置に生成してSpawn！
+                if (prefabToSpawn != null)
+                {
+                    GameObject spawnedEnemy = Instantiate(
+                        prefabToSpawn,
+                        waveChildEnemy.transform.position,
+                        waveChildEnemy.transform.rotation
+                    );
+
+                    // ネットワーク上に一斉スポーン（クライアント側にも自動出現）
+                    NetworkObject netObj = spawnedEnemy.GetComponent<NetworkObject>();
+                    if (netObj != null)
+                    {
+                        netObj.transform.SetParent(null); // 親子関係を切る
+                        netObj.Spawn();
+                        whileCount++;
+                    }
+
+                    // 生成された本物の敵の出現アニメーションを再生
+                    WaveObj newWaveObj = spawnedEnemy.GetComponent<WaveObj>();
+                    if (newWaveObj != null)
+                    {
+                        newWaveObj.PopAnim();
+
+                        // 既存のリストの参照を、新しく生まれた本物の敵に差し替える
+                        _objList[_nowObj] = new ObjData
+                        {
+                            _generateFrame = _objList[_nowObj]._generateFrame,
+                            _waveObj = newWaveObj
+                        };
+                    }
+                }
+
+                // サーバー側でのみ、用済みになったシーン上のダミーオブジェクトを即座に削除
+                Destroy(waveChildEnemy.gameObject);
             }
 
-            //次の敵へ移動
+            // 次の敵へ移動
             NextObj();
 
             if (_nowState != Transition.Enemy)
@@ -277,8 +403,8 @@ public class Wave : MonoBehaviour
                 break;
             }
         }
-    }
 
+    }
     /// <summary>
     /// 次有効化するギミックの位置に遷移するメソッド
     /// </summary>
@@ -307,7 +433,7 @@ public class Wave : MonoBehaviour
         {
             //指標を変更
             ++_nowObj;
-            _objFrame = 0;
+            //_objFrame = 0;
         }
         else
         {

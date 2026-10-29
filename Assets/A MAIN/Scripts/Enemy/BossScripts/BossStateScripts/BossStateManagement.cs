@@ -81,7 +81,7 @@ public class BossStateManagement : EnemyMove
         Cooldown,//攻撃後の後隙
         Drop //落下中
     }
-    internal BossState _currentState = BossState.Stop;
+    [SerializeField]public BossState _currentState = BossState.Approach;
     public BossState CurrentState
     {
         get { return _currentState; }
@@ -116,6 +116,7 @@ public class BossStateManagement : EnemyMove
     }
     public void FixedUpdate()
     {
+        if (!IsServer) return;
         if (_playerObject == null)
         {
             FindPlayer();
@@ -130,7 +131,7 @@ public class BossStateManagement : EnemyMove
         if (_bossHP._secondForm && !_changed)
         {
             _changed = true;
-            _changeSecondForm.ToBESecondForm();
+            _changeSecondForm.ToBESecondFormClientRpc();
             _currentState = BossState.Stop;
             _hasDecidedNextAction = false;
         }
@@ -140,9 +141,12 @@ public class BossStateManagement : EnemyMove
             _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         }
     }
-
     protected void BossStateChange()
     {
+        if(_currentState == BossState.Drop)
+        {
+            return;
+        }
 
         switch (_currentState)
         {
@@ -269,5 +273,20 @@ public class BossStateManagement : EnemyMove
         _randamRange = Random.Range(0, total);
     }
 
+    /// <summary>
+    /// 落下にステートを変える
+    /// </summary>
+    /// <param name="isFalling">trueで落下中、falseで落下解除</param>
+    public void FallStateChange(bool isFalling)
+    {
+        if (isFalling)
+        {
+            _currentState = BossState.Drop;
+        }
+        else
+        {
+            _currentState = BossState.Approach;
+        }
+    }
 
 }

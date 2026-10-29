@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ArmorKnockBack : EnemyKnockBack
@@ -56,7 +57,8 @@ public class ArmorKnockBack : EnemyKnockBack
         {
             //正面からの攻撃でなおかつ通常ショットだった場合ガード判定の吹き飛ばし
             _force = _guardKnockbackForce;
-            _seManager.PlayGuardSound();
+            //_seManager.PlayGuardSound();
+            PlayTakeDamageEffectClientRpc(true);
         }
         else
         {
@@ -89,6 +91,21 @@ public class ArmorKnockBack : EnemyKnockBack
                 _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
                 _canKnockBack = true;
             }
+        }
+
+        PlayTakeDamageEffectClientRpc(false);
+    }
+
+    /// <summary>
+    /// 被弾した時のエフェクト再生
+    /// </summary>
+    /// <param name="isGuard">ガードしたか否か</param>
+    [ClientRpc]
+    private void PlayTakeDamageEffectClientRpc(bool isGuard)
+    {
+        if (isGuard)
+        {
+            _seManager.PlayGuardSound();
         }
 
         DamageEffect damageEffect = GetComponentInChildren<DamageEffect>();

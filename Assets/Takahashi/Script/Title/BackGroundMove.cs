@@ -1,18 +1,18 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ƒ^ƒCƒgƒ‹‚Ì”wŒi‚ğˆÚ“®‚³‚¹‚éƒXƒNƒŠƒvƒg
-/// yì¬ÒFûü‹´‰pmz
+/// ã‚¿ã‚¤ãƒˆãƒ«ã®èƒŒæ™¯ã‚’ç§»å‹•ã•ã›ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+/// ã€ä½œæˆè€…ï¼šé«™æ©‹è‹±å£«ã€‘
 /// </summary>
 public class BackGroundMove : MonoBehaviour
 {
-    [SerializeField, Header("ŠJnˆÊ’u")]
+    [SerializeField, Header("é–‹å§‹ä½ç½®")]
     private float _startPos = 24.0f;
 
-    [SerializeField, Header("I—¹ˆÊ’u")]
+    [SerializeField, Header("çµ‚äº†ä½ç½®")]
     private float _endPos = -24.0f;
 
-    [SerializeField, Header("ˆÚ“®‘¬“x")]
+    [SerializeField, Header("ç§»å‹•é€Ÿåº¦")]
     private float _moveSpeed = 1.0f;
 
     private void FixedUpdate()
@@ -21,17 +21,17 @@ public class BackGroundMove : MonoBehaviour
     }
 
     /// <summary>
-    /// ”wŒi‚ğˆÚ“®‚³‚¹‚éƒƒ\ƒbƒh
+    /// èƒŒæ™¯ã‚’ç§»å‹•ã•ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void Move()
     {
-        //©g‚ÌÀ•W‚ğæ“¾
+        //è‡ªèº«ã®åº§æ¨™ã‚’å–å¾—
         Vector3 pos = transform.position;
 
-        //©g‚ÌÀ•W‚©‚çˆÚ“®‘¬“x‚ğˆø‚¢‚½’l‚ğ‘ã“ü
+        //è‡ªèº«ã®åº§æ¨™ã‹ã‚‰ç§»å‹•é€Ÿåº¦ã‚’å¼•ã„ãŸå€¤ã‚’ä»£å…¥
         transform.position = new Vector3(pos.x - (_moveSpeed * Time.deltaTime), pos.y, pos.z);
 
-        //©g‚ÌÀ•W‚ªI—¹’n“_ˆÈ‰º‚¾‚Á‚½ê‡ŠJnˆÊ’u‚ÉˆÚ“®
+        //è‡ªèº«ã®åº§æ¨™ãŒçµ‚äº†åœ°ç‚¹ä»¥ä¸‹ã ã£ãŸå ´åˆé–‹å§‹ä½ç½®ã«ç§»å‹•
         if(transform.position.x <= _endPos)
         {
             transform.position = new Vector3(_startPos, pos.y, pos.z);

@@ -1,7 +1,3 @@
-using NUnit.Framework.Api;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,9 +43,16 @@ public class ScoreData : MonoBehaviour
     }
 
     private int _damageTakenCount = 0;
+
     public int DamageTakenCount
     {
         get { return _damageTakenCount;}
+    }
+
+    private int _totalTakenDamage = 0;
+    public int TotalTakenDamage
+    {
+        get { return _totalTakenDamage;}
     }
     #endregion
     #region 定数
@@ -99,10 +102,32 @@ public class ScoreData : MonoBehaviour
         _maxCombo = maxCombo;
     }
 
+    /// <summary>
+    /// 被弾時にプレイヤーから呼ばれるメソッド
+    /// </summary>
     public void TakeDamageCountPlus()
     {
+        Debug.Log("被弾回数増えるメソッド呼び出し");
+        WaveManager waveManager = FindAnyObjectByType<WaveManager>();
+        if (waveManager != null)
+        {
+            Debug.Log("ウェーブマネージャーあったよ");
+
+            waveManager.NotifyTakeDamageServerRpc();
+        }
+        else
+        {
+            AddDamageCount();
+        }
+    }
+
+    /// <summary>
+    /// サーバー（ホスト）側で ServerRpc 受領後に呼ばれる、純粋な加算処理
+    /// </summary>
+    public void AddDamageCount()
+    {
         _damageTakenCount++;
-        _enemyCountAndCreateTime.TakeDamage();
+        _totalTakenDamage++;
     }
 
     public void SetScore(int timeScore, int hitCount,float clearTime)
@@ -124,12 +149,31 @@ public class ScoreData : MonoBehaviour
 
         _scoreList[_initListIndex] = _total;
 
-        _scoreUIManager.PopText(clearTime, hitCount, _scoreCharList[_initListIndex]);
+        int waveIndex = 0;
+        WaveManager waveManager = FindAnyObjectByType<WaveManager>();
+        if (waveManager)
+        {
+            waveIndex = waveManager.WaveIndex;
+        }
+        Debug.Log("取得したウェーブのインデックスは" + waveIndex);
+        _scoreUIManager.PopTextClientRpc(clearTime, hitCount, _scoreCharList[_initListIndex],waveIndex);
 
 
         _initListIndex++;
 
         _total = 0;
 
+
+        //_shownDamageCount = _damageTakenCount;
+        _damageTakenCount = 0;
+
+    }
+
+    /// <summary>
+    /// ホストから最終リザルト用に通算被弾数を全端末へ同期させるためのメソッド
+    /// </summary>
+    public void SyncTotalDamageFromHost(int totalDamage)
+    {
+        _totalTakenDamage = totalDamage;
     }
 }

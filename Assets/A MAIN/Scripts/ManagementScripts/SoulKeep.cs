@@ -1,260 +1,210 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class SoulKeep : MonoBehaviour
+public class SoulKeep : NetworkBehaviour
 {
     [SerializeField] private SoulMeter _soulMeter;
-    [SerializeField, Header("Œø‰Ê‰¹")]
+    [SerializeField, Header("SEç®¡ç†")]
     private PlayerSEControlScript _seScript = default;
-    [SerializeField, Header("ƒvƒŒƒCƒ„[ƒAƒjƒŠÇ—")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç®¡ç†")]
     private PlayerAnimation _playerAnimation = default;
-    [SerializeField, Header("ƒvƒ‰ƒXƒJƒEƒ“ƒg‚ğ•\¦‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒ—ãƒ©ã‚¹ã‚«ã‚¦ãƒ³ãƒˆè¡¨ç¤ºã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private SoulCountUI _soulCountUI = default;
 
-    private int _vStock = 0;
-    public int VStock
-    {
-        get { return _vStock; }
-    }
-    private int _useFullSoul = 0;
-    public int UseFullSoul
-    {
-        get { return _useFullSoul; }
-    }
+    private NetworkVariable<int> _vStock = new NetworkVariable<int>(
+        0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    public int VStock => _vStock.Value;
+
+    private NetworkVariable<int> _useFullSoul = new NetworkVariable<int>(
+        0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    public int UseFullSoul => _useFullSoul.Value;
 
     private const int USEULTIMATE_NEEDSOUL = 10;
-    public int NeedUseUltimateCoin
-    {
-        get { return USEULTIMATE_NEEDSOUL; }
-    }
+    public int NeedUseUltimateCoin => USEULTIMATE_NEEDSOUL;
 
-    private bool _isVstockMax = false;
-
+    // vStockãŒMAXï¼ˆ3ä»¥ä¸Šï¼‰ã‹ã©ã†ã‹ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã§åˆ¤å®š
+    public bool IsVStockMax => _vStock.Value >= 3;
 
     private void Start()
     {
-        if(_soulMeter == null)
+        if (IsOwner)
         {
-            _soulMeter = GameObject.Find("Soul_Bottle").GetComponent<SoulMeter>();
+            ResolveSoulMeter();
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        _vStock.OnValueChanged += OnVStockChanged;
+        _useFullSoul.OnValueChanged += OnSoulChanged;
+
+        // æ“ä½œã™ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼ˆIsOwnerï¼‰ã®ç”»é¢ã®UIã‚’è¨­å®š
+        if (IsOwner)
+        {
+            ResolveSoulMeter();
+            UpdateSoulUI(_useFullSoul.Value);
+            UpdateVStockUI(_vStock.Value);
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        _vStock.OnValueChanged -= OnVStockChanged;
+        _useFullSoul.OnValueChanged -= OnSoulChanged;
+        base.OnNetworkDespawn();
+    }
+
+    /// <summary>
+    /// è‡ªç«¯æœ«ï¼ˆIsOwnerï¼‰ã®ã‚½ã‚¦ãƒ«ãƒ¡ãƒ¼ã‚¿ãƒ¼UIå‚ç…§ã‚’å®‰å…¨ã«è§£æ±ºã™ã‚‹ã€‚
+    /// ã‚²ãƒ¼ãƒ é–‹å§‹å‰ã®éã‚¢ã‚¯ãƒ†ã‚£ãƒ–çŠ¶æ…‹ï¼ˆHUD Canvasï¼‰ã‚‚å«ã‚ã¦æ¤œç´¢ã—ã€å¿…è¦ã«å¿œã˜ã¦é…å»¶å–å¾—ã™ã‚‹ã€‚
+    /// </summary>
+    private SoulMeter ResolveSoulMeter()
+    {
+        if (_soulMeter != null) return _soulMeter;
+        if (!IsOwner) return null;
+
+        _soulMeter = UnityEngine.Object.FindAnyObjectByType<SoulMeter>(FindObjectsInactive.Include);
+        return _soulMeter;
+    }
+
+    private void OnVStockChanged(int prevValue, int newValue)
+    {
+        if (!IsOwner) return;
+        UpdateVStockUI(newValue);
+    }
+
+    private void OnSoulChanged(int prevValue, int newValue)
+    {
+        if (!IsOwner) return;
+        UpdateSoulUI(newValue);
+    }
+
+    // UIæ›´æ–°ã¯ã™ã¹ã¦ NetworkVariable ã®å¤‰æ›´é€šçŸ¥ï¼ˆOnValueChangedï¼‰çµŒç”±ã§å®Ÿè¡Œ
+    private void UpdateSoulUI(int soulValue)
+    {
+        var meter = ResolveSoulMeter();
+        if (meter == null) return;
+        meter.SetCount(soulValue);
+        meter.AddMeter(soulValue);
+    }
+
+    private void UpdateVStockUI(int vStockValue)
+    {
+        var meter = ResolveSoulMeter();
+        if (meter == null) return;
+        meter.UpdateVStockDisplay(vStockValue);
+    }
+
+    /// <summary>
+    /// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ»ã‚µãƒ¼ãƒãƒ¼å•ã‚ãšã‚³ã‚¤ãƒ³å–å¾—ã‚’å‘¼ã³å‡ºã™å…±é€šãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    public void CollectCoin()
+    {
+        if (IsServer)
+        {
+            AdditionCoin();
+        }
+        else if (IsOwner)
+        {
+            RequestAdditionCoinServerRpc();
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void RequestAdditionCoinServerRpc()
+    {
+        AdditionCoin();
+    }
 
     public void AdditionCoin()
     {
-        if (!_isVstockMax)
+        if (!IsServer) return;
+
+        if (!IsVStockMax)
         {
-            _useFullSoul++;
-        }
-        _playerAnimation.SoulGet();
-        _seScript.PlayGetSoulSE();
-        while (_useFullSoul >= USEULTIMATE_NEEDSOUL && _vStock < 3)
-        {
-            _useFullSoul -= USEULTIMATE_NEEDSOUL;
-            _vStock++;
-            if(_vStock <= 2)
-            {
-                _soulMeter.ResetMeter();
-            }
-        }
-        if (_vStock >= 3)
-        {
-            Debug.Log("Å‘å");
-            _soulMeter.SetCount(10);
-            _useFullSoul = 0;
-            _isVstockMax = true;
-            return;
-        }
-        else
-        {
-            _soulMeter.SetCount(_useFullSoul);
-            _soulMeter.AddMeter(_useFullSoul);
-            _soulCountUI.SoulPlus();
-            _isVstockMax = false;
+            _useFullSoul.Value++;
         }
 
-        UpdateVStockUI();
+        // æ¼”å‡ºå‘¼ã³å‡ºã—
+        ShowGetSoulEffectsClientRpc();
+
+        // 10ã‚½ã‚¦ãƒ«ã”ã¨ã«VStockã¸å¤‰æ›
+        while (_useFullSoul.Value >= USEULTIMATE_NEEDSOUL && _vStock.Value < 3)
+        {
+            _useFullSoul.Value -= USEULTIMATE_NEEDSOUL;
+            _vStock.Value++;
+        }
+
+        if (_vStock.Value >= 3)
+        {
+            _useFullSoul.Value = 0;
+        }
     }
 
+    /// <summary>
+    /// å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç«¯æœ«ã§ç²å¾—ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ»SEãƒ»UIæ¼”å‡ºã‚’ç™ºç«ã™ã‚‹RPC
+    /// </summary>
+    [ClientRpc]
+    private void ShowGetSoulEffectsClientRpc()
+    {
+        if (_playerAnimation != null) _playerAnimation.SoulGet();
+        if (_seScript != null) _seScript.PlayGetSoulSE();
+
+        // æ“ä½œã—ã¦ã„ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼ˆIsOwnerï¼‰ã®ç”»é¢ã®UIã®ã¿ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—è¡¨ç¤º
+        if (IsOwner)
+        {
+            if (_soulCountUI == null)
+            {
+                _soulCountUI = GetComponentInChildren<SoulCountUI>(true);
+            }
+
+            if (_soulCountUI != null)
+            {
+                _soulCountUI.SoulPlus();
+            }
+        }
+    }
 
     public void ReduceCoin()
     {
-        Debug.Log("”í’e");
-        _useFullSoul = 0;
-        _soulMeter.SetCount(_useFullSoul);
-        _soulMeter.ResetMeter() ;
-        UpdateVStockUI();
+        if (!IsServer) return; // ã‚µãƒ¼ãƒãƒ¼ã®ã¿
+        _useFullSoul.Value = 0; // å€¤ã®å¤‰æ›´ã®ã¿ã€‚UIæ›´æ–°ã¯ OnValueChanged ã§è¡Œã†
     }
 
     public void ReduceVStock()
     {
-        if (_vStock <= 0)
-        {
-            return;
-        }
-        if (_isVstockMax)
-        {
-            _soulMeter.SetCount(_useFullSoul);
-            _soulMeter.ResetMeter();
-            _isVstockMax = false;
-        }
-        _vStock--;
-        UpdateVStockUI();
-    }
+        if (!IsServer) return;
+        if (_vStock.Value <= 0) return;
 
+        _vStock.Value--;
+    }
 
     public void UseUltimate()
     {
-        if (_vStock <= 0) return;
-        if(_vStock >= 3)
+        if (IsServer)
         {
-            _soulMeter.ResetMeter();                                                                                                                                                                                                    
+            ConsumeUltimate();
         }
-        _vStock--;
-        _soulMeter.SetCount(_useFullSoul);
-        UpdateVStockUI();
+        else if (IsOwner)
+        {
+            RequestUseUltimateServerRpc();
+        }
     }
 
-
-    private void UpdateVStockUI()
+    [Rpc(SendTo.Server)]
+    public void RequestUseUltimateServerRpc()
     {
-        _soulMeter.UpdateVStockDisplay(_vStock);
+        ConsumeUltimate();
     }
-    //[SerializeField] private PlayerStateManager _stateManager = default;
-    //[SerializeField] private InputChangeState _changeState = default;
 
-    //[SerializeField, Header("VStock‚ÌŠãŒÀ")]
-    //private const int VSTOCK_LIMIT = 3;
+    private void ConsumeUltimate()
+    {
+        if (!IsServer) return;
+        if (_vStock.Value <= 0) return;
 
-    //[SerializeField,Header("ƒ\ƒEƒ‹‚Ìƒ[ƒ^[‚ğ•\¦‚·‚éƒXƒNƒŠƒvƒg")]
-    //private SoulMeter _soulMeter = default;
-
-
-
-
-    ////vƒXƒgƒbƒN‚ª3‚Â‚ ‚é‚©‚Ç‚¤‚©‚ğ”»’f‚·‚é
-    //private bool _isVStockMax = false;
-
-
-    //private const int ONE_VSTOCK_NEED_SOUL = 10; //VƒXƒgƒbƒN‚ª1‚Â—­‚Ü‚é‚Ì‚É•K—v‚Èƒ\ƒEƒ‹‚Ì”
-    //private int _initPossesionSoul = 0;
-
-    ////ƒEƒ‹ƒg‚ğg—p‚·‚éÛ‚Ég—p‚·‚éƒXƒgƒbƒNAƒ\ƒEƒ‹10ŒÂ‚Å1‚Â
-    //private int _vStock = 0;
-
-    //public int VStock
-    //{
-    //    get { return _vStock; }
-    //}
-
-    ///// <summary>
-    ///// g—p‰Â”\‚Èƒ\ƒEƒ‹
-    ///// </summary>
-    //public int UseFullSoul
-    //{
-    //    get { return _initPossesionSoul; }  
-    //}
-
-
-    ///// <summary>
-    ///// ƒEƒ‹ƒg‚ğg—p‰Â”\‚É‚È‚é‚½‚ß‚Ìƒ\ƒEƒ‹‚Ì”
-    ///// </summary>
-    //public int NeedUseUltimateCoin
-    //{
-    //    get { return ONE_VSTOCK_NEED_SOUL; }
-    //}
-
-    ///// <summary>
-    ///// Šƒ\ƒEƒ‹‚ª‹K’è”‚ğ’´‚¦‚½‚çvƒXƒgƒbƒN‚ğ1ŒÂ’™‚ß‚é
-    ///// </summary>
-    //private void Update()
-    //{
-
-    //    if(_initPossesionSoul >= ONE_VSTOCK_NEED_SOUL)
-    //    {
-    //        _vStock++;
-    //        if (_vStock < 3)
-    //        {
-    //            _vStock = Mathf.Clamp(_vStock, 0, VSTOCK_LIMIT);
-    //            _initPossesionSoul = 0;
-    //            _soulMeter.ResetMeter();
-    //        }
-    //        else
-    //        {
-    //            _initPossesionSoul = 0;
-    //        }
-    //        _soulMeter.ActiveVStock(_vStock);
-    //    }
-    //    if (_vStock <= VSTOCK_LIMIT)
-    //    {
-    //        _isVStockMax = false;
-    //    }
-    //    else
-    //    {
-    //        _isVStockMax = true;
-    //    }
-
-    //}
-
-    //public void AdditionCoin()
-    //{
-    //    if (!_isVStockMax)
-    //    {
-    //        _initPossesionSoul++;
-
-    //        _soulMeter.AddMeter(_initPossesionSoul);
-
-
-    //        //æ“¾ƒ\ƒEƒ‹‚ğƒJƒEƒ“ƒ^[‚É•\¦
-    //        _soulMeter.SetCount(_initPossesionSoul);
-
-    //    }
-    //}
-
-    //public void ReduceCoin()
-    //{
-    //    if (!this.gameObject.scene.isLoaded)
-    //    {
-    //        return;
-    //    }
-
-    //    if (!this.gameObject.activeInHierarchy)
-    //    {
-    //        return;
-    //    }
-
-    //    if (_vStock >= 1)
-    //    {
-    //        if(_initPossesionSoul >= 1)
-    //        {
-    //            _initPossesionSoul = 0;
-    //        }
-    //        else
-    //        {
-    //            _vStock--;
-    //            _soulMeter.DeActiveVStock();
-    //        }
-    //    }
-    //    else
-    //    {
-    //        _initPossesionSoul = 0;
-    //    }
-    //}
-
-    //public void UseUltimate()
-    //{
-
-    //    _vStock--;
-    //    _soulMeter.DeActiveVStock();
-    //    if(_vStock <=0 && _stateManager.PlayerState == PlayerState.Ultimate)
-    //    {
-    //        _stateManager.NormalState();
-    //        _changeState.UltimateActive = false;
-    //    }
-    //}
-
-    //public void UpdateVStockUI()
-    //{
-
-    //}
-
+        _vStock.Value--;
+    }
 }

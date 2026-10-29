@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,17 +7,11 @@ public class CockRoachTakeDamage : EnemyTakeDamage
     public override void Start()
     {
         base.Start();
-        _enemyHP = JsonSaver.Instance.EnemyJson.CockRoachHP;
-        if (_hpUI != null)
-        {
-            //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
-            _hpUI.Initialize(_enemyHP);
-        }
-
+        SetMaxHP(JsonSaver.Instance.EnemyJson.CockRoachHP);
     }
     public override IEnumerator DeathProtocol(float chargeTime)
     {
-        //ƒSƒLƒuƒŠ‚Í“|‚µ‚Ä‚àƒRƒCƒ“‚ª‘‚¦‚È‚¢
+        //ï¿½Sï¿½Lï¿½uï¿½ï¿½ï¿½Í“|ï¿½ï¿½ï¿½Ä‚ï¿½Rï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
         float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
         _playTheSEManager.PlayEnemyDeathSound();
         yield return new WaitForSeconds(timeLeftUntilDeath);

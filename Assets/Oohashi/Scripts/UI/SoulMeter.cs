@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -7,18 +7,18 @@ using UnityEngine.UI;
 
 public class SoulMeter : MonoBehaviour
 {
-    [SerializeField, Header("ƒ\ƒEƒ‹‚Ì‰t‘Ì‚ÌƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ã‚½ã‚¦ãƒ«ã®æ¶²ä½“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _soulObject = default;
     private RectTransform _soulRect = default;
-    [SerializeField, Header("‰t‘Ì‚Ìã‚ª‚è•")]
+    [SerializeField, Header("æ¶²ä½“ã®ä¸ŠãŒã‚Šå¹…")]
     private int _soulUpValue = 1;
-    [SerializeField, Header("‰t‘Ì‚Ì”­ŒõƒCƒ[ƒW‚ÌƒAƒjƒ[ƒ^")]
+    [SerializeField, Header("æ¶²ä½“ã®ç™ºå…‰ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿")]
     private Animator _soulFlashAnimator = default;
 
-    [SerializeField, Header("ƒ\ƒEƒ‹æ“¾‚ÌƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("ã‚½ã‚¦ãƒ«å–å¾—æ™‚ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private Animator _getSoulEffect = default;
 
-    [Header("ƒ\ƒEƒ‹MAX‚ÌUI‚ÆƒGƒtƒFƒNƒg")]
+    [Header("ã‚½ã‚¦ãƒ«MAXæ™‚ã®UIã¨ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     [SerializeField] private GameObject _soulMaxUI = default;
     [SerializeField] private GameObject _soulMaxEffect = default;
 
@@ -80,19 +80,35 @@ public class SoulMeter : MonoBehaviour
 
     }
     /// <summary>
-    /// ƒ[ƒ^[‚ğã‚°‚éƒƒ\ƒbƒh
+    /// ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’ä¸Šã’ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <param name="count">Œ»İ‚ÌŠ—Lƒ\ƒEƒ‹‚ğ“n‚·</param>
+    /// <param name="count">ç¾åœ¨ã®æ‰€æœ‰ã‚½ã‚¦ãƒ«ã‚’æ¸¡ã™</param>
     public void AddMeter(int count)
     {
+        //_maxCeil = _soulFirstPos + count * _upValue;
+        //_soulFlashAnimator.SetTrigger("Flash");
+        //_getSoulEffect.SetTrigger("Get");
         _maxCeil = _soulFirstPos + count * _upValue;
-        _soulFlashAnimator.SetTrigger("Flash");
-        _getSoulEffect.SetTrigger("Get");
+
+        Vector2 soulPos = _soulRect.localPosition;
+
+        // ã‚½ã‚¦ãƒ«ãŒæ¸›ã£ã¦ç¾åœ¨ã®é«˜ã•ã‚’è¶…ãˆã¦ã—ã¾ã£ãŸå ´åˆã¯ã€å³åº§ã«ç›®æ¨™ä½ç½®ã¸ä¸‹ã’ã‚‹
+        if (soulPos.y > _maxCeil)
+        {
+            soulPos.y = _maxCeil;
+            _soulRect.localPosition = soulPos;
+        }
+        else
+        {
+            // å¢—ãˆãŸæ™‚ã®ã¿æ¼”å‡ºã‚’å†ç”Ÿ
+            if (_soulFlashAnimator != null) _soulFlashAnimator.SetTrigger("Flash");
+            if (_getSoulEffect != null) _getSoulEffect.SetTrigger("Get");
+        }
     }
 
 
     /// <summary>
-    /// ƒ[ƒ^[‚ğƒŠƒZƒbƒg‚·‚é
+    /// ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     /// </summary>
     public void ResetMeter()
     {
@@ -118,130 +134,4 @@ public class SoulMeter : MonoBehaviour
 
 
 
-    //[SerializeField, Header("ƒ{ƒgƒ‹‘O–Ê‚Ì”­ŒõƒCƒ[ƒW")]
-    //private GameObject _bottleFlash = default;
-
-    //[SerializeField, Header("ƒ{ƒgƒ‹ƒ}ƒbƒNƒX‚Ì”­ŒõƒCƒ[ƒW")]
-    //private GameObject _bottleMax = default;
-
-    //[SerializeField, Header("ƒEƒ‹ƒg‚ª‚È‚¢ó‘Ô‚ÌŒ©‚½–Ú")]
-    //private Sprite _unAssignSoulImage = default;
-
-    //[SerializeField,Header("ƒEƒ‹ƒg‚ª’™‚Ü‚Á‚½‚ÌŒ©‚½–Ú")]
-    //private Sprite _assignSoulImage = default;
-
-    //[SerializeField, Header("Šƒ\ƒEƒ‹•\¦ƒeƒLƒXƒg")]
-    //private Text _soulCountText = default;
-
-    //[SerializeField,Header("Vstock‚ÌƒŠƒXƒg")]
-    //private List<Image> _vstockList = new List<Image>();
-
-    //[SerializeField,Header("Vstock‚Ì”­ŒõƒAƒjƒ[ƒ^")]
-    //private List<GameObject> _vstockFlash = new List<GameObject>();
-
-    ////Œ»İƒAƒNƒeƒBƒu‚É‚È‚Á‚Ä‚éVƒXƒgƒbƒN‚ÌƒCƒ“ƒfƒbƒNƒX
-    ////private int _initActiveVstockIndex = 0;
-
-
-    //private int _soulMaxPos = 60;
-
-
-
-    //private readonly string PLAYER_TAGNAME = "Player";
-
-    ////ƒXƒgƒbƒN‚Ì“§–¾“x•ÏX—p•Ï”
-    //private readonly Color _activeColor = new Color(1f, 1f, 1f, 1f);
-    //private readonly Color _hideColor = new Color(1f, 1f, 1f, 0.2f);
-
-
-
-    ///// <summary>
-    ///// vƒXƒgƒbƒN‚ğŒõ‚ç‚¹‚éA‚à‚µ2‚ÂŒõ‚Á‚Ä‚½‚ç•r‚Ì’†g‚ğƒ}ƒbƒNƒX‚É‚·‚é
-    ///// </summary>
-    ///// <param name="value">vƒXƒgƒbƒN‚Ì”</param>
-    //public void ActiveVStock(int value)
-    //{
-    //    for (int i = 0; i < _vstockList.Count; i++)
-    //    {
-    //        bool isActive = i < value;
-    //        _vstockList[i].color = isActive ? _activeColor : _hideColor;
-    //        _vstockList[i].sprite = isActive ? _assignSoulImage : _unAssignSoulImage;
-    //        _vstockFlash[i].SetActive(isActive);
-    //    }
-    //    //Debug.Log("ActiveVStock Called with index: " + _initActiveVstockIndex);
-    //    //if (_initActiveVstockIndex < 2)
-    //    //{
-    //    //    _vstockList[_initActiveVstockIndex].color = _activeColor;
-    //    //    _vstockList[_initActiveVstockIndex].sprite = _assignSoulImage;
-    //    //    _vstockFlash[_initActiveVstockIndex].SetActive(true);
-    //    //}
-    //    //else
-    //    //{
-    //    //    _maxCeil = _soulMaxPos;
-    //    //    _bottleMax.SetActive(true);
-    //    //}
-    //    //_initActiveVstockIndex++;
-    //}
-
-
-    ///// <summary>
-    ///// vƒXƒgƒbƒN‚ğÁ”ï‚·‚éA‚à‚µ•r‚Ì’†g‚ªƒ}ƒbƒNƒX‚¾‚Á‚½‚çæ‚É‚»‚Á‚¿‚©‚çÁ”ï‚·‚é
-    ///// </summary>
-    //public void DeActiveVStock()
-    //{
-    //    _initActiveVstockIndex--;
-    //    if (_initActiveVstockIndex < 0)
-    //    {
-    //        _initActiveVstockIndex = 0;
-    //        Debug.LogWarning("VƒXƒgƒbƒN‚ª‚à‚¤‘¶İ‚µ‚Ü‚¹‚ñI");
-    //        return;
-    //    }
-
-    //    if ( _initActiveVstockIndex < 2)
-    //    {
-    //        _vstockList[_initActiveVstockIndex].color = _hideColor;
-    //        _vstockList[_initActiveVstockIndex].sprite = _unAssignSoulImage;
-    //        _vstockFlash[_initActiveVstockIndex].SetActive(false);
-    //    }
-    //    else
-    //    {
-    //        Vector2 soulPos = _soulObject.transform.localPosition;
-    //        soulPos.y = _soulFirstPos;
-    //        _soulRect.localPosition = soulPos;
-    //        _maxCeil = _soulFirstPos;
-    //        _bottleMax.SetActive(false);
-
-    //    }
-    //}
-
-    //public void UpdateVStockDisplay(int vstock)
-    //{
-    //    for (int i = 0; i < _vstockList.Count; i++)
-    //    {
-    //        bool isActive = i < vstock;
-    //        _vstockList[i].color = isActive ? _activeColor : _hideColor;
-    //        _vstockList[i].sprite = isActive ? _assignSoulImage : _unAssignSoulImage;
-    //        _vstockFlash[i].SetActive(isActive);
-    //    }
-
-    //    // •r‚Ì‰t‘Ìˆ—‚È‚Ç‚à•K—v‚É‰‚¶‚Ä‚±‚±‚Å’²®
-    //    if (vstock >= _vstockList.Count)
-    //    {
-    //        _bottleMax.SetActive(true);
-    //    }
-    //    else
-    //    {
-    //        _bottleMax.SetActive(false);
-    //    }
-    //}
-
-
-    ///// <summary>
-    ///// ƒ[ƒ^[‚ÌƒJƒEƒ“ƒgƒeƒLƒXƒg‚ğİ’è‚·‚éƒƒ\ƒbƒh
-    ///// </summary>
-    ///// <param name="count">Œ»İŠ‚µ‚Ä‚¢‚éƒ\ƒEƒ‹”</param>
-    //public void SetCount(int count)
-    //{
-    //    _soulCountText.text = count.ToString();
-    //}
 }

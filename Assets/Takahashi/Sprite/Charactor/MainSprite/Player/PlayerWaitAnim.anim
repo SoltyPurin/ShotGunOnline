@@ -31,23 +31,6 @@ AnimationClip:
     - time: 0.6666667
       value: {fileID: -3256981551129009960, guid: 847838d10ca98054ba394c755d94825a, type: 3}
     attribute: m_Sprite
-    path: SpriteManager/FrontSprite
-    classID: 212
-    script: {fileID: 0}
-    flags: 2
-  - serializedVersion: 2
-    curve:
-    - time: 0
-      value: {fileID: -8199880427810087746, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - time: 0.16666667
-      value: {fileID: -5198431467970381334, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - time: 0.33333334
-      value: {fileID: 2401558462594044436, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - time: 0.5
-      value: {fileID: 1540601117170483512, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - time: 0.6666667
-      value: {fileID: -3256981551129009960, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
@@ -60,15 +43,6 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 100835353
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
-      isIntCurve: 0
-      isSerializeReferenceCurve: 0
-    - serializedVersion: 2
       path: 0
       attribute: 0
       script: {fileID: 0}
@@ -78,11 +52,6 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: -8199880427810087746, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - {fileID: -5198431467970381334, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - {fileID: 2401558462594044436, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - {fileID: 1540601117170483512, guid: 847838d10ca98054ba394c755d94825a, type: 3}
-    - {fileID: -3256981551129009960, guid: 847838d10ca98054ba394c755d94825a, type: 3}
     - {fileID: -8199880427810087746, guid: 847838d10ca98054ba394c755d94825a, type: 3}
     - {fileID: -5198431467970381334, guid: 847838d10ca98054ba394c755d94825a, type: 3}
     - {fileID: 2401558462594044436, guid: 847838d10ca98054ba394c755d94825a, type: 3}

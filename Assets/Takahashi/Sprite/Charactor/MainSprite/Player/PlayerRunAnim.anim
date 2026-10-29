@@ -31,23 +31,6 @@ AnimationClip:
     - time: 0.33333334
       value: {fileID: 1354115375237695471, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
     attribute: m_Sprite
-    path: SpriteManager/FrontSprite
-    classID: 212
-    script: {fileID: 0}
-    flags: 2
-  - serializedVersion: 2
-    curve:
-    - time: 0
-      value: {fileID: -7870276711496609559, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - time: 0.083333336
-      value: {fileID: 1728719941392088379, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - time: 0.16666667
-      value: {fileID: 5511062410843008217, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - time: 0.25
-      value: {fileID: 1354115375237695471, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - time: 0.33333334
-      value: {fileID: 1354115375237695471, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
@@ -60,15 +43,6 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 100835353
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
-      isIntCurve: 0
-      isSerializeReferenceCurve: 0
-    - serializedVersion: 2
       path: 0
       attribute: 0
       script: {fileID: 0}
@@ -78,11 +52,6 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: -7870276711496609559, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - {fileID: 1728719941392088379, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - {fileID: 5511062410843008217, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - {fileID: 1354115375237695471, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
-    - {fileID: 1354115375237695471, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
     - {fileID: -7870276711496609559, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
     - {fileID: 1728719941392088379, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}
     - {fileID: 5511062410843008217, guid: e3a15f3da9e92bc4c8e7496e4400e149, type: 3}

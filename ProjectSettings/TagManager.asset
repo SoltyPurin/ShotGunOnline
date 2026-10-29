@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Armor
   - Undefined
@@ -41,6 +41,7 @@ TagManager:
   - MainCanvas
   - MainGage
   - BGMManager
+  - FadeUI
   layers:
   - Default
   - TransparentFX
@@ -90,3 +91,6 @@ TagManager:
   - name: Fade
     uniqueID: 2799173183
     locked: 0
+  m_RenderingLayers:
+  - Default
+  m_MigratedRenderPipelines: []

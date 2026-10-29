@@ -1,64 +1,65 @@
-using System.Collections;
+ï»¿using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public enum ShootState
 {
-    CanShoot, //ËŒ‚‰Â”\
-    OverHeat//ƒI[ƒo[ƒq[ƒg
+    CanShoot, //å°„æ’ƒå¯èƒ½
+    OverHeat//ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆ
 }
 
 public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 {
-    [SerializeField,Header("‘_‚Á‚Ä‚é•ûŒü‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ç‹™ã£ã¦ã‚‹æ–¹å‘ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private PlayerAiming _playerAiming = default;
-    [SerializeField,Header("ƒmƒbƒNƒoƒbƒN‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private PlayerKnockBack _knockBackScriput = default;
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌˆÚ“®‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private PlayerMove _playerMoveScript = default;
-    [SerializeField,Header("ƒVƒ‡ƒbƒgƒKƒ“‚Ì”»’èƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚·ãƒ§ãƒƒãƒˆã‚¬ãƒ³ã®åˆ¤å®šã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private ShootRange _shootRange = default;
-    [SerializeField,Header("“–‚½‚è”»’è‚ğ•\¦‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("å½“ãŸã‚Šåˆ¤å®šã‚’è¡¨ç¤ºã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private ShootShape _shootShape = default;
-    [SerializeField,Header("ƒŒƒoƒuƒ‹‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒ¬ãƒãƒ–ãƒ«ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private ControllerVibelation _vibe = default;
-    [SerializeField,Header("ƒEƒ‹ƒg‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private UltimateShot _ultShot = default;
-    [SerializeField,Header("ƒRƒCƒ“‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚³ã‚¤ãƒ³ã‚’ç®¡ç†ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private SoulKeep _coinKeep = default;
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg‚ğŠÇ—")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç®¡ç†")]
     private PlayerStateManager _stateManager = default;
-    [SerializeField,Header("e’e‚Ìƒv[ƒ‹")]
+    [SerializeField, Header("éŠƒå¼¾ã®ãƒ—ãƒ¼ãƒ«")]
     private BulletPool _bulletPool = default;
-    [SerializeField,Header("SE‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("SEã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private PlayerSEControlScript _seScript = default;
-    [SerializeField, Header("ƒI[ƒo[ƒq[ƒg‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private OverHeat _overHeat = default;
-    [Header("ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg“o˜^")]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç™»éŒ²")]
     [SerializeField] private GameObject _playerObject;
-    [SerializeField, Header("ƒ}ƒYƒ‹ƒtƒ‰ƒbƒVƒ…‚ÌƒXƒNƒŠƒvƒg“o˜^")]
+    [SerializeField, Header("ãƒã‚ºãƒ«ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆç™»éŒ²")]
     private MuzzleFlash _muzzleFlashAnimation = default;
-    [SerializeField, Header("ƒqƒbƒgƒXƒgƒbƒv‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private HitStop _hitstop = default;
-    [SerializeField, Header("ƒNƒŠƒeƒBƒJƒ‹‰‰o‚Ìƒuƒ‹[ƒ€ŒÄ‚Ño‚µƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«æ¼”å‡ºã®ãƒ–ãƒ«ãƒ¼ãƒ å‘¼ã³å‡ºã—ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private BloomScript _bloom = default;
 
-    [SerializeField, Header("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg‚ÌuŠÔ‚Ì‚«”ò‚Ñ’l")]
+    [SerializeField, Header("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆã®ç¬é–“ã®å¹ãé£›ã³å€¤")]
     private float _criticalPower = 2.4f;
 
-    [SerializeField, Header("ƒNƒŠƒeƒBƒJƒ‹ƒVƒ‡ƒbƒg‚ÌƒmƒbƒNƒoƒbƒN‚Ì’l")]
+    [SerializeField, Header("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚·ãƒ§ãƒƒãƒˆã®ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®å€¤")]
     private float _criticalKnockBackValue = 1.8f;
 
-    //ƒ`ƒƒ[ƒWŒ¸Z‚µ‚½Œã‚ÍÅ’áƒ`ƒƒ[ƒW‚Ì’l‚Ü‚Å‰º‚°‚é
+    //ãƒãƒ£ãƒ¼ã‚¸æ¸›ç®—ã—ãŸå¾Œã¯æœ€ä½ãƒãƒ£ãƒ¼ã‚¸ã®å€¤ã¾ã§ä¸‹ã’ã‚‹
     private bool _canDecChargeValue = false;
 
-    [SerializeField, Header("ƒNƒŠƒeƒBƒJƒ‹ƒVƒ‡ƒbƒg‚Ì—P—\ŠÔ")]
-    private float _criticalGraceTime = 0.1f;
+    [SerializeField, Header("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚·ãƒ§ãƒƒãƒˆã®çŒ¶äºˆæ™‚é–“")]
+    private float _criticalGraceTime = 0.35f;
 
-    [SerializeField, Header("ƒEƒ‹ƒgó‘Ô‘JˆÚ‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆçŠ¶æ…‹é·ç§»ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private InputChangeState _inputChengeState = default;
 
-    //uŠÔ@Sd‚Ë‚Ä
+    //ç¬é–“ã€€å¿ƒé‡ã­ã¦
     private bool _canCriticalShoot = false;
 
     public bool CanDecChargeValue
@@ -66,41 +67,47 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         get { return _canDecChargeValue; }
     }
 
-    private float _chargeTime = 0.0f;//ƒ`ƒƒ[ƒW‚µ‚Ä‚éŠÔ
+    private float _chargeTime = 0.0f;//ãƒãƒ£ãƒ¼ã‚¸ã—ã¦ã‚‹æ™‚é–“
     public float ChargeValue
     {
         get { return _chargeTime; }
     }
-    //§ŒÀ‚³‚ê‚È‚¢Œ»İ‚Ìƒ`ƒƒ[ƒWŠÔ‚ğ‘ª’è
+    //åˆ¶é™ã•ã‚Œãªã„ç¾åœ¨ã®ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã‚’æ¸¬å®š
     private float _initChargeTime = 0.0f;
-    private bool _isCharge = false;//ƒ`ƒƒ[ƒW‚µ‚Ä‚é‚©‚Ç‚¤‚©
-    private bool _isDecChargeTime = false; //ƒ`ƒƒ[ƒW‚ğŒ¸Z’†‚©‚Ç‚¤‚©
+    private bool _isCharge = false;//ãƒãƒ£ãƒ¼ã‚¸ã—ã¦ã‚‹ã‹ã©ã†ã‹
+    private bool _isDecChargeTime = false; //ãƒãƒ£ãƒ¼ã‚¸ã‚’æ¸›ç®—ä¸­ã‹ã©ã†ã‹
     public bool IsDecCharge
     {
         get { return _isDecChargeTime; }
     }
-    private readonly string FIREBUTTONNAME = "Fire";//Œ‚‚Âƒ{ƒ^ƒ“‚Ì–¼‘O
-    private bool _hasShotUltimate = false; //ƒEƒ‹ƒg‚ğ”­“®‰Â”\‚©
+    private readonly string FIREBUTTONNAME = "Fire";//æ’ƒã¤ãƒœã‚¿ãƒ³ã®åå‰
+    private bool _hasShotUltimate = false; //ã‚¦ãƒ«ãƒˆã‚’ç™ºå‹•å¯èƒ½ã‹
     public bool HasShotUltimate
     {
         get { return _hasShotUltimate; }
     }
-    //ËŒ‚ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚©‚Ç‚¤‚©
-    private bool _isPushShootButton = false; 
+    ////å°„æ’ƒãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‹ã©ã†ã‹
+    //private bool _isPushShootButton = false;
+    private NetworkVariable<bool> _netIsPushShootButton = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
     public bool IsPushShotButton
     {
-        get { return _isPushShootButton; }
+        get { return _netIsPushShootButton.Value; }
+        //get { return _isPushShootButton; }
     }
-    //ƒXƒe[ƒg‚ğŠ—L‚µ‚Ä‚é•Ï”
+    //ã‚¹ãƒ†ãƒ¼ãƒˆã‚’æ‰€æœ‰ã—ã¦ã‚‹å¤‰æ•°
     private ShootState _shootState = ShootState.CanShoot;
     public ShootState ShootState
     {
-        set { _shootState = value; } //ƒI[ƒo[ƒq[ƒg‚ÌƒXƒNƒŠƒvƒg‚©‚ç•ÏX
-        get { return _shootState; } //SEÄ¶‚ÌƒXƒNƒŠƒvƒg‚©‚çQÆ
+        set { _shootState = value; } //ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‹ã‚‰å¤‰æ›´
+        get { return _shootState; } //SEå†ç”Ÿã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‹ã‚‰å‚ç…§
     }
 
-    //ƒ`ƒƒ[ƒWŠÔ‚ÉæZ‚·‚é’lA‚²–J”ü’†‚Í‚±‚Ì’l‚ª‘‰Á‚·‚é
-    private float _bonusMultiplier = 1.0f; 
+    //ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã«ä¹—ç®—ã™ã‚‹å€¤ã€ã”è¤’ç¾ä¸­ã¯ã“ã®å€¤ãŒå¢—åŠ ã™ã‚‹
+    private float _bonusMultiplier = 1.0f;
     public float BonusMultiplier
     {
         get { return _bonusMultiplier; }
@@ -108,7 +115,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private const float MAXCHARGEVALUE = 2;
 
-    //¶‘¶‚µ‚Ä‚é‚©”Û‚©
+    //ç”Ÿå­˜ã—ã¦ã‚‹ã‹å¦ã‹
     private bool _isAlive = true;
     public bool IsAlive
     {
@@ -116,12 +123,26 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     }
 
     private float _rightTriggerValue = default;
+    private bool _isKeyboardShootPressed = false;
+    private bool _isKeyboardShootDown = false;
+
     private void Start()
     {
         _criticalGraceTime += MAXCHARGEVALUE;
-        if(_bloom == null)
+        if (_bloom == null)
         {
-            _bloom = GameObject.Find("PostManager").GetComponent<BloomScript>();
+            var postManager = GameObject.Find("PostManager");
+            if (postManager != null) _bloom = postManager.GetComponent<BloomScript>();
+        }
+        if (_hitstop == null)
+        {
+            _hitstop = GetComponent<HitStop>();
+            if (_hitstop == null) _hitstop = GetComponentInChildren<HitStop>();
+        }
+        if (_inputChengeState == null)
+        {
+            _inputChengeState = GetComponent<InputChangeState>();
+            if (_inputChengeState == null) _inputChengeState = GetComponentInChildren<InputChangeState>();
         }
     }
 
@@ -130,54 +151,89 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         _isAlive = false;
     }
 
-    //ƒEƒ‹ƒgËŒ‚Œã‚Ü‚½ƒ`ƒƒ[ƒWƒAƒjƒ‚ğ•\¦‚·‚é‚Ég—p‚·‚é‚à‚Ì
+    //ã‚¦ãƒ«ãƒˆå°„æ’ƒå¾Œã¾ãŸãƒãƒ£ãƒ¼ã‚¸ã‚¢ãƒ‹ãƒ¡ã‚’è¡¨ç¤ºã™ã‚‹æ™‚ã«ä½¿ç”¨ã™ã‚‹ã‚‚ã®
     private bool _showUltCharge = false;
 
     private void Update()
     {
-        //€‚ñ‚Å‚½‚çˆ—‚Ís‚í‚È‚¢
-        if (!_isAlive)
-        {
-            return;
-        }
-        //—‰º’†‚Í‘ŠúƒŠƒ^[ƒ“‚·‚é
-        if (_stateManager.PlayerState == PlayerState.Fall) return;
-        //MaxChargeDec();
-        if(Gamepad.current == null)
-        {
-            return;
-        }
+        // æ­»ã‚“ã§ãŸã‚‰å‡¦ç†ã¯è¡Œã‚ãªã„
+        if (!_isAlive) return;
+
+        // â˜…æ“ä½œã—ã¦ã„ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼ˆIsOwnerï¼‰ã®ã¿ãŒè‡ªèº«ã®å…¥åŠ›ã‚’æ¤œå‡ºã—ã¦åŒæœŸã™ã‚‹
         if (this.IsOwner)
         {
-            //‰EƒgƒŠƒK[‚©‚ç’l‚ğæ“¾
-            _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
-        }
+            if (Gamepad.current != null)
+            {
+                _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
+            }
+            else
+            {
+                _rightTriggerValue = 0f;
+            }
 
-        if (this.IsServer)
-        {
-            PadShot();
+            // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹ã®å°„æ’ƒå…¥åŠ›ã‚’å–å¾—
+            _isKeyboardShootPressed = false;
+            _isKeyboardShootDown = false;
+            if (Mouse.current != null)
+            {
+                _isKeyboardShootPressed |= Mouse.current.leftButton.isPressed;
+                _isKeyboardShootDown |= Mouse.current.leftButton.wasPressedThisFrame;
+            }
+            if (Keyboard.current != null)
+            {
+                _isKeyboardShootPressed |= Keyboard.current.spaceKey.isPressed;
+                _isKeyboardShootDown |= Keyboard.current.spaceKey.wasPressedThisFrame;
+            }
+
+            // å…¥åŠ›åˆ¤å®š
+            bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
+            bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || Input.GetButton(FIREBUTTONNAME);
+            bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || Input.GetButtonDown(FIREBUTTONNAME);
+
+            bool currentPushState = false;
+
+            switch (_stateManager.PlayerState)
+            {
+                case PlayerState.Normal:
+                    currentPushState = isShootPressed && !_isDecChargeTime;
+                    break;
+
+                case PlayerState.Ultimate:
+                    currentPushState = isShootDown;
+                    break;
+
+                case PlayerState.DamageKnockBack:
+                case PlayerState.Fall:
+                case PlayerState.Movie:
+                    currentPushState = false;
+                    break;
+            }
+
+            // ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å¤‰æ•°ã«è¨­å®šï¼ˆè‡ªå‹•çš„ã«ãƒ›ã‚¹ãƒˆãƒ»ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå…¨å“¡ã¸åŒæœŸã•ã‚Œã‚‹ï¼‰
+            _netIsPushShootButton.Value = currentPushState;
         }
     }
 
-    private void PadShot()
-    {
-        bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
-        switch (_stateManager.PlayerState)
-        {
-            case PlayerState.Normal:
-                _isPushShootButton = (isrightTriggerInput || Input.GetButton(FIREBUTTONNAME)) && !_isDecChargeTime /*&& _shootState == ShootState.CanShoot*/;
-                break;
+    //private void PadShot()
+    //{
+    //    bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
+    //    bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || Input.GetButton(FIREBUTTONNAME);
+    //    bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || Input.GetButtonDown(FIREBUTTONNAME);
 
-            case PlayerState.Ultimate:
-                _isPushShootButton = (isrightTriggerInput || Input.GetButtonDown(FIREBUTTONNAME));
-                break;
+    //    switch (_stateManager.PlayerState)
+    //    {
+    //        case PlayerState.Normal:
+    //            _isPushShootButton = isShootPressed && !_isDecChargeTime;
+    //            break;
 
-            case PlayerState.Fall:
-                break;
-        }
-        //“ü—Í‚ª0.9ˆÈã‚Å‚ ‚ê‚ÎÀs”»’è‚ÉˆÚ‚·
+    //        case PlayerState.Ultimate:
+    //            _isPushShootButton = isShootDown;
+    //            break;
 
-    }
+    //        case PlayerState.Fall:
+    //            break;
+    //    }
+    //}
 
     private void Charge()
     {
@@ -188,20 +244,45 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         }
         else
         {
-            //ƒ`ƒƒ[ƒWŠÔ‚É‰ÁZ
+            //ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã«åŠ ç®—
             _chargeTime += Time.deltaTime * _bonusMultiplier;
-            //ƒ`ƒƒ[ƒWŠÔ‚ÍÅ‘å2•b‚È‚Ì‚Å‚»‚Ì’†‚Éû‚Ü‚é‚æ‚¤‚É‚·‚é
+            //ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã¯æœ€å¤§2ç§’ãªã®ã§ãã®ä¸­ã«åã¾ã‚‹ã‚ˆã†ã«ã™ã‚‹
             _chargeTime = Mathf.Clamp(_chargeTime, 0, MAXCHARGEVALUE);
-            //ƒ`ƒƒ[ƒW‚µ‚Ä‚é”»’è‚É‚·‚é
-            _isCharge = true;
+        }
+        //ãƒãƒ£ãƒ¼ã‚¸ã—ã¦ã‚‹åˆ¤å®šã«ã™ã‚‹
+        _isCharge = true;
+    }
 
+    /// <summary>
+    /// è¢«å¼¾æ™‚ã‚„è½ä¸‹æ™‚ã«ãƒãƒ£ãƒ¼ã‚¸çŠ¶æ…‹ã‚’å³åº§ã«ã‚­ãƒ£ãƒ³ã‚»ãƒ«ãƒ»ãƒªã‚»ãƒƒãƒˆã™ã‚‹
+    /// </summary>
+    public void CancelCharge()
+    {
+        _isCharge = false;
+        _chargeTime = 0f;
+        _initChargeTime = 0f;
+        _canCriticalShoot = false;
+        _canDecChargeValue = false;
+        _isDecChargeTime = false;
+
+        if (_showUltCharge)
+        {
+            if (_inputChengeState != null)
+            {
+                _inputChengeState.ShowUltCharge(false);
+            }
+            _showUltCharge = false;
+        }
+
+        if (this.IsOwner && IsSpawned)
+        {
+            _netIsPushShootButton.Value = false;
         }
     }
 
-
     private void CriticalMethod()
     {
-        if(_initChargeTime >= 2 && _initChargeTime < _criticalGraceTime)
+        if (_initChargeTime >= 2f && _initChargeTime <= _criticalGraceTime)
         {
             _canCriticalShoot = true;
         }
@@ -211,152 +292,215 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         }
     }
     /// <summary>
-    /// ƒEƒ‹ƒg‚Ì”»’èƒƒ\ƒbƒh‹y‚ÑƒŒƒoƒuƒ‹ƒƒ\ƒbƒh‚ğÀs
+    /// ã‚¦ãƒ«ãƒˆã®åˆ¤å®šãƒ¡ã‚½ãƒƒãƒ‰åŠã³ãƒ¬ãƒãƒ–ãƒ«ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®Ÿè¡Œ
     /// </summary>
-    /// <returns>ƒEƒ‹ƒg‚ğŒ‚‚Á‚Ä‚é”»’è‚ğ‰ğœAƒRƒCƒ“Œ¸Zƒƒ\ƒbƒh‚ğÀs</returns>
+    /// <returns>ã‚¦ãƒ«ãƒˆã‚’æ’ƒã£ã¦ã‚‹åˆ¤å®šã‚’è§£é™¤ã€ã‚³ã‚¤ãƒ³æ¸›ç®—ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®Ÿè¡Œ</returns>
     private IEnumerator UltProtocolWithDelay()
     {
-        //ƒŒƒoƒuƒ‹
-        _vibe.StartCoroutine(_vibe.UltVibeProtocol());
-        //ƒEƒ‹ƒg‚ÌƒXƒNƒŠƒvƒg‚Ì”»’è‚ğo‚·ƒƒ\ƒbƒh‚ğŒÄ‚Ô
-        _ultShot.UltimateShotProtocol();
-        //2•b‘Ò‚½‚È‚¢‚ÆƒRƒCƒ“‚ª˜A‘±‚µ‚ÄŒ¸‚éƒoƒO‚ª‹N‚«‚é‚Ì‚Å2•b‘Ò‚Â
+        if (this.IsOwner)
+        {
+            //ãƒ¬ãƒãƒ–ãƒ«
+            _vibe.StartCoroutine(_vibe.UltVibeProtocol());
+            //ã‚¦ãƒ«ãƒˆã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®åˆ¤å®šã‚’å‡ºã™ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã¶
+            _ultShot.UltimateShotProtocol();
+        }
+        //2ç§’å¾…ãŸãªã„ã¨ã‚³ã‚¤ãƒ³ãŒé€£ç¶šã—ã¦æ¸›ã‚‹ãƒã‚°ãŒèµ·ãã‚‹ã®ã§2ç§’å¾…ã¤
         yield return new WaitForSeconds(2.0f);
-        //ƒEƒ‹ƒg”­Ëó‘Ô‚ğI—¹
+        //ã‚¦ãƒ«ãƒˆç™ºå°„çŠ¶æ…‹ã‚’çµ‚äº†
         _hasShotUltimate = false;
-        //ƒEƒ‹ƒgg—p‚µ‚½•ª‚ÌƒRƒCƒ“‚ğŒ¸‚ç‚·
-        _coinKeep.UseUltimate();
+        if (this.IsOwner)
+        {
+            //ã‚¦ãƒ«ãƒˆä½¿ç”¨ã—ãŸåˆ†ã®ã‚³ã‚¤ãƒ³ã‚’æ¸›ã‚‰ã™
+            _coinKeep.UseUltimate();
+        }
 
     }
 
     private void FixedUpdate()
     {
-        if(_bulletPool == null)
+        if (_bulletPool == null)
         {
             _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
             return;
         }
-        //ƒ`ƒƒ[ƒWŠÔ‚ª0ˆÈã‚Åƒ`ƒƒ[ƒW’†‚Å‚È‚¢ê‡
+
+        // ã‚¦ãƒ«ãƒˆä»¥å¤–ã®ã‚¹ãƒ†ãƒ¼ãƒˆã«ãªã£ãŸå ´åˆã€ã‚¦ãƒ«ãƒˆãƒãƒ£ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆï¼ˆé’ã„ä¸¸ï¼‰ã‚’ç¢ºå®Ÿã«éè¡¨ç¤ºã«ã™ã‚‹
+        if (_stateManager != null && _stateManager.PlayerState != PlayerState.Ultimate && _showUltCharge)
+        {
+            if (_inputChengeState != null)
+            {
+                _inputChengeState.ShowUltCharge(false);
+            }
+            _showUltCharge = false;
+        }
+
+        // è¢«å¼¾ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­ãƒ»è½ä¸‹ä¸­ã¯ãƒãƒ£ãƒ¼ã‚¸ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¦æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³
+        if (_stateManager.PlayerState == PlayerState.DamageKnockBack || _stateManager.PlayerState == PlayerState.Fall || _stateManager.PlayerState == PlayerState.Movie)
+        {
+            CancelCharge();
+            return;
+        }
+
+        //ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ãŒ0ä»¥ä¸Šã§ãƒãƒ£ãƒ¼ã‚¸ä¸­ã§ãªã„å ´åˆ
         if (_chargeTime > 0 && !_isCharge)
         {
             ChargeTimeDecrease();
-            _isDecChargeTime = true; //ƒ`ƒƒ[ƒWŒ¸Z’†‚Ìbool‚ğtrue‚É
+            _isDecChargeTime = true; //ãƒãƒ£ãƒ¼ã‚¸æ¸›ç®—ä¸­ã®boolã‚’trueã«
         }
         else
         {
-            _isDecChargeTime = false;//ƒ`ƒƒ[ƒWŒ¸ZI—¹
+            _isDecChargeTime = false;//ãƒãƒ£ãƒ¼ã‚¸æ¸›ç®—çµ‚äº†
         }
 
         switch (_stateManager.PlayerState)
         {
             case PlayerState.Normal:
-                //“ü—Í‚ÍUpdate‚ÅŠÇ—‚·‚é
-                //Œ‚‚Âƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚¨‚èAƒ`ƒƒ[ƒWŒ¸Z’†‚Å‚È‚­AƒXƒe[ƒg‚ªËŒ‚‰Â”\‚È‚ÉŒ‚‚Â
-                if (_isPushShootButton && !_canDecChargeValue)
+                //å…¥åŠ›ã¯Updateã§ç®¡ç†ã™ã‚‹
+                //æ’ƒã¤ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãŠã‚Šã€ãƒãƒ£ãƒ¼ã‚¸æ¸›ç®—ä¸­ã§ãªãã€ã‚¹ãƒ†ãƒ¼ãƒˆãŒå°„æ’ƒå¯èƒ½ãªæ™‚ã«æ’ƒã¤
+                if (_netIsPushShootButton.Value && !_canDecChargeValue)
                 {
                     if (_shootState == ShootState.OverHeat)
                     {
                         _seScript.PlayDryFire();
                         return;
                     }
-                    //“–‚½‚è”»’è‚ÌŒvZƒƒ\ƒbƒh‚ğÀs
+                    //å½“ãŸã‚Šåˆ¤å®šã®è¨ˆç®—ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®Ÿè¡Œ
                     _shootRange.CalcChargeAngle(_chargeTime);
-                    //ƒNƒŠƒeƒBƒJƒ‹”»’è‚Ìƒƒ\ƒbƒh
+                    //ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«åˆ¤å®šã®ãƒ¡ã‚½ãƒƒãƒ‰
                     CriticalMethod();
-                    //ƒ`ƒƒ[ƒW‚·‚éƒƒ\ƒbƒh
+                    //ãƒãƒ£ãƒ¼ã‚¸ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
                     Charge();
-                    _shootRange.StartCharge();
+                    //_shootRange.StartCharge();
                 }
-                //Œ‚‚Âƒ{ƒ^ƒ“‚ğ—£‚µ‚ÄA‚È‚¨‚©‚ÂŒ»İƒ`ƒƒ[ƒW’†‚Å‚È‚­—‰º’†‚Å‚È‚©‚Á‚½‚ç‰ğ•ú‰Â”\
-                else if (!_isPushShootButton && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
+                //æ’ƒã¤ãƒœã‚¿ãƒ³ã‚’é›¢ã—ã¦ã€ãªãŠã‹ã¤ç¾åœ¨ãƒãƒ£ãƒ¼ã‚¸ä¸­ã§ãªãè½ä¸‹ä¸­ã§ãªã‹ã£ãŸã‚‰è§£æ”¾å¯èƒ½
+                else if (!_netIsPushShootButton.Value && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
                 {
+                    float shotCharge = _chargeTime;
+                    bool isCrit = _canCriticalShoot;
+                    // æœ€å¤§ãƒãƒ£ãƒ¼ã‚¸ï¼ˆ2ç§’ï¼‰ã®å°‘ã—æ‰‹å‰ï¼ˆ1.9ç§’ä»¥ä¸Šï¼‰ã§é›¢ã—ã¦ã‚‚æœ€å¤§ãƒãƒ£ãƒ¼ã‚¸ã¨åˆ¤å®šã™ã‚‹éŠã³ã‚’æŒãŸã›ã‚‹
+                    bool isMaxCharge = shotCharge >= (MAXCHARGEVALUE - 0.1f);
+                    if (isMaxCharge && shotCharge < MAXCHARGEVALUE)
+                    {
+                        shotCharge = MAXCHARGEVALUE;
+                    }
+
                     _initChargeTime = 0;
                     _canDecChargeValue = false;
+                    _canCriticalShoot = false;
                     //_initMaxChargetTime = 0;
-                    //ƒI[ƒo[ƒq[ƒg‚Ì’l‚ğ‰ÁZ‚·‚éƒƒ\ƒbƒhÀs
+                    //ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã®å€¤ã‚’åŠ ç®—ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰å®Ÿè¡Œ
                     _overHeat.ShotCountPlus();
-                    //ƒ`ƒƒ[ƒW‚µ‚Ä‚é”»’è‚ğØ‚é
+                    //ãƒãƒ£ãƒ¼ã‚¸ã—ã¦ã‚‹åˆ¤å®šã‚’åˆ‡ã‚‹
                     _isCharge = false;
-                    //ƒmƒbƒNƒoƒbƒN‚ÌƒXƒNƒŠƒvƒg‚ÉŒ»İŒü‚¢‚Ä‚é•ûŒü‚ğ“n‚·
-                    //ƒNƒŠƒeƒBƒJƒ‹”»’è‚¾‚Á‚½ê‡ƒvƒŒƒCƒ„[‚Ì”½“®‚Í‚Ù‚Ú0
-                    if (_canCriticalShoot)
+
+                    // å½“ãŸã‚Šåˆ¤å®šãƒ»åå‹•ãƒ»ç”»é¢ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ»æŒ¯å‹•ã¯æ’ƒã£ãŸæœ¬äººï¼ˆOwnerï¼‰ã®ã¿å®Ÿè¡Œã™ã‚‹ï¼ˆè¤‡æ•°ç«¯æœ«ã‹ã‚‰ã®2é‡ãƒ€ãƒ¡ãƒ¼ã‚¸é˜²æ­¢ï¼‰
+                    if (this.IsOwner)
                     {
-                        _knockBackScriput.SetDirection(_playerAiming.Direction, _criticalKnockBackValue);
-                        _hitstop.CriticalHitStopMethod();
-                        _bloom.UseCritical();
-                        //“–‚½‚è”»’èã‚Ì“G‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚éƒƒ\ƒbƒh‚ğÀs
-                        _shootRange.ShotgunHitCheck(_chargeTime,true);
+                        if (_bloom == null)
+                        {
+                            var postManager = GameObject.Find("PostManager");
+                            if (postManager != null) _bloom = postManager.GetComponent<BloomScript>();
+                        }
+
+                        //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã«ç¾åœ¨å‘ã„ã¦ã‚‹æ–¹å‘ã‚’æ¸¡ã™
+                        //ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«åˆ¤å®šã¾ãŸã¯æœ€å¤§ãƒãƒ£ãƒ¼ã‚¸ã ã£ãŸå ´åˆã€ã‚¤ãƒ³ãƒ‘ã‚¯ãƒˆã‚ã‚‹æ¼”å‡ºã‚’è¡Œã†
+                        if (isCrit)
+                        {
+                            _knockBackScriput.SetDirection(_playerAiming.Direction, _criticalKnockBackValue);
+                            if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                            if (_bloom != null) _bloom.UseCritical();
+                            //å½“ãŸã‚Šåˆ¤å®šä¸Šã®æ•µã«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®Ÿè¡Œ
+                            _shootRange.ShotgunHitCheck(shotCharge, true);
+                        }
+                        else
+                        {
+                            if (isMaxCharge)
+                            {
+                                // æœ€å¤§ãƒãƒ£ãƒ¼ã‚¸æ™‚ã‚‚ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã¨åŒç­‰ã®ã‚¤ãƒ³ãƒ‘ã‚¯ãƒˆæ¼”å‡ºã‚’ç™ºå‹•
+                                if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                                if (_bloom != null) _bloom.UseCritical();
+                                _shootRange.ShotgunHitCheck(shotCharge, true);
+                            }
+                            else
+                            {
+                                _shootRange.ShotgunHitCheck(shotCharge, false);
+                            }
+                            _knockBackScriput.SetDirection(_playerAiming.Direction, shotCharge);
+                        }
+                        //ãƒ¬ãƒãƒ–ãƒ«ã«ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã‚’æ¸¡ã—ã¦éœ‡ãˆã•ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®Ÿè¡Œ
+                        if (_vibe != null) _vibe.ViblationPortocol(shotCharge);
                     }
-                    else
-                    {
-                        _shootRange.ShotgunHitCheck(_chargeTime,false   );
-                        _knockBackScriput.SetDirection(_playerAiming.Direction, _chargeTime);
-                    }
-                    //ƒŒƒoƒuƒ‹‚Éƒ`ƒƒ[ƒWŠÔ‚ğ“n‚µ‚Äk‚¦‚³‚¹‚éƒƒ\ƒbƒh‚ğÀs
-                    _vibe.ViblationPortocol(_chargeTime);
-                    //ƒ}ƒYƒ‹ƒtƒ‰ƒbƒVƒ…‚ÌƒAƒjƒ[ƒVƒ‡ƒ“Ä¶ƒƒ\ƒbƒh‚ğÀs
+
+                    //ãƒã‚ºãƒ«ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®Ÿè¡Œ
                     _muzzleFlashAnimation.PlayTheMuzzleFlash();
-                    //e’e(“–‚½‚è”»’è–³‚µ)‚Ì•\¦
-                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, _chargeTime);
+                    //éŠƒå¼¾(å½“ãŸã‚Šåˆ¤å®šç„¡ã—)ã®è¡¨ç¤º
+                    _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, shotCharge);
+
+                    // ç™ºå°„éŸ³ã‚’ç¢ºå®Ÿã«å†ç”Ÿï¼ˆã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã¾ãŸã¯æœ€å¤§ãƒãƒ£ãƒ¼ã‚¸æ™‚ã¯shotSE_Largeã‚’å†ç”Ÿï¼‰
+                    if (_seScript != null)
+                    {
+                        _seScript.PlayShotSE(shotCharge, isCrit || isMaxCharge);
+                    }
                 }
                 break;
 
             case PlayerState.Ultimate:
 
-                //ƒEƒ‹ƒgg—p‰Â”\‚©‚ÂƒEƒ‹ƒgƒ`ƒƒ[ƒWƒGƒtƒFƒNƒg‚ª”ñ•\¦‚È‚ç•\¦‚³‚¹‚éB
-                if(!_hasShotUltimate && !_showUltCharge)
+                //ã‚¦ãƒ«ãƒˆä½¿ç”¨å¯èƒ½ã‹ã¤ã‚¦ãƒ«ãƒˆãƒãƒ£ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãŒéè¡¨ç¤ºãªã‚‰è¡¨ç¤ºã•ã›ã‚‹ã€‚
+                if (!_hasShotUltimate && !_showUltCharge)
                 {
                     _inputChengeState.ShowUltCharge(true);
                     _showUltCharge = true;
                 }
 
-                //ƒEƒ‹ƒg‚Ì“–‚½‚è”»’è‚ğ•\¦
+                //ã‚¦ãƒ«ãƒˆã®å½“ãŸã‚Šåˆ¤å®šã‚’è¡¨ç¤º
                 _shootShape.UltShape(_playerAiming.Direction);
-                //Œ‚‚Â”»’è‚ğŒŸ’m
-                //ËŒ‚ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚È‚¨‚©‚ÂƒEƒ‹ƒg‚ğŒ‚‚Á‚Ä‚È‚¢‚ÉƒEƒ‹ƒg”­Ë‰Â”\
-                if (_isPushShootButton && !_hasShotUltimate)
+                //æ’ƒã¤åˆ¤å®šã‚’æ¤œçŸ¥
+                //å°„æ’ƒãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãªãŠã‹ã¤ã‚¦ãƒ«ãƒˆã‚’æ’ƒã£ã¦ãªã„æ™‚ã«ã‚¦ãƒ«ãƒˆç™ºå°„å¯èƒ½
+                if (_netIsPushShootButton.Value && !_hasShotUltimate)
                 {
-                    //ƒEƒ‹ƒg”­Ëó‘Ô‚ÉØ‚è‘Ö‚¦
+                    //ã‚¦ãƒ«ãƒˆç™ºå°„çŠ¶æ…‹ã«åˆ‡ã‚Šæ›¿ãˆ
                     _hasShotUltimate = true;
-                    //ƒEƒ‹ƒg‚Ìˆ—‚ğs‚¤ƒRƒ‹[ƒ`ƒ“‚ğŒÄ‚Ño‚·
+                    //ã‚¦ãƒ«ãƒˆã®å‡¦ç†ã‚’è¡Œã†ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’å‘¼ã³å‡ºã™
                     StartCoroutine(UltProtocolWithDelay());
-                    //ƒ}ƒYƒ‹ƒtƒ‰ƒbƒVƒ…‚ğÄ¶‚·‚éƒƒ\ƒbƒh‚ğŒÄ‚Ño‚·
+                    //ãƒã‚ºãƒ«ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã‚’å†ç”Ÿã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã³å‡ºã™
                     _muzzleFlashAnimation.PlayTheUltFlash();
-                    //e’e‚Ìƒv[ƒ‹‚ÉƒAƒNƒeƒBƒu‰»‚·‚é
+                    //éŠƒå¼¾ã®ãƒ—ãƒ¼ãƒ«ã«ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–ã™ã‚‹
                     _bulletPool.ActiveUltBullet(_playerAiming.Direction, this.transform.position);
 
-                    //ƒEƒ‹ƒgƒ`ƒƒ[ƒWƒGƒtƒFƒNƒg‚ğ”ñ•\¦
+                    //ã‚¦ãƒ«ãƒˆãƒãƒ£ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’éè¡¨ç¤º
                     _inputChengeState.ShowUltCharge(false);
                     _showUltCharge = false;
                 }
 
                 break;
 
+            case PlayerState.DamageKnockBack:
             case PlayerState.Fall:
-                //—‰º’†‚Í‚È‚É‚à‚Å‚«‚È‚¢
+                CancelCharge();
                 break;
         }
 
     }
     /// <summary>
-    /// ”­Ë‚µ‚½Œã‚Ìƒ`ƒƒ[ƒWŠÔŒ¸ZA’™‚ß‚éŠÔ‚æ‚è‚à‘‚­–ß‚é
+    /// ç™ºå°„ã—ãŸå¾Œã®ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“æ¸›ç®—ã€è²¯ã‚ã‚‹æ™‚é–“ã‚ˆã‚Šã‚‚æ—©ãæˆ»ã‚‹
     /// </summary>
     private void ChargeTimeDecrease()
     {
-        _chargeTime -= Time.fixedDeltaTime *1.5f;
+        _chargeTime = Mathf.Max(0f, _chargeTime - Time.fixedDeltaTime * 1.5f);
     }
 
     /// <summary>
-    /// ƒRƒ“ƒ{ƒ{[ƒiƒX‚Ìƒ`ƒƒ[ƒWŠÔ’Zk‚ÌæZ’l‚ğ•ÏX
+    /// ã‚³ãƒ³ãƒœãƒœãƒ¼ãƒŠã‚¹ã®ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“çŸ­ç¸®ã®ä¹—ç®—å€¤ã‚’å¤‰æ›´
     /// </summary>
-    /// <param name="bonusValue">ƒRƒ“ƒ{ƒXƒNƒŠƒvƒg‚©‚ç“n‚³‚ê‚é‚²–J”ü‚Ì’l</param>
+    /// <param name="bonusValue">ã‚³ãƒ³ãƒœã‚¹ã‚¯ãƒªãƒ—ãƒˆã‹ã‚‰æ¸¡ã•ã‚Œã‚‹ã”è¤’ç¾ã®å€¤</param>
     public void BonusSet(float bonusValue)
     {
         _bonusMultiplier = bonusValue;
     }
 
     /// <summary>
-    /// ƒ`ƒƒ[ƒWŠÔ‚ÌæZ’l‚ğŒ³‚É–ß‚·
+    /// ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã®ä¹—ç®—å€¤ã‚’å…ƒã«æˆ»ã™
     /// </summary>
     public void ResetBonusMultiplier()
     {

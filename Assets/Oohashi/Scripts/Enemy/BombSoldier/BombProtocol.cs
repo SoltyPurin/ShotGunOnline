@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.Netcode;
 using UnityEngine;
 
-public class BombProtocol : MonoBehaviour
+public class BombProtocol : NetworkBehaviour
 {
     private bool _isBlowing = false;    //吹っ飛んでるかを判断
     public bool IsBlowing
@@ -132,8 +133,7 @@ public class BombProtocol : MonoBehaviour
     /// </summary>
     public void BombCircleCheck()
     {
-        _playTheBombEffect.BombEffect(transform.position);
-        _playeTheSEManager.PlayBombSound();
+        BombEffectClientRpc();
         //爆弾のパワーで補正値を求める
         float t = Mathf.Clamp01(_bombEnemyPower / 2f);
         //半径を求める
@@ -157,15 +157,13 @@ public class BombProtocol : MonoBehaviour
             {
                 //プレイヤーに接触したときのダメージ判定を呼び出す
                 _takeDamage.PlayerCollision();
-                if(_collision != null)
+                Vector3 direction = (hitObject.transform.position - this.transform.position).normalized;
+                PlayerDamageKnockBack knockback = hitObject.GetComponent<PlayerDamageKnockBack>();
+                if (knockback != null)
                 {
-                    Vector3 direction = (_collision.transform.position - this.transform.position).normalized;
-                    PlayerDamageKnockBack knockback = _collision.gameObject.GetComponent<PlayerDamageKnockBack>();
                     //吹き飛ばしのメソッド呼び出し
                     knockback.SetDirection(direction, _bombPower, this.gameObject);
-
                 }
-
             }
             else
             {
@@ -186,6 +184,12 @@ public class BombProtocol : MonoBehaviour
         }
     }
 
+    [ClientRpc]
+    private void BombEffectClientRpc()
+    {
+        _playTheBombEffect.BombEffect(transform.position);
+        _playeTheSEManager.PlayBombSound();
+    }
 
     private void OnDrawGizmos()
     {

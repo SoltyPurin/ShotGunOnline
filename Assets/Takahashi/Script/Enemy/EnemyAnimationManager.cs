@@ -18,8 +18,21 @@ public class EnemyAnimationManager : MonoBehaviour
         _animator.SetBool("KnockBack", false);
     }
 
+    private float _forceUntil = 0f;
+
+    /// <summary>
+    /// ????????????????????????????????????
+    /// </summary>
+    public void ForceKnockBack()
+    {
+        _forceUntil = Time.time + 0.5f;
+        _animator.SetBool("KnockBack", true);
+        _animator.SetBool("Move", false);
+    }
+
     private void FixedUpdate()
     {
+        if (Time.time < _forceUntil) return;
         switch(_enemyMove.EnemyState)
         {
             case EnemyState.move:

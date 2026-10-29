@@ -1,97 +1,170 @@
 using Unity.Netcode;
+
 using UnityEngine;
 
+
+
 /// <summary>
-/// “G‚ğƒvƒŒƒCƒ„[‚Ì‚¢‚éŒü‚«‚É•Ï‚¦‚éƒXƒNƒŠƒvƒg
+
+/// æ•µã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã„ã‚‹å‘ãã«å¤‰ãˆã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+
 /// </summary>
+
 /// 
+
 public class EnemyLookToPlayer : MonoBehaviour
+
 {
+
     private GameObject _player = default;
+
+
 
     private readonly string PLAYER = "Player";
 
-    [SerializeField, Header("”½“]‚³‚¹‚éƒIƒuƒWƒFƒNƒg(ƒXƒvƒ‰ƒCƒg)")]
+
+
+    [SerializeField, Header("åè»¢ã•ã›ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ(ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ)")]
+
     protected GameObject _sprite = default;
+
     [SerializeField]
+
     private BossStateManagement _stateManagement = default;
+
     [SerializeField]
+
     private BossMachPunch _machPunch = default;
 
+
+
     private Vector2 _leftRotation = new Vector3(0, 180f, 0);
+
     public virtual void Start()
+
     {
+
         _player = GameObject.FindWithTag(PLAYER);
+
     }
 
+
+
     private void FixedUpdate()
+
     {
+
         if (this.gameObject.CompareTag("Boss"))
+
         {
+
             BossLook();
+
         }
+
         else
+
         {
+
             EnemyLook();
+
         }
+
     }
+
+
 
     public void EnemyLook()
     {
-        if (_player == null)
+        // æ¯å›æœ€ã‚‚è¿‘ã„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æ¢ã™(ãƒ›ã‚¹ãƒˆã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å›ºå®šã•ã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹)
+        _player = FindNearestPlayer();
+        if (_player == null) return;
+
+        float direction = (_player.transform.position.x - this.transform.position.x);
+        if (direction > 0)
         {
-            // ƒV[ƒ““à‚Ì‘SƒvƒŒƒCƒ„[‚©‚çu©•ª©giƒ[ƒJƒ‹ƒvƒŒƒCƒ„[jv‚ğ’T‚·
-            GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYER);
-            foreach (GameObject p in players)
-            {
-                NetworkObject netObj = p.GetComponent<Unity.Netcode.NetworkObject>();
-                if (netObj != null && netObj.IsLocalPlayer)
-                {
-                    _player = p;
-                    break;
-                }
-            }
-            return;
+            TurnRight();
         }
+        else
         {
-            float direction = (_player.transform.position.x - this.transform.position.x);
-            if (direction > 0)
+            TurnLeft();
+        }
+    }
+
+    private GameObject FindNearestPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYER);
+        GameObject nearestPlayer = null;
+        float minDistance = float.MaxValue;
+        foreach (GameObject p in players)
+        {
+            if (p == null) continue;
+            float dist = Vector2.Distance(transform.position, p.transform.position);
+            if (dist < minDistance)
             {
-                TurnRight();
-            }
-            else
-            {
-                TurnLeft();
+                minDistance = dist;
+                nearestPlayer = p;
             }
         }
+        return nearestPlayer;
     }
     public void BossLook()
+
     {
+
         float bossDirection = (_player.transform.position.x - this.transform.position.x);
+
         bool jumpAttack = _stateManagement._currentState == BossStateManagement.BossState.JumpAtack;
+
         bool cooldown = _stateManagement._currentState == BossStateManagement.BossState.Cooldown;
+
         bool punch = _machPunch._lockRotate;
 
+
+
         if (!jumpAttack && !punch && !cooldown)
+
         {
+
             if (bossDirection > 0)
+
             {
+
                 TurnRight();
+
             }
+
             else
+
             {
+
                 TurnLeft();
+
             }
+
         }
+
     }
+
     public virtual void TurnLeft()
+
     {
+
         _sprite.transform.localRotation = Quaternion.Euler(_leftRotation);
+
     }
+
+
 
     public virtual void TurnRight()
+
     {
+
         _sprite.transform.localRotation = Quaternion.Euler(Vector2.zero);
+
     }
 
+
+
 }
+

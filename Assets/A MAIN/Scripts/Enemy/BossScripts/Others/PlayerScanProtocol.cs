@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerScanProtocol : MonoBehaviour
@@ -22,17 +23,29 @@ public class PlayerScanProtocol : MonoBehaviour
         _cameraMove = _camera.GetComponent<FollowingCameraToBurrel>();
         _time = GameObject.FindWithTag(WAVESCORE).GetComponent<EnemyCountAndCreateTime>();
         _time.TimerStop();
+        TimerStart();
+    }
+
+    private IEnumerator TimerStart()
+    {
+        yield return new WaitForSeconds(1.0f);
+        _waveCreate._waveSW = true;
+        _createSW = false;
+        this.enabled = false;
+        _cameraMove.IsMovie = true;
+        _time.TimerStart();
+
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && _createSW)
-        {
-            _waveCreate._waveSW = true;
-            _createSW = false;
-            this.enabled = false;
-            _cameraMove.IsMovie = true;
-            _time.TimerStart();
-        }
+        //if (collision.gameObject.CompareTag("Player") && _createSW)
+        //{
+        //    _waveCreate._waveSW = true;
+        //    _createSW = false;
+        //    this.enabled = false;
+        //    _cameraMove.IsMovie = true;
+        //    _time.TimerStart();
+        //}
     }
 
 }

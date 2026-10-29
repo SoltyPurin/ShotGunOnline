@@ -24,4 +24,8 @@ public class MoveScene : MonoBehaviour
         _nextScene = "TutorialScene";
     }
 
+    public void SetMultiplayerLobbyScene()
+    {
+        _nextScene = "MultiplayerLobbyScene";
+    }
 }

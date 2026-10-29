@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class FloorOasis : MonoBehaviour
+public class FloorOasis : NetworkBehaviour
 {
     [SerializeField, Header("消えるまでの時間")]
     private float _destroyTime = 6f;
@@ -11,52 +12,91 @@ public class FloorOasis : MonoBehaviour
     private int _floorSpawnValue = 4;
     [SerializeField, Header("ソウル床を出す座標")]
     private Vector2[] _floorSpawnPos;
+
     [SerializeField, Header("ソウル床のプレハブ")]
     private GameObject _soulFloorObject = default;
-    private GameObject[] _floorObjectList;
+
+    private GameObject _currentFloorObject = default;
 
     private bool _isTaked = false;
 
-    private int _initObservationIndex = 0;
+    private int _currentObservationIndex = 0;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        _floorObjectList = new GameObject[_floorSpawnValue];
-        for(int i = 0; i<_floorSpawnValue; i++)
+        // サーバー（ホスト）のみが出現管理を行う
+        if (!IsServer) return;
+
+        SpawnNextFloor();
+    }
+
+    private void SpawnNextFloor()
+    {
+        if (_floorSpawnPos == null || _floorSpawnPos.Length == 0 || _soulFloorObject == null) return;
+
+        Vector2 spawnPos = _floorSpawnPos[_currentObservationIndex];
+        _currentFloorObject = Instantiate(_soulFloorObject, spawnPos, Quaternion.identity);
+
+        NetworkObject netObj = _currentFloorObject.GetComponent<NetworkObject>();
+        if (netObj != null)
         {
-            _floorObjectList[i]= Instantiate(_soulFloorObject, _floorSpawnPos[i], Quaternion.identity);
-            _floorObjectList[i].SetActive(false);
+            netObj.Spawn(); // サーバーから全端末へ同期スポーン
         }
-        _floorObjectList[0].SetActive(true);
     }
 
     private void FixedUpdate()
     {
+        if (!IsServer) return;
         _initWaitTime += Time.fixedDeltaTime;
-        if (_floorObjectList[_initObservationIndex] == null && !_isTaked)
+        //踏まれて消えたか制限時間が来た時、床を削除する
+        if (_currentFloorObject == null || _initWaitTime > _destroyTime)
         {
+
+            if(_currentFloorObject != null)
+            {
+                NetworkObject prevNetFloor = _currentFloorObject.GetComponent<NetworkObject>();
+                if (prevNetFloor != null && prevNetFloor.IsSpawned)
+                {
+                    prevNetFloor.Despawn();
+                }
+            }
+
+            _currentObservationIndex++;
+            if (_currentObservationIndex >= _floorSpawnPos.Length)
+            {
+                _currentObservationIndex = 0;
+            }
+
+            
+            GameObject floor = Instantiate(_soulFloorObject, _floorSpawnPos[_currentObservationIndex],Quaternion.identity);
+            _currentFloorObject = floor;
+            NetworkObject netFloor = floor.GetComponent<NetworkObject>();
+            netFloor.Spawn();
+
             _initWaitTime = 0;
             _isTaked = true;
         }
-        if (_initWaitTime > _destroyTime)
-        {
-            if(_floorObjectList[_initObservationIndex] == null)
-            {
-                _floorObjectList[_initObservationIndex] = Instantiate(_soulFloorObject, _floorSpawnPos[_initObservationIndex], Quaternion.identity);
-                _floorObjectList[_initObservationIndex].SetActive(false);
-            }
-            else
-            {
-                _floorObjectList[_initObservationIndex].SetActive(false);
-            }
-            _initObservationIndex++;
-            if (_initObservationIndex >= _floorObjectList.Length)
-            {
-                _initObservationIndex = 0;
-            }
-            _initWaitTime = 0;
-            _floorObjectList[_initObservationIndex].SetActive(true) ;
-            _isTaked = false;
-        }
+        //if (_initWaitTime > _destroyTime)
+        //{
+        //    if(_floorObjectList[_currentObservationIndex] == null)
+        //    {
+        //        GameObject floorObj = Instantiate(_soulFloorObject, _floorSpawnPos[_currentObservationIndex], Quaternion.identity);
+        //        NetworkObject netFloor = floorObj.GetComponent<NetworkObject>();
+        //        _floorObjectList[_currentObservationIndex] =floorObj;
+        //        _floorObjectList[_currentObservationIndex].SetActive(false);
+        //    }
+        //    else
+        //    {
+        //        _floorObjectList[_currentObservationIndex].SetActive(false);
+        //    }
+        //    _currentObservationIndex++;
+        //    if (_currentObservationIndex >= _floorObjectList.Length)
+        //    {
+        //        _currentObservationIndex = 0;
+        //    }
+        //    _initWaitTime = 0;
+        //    _floorObjectList[_currentObservationIndex].SetActive(true) ;
+        //    _isTaked = false;
+        //}
     }
 }

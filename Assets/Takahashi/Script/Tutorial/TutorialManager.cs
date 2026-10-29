@@ -59,6 +59,12 @@ public class TutorialManager : MonoBehaviour
 
         //タイマーをリセット
         _timer = 0.0f;
+
+        var networkUI = FindAnyObjectByType<NetworkUI>();
+        if (networkUI != null)
+        {
+            networkUI.StartHost();
+        }
     }
 
     /// <summary>

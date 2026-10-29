@@ -4,7 +4,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyCountAndCreateTime : MonoBehaviour
+public class EnemyCountAndCreateTime : NetworkBehaviour
 {
     #region Serialize変数群
 
@@ -78,10 +78,10 @@ public class EnemyCountAndCreateTime : MonoBehaviour
 
     #region ゲッター変数
     //そのウェーブの現在の経過時間
-    private float _initWaveTime = 0;
-    public float InitWaveTime
+    private float _currentWaveTime = 0;
+    public float CurrentWaveTime
     {
-        get { return _initWaveTime; }
+        get { return _currentWaveTime; }
     }
 
     #endregion
@@ -94,6 +94,34 @@ public class EnemyCountAndCreateTime : MonoBehaviour
 
     public void EnemyCount(int count,int difficulty, Wave.WaveEnemyType type)
     {
+        //if (IsServer)
+        //{
+        //    EnemyCountClientRpc(count, difficulty, type);
+        //}
+
+        // ネットワーク接続中かつサーバーなら ClientRpc で全端末に同期
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && IsServer)
+        {
+            EnemyCountClientRpc(count, difficulty, type);
+        }
+        else
+        {
+            // オフライン / ソロプレイ時は直接ローカルで実行
+            SetupTimerLocal(count, difficulty, type);
+        }
+    }
+
+    [ClientRpc]
+    private void EnemyCountClientRpc(int count, int difficulty, Wave.WaveEnemyType type)
+    {
+        SetupTimerLocal(count, difficulty, type);
+    }
+
+    private void SetupTimerLocal(int count, int difficulty, Wave.WaveEnemyType type)
+    {
+        _currentWaveTime = 0f;
+        _canCountTimer = false;
+        _realTimeCircle.StartTimer();
         switch (type)
         {
             case Wave.WaveEnemyType.Normal:
@@ -104,7 +132,7 @@ public class EnemyCountAndCreateTime : MonoBehaviour
                 break;
 
             case Wave.WaveEnemyType.Boss:
-                _baseTime = count *_bossExpectedTime;
+                _baseTime = count * _bossExpectedTime;
                 _sRankTime = _baseTime * _bossTimeSRankRatio;
                 _aRankTime = _baseTime * _bossTimeARankRatio;
                 StartCoroutine(TimerFlagStart(true));
@@ -119,25 +147,24 @@ public class EnemyCountAndCreateTime : MonoBehaviour
         }
 
         _damageDecValue = _oneDamageDecExTime * difficulty;
-        
 
-        _realTimeCircle.SetValue(_sRankTime, _aRankTime,difficulty,_damageDecValue);
-
+        _realTimeCircle.SetValue(_sRankTime, _aRankTime, difficulty, _damageDecValue);
+        _realTimeCircle.StartTimer();
     }
-
     private IEnumerator TimerFlagStart(bool isBossWave)
     {
         yield return new WaitForSeconds(1);
-        if (!isBossWave)
-        {
+        //if (!isBossWave)
+        //{
             _canCountTimer = true;
-        }
+        //}
 
     }
 
     public void TakeDamage()
     {
-        _initWaveTime += _damageDecValue;
+        Debug.Log("スコアの被弾処理呼び出し");
+        _currentWaveTime += _damageDecValue;
 
         _realTimeCircle.Trenble();
 
@@ -146,19 +173,10 @@ public class EnemyCountAndCreateTime : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FindPlayerAndTimerStart();
-        if (_canCountTimer &&  _player != null)
+        //FindPlayerAndTimerStart();
+        if (_canCountTimer)
         {
-            _initWaveTime += Time.fixedDeltaTime;
-        }
-    }
-
-    private void FindPlayerAndTimerStart()
-    {
-        _player = GameObject.FindWithTag("Player");
-        if(_player != null )
-        {
-            _realTimeCircle.StartTimer();
+            _currentWaveTime += Time.fixedDeltaTime;
         }
     }
 
@@ -174,6 +192,10 @@ public class EnemyCountAndCreateTime : MonoBehaviour
 
     public void Calculator()
     {
+        if (!IsServer && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            // サーバー以外は計算しない（二重計算防止）
+        }
         // --- プレイヤーを安全に自動取得する処理を追加 ---
         if (_playerDamage == null)
         {
@@ -182,7 +204,7 @@ public class EnemyCountAndCreateTime : MonoBehaviour
             foreach (GameObject p in players)
             {
                 NetworkObject netObj = p.GetComponent<Unity.Netcode.NetworkObject>();
-                // 自分が操作しているローカルプレイヤーのコンポーネントを一本釣りする
+                // 自分が操作しているローカルプレイヤーのコンポーネントを取得
                 if (netObj != null && netObj.IsLocalPlayer)
                 {
                     _playerDamage = p.GetComponent<PlayerDamageKnockBack>();
@@ -195,20 +217,20 @@ public class EnemyCountAndCreateTime : MonoBehaviour
         if (_playerDamage == null)
         {
             Debug.LogWarning("現在のシーンに操作可能なローカルプレイヤー(PlayerDamageKnockBack)が見つからないため、スコア計算をスキップしました。");
-            _initWaveTime = 0;
+            _currentWaveTime = 0;
             return;
         }
         if (_scoreData == null)
         {
             Debug.LogError("ScoreData スクリプトへの参照がありません。インスペクターを確認してください。");
-            _initWaveTime = 0;
+            _currentWaveTime = 0;
             return;
         }
-        if (_initWaveTime <= _sRankTime)
+        if (_currentWaveTime <= _sRankTime)
         {
             _timeRank = SRANK;
         }
-        else if (_initWaveTime <= _aRankTime)
+        else if (_currentWaveTime <= _aRankTime)
         {
             _timeRank = ARANK;
         }
@@ -217,11 +239,16 @@ public class EnemyCountAndCreateTime : MonoBehaviour
             _timeRank = BRANK;
         }
 
-        _scoreData.SetScore(_timeRank, _playerDamage.DamageCount, _initWaveTime);
+        WaveManager waveManager = FindAnyObjectByType<WaveManager>();
+        if (waveManager != null)
+        {
+            waveManager.SyncScoreClientRpc(_timeRank, _scoreData.DamageTakenCount, _currentWaveTime);
+        }
+        //_scoreData.SetScore(_timeRank, _playerDamage.DamageCount, _initWaveTime);
         _playerDamage.ResetDamageCount();
 
 
-        _initWaveTime = 0;
+        _currentWaveTime = 0;
 
     }
 

@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class SEManager : MonoBehaviour
 {
     [SerializeField, Header("効果音のクールタイム")]
-    private float _seCoolTime = 0.1f;
+    private float _seCoolTime = 0.05f;
     private bool _canPlaySE = true;
+    private bool _canPlayDamageSE = true;
+    private bool _canPlayMoneySE = true;
+    private bool _canPlayDeathSE = true;
     [SerializeField, Header("オーディオソース")]
     private AudioSource _audioSource = default;//オーディオソース
     [SerializeField, Header("シールド用オーディオソース")]
@@ -66,25 +70,44 @@ public class SEManager : MonoBehaviour
         _canPlaySE = true;
     }
 
+    private IEnumerator DamageSECoolTime()
+    {
+        _canPlayDamageSE = false;
+        yield return new WaitForSeconds(_seCoolTime);
+        _canPlayDamageSE = true;
+    }
 
+    private IEnumerator DeathSECoolTime()
+    {
+        _canPlayDeathSE = false;
+        yield return new WaitForSeconds(_seCoolTime);
+        _canPlayDeathSE = true;
+    }
+
+    private IEnumerator MoneySECoolTime()
+    {
+        _canPlayMoneySE = false;
+        yield return new WaitForSeconds(_seCoolTime);
+        _canPlayMoneySE = true;
+    }
 
     //ダメージ系--------------------------------------------------------------------------------
     public void PlayEnemyDamageSound()
     {
-        if (!_canPlaySE)
+        if (!_canPlayDamageSE || _enemyDamageSE == null || _audioSource == null)
         {
             return;
         }
-        CallSECoolTime();
+        StartCoroutine(DamageSECoolTime());
         _audioSource.PlayOneShot(_enemyDamageSE);
     }
     public void PlayEnemyDeathSound()
     {
-        if (!_canPlaySE)
+        if (!_canPlayDeathSE || _enemyDeathSE == null || _audioSource == null)
         {
             return;
         }
-        CallSECoolTime();
+        StartCoroutine(DeathSECoolTime());
 
         _audioSource.PlayOneShot(_enemyDeathSE);
     }
@@ -145,11 +168,11 @@ public class SEManager : MonoBehaviour
     }
     public void PlayMoneyDropSound()
     {
-        if (!_canPlaySE)
+        if (!_canPlayMoneySE || _moneyDropSE == null || _audioSource == null)
         {
             return;
         }
-        CallSECoolTime();
+        StartCoroutine(MoneySECoolTime());
 
         _audioSource.PlayOneShot(_moneyDropSE);
     }

@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class SpecialMoveMirrorBullet : EnemyMirrorBullet
 {
-    [SerializeField, Header("ƒXƒvƒ‰ƒCƒg“o˜^")]
+    [SerializeField, Header("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç™»éŒ²")]
     private SpriteRenderer _sprite = default;
 
     private PlayTheBombEffect _bombEffect = default;
 
     Color _plusColor = new Color(0, 0.2f, 0.2f);
 
-    //“ñ‰ñŒ‚‚½‚ê‚½‚ç”½Ë‚·‚é
-    //ˆê‰ñŒ‚‚Â‚²‚Æ‚É’e‚ÌF•Ï‰»
+    //äºŒå›æ’ƒãŸã‚ŒãŸã‚‰åå°„ã™ã‚‹
+    //ä¸€å›æ’ƒã¤ã”ã¨ã«å¼¾ã®è‰²å¤‰åŒ–
 
     private void Start()
     {

@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GetAndDisplayScores : MonoBehaviour
+public class GetAndDisplayScores : NetworkBehaviour
 {
     [SerializeField, Header("細かいスコアを表示するスクリプト")]
     private CreateWavesTexts _nextScores = default;
@@ -15,6 +16,8 @@ public class GetAndDisplayScores : MonoBehaviour
     [SerializeField,Header("Bランクのイラスト")]
     private GameObject _bRankImage = default;
 
+    [SerializeField,Header("マルチプレイの時のイラスト")]
+    private GameObject _multiPlayImage =default;
     [SerializeField, Header("＋のテキスト")]
     private GameObject _plusText = default;
 
@@ -59,11 +62,39 @@ public class GetAndDisplayScores : MonoBehaviour
 
     private string[] _testList = { "a", "b", "c", "d", "e", "f" };
 
+    private NetworkVariable<int> _onlinePlayerCount = new NetworkVariable<int>(
+        1,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
     /// <summary>
     /// 1ゲームの合計スコアを計算、それと各ウェーブのスコアを表示するスクリプトに生成命令を出す
     /// </summary>
     private void Start()
     {
+        bool isMultiplay = false;
+
+        // 1. ネットワークセッションが稼働しているかチェック
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            // ホスト・サーバー側であれば NetworkManager から直接人数を取得可能
+            if (NetworkManager.Singleton.IsServer)
+            {
+                _onlinePlayerCount.Value = NetworkManager.Singleton.ConnectedClientsIds.Count;
+                isMultiplay = (_onlinePlayerCount.Value > 1);
+            }
+            else
+            {
+                // クライアント側は同期された NetworkVariable や RPC の値を参照
+                isMultiplay = (_onlinePlayerCount.Value > 1);
+            }
+        }
+        else
+        {
+            // ネットワーク非接続時はシングルプレイ扱い
+            isMultiplay = false;
+        }
+
         _sRankRatio *= 0.1f;
         _aRankRatio *= 0.1f;
         GameObject scoreObject = GameObject.FindWithTag(SCOREDATA);
@@ -91,9 +122,18 @@ public class GetAndDisplayScores : MonoBehaviour
         if(_totalScore >= _sRankValue)
         {
             _totalScoreShowText.text = "S";
-            _sRankImage.SetActive(true);
+            if (isMultiplay)
+            {
+                _multiPlayImage.SetActive(true);
+                MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
+                imageChanger.ChangeResutlImage(_onlinePlayerCount.Value);
+            }
+            else
+            {
+                _sRankImage.SetActive(true);
+            }
 
-            if(_totalScore >= _maxScore)
+            if (_totalScore >= _maxScore)
             {
                 _plusText.SetActive(true);
             }
@@ -101,15 +141,35 @@ public class GetAndDisplayScores : MonoBehaviour
         else if( _totalScore >= _aRankValue)
         {
             _totalScoreShowText.text = "A";
-            _aRankImage.SetActive(true);
+            if (isMultiplay)
+            {
+                _multiPlayImage.SetActive(true);
+                MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
+                imageChanger.ChangeResutlImage(_onlinePlayerCount.Value);
+
+            }
+            else
+            {
+                _aRankImage.SetActive(true);
+            }
         }
         else
         {
             _totalScoreShowText.text = "B";
-            _bRankImage.SetActive(true);
+            if (isMultiplay)
+            {
+                _multiPlayImage.SetActive(true);
+                MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
+                imageChanger.ChangeResutlImage(_onlinePlayerCount.Value);
+            }
+            else
+            {
+                _bRankImage.SetActive(true);
+            }
         }
 
-        _hitsTakenText.text = _scoreData.DamageTakenCount.ToString();
+        //_hitsTakenText.text = _scoreData.DamageTakenCount.ToString();
+        _hitsTakenText.text = _scoreData.TotalTakenDamage.ToString();
 
         Destroy(scoreObject);
     }

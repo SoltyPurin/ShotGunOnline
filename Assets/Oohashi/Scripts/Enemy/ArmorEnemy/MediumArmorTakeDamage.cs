@@ -1,143 +1,171 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 public class MediumArmorTakeDamage : ArmorTakeDamage
 {
-    #region Serialize•Ï”
-    [SerializeField, Header("Šâ‚Å‹ò‚ç‚¤ƒ_ƒ[ƒW")]
+    #region Serializeå¤‰æ•°
+    [SerializeField, Header("å²©æ¥è§¦æ™‚ã®ãƒ€ãƒ¡ãƒ¼ã‚¸")]
     private float _stoneTakeDamage = 700;
-    [SerializeField, Header("ƒEƒ‹ƒg‚Å‹ò‚ç‚¤ƒ_ƒ[ƒW")]
+    [SerializeField, Header("ã‚¢ãƒ«ãƒ†ã‚£ãƒ¡ãƒƒãƒˆæ™‚ã®ãƒ€ãƒ¡ãƒ¼ã‚¸")]
     private float _ultDamage = 1500;
-    [SerializeField, Header("—‰º‚Å‹ò‚ç‚¤ƒ_ƒ[ƒW")]
+    [SerializeField, Header("è½ä¸‹æ™‚ã®ãƒ€ãƒ¡ãƒ¼ã‚¸")]
     private float _fallTakeDamage = 700;
-    [SerializeField, Header("ƒXƒe[ƒW‚É–ß‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ã‚¹ãƒ†ãƒ¼ã‚¸ã«å¾©å¸°ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private BossFallToCliffAndHole _bossFall = default;
     #endregion
 
-    #region ’è”
-
+    #region å®šæ•°
     private readonly string DAMAGEEFFECTTRIGERNAME = "Damage";
     private readonly string FALLCOROUTINENAME = "HoleFallMethod";
     #endregion
 
-    #region •Ï”
-
+    #region å¤‰æ•°
     private Vector2 _returnPosition = new Vector2(0, 10);
-
     private MidiumCameraSW _cameraSW = default;
-
+    private bool _isFalling = false;
     #endregion
 
     public override void Start()
     {
         base.Start();
         _cameraSW = GetComponent<MidiumCameraSW>();
-        _enemyHP = JsonSaver.Instance.EnemyJson.ArmorHP;
-        if (_hpUI != null)
-        {
-            //Å‰‚ÉHP•\¦‚Ìƒo[‚ÉÅ‘åhp‚ğİ’è
-            _hpUI.Initialize(_enemyHP);
-        }
-
+        SetMaxHP(JsonSaver.Instance.EnemyJson.ArmorHP);
     }
+
     /// <summary>
-    /// ’†ƒ{ƒX‚ÍƒEƒ‹ƒg€‚È‚È‚¢‚Ì‚Åˆ—‚ª•Ê
+    /// è¢«å¼¾ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†ã€ã‚¦ãƒ«ãƒˆæ™‚ã¯å³æ­»ãƒ€ãƒ¡ãƒ¼ã‚¸
     /// </summary>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
-    /// <param name="state">ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
+    /// <param name="state">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆ</param>
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        //ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg‚ªƒEƒ‹ƒg‚¾‚Á‚½‚çƒ_ƒ[ƒW‚ğƒEƒ‹ƒgƒ_ƒ[ƒW‚ÉØ‚è‘Ö‚¦‚é
-        //‚±‚ê‚ÍƒK[ƒh•s‰Â”\
+        if (!IsServer || _isDead) return;
+
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆãŒã‚¦ãƒ«ãƒˆãªã‚‰ã‚¦ãƒ«ãƒˆãƒ€ãƒ¡ãƒ¼ã‚¸ã«åˆ‡ã‚Šæ›¿ãˆ
         if (state == PlayerState.Ultimate)
         {
             _damage = _ultDamage;
         }
+
         bool isGuard = _armorKnockbackScript.IsFromFlont;
-        //ƒK[ƒh‚µ‚½ê‡‚Ìˆ—
+        // ã‚¬ãƒ¼ãƒ‰æ™‚ã®å‡¦ç†
         if (isGuard)
         {
             _damage = chargeTime * _guardMultiplier;
             _damage = Mathf.Max(_damage, _guardMinDamage);
-            _guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            TakeDamageEffectClientRpc(true);
         }
-        else //‘¤–Ê‚È‚Ç‚©‚çUŒ‚‚µ‚½ê‡‚Ìˆ—
+        else // æ­£é¢ä»¥å¤–ã‹ã‚‰æ”»æ’ƒã‚’å—ã‘ãŸå ´åˆã®å‡¦ç†
         {
             _damage = chargeTime * _damageMultiplier;
             _damage = Mathf.Max(_damage, _minDamage);
-            _damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
-            _damageMaterial.Damage();
-
+            TakeDamageEffectClientRpc(false);
         }
-        //HP‚©‚çƒ_ƒ[ƒW•ªˆø‚¢‚Ä‘ã“üAHPƒo[‚ğXV
-        _enemyHP = (_enemyHP - (int)_damage);
-        _hpUI.UpdateHP(_enemyHP);
-        if (_enemyHP <= 0)
+
+        // HPã‹ã‚‰ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’æ¸›ç®—ã—HPãƒãƒ¼æ›´æ–°
+        _enemyHP.Value = (_enemyHP.Value - (int)_damage);
+        _hpUI.UpdateHP(_enemyHP.Value);
+        if (_enemyHP.Value <= 0)
         {
+            _isDead = true;
             StartCoroutine(DeathProtocol(chargeTime));
         }
-
     }
 
     /// <summary>
-    /// Šâ‚ÉÚG‚µ‚½‚Æ‚«‚Ìƒƒ\ƒbƒhA’Êí‚Æˆá‚¢ˆêŒ‚‚Å‚Í€‚È‚È‚¢
+    /// è¢«å¼¾æ™‚ã®æ¼”å‡ºã‚’å†ç”Ÿã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    /// <param name="isGuard">ã‚¬ãƒ¼ãƒ‰æˆåŠŸã‹</param>
+    [ClientRpc]
+    private void TakeDamageEffectClientRpc(bool isGuard)
+    {
+        if (isGuard)
+        {
+            _guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+        }
+        else
+        {
+            _damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            _damageMaterial.Damage();
+        }
+    }
+
+    /// <summary>
+    /// å²©ã«æ¥è§¦ã—ãŸã¨ãã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public override void ContactStoneMethod()
     {
-        //ƒ_ƒ[ƒW‚ÉŠâ‚ÌÚGƒ_ƒ[ƒW‚ğ‘ã“ü
+        if (!IsServer || _isDead) return;
+
         _damage = _stoneTakeDamage;
-        //hp‚ğŒ¸‚ç‚µ‚Ähpƒo[‚ğXV
-        _enemyHP = (_enemyHP - (int)_damage);
-        _hpUI.UpdateHP(_enemyHP);
-        //‘Ì—Í‚ª0‚É‚È‚Á‚½‚ç1•bŒã‚É€–S‚ÌƒRƒ‹[ƒ`ƒ“Às
-        if (_enemyHP <= 0)
+        _enemyHP.Value = (_enemyHP.Value - (int)_damage);
+        _hpUI.UpdateHP(_enemyHP.Value);
+
+        if (_enemyHP.Value <= 0)
         {
+            _isDead = true;
             StartCoroutine(DeathProtocol(1));
         }
     }
 
     /// <summary>
-    /// —‰º‚Ìƒ_ƒ[ƒW
+    /// è½ä¸‹æ™‚ã®ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†ï¼ˆEnemyUnderRayç­‰ã®æ¯ãƒ•ãƒ¬ãƒ¼ãƒ é‡è¤‡å‘¼ã³å‡ºã—ã‚’é˜²æ­¢ï¼‰
     /// </summary>
     public override void FallDamage()
     {
-        //ƒXƒe[ƒg‚ğ—‰º’†‚É‚·‚é
+        if (!IsServer || _isDead || _isFalling) return;
+
+        _isFalling = true;
         _enemyMove.EnemyState = EnemyState.fall;
-        //hp‚©‚ç—‰ºƒ_ƒ[ƒW‚ğˆø‚¢‚Ä‘Ì—Íƒo[‚ğXV
-        _enemyHP -= (int)_fallTakeDamage;
-        _hpUI.UpdateHP(_enemyHP);
-        //—‰º‚ÌŒø‰Ê‰¹–Â‚ç‚·
-        _playTheSEManager.PlayDropSound();
-        //•œ‹A‚ÌƒRƒ‹[ƒ`ƒ“‹N“®
-        _bossFall.StartCoroutine(FALLCOROUTINENAME);
-        //ƒXƒe[ƒW‚É–ß‚é
-        StartCoroutine(ReturnStage());
-        if (_enemyHP <= 0)
+        _enemyHP.Value -= (int)_fallTakeDamage;
+        _hpUI.UpdateHP(_enemyHP.Value);
+
+        FallSoundClientRpc();
+
+        if (_enemyHP.Value <= 0)
         {
+            _isDead = true;
             StartCoroutine(DeathProtocol(1));
+        }
+        else
+        {
+            // ç”Ÿå­˜æ™‚ã®ã¿ç©´ã‹ã‚‰ã®å¾©å¸°æ¼”å‡ºãƒ»å¾©å¸°å‡¦ç†ã‚’è¡Œã†
+            if (_bossFall != null)
+            {
+                _bossFall.StartCoroutine(FALLCOROUTINENAME);
+            }
+            StartCoroutine(ReturnStage());
+        }
+    }
+
+    [ClientRpc]
+    private void FallSoundClientRpc()
+    {
+        if (_playTheSEManager != null)
+        {
+            _playTheSEManager.PlayDropSound();
         }
     }
 
     /// <summary>
-    /// ƒXƒe[ƒW‚É–ß‚Á‚Ä‚­‚éƒRƒ‹[ƒ`ƒ“
+    /// ã‚¹ãƒ†ãƒ¼ã‚¸ã«å¾©å¸°ã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
-    /// <returns>ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶ŠÔ•ª‘Ò‚Â</returns>
     private IEnumerator ReturnStage()
     {
         yield return new WaitForSeconds(2);
-        //ˆÚ“®‚ÌƒXƒe[ƒg‚É•ÏX
         _enemyMove.EnemyState = EnemyState.move;
-        //•œŠˆ’n“_‚É–ß‚·
-        this.transform.position = _returnPosition;
-
+        transform.position = _returnPosition;
+        _isFalling = false;
     }
 
     public override IEnumerator DeathProtocol(float chargeTime)
     {
-        _cameraSW.SwitchOff();
+        if (_cameraSW != null)
+        {
+            _cameraSW.SwitchOff();
+        }
         return base.DeathProtocol(chargeTime);
     }
-
 }
