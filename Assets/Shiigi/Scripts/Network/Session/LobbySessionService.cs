@@ -1,25 +1,24 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
-using Unity.Networking.Transport.Relay;
+using System.Threading;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 
 /// <summary>
-/// UGSのMultiplayerServiceを用いたルームの作成・検索・参加・退出・Ready属性更新のみを担当するクラス (SRP)
+/// UGSのMultiplayerServiceを用いたルームの作成・検索・参加・退出・Ready属性更新のみを担当するクラス
+/// トランスポート設定およびNGO/Relayの接続確立待機はRelayConnectionHandlerから取得
 /// </summary>
 public class LobbySessionService : ILobbySessionService
 {
-    private const float ConnectionTimeoutSeconds = 15f;
-
     private readonly IUnityServicesInitializer _servicesInitializer;
+    private readonly RelayConnectionHandler _relayConnectionHandler;
     private readonly Action _onSessionConnected;
     private readonly Action _onSessionLeaving;
     private readonly Action _onUnexpectedDisconnect;
 
     private ISession _currentSession;
+    private CancellationTokenSource _connectionCts;
     private bool _isSessionConnected;
     private bool _isLeavingIntentionally;
 
@@ -29,11 +28,13 @@ public class LobbySessionService : ILobbySessionService
 
     public LobbySessionService(
         IUnityServicesInitializer servicesInitializer,
+        RelayConnectionHandler relayConnectionHandler = null,
         Action onSessionConnected = null,
         Action onSessionLeaving = null,
         Action onUnexpectedDisconnect = null)
     {
         _servicesInitializer = servicesInitializer ?? throw new ArgumentNullException(nameof(servicesInitializer));
+        _relayConnectionHandler = relayConnectionHandler ?? new RelayConnectionHandler();
         _onSessionConnected = onSessionConnected;
         _onSessionLeaving = onSessionLeaving;
         _onUnexpectedDisconnect = onUnexpectedDisconnect;
@@ -41,18 +42,12 @@ public class LobbySessionService : ILobbySessionService
 
     public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers)
     {
-        if (!_servicesInitializer.IsInitialized)
-        {
-            Debug.LogError("Servicesが初期化されていません");
-            return false;
-        }
+        if (!EnsureServicesInitialized()) return false;
+
+        var cancellationToken = BeginConnectionAttempt();
 
         try
         {
-            _isSessionConnected = false;
-            _isLeavingIntentionally = false;
-            ConfigureWebSocketTransport();
-
             // Relay接続が完了するまでは一覧に表示されないよう非公開で作成
             var options = new SessionOptions
             {
@@ -66,43 +61,21 @@ public class LobbySessionService : ILobbySessionService
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
             SubscribeSessionEvents(_currentSession);
 
-            if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
+            // NGOホスト起動およびRelayサーバーとの疎通確立を待機
+            if (!await _relayConnectionHandler.StartHostAndVerifyAsync(cancellationToken))
             {
-                var hostStarted = NetworkManager.Singleton.StartHost();
-                if (!hostStarted)
-                {
-                    Debug.LogError("[MSM]: NetworkManager.StartHost() の実行に失敗しました。");
-                    await LeaveRoomSessionAsync();
-                    return false;
-                }
-            }
-
-            // Relayとの接続確立および疎通を待機
-            var isConnected = await WaitForNetworkConnectionAsync(isHost: true, ConnectionTimeoutSeconds);
-            if (!isConnected)
-            {
-                Debug.LogError("[MSM]: Relayホスト接続待機または疎通確認に失敗しました。ロビーを破棄します。");
                 await LeaveRoomSessionAsync();
                 return false;
             }
 
-            // ホスト自身のRelay接続完了プロパティを保存
-            if (_currentSession.CurrentPlayer != null)
-            {
-                var relayProps = SessionPlayerPropertyHelper.CreateRelayConnectedProperties(true);
-                _currentSession.CurrentPlayer.SetProperties(relayProps);
-                await _currentSession.SaveCurrentPlayerDataAsync();
-            }
+            await SaveRelayConnectedPropertyAsync();
 
             // Relay接続が確立したのでルームを公開（ルーム一覧に表示されるようにする）
             var hostSession = _currentSession.AsHost();
             hostSession.IsPrivate = false;
             await hostSession.SavePropertiesAsync();
 
-            _isSessionConnected = true;
-            _onSessionConnected?.Invoke();
-            Debug.Log("[MSM]: ホストとして接続完了、ルーム一覧に公開しました (WSS)");
-
+            CompleteConnectionAttempt("ホストとして接続完了、ルーム一覧に公開しました (WSS)");
             return true;
         }
         catch (Exception ex)
@@ -115,9 +88,8 @@ public class LobbySessionService : ILobbySessionService
 
     public async UniTask<List<ISessionInfo>> SearchRoomSessionsAsync()
     {
-        if (!_servicesInitializer.IsInitialized)
+        if (!EnsureServicesInitialized())
         {
-            Debug.LogError("Servicesが初期化されていません");
             return new List<ISessionInfo>();
         }
 
@@ -136,56 +108,28 @@ public class LobbySessionService : ILobbySessionService
 
     public async UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom)
     {
-        if (!_servicesInitializer.IsInitialized)
-        {
-            Debug.Log("Servicesが初期化されていません");
-            return false;
-        }
+        if (!EnsureServicesInitialized()) return false;
+
+        var cancellationToken = BeginConnectionAttempt();
 
         try
         {
-            _isSessionConnected = false;
-            _isLeavingIntentionally = false;
-            ConfigureWebSocketTransport();
-
             var joinOptions = new JoinSessionOptions()
                 .WithNetworkOptions(new NetworkOptions { RelayProtocol = RelayProtocol.WSS });
 
             _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id, joinOptions);
             SubscribeSessionEvents(_currentSession);
 
-            if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
+            // NGOクライアント起動およびRelay経由での接続確立を待機
+            if (!await _relayConnectionHandler.StartClientAndVerifyAsync(cancellationToken))
             {
-                var clientStarted = NetworkManager.Singleton.StartClient();
-                if (!clientStarted)
-                {
-                    Debug.LogError("[MSM]: NetworkManager.StartClient() の実行に失敗しました。");
-                    await LeaveRoomSessionAsync();
-                    return false;
-                }
-            }
-
-            // Relayとのクライアント接続確立を待機
-            var isConnected = await WaitForNetworkConnectionAsync(isHost: false, ConnectionTimeoutSeconds);
-            if (!isConnected)
-            {
-                Debug.LogError("[MSM]: Relayクライアント接続待機がタイムアウトまたは失敗しました。");
                 await LeaveRoomSessionAsync();
                 return false;
             }
 
-            // Relay接続が完了したため、プレイヤープロパティに接続済みフラグを付与して保存
-            if (_currentSession.CurrentPlayer != null)
-            {
-                var relayProps = SessionPlayerPropertyHelper.CreateRelayConnectedProperties(true);
-                _currentSession.CurrentPlayer.SetProperties(relayProps);
-                await _currentSession.SaveCurrentPlayerDataAsync();
-            }
+            await SaveRelayConnectedPropertyAsync();
 
-            _isSessionConnected = true;
-            _onSessionConnected?.Invoke();
-            Debug.Log("[MSM]: クライアントとして接続完了 (WSS)");
-
+            CompleteConnectionAttempt("クライアントとして接続完了 (WSS)");
             return true;
         }
         catch (Exception ex)
@@ -196,94 +140,11 @@ public class LobbySessionService : ILobbySessionService
         }
     }
 
-    /// <summary>
-    /// NetworkManager (Relay) の接続確立を非同期で待機する。
-    /// ホストの場合は、UnityTransportのRelayレイヤーがRelayサーバーからBind応答を受信したか(Established)を確認します。
-    /// これにより、UDPがブロックされている環境でもホストが孤立してゴーストロビーを作成することを防止します。
-    /// </summary>
-    private static async UniTask<bool> WaitForNetworkConnectionAsync(bool isHost, float timeoutSeconds)
-    {
-        var networkManager = NetworkManager.Singleton;
-        if (networkManager == null) return false;
-
-        var transport = networkManager.NetworkConfig?.NetworkTransport as UnityTransport;
-        float elapsedTime = 0f;
-        const float checkInterval = 0.1f;
-
-        while (elapsedTime < timeoutSeconds)
-        {
-            if (isHost)
-            {
-                if (networkManager.IsServer && networkManager.IsListening)
-                {
-                    // Relayを使用している場合、トランスポートのDriverステータスで疎通を確認
-                    if (transport != null)
-                    {
-                        var driver = transport.GetNetworkDriver();
-                        if (driver.IsCreated)
-                        {
-                            var relayStatus = driver.GetRelayConnectionStatus();
-                            if (relayStatus == RelayConnectionStatus.Established)
-                            {
-                                Debug.Log("[MSM]: ホストとRelayサーバーの双方向接続が確立されました (Established)。");
-                                return true;
-                            }
-
-                            if (relayStatus == RelayConnectionStatus.AllocationInvalid)
-                            {
-                                Debug.LogError("[MSM]: Relayサーバーへの接続に失敗しました (AllocationInvalid)。ロビーを破棄します。");
-                                return false;
-                            }
-
-                            if (relayStatus == RelayConnectionStatus.NotUsingRelay)
-                            {
-                                // Relay非使用構成（Direct等）の場合はローカルリッスンのみで完了
-                                return true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                if (networkManager.IsConnectedClient)
-                {
-                    return true;
-                }
-
-                // 接続を試行している最中にリッスンが停止した場合（接続拒否・ハンドシェイク失敗など）
-                if (!networkManager.IsListening && elapsedTime > 1.0f)
-                {
-                    Debug.LogWarning("[MSM]: クライアント接続処理中にリッスンが停止しました。");
-                    return false;
-                }
-            }
-
-            await UniTask.Delay(TimeSpan.FromSeconds(checkInterval), ignoreTimeScale: true);
-            elapsedTime += checkInterval;
-        }
-
-        Debug.LogError($"[MSM]: Relay接続待機がタイムアウトしました ({timeoutSeconds}秒)。UDP等の通信が制限されている可能性があります。");
-        return false;
-    }
-
-    private static void ConfigureWebSocketTransport()
-    {
-        if (NetworkManager.Singleton != null &&
-            NetworkManager.Singleton.NetworkConfig?.NetworkTransport is UnityTransport transport)
-        {
-            transport.UseWebSockets = true;
-        }
-    }
-
     public async UniTask LeaveRoomSessionAsync()
     {
         _isLeavingIntentionally = true;
         _isSessionConnected = false;
+        CancelPendingConnectionAttempt();
 
         try
         {
@@ -309,19 +170,14 @@ public class LobbySessionService : ILobbySessionService
         finally
         {
             _currentSession = null;
-
-            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
-            {
-                NetworkManager.Singleton.Shutdown();
-            }
-
+            _relayConnectionHandler.Shutdown();
             _isLeavingIntentionally = false;
         }
     }
 
     public async UniTask SetReadyStatusAsync(bool isReady)
     {
-        if (_currentSession == null || _currentSession.CurrentPlayer == null)
+        if (_currentSession?.CurrentPlayer == null)
         {
             Debug.LogError("セッションまたはプレイヤーが存在しません");
             return;
@@ -330,13 +186,57 @@ public class LobbySessionService : ILobbySessionService
         try
         {
             var properties = SessionPlayerPropertyHelper.CreateReadyProperties(isReady);
-            _currentSession.CurrentPlayer.SetProperties(properties);
-            await _currentSession.SaveCurrentPlayerDataAsync();
+            await SaveCurrentPlayerPropertiesAsync(properties);
         }
         catch (Exception ex)
         {
             Debug.LogError($"準備状態の更新に失敗しました: {ex.Message}");
         }
+    }
+
+    private bool EnsureServicesInitialized()
+    {
+        if (_servicesInitializer.IsInitialized) return true;
+        Debug.LogError("Servicesが初期化されていません");
+        return false;
+    }
+
+    private CancellationToken BeginConnectionAttempt()
+    {
+        CancelPendingConnectionAttempt();
+        _connectionCts = new CancellationTokenSource();
+        _isSessionConnected = false;
+        _isLeavingIntentionally = false;
+        _relayConnectionHandler.ConfigureWebSocketTransport();
+        return _connectionCts.Token;
+    }
+
+    private void CompleteConnectionAttempt(string logMessage)
+    {
+        _isSessionConnected = true;
+        _onSessionConnected?.Invoke();
+        Debug.Log($"[MSM]: {logMessage}");
+    }
+
+    private void CancelPendingConnectionAttempt()
+    {
+        if (_connectionCts == null) return;
+        _connectionCts.Cancel();
+        _connectionCts.Dispose();
+        _connectionCts = null;
+    }
+
+    private async UniTask SaveRelayConnectedPropertyAsync()
+    {
+        var relayProps = SessionPlayerPropertyHelper.CreateRelayConnectedProperties(true);
+        await SaveCurrentPlayerPropertiesAsync(relayProps);
+    }
+
+    private async UniTask SaveCurrentPlayerPropertiesAsync(Dictionary<string, PlayerProperty> properties)
+    {
+        if (_currentSession?.CurrentPlayer == null) return;
+        _currentSession.CurrentPlayer.SetProperties(properties);
+        await _currentSession.SaveCurrentPlayerDataAsync();
     }
 
     private void SubscribeSessionEvents(ISession session)
