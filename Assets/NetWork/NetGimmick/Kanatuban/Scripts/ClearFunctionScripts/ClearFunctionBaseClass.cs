@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class ClearFunctionBaseClass : NetworkBehaviour
 {
+    [Header("このオブジェクトは絶対にPlateParentオブジェクトの子オブジェクトにしてください")]
+    [Header("絶対にこのオブジェクトにNetworkObjectクラスをアタッチしないでください")]
+    [Header("もしNetworkObjectをアタッチしてしまったら絶対に削除してください")]
+    [Space(10)]
+    [SerializeField] private bool _dummy;
+
+
+
     [SerializeField, Header("クリアしたら消えるオブジェクト？")]
     private bool _isClearedVanishObj = false;
 
