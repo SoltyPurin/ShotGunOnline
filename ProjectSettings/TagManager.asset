@@ -42,6 +42,7 @@ TagManager:
   - MainGage
   - BGMManager
   - FadeUI
+  - Candle
   layers:
   - Default
   - TransparentFX

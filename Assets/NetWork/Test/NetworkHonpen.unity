@@ -8482,7 +8482,7 @@ PrefabInstance:
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[0]'
       value: 
-      objectReference: {fileID: 8040145471762432446, guid: 82d0852d80de370419d93eac52414340, type: 3}
+      objectReference: {fileID: 8326269498797112079, guid: 97ab88bd7d41a8446a6066b106b1bc8a, type: 3}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: '_waveList.Array.data[1]'
       value: 

@@ -175,6 +175,10 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             return;
         }
+        else if (collision.gameObject.CompareTag("Candle"))
+        {
+            return;
+        }
         else if (collision.gameObject.CompareTag(MIRRORBULLETTAGNAME))
         {
             //吹き飛ぶ方向のメソッド呼び出し

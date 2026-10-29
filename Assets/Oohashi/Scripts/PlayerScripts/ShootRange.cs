@@ -85,6 +85,9 @@ public class ShootRange : MonoBehaviour
     private readonly string BOSSTAGNAME = "Boss";
     private readonly string NORMALBULLETTAGNAME = "EnemyBullet";
     private readonly string MIRRORBULLETTAGNAME = "MirrorBullet";
+    private readonly string CANDLE_TAG = "Candle";
+
+    private const int MAX_CHARGETIME = 2;
     #endregion
 
     private void Start()
@@ -107,7 +110,7 @@ public class ShootRange : MonoBehaviour
         //射程距離をLerpで変更する
         _range = Mathf.Lerp(_minRange, _maxRange, _t);
         //float halfAngleRad = Mathf.Deg2Rad * (_maxAngle / 2);
-        if (chargeTime < 2)
+        if (chargeTime < MAX_CHARGETIME)
         {
             _didSwingStart = false;
             //チャージ2秒未満の場合は最大角度から最低角度まで下げていく
@@ -179,6 +182,10 @@ public class ShootRange : MonoBehaviour
             {
                 MirrorTheBullet(hitObject);
             }
+            else if (hitObject.CompareTag(CANDLE_TAG))
+            {
+                CandleHitObject(hitObject, chargeTime);
+            }
             else
             {
                 NormalHitObject(hitObject, chargeTime,isCritical);
@@ -189,6 +196,19 @@ public class ShootRange : MonoBehaviour
         }
         _canCharge = true;
         _didSwingStart = false;
+    }
+
+    /// <summary>
+    /// キャンドルを撃った時のメソッド、中ショットに意味を持たせる要素
+    /// </summary>
+    /// <param name="hitObject"></param>
+    private void CandleHitObject(GameObject hitObject,float chargeTime)
+    {
+        CandleTakeFire candle = hitObject.GetComponent<CandleTakeFire>();
+        if(candle != null)
+        {
+            candle.TakeFire(chargeTime);
+        }
     }
     /// <summary>
     /// 銃弾を撃った時のメソッド、反射弾かどうかで処理が変わる
