@@ -107,12 +107,9 @@ public class ScoreData : MonoBehaviour
     /// </summary>
     public void TakeDamageCountPlus()
     {
-        Debug.Log("被弾回数増えるメソッド呼び出し");
         WaveManager waveManager = FindAnyObjectByType<WaveManager>();
         if (waveManager != null)
         {
-            Debug.Log("ウェーブマネージャーあったよ");
-
             waveManager.NotifyTakeDamageServerRpc();
         }
         else
