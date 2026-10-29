@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 
@@ -52,7 +53,7 @@ public class LobbySessionService : ILobbySessionService
             _isLeavingIntentionally = false;
             ConfigureWebSocketTransport();
 
-            // Relay接続が完了するまでは一覧に表示されないよう非公開(IsPrivate = true)で作成
+            // Relay接続が完了するまでは一覧に表示されないよう非公開で作成
             var options = new SessionOptions
             {
                 Name = roomName,
@@ -67,14 +68,20 @@ public class LobbySessionService : ILobbySessionService
 
             if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
             {
-                NetworkManager.Singleton.StartHost();
+                var hostStarted = NetworkManager.Singleton.StartHost();
+                if (!hostStarted)
+                {
+                    Debug.LogError("[MSM]: NetworkManager.StartHost() の実行に失敗しました。");
+                    await LeaveRoomSessionAsync();
+                    return false;
+                }
             }
 
-            // Relayとの接続確立を待機
+            // Relayとの接続確立および疎通を待機
             var isConnected = await WaitForNetworkConnectionAsync(isHost: true, ConnectionTimeoutSeconds);
             if (!isConnected)
             {
-                Debug.LogError("[MSM]: Relayホスト接続待機がタイムアウトしました。");
+                Debug.LogError("[MSM]: Relayホスト接続待機または疎通確認に失敗しました。ロビーを破棄します。");
                 await LeaveRoomSessionAsync();
                 return false;
             }
@@ -149,7 +156,13 @@ public class LobbySessionService : ILobbySessionService
 
             if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
             {
-                NetworkManager.Singleton.StartClient();
+                var clientStarted = NetworkManager.Singleton.StartClient();
+                if (!clientStarted)
+                {
+                    Debug.LogError("[MSM]: NetworkManager.StartClient() の実行に失敗しました。");
+                    await LeaveRoomSessionAsync();
+                    return false;
+                }
             }
 
             // Relayとのクライアント接続確立を待機
@@ -184,13 +197,16 @@ public class LobbySessionService : ILobbySessionService
     }
 
     /// <summary>
-    /// NetworkManager (Relay) の接続確立を非同期で待機する
+    /// NetworkManager (Relay) の接続確立を非同期で待機する。
+    /// ホストの場合は、UnityTransportのRelayレイヤーがRelayサーバーからBind応答を受信したか(Established)を確認します。
+    /// これにより、UDPがブロックされている環境でもホストが孤立してゴーストロビーを作成することを防止します。
     /// </summary>
     private static async UniTask<bool> WaitForNetworkConnectionAsync(bool isHost, float timeoutSeconds)
     {
         var networkManager = NetworkManager.Singleton;
         if (networkManager == null) return false;
 
+        var transport = networkManager.NetworkConfig?.NetworkTransport as UnityTransport;
         float elapsedTime = 0f;
         const float checkInterval = 0.1f;
 
@@ -200,7 +216,36 @@ public class LobbySessionService : ILobbySessionService
             {
                 if (networkManager.IsServer && networkManager.IsListening)
                 {
-                    return true;
+                    // Relayを使用している場合、トランスポートのDriverステータスで疎通を確認
+                    if (transport != null)
+                    {
+                        var driver = transport.GetNetworkDriver();
+                        if (driver.IsCreated)
+                        {
+                            var relayStatus = driver.GetRelayConnectionStatus();
+                            if (relayStatus == RelayConnectionStatus.Established)
+                            {
+                                Debug.Log("[MSM]: ホストとRelayサーバーの双方向接続が確立されました (Established)。");
+                                return true;
+                            }
+
+                            if (relayStatus == RelayConnectionStatus.AllocationInvalid)
+                            {
+                                Debug.LogError("[MSM]: Relayサーバーへの接続に失敗しました (AllocationInvalid)。ロビーを破棄します。");
+                                return false;
+                            }
+
+                            if (relayStatus == RelayConnectionStatus.NotUsingRelay)
+                            {
+                                // Relay非使用構成（Direct等）の場合はローカルリッスンのみで完了
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
             else
@@ -222,6 +267,7 @@ public class LobbySessionService : ILobbySessionService
             elapsedTime += checkInterval;
         }
 
+        Debug.LogError($"[MSM]: Relay接続待機がタイムアウトしました ({timeoutSeconds}秒)。UDP等の通信が制限されている可能性があります。");
         return false;
     }
 
