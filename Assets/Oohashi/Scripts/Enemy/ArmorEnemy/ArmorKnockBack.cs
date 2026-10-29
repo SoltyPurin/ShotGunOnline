@@ -71,7 +71,6 @@ public class ArmorKnockBack : EnemyKnockBack
         {
             if (isCrit)
             {
-                Debug.Log("クリティカル");
                 StartCoroutine(HitStop(_force, _critStiffnessTime));
                 _force = 0;
                 _enemyMove.EnemyState = EnemyState.knockback;
@@ -79,7 +78,6 @@ public class ArmorKnockBack : EnemyKnockBack
             }
             else if (isUlt)
             {
-                Debug.Log("ウルト");
                 StartCoroutine(HitStop(_force, _ultStiffnessTime));
                 _force = 0;
                 _enemyMove.EnemyState = EnemyState.knockback;
@@ -87,7 +85,6 @@ public class ArmorKnockBack : EnemyKnockBack
             }
             else if (!isCrit && !isUlt)
             {
-                Debug.Log("通常");
                 _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
                 _canKnockBack = true;
             }

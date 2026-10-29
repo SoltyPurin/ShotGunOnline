@@ -540,7 +540,6 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         }
         _force = 0;
         _isKnockBacking = false;
-        Debug.Log("落下");
     }
 
     /// <summary>
@@ -555,7 +554,6 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         }
         _force = 0f;
         _isKnockBacking = false;
-        Debug.Log("力をリセット");
     }
 
     private void FixedUpdate()

@@ -163,7 +163,6 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     public void TakeDamage()
     {
-        Debug.Log("スコアの被弾処理呼び出し");
         _currentWaveTime += _damageDecValue;
 
         _realTimeCircle.Trenble();

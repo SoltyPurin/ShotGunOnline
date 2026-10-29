@@ -52,7 +52,6 @@ public class PlayerHP : MonoBehaviour
         }
         if (SceneManager.GetActiveScene().name == "HPHonpen")
         {
-            Debug.Log("”í’e");
             _hpValue--;
             if (_hpValue <= 0)
             {

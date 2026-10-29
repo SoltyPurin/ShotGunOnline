@@ -74,7 +74,6 @@ public class RetakeBossMove : EnemyMove
 
     private void FixedUpdate()
     {
-        Debug.Log("現在のステートは" + _currentState);
         //第一形態でのみ処理を行う
         if (_initBossForm == BossForm.First)
         {

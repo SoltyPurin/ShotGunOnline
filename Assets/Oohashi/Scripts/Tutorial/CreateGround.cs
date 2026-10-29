@@ -47,14 +47,12 @@ public class CreateGround : MonoBehaviour
             Vector3Int cellPos = _tileMap.WorldToCell(_secondGenPos[j]);
             _tileMap.SetTile(cellPos, _genTileBases);
         }
-        Debug.Log("タイルマップ生成完了");
         StartCoroutine(GennavMesh());
     }
 
     private IEnumerator GennavMesh()
     {
         yield return null;
-        Debug.Log("足場生成");
         _genNavMeshBuilder.RebuildNavmesh(false);
     }
 }
