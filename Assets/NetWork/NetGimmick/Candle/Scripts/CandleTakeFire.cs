@@ -1,9 +1,12 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
 public class CandleTakeFire : NetworkBehaviour
 {
     #region ïœêî
+    public event Action<bool> IsCandleTakeFire;
+
     [SerializeField, Header("âŒÇ™è¡Ç¶ÇÈÇ‹Ç≈ÇÃéûä‘")]
     private float _timeUntileItFireOff = 10.0f;
     [SerializeField, Header("âŒÇ™é„Ç‹ÇÈÇ‹Ç≈ÇÃéûä‘")]
@@ -11,13 +14,15 @@ public class CandleTakeFire : NetworkBehaviour
 
     private float _currentFireOnTime = 0;
 
-    private bool _isFireOn = false;
+    private NetworkVariable<bool> _isFireOn = new NetworkVariable<bool>();
     public bool IsFireOn
     {
-        get { return _isFireOn; }
+        get { return _isFireOn.Value; }
     }
+
+    private NetworkVariable<bool> _isCleared = new NetworkVariable<bool>();
+
     private bool _isFireOff = true;
-    private bool _isClear = false;
     private Animator _fireAnimator = default;
     private float _middleShotUnder = 0.6f;
     private float _middleShotCeil = 1.4f;
@@ -33,10 +38,26 @@ public class CandleTakeFire : NetworkBehaviour
         _fireAnimator = GetComponentInChildren<Animator>();
         _fireAnimator.SetTrigger(FIRE_OFF);
     }
-    //[ClientRpc]
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        _isFireOn.OnValueChanged += OnFireChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        _isFireOn.OnValueChanged -= OnFireChanged;
+    }
+
+    private void OnFireChanged(bool prevBool,bool curBool)
+    {
+        IsCandleTakeFire?.Invoke(curBool);
+    }
     public void TakeFire(float chargeTime)
     {
-        if (_isClear)
+        if (_isCleared.Value)
         {
             return;
         }
@@ -55,7 +76,7 @@ public class CandleTakeFire : NetworkBehaviour
             RequestTakeFireServerRpc();
         }
 
-        _isFireOn = true;
+        _isFireOn.Value = true;
         _isFireOff = false;
         _currentFireOnTime = 0;
         _fireAnimator.ResetTrigger(FIRE_WEAKER);
@@ -87,7 +108,7 @@ public class CandleTakeFire : NetworkBehaviour
     [ClientRpc]
     private void StartFireClientRpc()
     {
-        _isFireOn = true;
+        _isFireOn.Value = true;
         _isFireOff = false;
         _currentFireOnTime = 0;
 
@@ -100,7 +121,11 @@ public class CandleTakeFire : NetworkBehaviour
     }
     private void FixedUpdate()
     {
-        if (!_isFireOn)
+        if (_isCleared.Value)
+        {
+            return;
+        }
+        if (!_isFireOn.Value)
         {
             return;
         }
@@ -123,6 +148,27 @@ public class CandleTakeFire : NetworkBehaviour
             _fireAnimator.ResetTrigger(FIRE_WEAKER);
             _fireAnimator.SetTrigger(FIRE_OFF);
             _isFireOff = true;
+            _isFireOn.Value = false;
+        }
+    }
+    /// <summary>
+    /// âºÇ…ëSïîíÖâŒÇµÇΩÇÁíÖâŒÇµÇ¡ÇœÇ»ÇµÇ»ÇÈÇ∆Ç´ÇÕÇ±ÇÍÇ™åƒÇ—èoÇ≥ÇÍÇÈ
+    /// </summary>
+    public void ClearJudgementConfirmed()
+    {
+        if (!IsServer || _isCleared.Value)
+        {
+            return;
+        }
+
+        _isCleared.Value = true;
+        if (IsServer)
+        {
+            ExecuteTakeFire();
+        }
+        else
+        {
+            RequestTakeFireServerRpc();
         }
     }
 }
