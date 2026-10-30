@@ -94,6 +94,11 @@ public class PlayerKnockBack : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
+
         if (!_isKnockBacking.Value)
         {
             return;
