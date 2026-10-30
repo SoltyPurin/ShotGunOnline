@@ -79,7 +79,8 @@ public class BossStateManagement : EnemyMove
         Punch,//‰“‹——£UŒ‚
         JumpAtack,//‹ß‹——£UŒ‚
         Cooldown,//UŒ‚Œã‚ÌŒãŒ„
-        Drop //—‰º’†
+        Drop, //—‰º’†
+        Death,//€–S
     }
     [SerializeField]public BossState _currentState = BossState.Approach;
     public BossState CurrentState
@@ -289,4 +290,8 @@ public class BossStateManagement : EnemyMove
         }
     }
 
+    public void SetBossState(BossState state)
+    {
+        _currentState = state;
+    }
 }
