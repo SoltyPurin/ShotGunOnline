@@ -64,6 +64,8 @@ public class PlayerHoleFall : EntityFall
     /// </summary>
     public override void Fall()
     {
+        _animator.SetTrigger(FALLTRIGGER);
+
         // マルチプレイ時、自機（所有権を持つローカルプレイヤー）のみ落下・画面エフェクト・リスポーンを実行
         NetworkObject netObj = GetComponent<NetworkObject>();
         if (netObj != null && !netObj.IsOwner)
@@ -97,7 +99,6 @@ public class PlayerHoleFall : EntityFall
         {
             _seManager.PlayDropSound();
         }
-        _animator.SetTrigger(FALLTRIGGER);
         _playerStateManager.FallState();
         StartCoroutine(MoveToRespawnPoint());
     }
