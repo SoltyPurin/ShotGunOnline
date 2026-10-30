@@ -74,8 +74,16 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     // サーバー位置とのずれがこの距離を超えたら即座に合わせる
     private const float CLIENT_SNAP_DISTANCE = 5f;
     private const float CLIENT_CORRECT_RATE = 4f;
-    // サーバー制御中(ノックバック等)にサーバー位置へ追従する速さ
-    private const float CLIENT_FOLLOW_RATE = 25f;
+    // サーバー制御中(ノックバック等)にサーバー位置へ追従する速さ (急峻なノックバックに追従するため高速化)
+    private const float CLIENT_FOLLOW_RATE = 45f;
+
+    // クライアント側でローカル先行でノックバック中と判定されているか
+    private bool _isClientKnockbackPending = false;
+    private float _clientKnockbackTimer = 0f;
+    private const float CLIENT_KNOCKBACK_TIMEOUT = 0.5f;
+
+    // 直前フレームでサーバー制御中だったか（復帰スナップ用）
+    private bool _wasServerControlled = false;
 
     public virtual void Start()
     {
@@ -97,6 +105,20 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         else if (!IsServer && _agent != null)
         {
             _agent.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// クライアント側でノックバックが開始された瞬間に呼び出し、前進移動を即座に停止してサーバー位置追従へ移行させる
+    /// </summary>
+    public void OnKnockBackStarted()
+    {
+        if (IsServer) return;
+        _isClientKnockbackPending = true;
+        _clientKnockbackTimer = CLIENT_KNOCKBACK_TIMEOUT;
+        if (_rigidBody != null)
+        {
+            _rigidBody.linearVelocity = Vector2.zero;
         }
     }
 
@@ -151,13 +173,37 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         Vector2 serverPos = _enemyNetworkTransform.ServerPosition;
         Vector3 curPos = transform.position;
 
-        bool serverControlled = _enemyState.Value != EnemyState.move || _isFloating;
+        // クライアント側の先行ノックバックタイマー更新
+        if (_isClientKnockbackPending)
+        {
+            _clientKnockbackTimer -= Time.fixedDeltaTime;
+            // サーバーから正式にknockbackステートが届いたか、タイムアウトしたら先行フラグを解除
+            if (_enemyState.Value == EnemyState.knockback || _clientKnockbackTimer <= 0f)
+            {
+                _isClientKnockbackPending = false;
+            }
+        }
+
+        bool isKnockback = _enemyState.Value == EnemyState.knockback || _isClientKnockbackPending;
+        bool serverControlled = _enemyState.Value != EnemyState.move || _isFloating || isKnockback;
+
         if (serverControlled)
         {
-            float follow = 1f - Mathf.Exp(-CLIENT_FOLLOW_RATE * Time.fixedDeltaTime);
+            _wasServerControlled = true;
+            // ノックバック中などは高速でサーバー位置に食らいつく
+            float rate = isKnockback ? CLIENT_FOLLOW_RATE : 25f;
+            float follow = 1f - Mathf.Exp(-rate * Time.fixedDeltaTime);
             Vector2 followed = Vector2.Lerp(curPos, serverPos, follow);
             transform.position = new Vector3(followed.x, followed.y, curPos.z);
             return;
+        }
+
+        // サーバー制御（ノックバック等）から通常移動に復帰した瞬間は、中途半端なズレを残さないようサーバー到達位置にスナップ
+        if (_wasServerControlled)
+        {
+            _wasServerControlled = false;
+            transform.position = new Vector3(serverPos.x, serverPos.y, curPos.z);
+            curPos = transform.position;
         }
 
         _findPlayerTimer += Time.fixedDeltaTime;

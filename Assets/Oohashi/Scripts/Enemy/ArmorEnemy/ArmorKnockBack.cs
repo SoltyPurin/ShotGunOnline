@@ -5,102 +5,132 @@ using UnityEngine;
 
 public class ArmorKnockBack : EnemyKnockBack
 {
-    [SerializeField,Header("‚Ç‚ê‚­‚ç‚¢‚ÌŠp“x‚ğ³–Ê‚Æ‚·‚é‚©")]
+    [SerializeField, Header("ã©ã‚Œãã‚‰ã„ã®è§’åº¦ã‚’æ­£é¢ã¨ã™ã‚‹ã‹")]
     private float _flont = 30;
-    [SerializeField, Header("‰ñ“]‘Ì‚ÌƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("å›è»¢ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _rotateChildren = default;
 
-    //ƒK[ƒh‚µ‚½‚Æ‚«‚Éforce‚É‘ã“ü‚·‚é’l
+    // ã‚¬ãƒ¼ãƒ‰æ™‚ã®forceä»£å…¥å€¤
     private float _guardKnockbackForce = 8; 
-    //UŒ‚‚µ‚Ä‚«‚½Šp“x‚ğ‘ã“ü‚·‚éfloat
+    // å½“ãŸã£ãŸè§’åº¦
     private float _angle = default;
-    //³–Ê‚©‚ç‚ÌUŒ‚‚©‚Ç‚¤‚©‚ğ”»’f‚·‚éƒtƒ‰ƒO
+    // æ­£é¢ã‹ã‚‰ã®æ”»æ’ƒã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹ãƒ•ãƒ©ã‚°
     private bool _isFromFlont = false;
     public bool IsFromFlont
     {
         get { return _isFromFlont; }
     }
-    //seManager‚ÌƒXƒNƒŠƒvƒg
+    // SEManagerã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
     private SEManager _seManager = default;
 
-    //Å’á‚«”ò‚Ñ’l
+    // æœ€ä½å¹ãé£›ã³å€¤
     private float _minBlowAwayValue = 3.0f;
 
-    //üŒ`•â³‚Ì•â³’l
+    // ç·šå½¢è£œæ­£ã®è£œæ­£å€¤
     private float _t = 0.5f;
 
-    //æZ‚·‚é’l
+    // ä¹—ç®—å€¤
     private float _powMultiplicationValue = 5.0f;
+
     private void Start()
     {
         GameObject seManagerObject = GameObject.FindWithTag("SEManager");
-        _seManager = seManagerObject.GetComponent<SEManager>();
+        if (seManagerObject != null)
+        {
+            _seManager = seManagerObject.GetComponent<SEManager>();
+        }
         _trenble = GetComponent<TrenbleEnemy>();
     }
 
     /// <summary>
-    /// ‚«”ò‚Ô•ûŒü‚Æ—Í‚ğİ’è‚·‚éƒƒ\ƒbƒhAƒK[ƒh‚µ‚½‚©”Û‚©‚Åˆ—‚ªˆÙ‚È‚é
+    /// åŸºåº•ã‚¯ãƒ©ã‚¹ã®RPCçµŒç”±ã§å‘¼ã°ã‚ŒãŸå ´åˆã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰
     /// </summary>
-    /// <param name="playerPos">ƒvƒŒƒCƒ„[‚ÌÀ•W</param>
-    /// <param name="chargeTime">ƒ`ƒƒ[ƒWŠÔ</param>
-    /// <param name="state">ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒg</param>
-    public void SetDirectionAndForce(Vector2 playerPos, float chargeTime,PlayerState state, bool isCrit, bool isUlt)
+    public override void SetDirectionAndForce(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
     {
-        //‚«”ò‚Ô•ûŒü‚ğŒvZ
+        SetDirectionAndForce(playerPos, chargeTime, PlayerState.Normal, isCrit, isUlt);
+    }
+
+    /// <summary>
+    /// å¹ãé£›ã¶æ–¹å‘ã¨åŠ›ã‚’è¨­å®šã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã€ã‚¬ãƒ¼ãƒ‰æˆå¦ã§å‡¦ç†ãŒç•°ãªã‚‹
+    /// </summary>
+    /// <param name="playerPos">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™</param>
+    /// <param name="chargeTime">ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“</param>
+    /// <param name="state">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆ</param>
+    public void SetDirectionAndForce(Vector2 playerPos, float chargeTime, PlayerState state, bool isCrit, bool isUlt)
+    {
+        // å¹ãé£›ã¶æ–¹å‘è¨ˆç®—
         _blowAwayDirection = ((playerPos - (Vector2)this.transform.position) * -1).normalized;
-        //UŒ‚‚ª‚‚ÌƒIƒuƒWƒFƒNƒg‚Ì³–Ê‚©‚çŒ©‚Ä‰½“x‚©‚ç”ò‚ñ‚Å‚«‚½‚©ŒvZ
-        _angle = Vector2.Angle((playerPos - (Vector2)this.transform.position), _rotateChildren.transform.up.normalized);
-        //UŒ‚‚µ‚Ä‚«‚½Šp“x‚ª³–Ê”»’è‚æ‚è‚Å‚©‚¢Šp“x‚¾‚Á‚½ê‡true
-        _isFromFlont = _angle <_flont;
-        _canKnockBack = true;
+
+        if (_rotateChildren != null)
+        {
+            _angle = Vector2.Angle((playerPos - (Vector2)this.transform.position), _rotateChildren.transform.up.normalized);
+            _isFromFlont = _angle < _flont;
+        }
+        else
+        {
+            _isFromFlont = false;
+        }
+
+        // é€šå¸¸ã‚·ãƒ§ãƒƒãƒˆæ™‚ã‚‚å«ã‚ã€ãƒãƒƒã‚¯ãƒãƒƒã‚¯é–‹å§‹æ™‚ã¯å³åº§ã«ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ knockback ã«å¤‰æ›´ã™ã‚‹
+        if (_enemyMove != null)
+        {
+            _enemyMove.EnemyState = EnemyState.knockback;
+        }
+
         if (_isFromFlont && state == PlayerState.Normal)
         {
-            //³–Ê‚©‚ç‚ÌUŒ‚‚Å‚È‚¨‚©‚Â’ÊíƒVƒ‡ƒbƒg‚¾‚Á‚½ê‡ƒK[ƒh”»’è‚Ì‚«”ò‚Î‚µ
+            // æ­£é¢ã‹ã‚‰ã®æ”»æ’ƒã‹ã¤é€šå¸¸ã‚·ãƒ§ãƒƒãƒˆã®å ´åˆã¯ã‚¬ãƒ¼ãƒ‰ã®å¹ãé£›ã³
             _force = _guardKnockbackForce;
-            //_seManager.PlayGuardSound();
+            _canKnockBack = true;
             PlayTakeDamageEffectClientRpc(true);
         }
         else
         {
             _powValue = Mathf.Pow(chargeTime, _powMultiplicationValue);
-            //Å’á3‚©‚çpowValue‚Ü‚Å‚ÌŠÔ‚ÅüŒ`•â³‚ğs‚¢Aƒ`ƒƒ[ƒW’l‚²‚Æ‚Ì‚«”ò‚Î‚µ‚ğ‚È‚ß‚ç‚©‚É
             _force = Mathf.Lerp(_minBlowAwayValue, _powValue, _t);
-        }
 
-        if (_trenble != null)
-        {
-            if (isCrit)
+            if (_trenble != null)
             {
-                StartCoroutine(HitStop(_force, _critStiffnessTime));
-                _force = 0;
-                _enemyMove.EnemyState = EnemyState.knockback;
-                _trenble.TrenbleProtocol(_critStiffnessTime);
+                if (isCrit)
+                {
+                    StartCoroutine(HitStop(_force, _critStiffnessTime));
+                    _force = 0;
+                    _trenble.TrenbleProtocol(_critStiffnessTime);
+                }
+                else if (isUlt)
+                {
+                    StartCoroutine(HitStop(_force, _ultStiffnessTime));
+                    _force = 0;
+                    _trenble.TrenbleProtocol(_ultStiffnessTime);
+                }
+                else if (!isCrit && !isUlt)
+                {
+                    _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
+                    _canKnockBack = true;
+                }
             }
-            else if (isUlt)
+            else
             {
-                StartCoroutine(HitStop(_force, _ultStiffnessTime));
-                _force = 0;
-                _enemyMove.EnemyState = EnemyState.knockback;
-                _trenble.TrenbleProtocol(_ultStiffnessTime);
-            }
-            else if (!isCrit && !isUlt)
-            {
-                _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
                 _canKnockBack = true;
             }
+
+            PlayTakeDamageEffectClientRpc(false);
         }
 
-        PlayTakeDamageEffectClientRpc(false);
+        if (IsServer)
+        {
+            PlayKnockBackEffectsClientRpc(isCrit, isUlt, chargeTime, _attackerClientId);
+        }
     }
 
     /// <summary>
-    /// ”í’e‚µ‚½‚ÌƒGƒtƒFƒNƒgÄ¶
+    /// è¢«å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå†ç”Ÿ
     /// </summary>
-    /// <param name="isGuard">ƒK[ƒh‚µ‚½‚©”Û‚©</param>
+    /// <param name="isGuard">ã‚¬ãƒ¼ãƒ‰æˆå¦</param>
     [ClientRpc]
     private void PlayTakeDamageEffectClientRpc(bool isGuard)
     {
-        if (isGuard)
+        if (isGuard && _seManager != null)
         {
             _seManager.PlayGuardSound();
         }
@@ -110,7 +140,5 @@ public class ArmorKnockBack : EnemyKnockBack
         {
             damageEffect.PlayAnim();
         }
-
     }
-
 }
