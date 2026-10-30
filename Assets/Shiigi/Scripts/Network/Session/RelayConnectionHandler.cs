@@ -4,6 +4,7 @@ using System.Threading;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using Unity.Services.Multiplayer;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,8 @@ using UnityEngine;
 public class RelayConnectionHandler
 {
     private const float DefaultTimeoutSeconds = 15f;
+    private const int ConnectTimeoutMs = 1000;
+    private const int MaxConnectAttempts = 15;
     private const float CheckIntervalSeconds = 0.1f;
     private const float ClientListenGracePeriodSeconds = 1.0f;
 
@@ -24,15 +27,25 @@ public class RelayConnectionHandler
     }
 
     /// <summary>
-    /// UnityTransport を WebSocket (WSS) モードに設定する
+    /// 指定された RelayProtocol に応じて UnityTransport の WebSocket 設定および接続タイムアウトを設定する
     /// </summary>
-    public void ConfigureWebSocketTransport()
+    public void ConfigureTransport(RelayProtocol protocol)
     {
         if (NetworkManager.Singleton != null &&
             NetworkManager.Singleton.NetworkConfig?.NetworkTransport is UnityTransport transport)
         {
-            transport.UseWebSockets = true;
+            transport.UseWebSockets = protocol == RelayProtocol.WSS;
+            transport.ConnectTimeoutMS = ConnectTimeoutMs;
+            transport.MaxConnectAttempts = MaxConnectAttempts;
         }
+    }
+
+    /// <summary>
+    /// UnityTransport を WebSocket (WSS) モードに設定する
+    /// </summary>
+    public void ConfigureWebSocketTransport()
+    {
+        ConfigureTransport(RelayProtocol.WSS);
     }
 
     /// <summary>

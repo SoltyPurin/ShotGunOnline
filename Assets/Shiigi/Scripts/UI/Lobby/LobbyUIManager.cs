@@ -139,11 +139,14 @@ public class LobbyUIManager : MonoBehaviour
             }
         }
 
-        // 決定されたらセッション作成処理実行
+        // 決定されたらセッション作成処理実行（選択された詳細設定のプロトコルを使用）
         TransitionTo(LobbyUIState.Connecting);
         try
         {
-            var success = await _sessionService.CreateRoomSessionAsync(result.RoomName, result.MaxPlayers);
+            var success = await _sessionService.CreateRoomSessionAsync(
+                result.RoomName,
+                result.MaxPlayers,
+                result.Protocol);
             if (success)
             {
                 TransitionTo(LobbyUIState.InRoom);
