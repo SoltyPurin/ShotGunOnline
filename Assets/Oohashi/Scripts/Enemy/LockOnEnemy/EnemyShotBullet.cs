@@ -182,24 +182,30 @@ public class EnemyShotBullet : NetworkBehaviour
         _isDestroyed = true;
 
         DisableBulletLocal();
-        DisableBulletClientRpc();
 
-        NetworkObject netObj = GetComponent<NetworkObject>();
-        if (netObj != null && netObj.IsSpawned)
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
             if (IsServer)
             {
-                netObj.Despawn(true);
+                DisableBulletClientRpc();
             }
-            else
+
+            NetworkObject netObj = GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
             {
-                RequestDestroyBulletServerRpc(netObj);
+                if (IsServer)
+                {
+                    netObj.Despawn(true);
+                }
+                else
+                {
+                    RequestDestroyBulletServerRpc(netObj);
+                }
+                return;
             }
         }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+
+        Destroy(this.gameObject);
     }
 
     [ClientRpc]
@@ -225,15 +231,19 @@ public class EnemyShotBullet : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void RequestDestroyBulletServerRpc(NetworkObjectReference bulletRef)
     {
         if (bulletRef.TryGet(out NetworkObject netObj))
         {
-            if (netObj.IsSpawned)
+            if (netObj != null && netObj.IsSpawned)
             {
                 netObj.Despawn(true);
             }
+        }
+        else if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
         }
     }
 }

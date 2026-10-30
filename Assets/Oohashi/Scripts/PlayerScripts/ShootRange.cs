@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class ShootRange : MonoBehaviour
 {
@@ -225,7 +225,15 @@ public class ShootRange : MonoBehaviour
         else //反射弾じゃなかったとき
         {
             Instantiate(_destroyEffect, hitObject.transform.position, Quaternion.identity);
-            Destroy(hitObject);
+            EnemyShotBullet bullet = hitObject.GetComponent<EnemyShotBullet>();
+            if (bullet != null)
+            {
+                bullet.DestroyProtocol();
+            }
+            else
+            {
+                Destroy(hitObject);
+            }
         }
     }
 

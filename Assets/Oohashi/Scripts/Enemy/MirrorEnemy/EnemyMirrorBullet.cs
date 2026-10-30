@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -92,7 +92,7 @@ public class EnemyMirrorBullet : EnemyShotBullet
         if(stoneBlowAway != null)
         {
             stoneBlowAway.SetDirectionAndForce((Vector2)transform.position, chargeTime,false,false);
-            Destroy(this.gameObject);
+            DestroyProtocol();
         }
     }
 
@@ -109,7 +109,7 @@ public class EnemyMirrorBullet : EnemyShotBullet
         {
             knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, false, false);
             bossHP.SetMirrorDamage(chargeTime);
-            Destroy(this.gameObject);
+            DestroyProtocol();
         }
     }
 
@@ -126,7 +126,7 @@ public class EnemyMirrorBullet : EnemyShotBullet
         {
             armorKnockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, PlayerState.Normal, false, false);
             armorTakeDamage.SetMirrorDamage(chargeTime);
-            Destroy(this.gameObject);
+            DestroyProtocol();
         }
     }
 
@@ -138,7 +138,7 @@ public class EnemyMirrorBullet : EnemyShotBullet
         {
             knockback.SetDirectionAndForce((Vector2)transform.position, chargeTime, false, false);
             takeDamage.SetMirrorDamage(chargeTime);
-            Destroy(this.gameObject);
+            DestroyProtocol();
         }
     }
 
