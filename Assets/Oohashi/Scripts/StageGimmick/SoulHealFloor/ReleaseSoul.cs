@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ReleaseSoul : MonoBehaviour
+public class ReleaseSoul : NetworkBehaviour
 {
     [SerializeField, Header("ソウルのオブジェクト")]
     private GameObject _soulObject = default;
@@ -14,45 +14,80 @@ public class ReleaseSoul : MonoBehaviour
 
     private SEManager _se = default;
     private readonly string SEMANAGER_TAG = "SEManager";
+    private bool _isReleased = false;
+    private bool _isServerReleased = false;
 
     private void Start()
     {
-        GameObject seObj = GameObject.FindWithTag(SEMANAGER_TAG);
-        if (seObj != null)
+        ResolveSE();
+    }
+
+    private void ResolveSE()
+    {
+        if (_se == null)
         {
-            _se = seObj.GetComponent<SEManager>();
+            GameObject seObj = GameObject.FindWithTag(SEMANAGER_TAG);
+            if (seObj != null)
+            {
+                _se = seObj.GetComponent<SEManager>();
+            }
         }
     }
 
     public void ReleaseProtocol()
     {
+        if (_isReleased) return;
+
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            if (IsServer)
+            {
+                ExecuteReleaseOnServer();
+            }
+            else
+            {
+                _isReleased = true;
+                RequestReleaseServerRpc();
+            }
+        }
+        else
+        {
+            ExecuteReleaseOffline();
+        }
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void RequestReleaseServerRpc()
+    {
+        ExecuteReleaseOnServer();
+    }
+
+    private void ExecuteReleaseOnServer()
+    {
+        if (_isServerReleased) return;
+        _isServerReleased = true;
+        _isReleased = true;
+
+        PlayStepSEClientRpc();
+
         for (int i = 0; i < _releaseSoulCount; i++)
         {
             if (_soulObject == null) break;
 
             GameObject coin = Instantiate(_soulObject, transform.position, Quaternion.identity);
 
-            // NetworkObject が付いている場合はネットワークスポーン
+            // NetworkObject が付いている場合はサーバー側でネットワークスポーン
             var netObj = coin.GetComponent<NetworkObject>();
-            if (netObj != null && NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+            if (netObj != null && !netObj.IsSpawned)
             {
-                if (!netObj.IsSpawned)
-                {
-                    netObj.Spawn();
-                }
+                netObj.Spawn();
             }
 
             MoveCoin moveCoin = coin.GetComponent<MoveCoin>();
             if (moveCoin != null)
             {
-                moveCoin.MoveStartClientRpc();
                 moveCoin.ChangeWaitTimeMethod(_collectTime);
             }
-        }
-
-        if (_se != null)
-        {
-            _se.PlayStepOnSoulFloor();
         }
 
         var floorNetObj = GetComponent<NetworkObject>();
@@ -64,5 +99,41 @@ public class ReleaseSoul : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    [ClientRpc]
+    private void PlayStepSEClientRpc()
+    {
+        ResolveSE();
+        if (_se != null)
+        {
+            _se.PlayStepOnSoulFloor();
+        }
+    }
+
+    private void ExecuteReleaseOffline()
+    {
+        if (_isReleased) return;
+        _isReleased = true;
+
+        for (int i = 0; i < _releaseSoulCount; i++)
+        {
+            if (_soulObject == null) break;
+
+            GameObject coin = Instantiate(_soulObject, transform.position, Quaternion.identity);
+            MoveCoin moveCoin = coin.GetComponent<MoveCoin>();
+            if (moveCoin != null)
+            {
+                moveCoin.ChangeWaitTimeMethod(_collectTime);
+            }
+        }
+
+        ResolveSE();
+        if (_se != null)
+        {
+            _se.PlayStepOnSoulFloor();
+        }
+
+        Destroy(gameObject);
     }
 }

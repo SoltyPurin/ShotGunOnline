@@ -1,4 +1,4 @@
-﻿using NUnit.Framework.Constraints;
+using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -186,7 +186,15 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //ダメージのレバブルを設定
             if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
-            Destroy(collision.gameObject);
+            EnemyShotBullet bullet = collision.gameObject.GetComponent<EnemyShotBullet>();
+            if (bullet != null)
+            {
+                bullet.DestroyProtocol();
+            }
+            else
+            {
+                Destroy(collision.gameObject);
+            }
         }
         else if (collision.gameObject.CompareTag(ENEMYBULLETTAGNAME))
         {
@@ -195,7 +203,15 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //ダメージのレバブルを設定
             if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
-            Destroy(collision.gameObject);
+            EnemyShotBullet bullet = collision.gameObject.GetComponent<EnemyShotBullet>();
+            if (bullet != null)
+            {
+                bullet.DestroyProtocol();
+            }
+            else
+            {
+                Destroy(collision.gameObject);
+            }
         }
         else if (collision.gameObject.CompareTag(MEDIUMARMORTAGNAME))
         {
