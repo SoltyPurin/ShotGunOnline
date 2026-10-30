@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// ボスの受けたダメージを管理するメソッド
 /// </summary>
+[RequireComponent(typeof(BossStateManagement))]
 public class BossHP : EnemyTakeDamage
 {
     #region[変数名]
@@ -233,6 +234,7 @@ public class BossHP : EnemyTakeDamage
             GameObject.Destroy(enemy2);
         }
         DeathObjectClientRpc();
+        GetComponent<BossStateManagement>().SetBossState(BossStateManagement.BossState.Death);
         // ネットワークオブジェクトの場合は Despawn、ローカルの場合は Destroy
         if (NetworkObject != null && NetworkObject.IsSpawned)
         {

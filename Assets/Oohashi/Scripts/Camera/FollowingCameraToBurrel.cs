@@ -144,6 +144,11 @@ public class FollowingCameraToBurrel : MonoBehaviour
         {
             if (_boss == null)
             {
+                _boss = GameObject.FindGameObjectWithTag("Boss") ?? GameObject.FindGameObjectWithTag("BossSprite");
+            }
+            if (_boss == null)
+            {
+                _isEndMovie = false;
                 return;
             }
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _movieSize, Time.deltaTime * _zoomSpeed);
@@ -168,9 +173,14 @@ public class FollowingCameraToBurrel : MonoBehaviour
         //    transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
         //}
-        else if (_isBossWave && !_isMovie)//ボスのウェーブであればボスにカメラを合わせる
+        else if (_isBossWave && !_isMovie) // ボスのウェーブであればボスとプレイヤーにカメラを合わせる
         {
+            if (_boss == null)
+            {
+                _boss = GameObject.FindGameObjectWithTag("Boss") ?? GameObject.FindGameObjectWithTag("BossSprite");
+            }
 
+            // ボスが存在しない（既に倒されて破棄された）場合、ボス追従を解除して通常カメラに戻す
             if (_boss == null)
             {
                 _boss = GameObject.FindGameObjectWithTag("BossSprite");
@@ -183,13 +193,22 @@ public class FollowingCameraToBurrel : MonoBehaviour
                 return;
             }
 
-            //ボスとプレイヤーの中心点を探す
+            // ボスのステートを確認（死亡ステートなら追従を解除して通常カメラに戻す）
+            var bossStateMgmt = _boss.GetComponent<BossStateManagement>() ?? _boss.GetComponentInParent<BossStateManagement>();
+            if (bossStateMgmt != null && bossStateMgmt.CurrentState == BossStateManagement.BossState.Death)
+            {
+                _isBossWave = false;
+                _boss = null;
+                return;
+            }
+
+            // ボスとプレイヤーの中心点を探す
             Vector3 targetPosition = (_player.transform.position + _boss.transform.position) / 2f;
             targetPosition.z = transform.position.z;
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
 
-            //ボスとプレイヤーとの距離に応じてカメラの描画の大きさを変える
+            // ボスとプレイヤーとの距離に応じてカメラの描画の大きさを変える
             float distance = Vector3.Distance(_player.transform.position, _boss.transform.position);
             float targetSize = Mathf.Clamp(distance * _zoomFactor, _minSize, _maxSize);
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, targetSize, Time.deltaTime * _zoomSpeed);
@@ -223,6 +242,10 @@ public class FollowingCameraToBurrel : MonoBehaviour
             targetPosition.z = transform.position.z;
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, _followSpeed * Time.fixedDeltaTime);
+            if (_camera != null)
+            {
+                _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _minSize, Time.deltaTime * _zoomSpeed);
+            }
         }
     }
 
