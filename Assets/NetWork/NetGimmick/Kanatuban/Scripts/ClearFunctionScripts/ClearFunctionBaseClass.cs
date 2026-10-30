@@ -17,6 +17,9 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     [SerializeField, Header("(感圧板と同期させて動かしたい場合)同期する感圧板")]
     private DetectOnPlayer _pressurePlate = default;
 
+    [SerializeField, Header("(キャンドルと同期させて動かしたい場合)同期するキャンドル")]
+    private CandleTakeFire _candle = default;
+
     private SpriteRenderer _sprite = default;
     private BoxCollider2D _collider = default;
 
@@ -26,7 +29,13 @@ public class ClearFunctionBaseClass : NetworkBehaviour
         //感圧板と同期させるオブジェクトの場合は公開してあるboolを購読する
         if (_pressurePlate != null)
         {
-            _pressurePlate.OnPlayerOnPlate += SyncPressurePlateFunction;
+            _pressurePlate.OnPlayerOnPlate += SyncGimmickFunction;
+        }
+
+        //キャンドルと同期させるオブジェクトの場合も同じく
+        if(_candle != null)
+        {
+            _candle.IsCandleTakeFire += SyncGimmickFunction;
         }
 
     }
@@ -36,7 +45,12 @@ public class ClearFunctionBaseClass : NetworkBehaviour
         base.OnNetworkDespawn();
         if (_pressurePlate != null)
         {
-            _pressurePlate.OnPlayerOnPlate -= SyncPressurePlateFunction;
+            _pressurePlate.OnPlayerOnPlate -= SyncGimmickFunction;
+        }
+
+        if(_candle != null)
+        {
+            _candle.IsCandleTakeFire -= SyncGimmickFunction;
         }
 
     }
@@ -92,7 +106,17 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     /// 特定の感圧板が押された時等に作動するメソッド
     /// </summary>
     /// <param name="isPress"></param>
-    public virtual void SyncPressurePlateFunction(bool isPress)
+    public virtual void SyncGimmickFunction(bool isPress)
+    {
+        if (!IsServer)
+        {
+            return;
+        }
+        SyncGimmickFunctionClientRpc(isPress);
+    }
+
+    [ClientRpc]
+    private void SyncGimmickFunctionClientRpc(bool isPress)
     {
         //押された時
         if (isPress)

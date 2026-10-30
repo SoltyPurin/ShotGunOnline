@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8278008183129148711}
-  - component: {fileID: 7609490546203902196}
-  - component: {fileID: -2732427031013488325}
   - component: {fileID: -7355615335968386423}
+  - component: {fileID: 7609490546203902196}
   - component: {fileID: 351441091521524191}
   m_Layer: 0
   m_Name: Candle
@@ -36,6 +35,21 @@ Transform:
   - {fileID: 8441008378584807637}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7355615335968386423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401915963546186902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51cdbc44bbfeb46418f64172f36a70dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CandleTakeFire
+  ShowTopMostFoldoutHeaderGroup: 1
+  _timeUntileItFireOff: 10
+  _timeUntilItWeakens: 5
 --- !u!212 &7609490546203902196
 SpriteRenderer:
   serializedVersion: 2
@@ -95,47 +109,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &-2732427031013488325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 401915963546186902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 554975768
-  InScenePlacedSourceGlobalObjectIdHash: 799138221
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  <InScenePlaced>k__BackingField: 0
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &-7355615335968386423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 401915963546186902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51cdbc44bbfeb46418f64172f36a70dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CandleTakeFire
-  ShowTopMostFoldoutHeaderGroup: 1
-  _timeUntileItFireOff: 10
-  _timeUntilItWeakens: 5
 --- !u!61 &351441091521524191
 BoxCollider2D:
   m_ObjectHideFlags: 0

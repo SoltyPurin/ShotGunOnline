@@ -9798,6 +9798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _respawnPoints: []
   _p1RespawnPointParent: {fileID: 2061345074}
   _p2RespawnPointParent: {fileID: 1113434070}
   _p3RespawnPointParent: {fileID: 464397449}

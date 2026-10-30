@@ -17,20 +17,22 @@ public class KanatubanManager : NetworkBehaviour
         _pressurePlateList.AddRange(GetComponentsInChildren<DetectOnPlayer>());
         _clearFunctionObject.AddRange(GetComponentsInChildren<ClearFunctionBaseClass>());
     }
-
-    private void OnEnable()
+    public override void OnNetworkSpawn()
     {
-        foreach(DetectOnPlayer doPlayer in _pressurePlateList)
+        base.OnNetworkSpawn();
+        foreach (DetectOnPlayer doPlayer in _pressurePlateList)
         {
-            if(doPlayer != null)
+            if (doPlayer != null)
             {
                 doPlayer.OnPlayerOnPlate += CheckAllChildState;
             }
         }
+
     }
 
-    private void OnDisable()
+    public override void OnNetworkDespawn()
     {
+        base.OnNetworkDespawn();
         foreach (DetectOnPlayer doPlayer in _pressurePlateList)
         {
             if (doPlayer != null)
@@ -38,8 +40,8 @@ public class KanatubanManager : NetworkBehaviour
                 doPlayer.OnPlayerOnPlate -= CheckAllChildState;
             }
         }
-    }
 
+    }
     private void CheckAllChildState(bool newState)
     {
         if (!IsServer)
