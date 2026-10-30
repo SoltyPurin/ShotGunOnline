@@ -315,6 +315,13 @@ public class ShootRange : MonoBehaviour
     {
         if (hitObject == null) return;
 
+        // クライアント側でも撃った瞬間に敵の前進移動を即座に停止してノックバック追従に備える
+        EnemyMove enemyMove = hitObject.GetComponent<EnemyMove>();
+        if (enemyMove != null)
+        {
+            enemyMove.OnKnockBackStarted();
+        }
+
         DamageEffect damageEffect = hitObject.GetComponentInChildren<DamageEffect>();
         if (damageEffect != null)
         {
@@ -365,4 +372,3 @@ public class ShootRange : MonoBehaviour
         Gizmos.DrawLine(p2, p1);
     }
 }
-
