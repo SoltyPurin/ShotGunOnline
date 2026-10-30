@@ -164,7 +164,7 @@ public class CoinControl : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void RequestAbsorbServerRpc(NetworkObjectReference playerRef)
     {
         if (playerRef.TryGet(out NetworkObject playerNetObj))

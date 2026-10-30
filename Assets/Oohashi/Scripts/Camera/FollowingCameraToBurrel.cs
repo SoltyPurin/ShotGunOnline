@@ -8,6 +8,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
     [SerializeField] private GameObject _player = default;
     private GameObject _boss = default;
     private GameObject _midiumBoss = default;
+    private BossStateManagement.BossState _bossState = default;
     [SerializeField] private float _followSpeed = 2;
     [SerializeField] private float _bossFollowSpeed = 20.0f;
     [SerializeField] private float _zoomFactor = 0.5f;
@@ -173,6 +174,13 @@ public class FollowingCameraToBurrel : MonoBehaviour
             if (_boss == null)
             {
                 _boss = GameObject.FindGameObjectWithTag("BossSprite");
+                _bossState = _boss.GetComponent<BossStateManagement>().CurrentState;
+            }
+
+            if (_bossState != BossStateManagement.BossState.Death)
+            {
+                // ボスが死亡している場合はカメラを移動しない
+                return;
             }
 
             //ボスとプレイヤーの中心点を探す
