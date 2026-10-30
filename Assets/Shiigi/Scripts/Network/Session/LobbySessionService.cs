@@ -40,23 +40,24 @@ public class LobbySessionService : ILobbySessionService
         _onUnexpectedDisconnect = onUnexpectedDisconnect;
     }
 
-    public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers)
+    public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers, RelayProtocol protocol = RelayProtocol.DTLS)
     {
         if (!EnsureServicesInitialized()) return false;
 
-        var cancellationToken = BeginConnectionAttempt();
+        var cancellationToken = BeginConnectionAttempt(protocol);
 
         try
         {
-            // Relay接続が完了するまでは一覧に表示されないよう非公開で作成
+            // Relay接続が完了するまでは一覧に表示されないよう非公開で作成し、公開プロパティにプロトコルを記録
             var options = new SessionOptions
             {
                 Name = roomName,
                 MaxPlayers = maxPlayers,
-                IsPrivate = true
+                IsPrivate = true,
+                SessionProperties = SessionPlayerPropertyHelper.CreateSessionProtocolProperties(protocol)
             }
             .WithRelayNetwork()
-            .WithNetworkOptions(new NetworkOptions { RelayProtocol = RelayProtocol.WSS });
+            .WithNetworkOptions(new NetworkOptions { RelayProtocol = protocol });
 
             _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
             SubscribeSessionEvents(_currentSession);
@@ -75,7 +76,7 @@ public class LobbySessionService : ILobbySessionService
             hostSession.IsPrivate = false;
             await hostSession.SavePropertiesAsync();
 
-            CompleteConnectionAttempt("ホストとして接続完了、ルーム一覧に公開しました (WSS)");
+            CompleteConnectionAttempt($"ホストとして接続完了、ルーム一覧に公開しました ({protocol})");
             return true;
         }
         catch (Exception ex)
@@ -110,12 +111,14 @@ public class LobbySessionService : ILobbySessionService
     {
         if (!EnsureServicesInitialized()) return false;
 
-        var cancellationToken = BeginConnectionAttempt();
+        // ルーム一覧情報（ISessionInfo）の公開プロパティから通信プロトコルを自動取得
+        var protocol = SessionPlayerPropertyHelper.GetSessionRelayProtocol(targetRoom);
+        var cancellationToken = BeginConnectionAttempt(protocol);
 
         try
         {
             var joinOptions = new JoinSessionOptions()
-                .WithNetworkOptions(new NetworkOptions { RelayProtocol = RelayProtocol.WSS });
+                .WithNetworkOptions(new NetworkOptions { RelayProtocol = protocol });
 
             _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id, joinOptions);
             SubscribeSessionEvents(_currentSession);
@@ -129,7 +132,7 @@ public class LobbySessionService : ILobbySessionService
 
             await SaveRelayConnectedPropertyAsync();
 
-            CompleteConnectionAttempt("クライアントとして接続完了 (WSS)");
+            CompleteConnectionAttempt($"クライアントとして接続完了 ({protocol})");
             return true;
         }
         catch (Exception ex)
@@ -201,13 +204,13 @@ public class LobbySessionService : ILobbySessionService
         return false;
     }
 
-    private CancellationToken BeginConnectionAttempt()
+    private CancellationToken BeginConnectionAttempt(RelayProtocol protocol)
     {
         CancelPendingConnectionAttempt();
         _connectionCts = new CancellationTokenSource();
         _isSessionConnected = false;
         _isLeavingIntentionally = false;
-        _relayConnectionHandler.ConfigureWebSocketTransport();
+        _relayConnectionHandler.ConfigureTransport(protocol);
         return _connectionCts.Token;
     }
 

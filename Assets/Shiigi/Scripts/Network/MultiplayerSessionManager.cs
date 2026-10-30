@@ -202,10 +202,10 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     /// <summary>
     /// ホストとして新しいルームを作成する
     /// </summary>
-    public UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers)
+    public UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers, RelayProtocol protocol = RelayProtocol.DTLS)
     {
         EnsureSubsystemsInitialized();
-        return _sessionService.CreateRoomSessionAsync(roomName, maxPlayers);
+        return _sessionService.CreateRoomSessionAsync(roomName, maxPlayers, protocol);
     }
 
     /// <summary>
