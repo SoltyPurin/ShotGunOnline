@@ -8,7 +8,6 @@ public class FollowingCameraToBurrel : MonoBehaviour
     [SerializeField] private GameObject _player = default;
     private GameObject _boss = default;
     private GameObject _midiumBoss = default;
-    private BossStateManagement.BossState _bossState = default;
     [SerializeField] private float _followSpeed = 2;
     [SerializeField] private float _bossFollowSpeed = 20.0f;
     [SerializeField] private float _zoomFactor = 0.5f;
@@ -43,7 +42,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
     private bool _isMidiumBoss = false;
     public bool IsMidiumBoss
     {
-        set { _isMidiumBoss= value; }
+        set { _isMidiumBoss = value; }
     }
 
     #endregion
@@ -183,13 +182,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             // ボスが存在しない（既に倒されて破棄された）場合、ボス追従を解除して通常カメラに戻す
             if (_boss == null)
             {
-                _boss = GameObject.FindGameObjectWithTag("BossSprite");
-                _bossState = _boss.GetComponent<BossStateManagement>().CurrentState;
-            }
-
-            if (_bossState != BossStateManagement.BossState.Death)
-            {
-                // ボスが死亡している場合はカメラを移動しない
+                _isBossWave = false;
                 return;
             }
 
