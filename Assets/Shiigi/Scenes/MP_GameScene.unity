@@ -5402,9 +5402,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 828960086041223890, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1465200320552591797, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1558415823052670716, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
       propertyPath: m_Name
       value: MapData
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098642293207665378, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769252319527448107, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3194050193905011615, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4559151203892946147, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5445,6 +5465,18 @@ PrefabInstance:
     - target: {fileID: 4559151203892946147, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5075353700293602296, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7581493254332651985, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8942793784291870513, guid: 10c38238f2bbd5143a75ba4f54393400, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
