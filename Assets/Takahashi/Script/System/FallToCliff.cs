@@ -77,9 +77,7 @@ public class FallToCliff : MonoBehaviour
 
     }
 
-    private IEnumerator PlayerFallCheck(
-    Collider2D playerCollider,
-    PlayerHoleFall playerFall)
+    private IEnumerator PlayerFallCheck(Collider2D playerCollider,PlayerHoleFall playerFall)
     {
         // 床の出現・Colliderの更新を待つ
         yield return new WaitForSeconds(_fallCheckDelay);
@@ -113,11 +111,9 @@ public class FallToCliff : MonoBehaviour
 
         if (ground != null)
         {
-            Debug.Log($"床を検知したため落下キャンセル: {ground.name}");
             yield break;
         }
 
-        Debug.Log("足元に床がないため落下");
 
         playerFall.Fall();
     }
