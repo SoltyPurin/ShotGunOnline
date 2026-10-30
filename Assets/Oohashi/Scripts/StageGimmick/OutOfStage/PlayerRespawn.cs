@@ -279,7 +279,6 @@ public class PlayerRespawn : NetworkBehaviour
                 }
 
                 MoveCamera(respawnPoint);
-                Debug.Log($"[PlayerRespawn] 落下プレイヤー ({netObj.name}) を現在のステージ {_currentRespawnIndex} (位置: {respawnPoint}) に復帰させました。");
             }
         }
     }

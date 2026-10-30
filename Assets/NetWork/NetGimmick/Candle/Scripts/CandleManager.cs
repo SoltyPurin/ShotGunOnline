@@ -59,7 +59,6 @@ public class CandleManager : NetworkBehaviour
         {
             _wasAllIgnited = true;
 
-            Debug.Log("全キャンドル点火！");
 
             if (_isAllIgnited)
             {

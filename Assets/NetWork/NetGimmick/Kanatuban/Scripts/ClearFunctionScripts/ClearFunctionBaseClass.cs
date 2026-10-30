@@ -14,6 +14,9 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     [SerializeField, Header("クリアしたら消えるオブジェクト？")]
     private bool _isClearedVanishObj = false;
 
+    [SerializeField,Header("出てきたら床になるオブジェクト？")]
+    private bool _isFloorObject = false;
+
     [SerializeField, Header("(感圧板と同期させて動かしたい場合)同期する感圧板")]
     private DetectOnPlayer _pressurePlate = default;
 
@@ -98,6 +101,11 @@ public class ClearFunctionBaseClass : NetworkBehaviour
         // そうでなければ出現
         else
         {
+            if (_isFloorObject)
+            {
+                _collider.isTrigger = true;
+            }
+
             _sprite.enabled = true;
             _collider.enabled = true;
         }
@@ -128,6 +136,10 @@ public class ClearFunctionBaseClass : NetworkBehaviour
             }
             else
             {
+                if (_isFloorObject)
+                {
+                    _collider.isTrigger = true;
+                }
                 _sprite.enabled = true;
                 _collider.enabled = true;
             }
@@ -137,6 +149,11 @@ public class ClearFunctionBaseClass : NetworkBehaviour
         {
             if (_isClearedVanishObj)
             {
+                if (_isFloorObject)
+                {
+                    _collider.isTrigger = true;
+                }
+
                 _sprite.enabled = true;
                 _collider.enabled = true;
             }

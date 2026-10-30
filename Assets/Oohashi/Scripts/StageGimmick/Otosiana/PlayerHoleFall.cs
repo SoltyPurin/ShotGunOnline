@@ -29,7 +29,7 @@ public class PlayerHoleFall : EntityFall
     [SerializeField, Tooltip("フェードのアニメーター（PlayerUI内にある）")]
     private Animator _fadeAnimator = default;
 
-    private PlayerDamageKnockBack _damage = default;
+    private bool _isFalling = false;
 
     //---アニメーターのトリガー---//
     private readonly string FALLTRIGGER = "Fall";
@@ -37,10 +37,7 @@ public class PlayerHoleFall : EntityFall
     private void Start()
     {
         _soul = GetComponent<SoulKeep>();
-        _damage = GetComponent<PlayerDamageKnockBack>();
     }
-
-
 
     /// <summary>
     /// リスポーン座標に移動するコルーチン
@@ -60,8 +57,8 @@ public class PlayerHoleFall : EntityFall
         _respawn.FallRespawnRpc(this.gameObject);
         _playerStateManager.NormalState();
         _inputChangeState.ToNormalAnimation();
+        _isFalling = false ;
     }
-
     /// <summary>
     /// 落下メソッド
     /// </summary>
@@ -73,6 +70,13 @@ public class PlayerHoleFall : EntityFall
         {
             return;
         }
+
+        if (_isFalling)
+        {
+            return;
+        }
+
+        _isFalling = true;
 
         _knockBack.Fall();
         _damageKnockBack.Fall();

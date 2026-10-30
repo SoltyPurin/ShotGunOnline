@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3034895138348335708}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.48633, y: 3.25354, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -50,6 +50,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _dummy: 0
   _isClearedVanishObj: 0
+  _isFloorObject: 1
   _pressurePlate: {fileID: 0}
   _candle: {fileID: 0}
 --- !u!212 &7802910833499666766
@@ -169,3 +170,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 298863f2ae4857e4e935aff95e6f1edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallToCliff
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _groundCheckWidth: 0.5
+  _groundCheckHeight: 0.1
+  _fallCheckDelay: 0.1
