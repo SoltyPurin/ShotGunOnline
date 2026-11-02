@@ -2,84 +2,76 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-
 public class FallToCliff : MonoBehaviour
 {
-
-    [SerializeField, Header("°‚Æ‚µ‚Ä”»’è‚·‚éƒŒƒCƒ„[")]
+    [SerializeField, Header("åºŠã¨ã—ã¦åˆ¤å®šã™ã‚‹ãƒ¬ã‚¤ãƒ¤ãƒ¼")]
     private LayerMask _groundLayer;
 
-    [SerializeField, Header("‘«Œ³”»’è‚Ì‰¡•")]
+    [SerializeField, Header("åºŠåˆ¤å®šã®å¹…")]
     private float _groundCheckWidth = 0.5f;
 
-    [SerializeField, Header("‘«Œ³”»’è‚Ì‚‚³")]
+    [SerializeField, Header("åºŠåˆ¤å®šã®é«˜ã•")]
     private float _groundCheckHeight = 0.1f;
 
-    [SerializeField, Header("‘«Œ³”»’è‚Ì‘Ò‹@ŠÔ")]
+    [SerializeField, Header("è½ä¸‹ã®å¾…æ©Ÿæ™‚é–“")]
     private float _fallCheckDelay = 0.1f;
-
 
     private WaveTransition _waveTransition = default;
 
     private void Start()
     {
-        _waveTransition = GameObject.FindWithTag("WaveManager").GetComponent<WaveTransition>();
+        GameObject waveManagerObj = GameObject.FindWithTag("WaveManager");
+        if (waveManagerObj != null)
+        {
+            _waveTransition = waveManagerObj.GetComponent<WaveTransition>();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!collision.gameObject.scene.isLoaded)
+        if (collision == null || !collision.gameObject.scene.isLoaded)
         {
             return;
         }
 
-        if (collision == null) return;
-
-        if (_waveTransition.IsWaveChangeMoment)
+        if (_waveTransition != null && _waveTransition.IsWaveChangeMoment)
         {
             return;
         }
 
-        EntityFall entityFall = collision.GetComponent<EntityFall>();
-        if (entityFall == null) return;
-
-
-        //6”Ô‚ÍEnemy‚ÌƒŒƒCƒ„[”Ô†
-        if (collision.gameObject.layer == 6)
-        {
-            StartCoroutine(DeathCheck(collision.gameObject,entityFall));
-        }
-        //else if (collision.CompareTag("Player"))
-        //{
-        //    PlayerDamageKnockBack damageKnockBack = collision.GetComponent<PlayerDamageKnockBack>();
-        //    if (damageKnockBack != null && damageKnockBack.gameObject.activeInHierarchy)
-        //    {
-        //        entityFall.Fall();
-        //        //StartCoroutine(damageKnockBack.StartCoroutine(DamagePerformance());
-        //        //damageKnockBack.StartCoroutine("");
-        //    }
-        //}
-        else
-        {
-            
-            StartCoroutine(StoneFall(collision.gameObject, entityFall));
-        }
-
-        PlayerHoleFall playerFall =
-       collision.GetComponentInParent<PlayerHoleFall>();
-
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆ¤å®šï¼ˆè¦ªéšå±¤å«ã‚€ï¼‰
+        PlayerHoleFall playerFall = collision.GetComponentInParent<PlayerHoleFall>();
         if (playerFall != null)
         {
             StartCoroutine(PlayerFallCheck(collision, playerFall));
             return;
         }
 
+        EntityFall entityFall = collision.GetComponent<EntityFall>();
+        if (entityFall == null) return;
 
+        // 6ç•ªã¯Enemyã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·
+        if (collision.gameObject.layer == 6)
+        {
+            StartCoroutine(DeathCheck(collision.gameObject, entityFall));
+            return;
+        }
+
+        // çŸ³ãªã©ã®è½ä¸‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆ¤å®š
+        StoneFallToCliff stoneFall = collision.GetComponent<StoneFallToCliff>();
+        if (stoneFall != null)
+        {
+            StartCoroutine(StoneFall(collision.gameObject, entityFall));
+            return;
+        }
+
+        // ãã®ä»–ã®è½ä¸‹ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£
+        entityFall.Fall();
     }
 
-    private IEnumerator PlayerFallCheck(Collider2D playerCollider,PlayerHoleFall playerFall)
+    private IEnumerator PlayerFallCheck(Collider2D playerCollider, PlayerHoleFall playerFall)
     {
-        // °‚ÌoŒ»ECollider‚ÌXV‚ğ‘Ò‚Â
+        // æµ®éŠãƒ»Colliderã®æ›´æ–°å¾…ã¡
         yield return new WaitForSeconds(_fallCheckDelay);
 
         if (playerCollider == null || playerFall == null)
@@ -87,10 +79,10 @@ public class FallToCliff : MonoBehaviour
             yield break;
         }
 
-        // ƒvƒŒƒCƒ„[‚ÌŒ»İ‚ÌColliderî•ñ‚ğæ“¾
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®Colliderå–å¾—
         Bounds bounds = playerCollider.bounds;
 
-        // ‘«Œ³‚ğ’²‚×‚é‚½‚ß‚Ì”»’è”ÍˆÍ
+        // åºŠã‚’èª¿ã¹ã‚‹ãŸã‚ã®åˆ¤å®šç¯„å›²
         Vector2 checkPosition = new Vector2(
             bounds.center.x,
             bounds.min.y - 0.02f
@@ -101,7 +93,7 @@ public class FallToCliff : MonoBehaviour
             _groundCheckHeight
         );
 
-        // Œ»İ‚Ì‘«Œ³‚É°‚ª‚ ‚é‚©Šm”F
+        // ç¾åœ¨ã®è¶³å…ƒã«åºŠãŒã‚ã‚‹ã‹ç¢ºèª
         Collider2D ground = Physics2D.OverlapBox(
             checkPosition,
             checkSize,
@@ -114,32 +106,39 @@ public class FallToCliff : MonoBehaviour
             yield break;
         }
 
-
         playerFall.Fall();
     }
-    private IEnumerator StoneFall(GameObject collision,EntityFall entityFall)
+
+    private IEnumerator StoneFall(GameObject collision, EntityFall entityFall)
     {
         yield return new WaitForSeconds(0.1f);
         if (collision == null || !collision) yield break;
-        StoneFallToCliff stoneFall = collision.GetComponent<StoneFallToCliff>();
-        stoneFall.FallMethod();
-        entityFall.Fall();
 
+        StoneFallToCliff stoneFall = collision.GetComponent<StoneFallToCliff>();
+        if (stoneFall != null)
+        {
+            stoneFall.FallMethod();
+        }
+
+        if (entityFall != null)
+        {
+            entityFall.Fall();
+        }
     }
 
-    private IEnumerator DeathCheck(GameObject collision,EntityFall entityFall)
+    private IEnumerator DeathCheck(GameObject collision, EntityFall entityFall)
     {
         yield return new WaitForSeconds(0.1f);
         if (collision == null || !collision) yield break;
+
         EnemyTakeDamage enemyTakeDamage = collision.GetComponent<EnemyTakeDamage>();
-        if(enemyTakeDamage == null)
+        if (enemyTakeDamage == null || enemyTakeDamage.IsDead)
         {
             yield break;
         }
-        EnemyMove enemyMove = collision.GetComponent<EnemyMove>();
-        if (enemyTakeDamage == null || enemyTakeDamage.IsDead) yield break;
 
-        if (enemyMove.EnemyState == EnemyState.roadKill)
+        EnemyMove enemyMove = collision.GetComponent<EnemyMove>();
+        if (enemyMove != null && enemyMove.EnemyState == EnemyState.roadKill)
         {
             yield break;
         }
@@ -149,8 +148,10 @@ public class FallToCliff : MonoBehaviour
         {
             yield break;
         }
-        entityFall.Fall();
 
-
+        if (entityFall != null)
+        {
+            entityFall.Fall();
+        }
     }
 }
