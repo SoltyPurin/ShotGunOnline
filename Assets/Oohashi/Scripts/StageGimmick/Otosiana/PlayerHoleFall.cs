@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -46,26 +46,36 @@ public class PlayerHoleFall : EntityFall
     private IEnumerator MoveToRespawnPoint()
     {
         transform.SetParent(null);
-        if(_respawn == null)
+        if (_respawn == null)
         {
-            _respawn = GameObject.FindWithTag("RespawnPoint").GetComponent<PlayerRespawn>();
+            GameObject respawnObj = GameObject.FindWithTag("RespawnPoint");
+            if (respawnObj != null)
+            {
+                _respawn = respawnObj.GetComponent<PlayerRespawn>();
+            }
+            if (_respawn == null)
+            {
+                _respawn = FindAnyObjectByType<PlayerRespawn>();
+            }
         }
         yield return new WaitForSeconds(2.2f);
         _rigidbody2D.simulated = true;
         _fadeAnimator.SetTrigger("FadeIn");
         _damageKnockBack.ResetForce();
-        _respawn.FallRespawnRpc(this.gameObject);
+        if (_respawn != null)
+        {
+            _respawn.FallRespawnRpc(this.gameObject);
+        }
         _playerStateManager.NormalState();
         _inputChangeState.ToNormalAnimation();
-        _isFalling = false ;
+        _isFalling = false;
     }
+
     /// <summary>
     /// 落下メソッド
     /// </summary>
     public override void Fall()
     {
-        _animator.SetTrigger(FALLTRIGGER);
-
         // マルチプレイ時、自機（所有権を持つローカルプレイヤー）のみ落下・画面エフェクト・リスポーンを実行
         NetworkObject netObj = GetComponent<NetworkObject>();
         if (netObj != null && !netObj.IsOwner)
@@ -78,14 +88,17 @@ public class PlayerHoleFall : EntityFall
             return;
         }
 
-        _isFalling = true;
-
-        _knockBack.Fall();
-        _damageKnockBack.Fall();
-        if (_playerStateManager.PlayerState == PlayerState.Movie)
+        // ムービー演出中は落下死させない（_isFalling を true にする前に判定する）
+        if (_playerStateManager != null && _playerStateManager.PlayerState == PlayerState.Movie)
         {
             return;
         }
+
+        _isFalling = true;
+        _animator.SetTrigger(FALLTRIGGER);
+
+        _knockBack.Fall();
+        _damageKnockBack.Fall();
 
         if (!_damageKnockBack.IsInvincible)
         {

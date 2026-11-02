@@ -7,28 +7,44 @@ public class FallToCliff : MonoBehaviour
     [SerializeField, Header("床として判定するレイヤー")]
     private LayerMask _groundLayer;
 
-    [SerializeField, Header("床判定の幅")]
+    [SerializeField, Header("足元判定の横幅")]
     private float _groundCheckWidth = 0.5f;
 
-    [SerializeField, Header("床判定の高さ")]
+    [SerializeField, Header("足元判定の高さ")]
     private float _groundCheckHeight = 0.1f;
 
-    [SerializeField, Header("落下の待機時間")]
+    [SerializeField, Header("足元判定の待機時間")]
     private float _fallCheckDelay = 0.1f;
 
     private WaveTransition _waveTransition = default;
 
+    private void Awake()
+    {
+        // インスペクター未設定（Nothing=0）の場合は TileMap レイヤー(Layer 3)を既定値として設定
+        if (_groundLayer.value == 0)
+        {
+            int tileMapLayer = LayerMask.NameToLayer("TileMap");
+            _groundLayer = tileMapLayer >= 0 ? (1 << tileMapLayer) : (1 << 3);
+        }
+    }
+
     private void Start()
     {
-        GameObject waveManagerObj = GameObject.FindWithTag("WaveManager");
-        if (waveManagerObj != null)
+        GameObject waveManObj = GameObject.FindWithTag("WaveManager");
+        if (waveManObj != null)
         {
-            _waveTransition = waveManagerObj.GetComponent<WaveTransition>();
+            _waveTransition = waveManObj.GetComponent<WaveTransition>();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        // ステージ切り替え等でこのMapオブジェクト自体が非アクティブ化された際のOnTriggerExit2Dではコルーチンを起動しない
+        if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (collision == null || !collision.gameObject.scene.isLoaded)
         {
             return;
@@ -39,7 +55,10 @@ public class FallToCliff : MonoBehaviour
             return;
         }
 
-        // プレイヤーの判定（親階層含む）
+        EntityFall entityFall = collision.GetComponent<EntityFall>();
+        if (entityFall == null) return;
+
+        // 1. プレイヤーの落下判定
         PlayerHoleFall playerFall = collision.GetComponentInParent<PlayerHoleFall>();
         if (playerFall != null)
         {
@@ -47,42 +66,37 @@ public class FallToCliff : MonoBehaviour
             return;
         }
 
-        EntityFall entityFall = collision.GetComponent<EntityFall>();
-        if (entityFall == null) return;
-
-        // 6番はEnemyのレイヤー番号
+        // 2. 敵（Layer 6: Enemy）の落下判定
         if (collision.gameObject.layer == 6)
         {
             StartCoroutine(DeathCheck(collision.gameObject, entityFall));
-            return;
         }
-
-        // 石などの落下オブジェクト判定
-        StoneFallToCliff stoneFall = collision.GetComponent<StoneFallToCliff>();
-        if (stoneFall != null)
+        // 3. 岩（StoneFallToCliff）の落下判定
+        else if (collision.GetComponent<StoneFallToCliff>() != null)
         {
             StartCoroutine(StoneFall(collision.gameObject, entityFall));
-            return;
         }
-
-        // その他の落下エンティティ
-        entityFall.Fall();
     }
 
     private IEnumerator PlayerFallCheck(Collider2D playerCollider, PlayerHoleFall playerFall)
     {
-        // 浮遊・Colliderの更新待ち
+        // 床の出現・Colliderの更新を待つ
         yield return new WaitForSeconds(_fallCheckDelay);
 
-        if (playerCollider == null || playerFall == null)
+        if (playerCollider == null || playerFall == null || !playerCollider.gameObject.activeInHierarchy)
         {
             yield break;
         }
 
-        // プレイヤーの現在のCollider取得
+        if (_waveTransition != null && _waveTransition.IsWaveChangeMoment)
+        {
+            yield break;
+        }
+
+        // プレイヤーの現在のCollider情報を取得
         Bounds bounds = playerCollider.bounds;
 
-        // 床を調べるための判定範囲
+        // 足元を調べるための判定範囲
         Vector2 checkPosition = new Vector2(
             bounds.center.x,
             bounds.min.y - 0.02f
@@ -113,13 +127,11 @@ public class FallToCliff : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         if (collision == null || !collision) yield break;
-
         StoneFallToCliff stoneFall = collision.GetComponent<StoneFallToCliff>();
         if (stoneFall != null)
         {
             stoneFall.FallMethod();
         }
-
         if (entityFall != null)
         {
             entityFall.Fall();
@@ -130,14 +142,14 @@ public class FallToCliff : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         if (collision == null || !collision) yield break;
-
         EnemyTakeDamage enemyTakeDamage = collision.GetComponent<EnemyTakeDamage>();
-        if (enemyTakeDamage == null || enemyTakeDamage.IsDead)
+        if (enemyTakeDamage == null)
         {
             yield break;
         }
-
         EnemyMove enemyMove = collision.GetComponent<EnemyMove>();
+        if (enemyTakeDamage == null || enemyTakeDamage.IsDead) yield break;
+
         if (enemyMove != null && enemyMove.EnemyState == EnemyState.roadKill)
         {
             yield break;
@@ -148,10 +160,6 @@ public class FallToCliff : MonoBehaviour
         {
             yield break;
         }
-
-        if (entityFall != null)
-        {
-            entityFall.Fall();
-        }
+        entityFall.Fall();
     }
 }

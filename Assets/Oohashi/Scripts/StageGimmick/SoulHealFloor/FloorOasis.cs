@@ -1,58 +1,112 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class FloorOasis : NetworkBehaviour
+public class FloorOasis : MonoBehaviour
 {
-    [SerializeField, Header("è¡Ç¶ÇÈÇ‹Ç≈ÇÃéûä‘")]
+    [SerializeField, Header("Ê∂à„Åà„Çã„Åæ„Åß„ÅÆÊôÇÈñì")]
     private float _destroyTime = 6f;
     private float _initWaitTime = 0;
-    [SerializeField, Header("âÒïúè∞ÇèoÇ∑å¬êî")]
+
+    [SerializeField, Header("ÂõûÂæ©Â∫ä„ÇíÂá∫„ÅôÂÄãÊï∞")]
     private int _floorSpawnValue = 4;
-    [SerializeField, Header("É\ÉEÉãè∞ÇèoÇ∑ç¿ïW")]
+
+    [SerializeField, Header("„ÇΩ„Ç¶„É´Â∫ä„ÇíÂá∫„ÅôÂ∫ßÊ®ô")]
     private Vector2[] _floorSpawnPos;
 
-    [SerializeField, Header("É\ÉEÉãè∞ÇÃÉvÉåÉnÉu")]
+    [SerializeField, Header("Ëá™Ë∫´„ÅÆTransformÂ∫ßÊ®ô„Åã„Çâ„ÅÆÁõ∏ÂØæ„Ç™„Éï„Çª„ÉÉ„Éà„Å®„Åó„Å¶Êâ±„ÅÜ„Åã")]
+    private bool _useRelativeOffset = false;
+
+    [SerializeField, Header("„ÇΩ„Ç¶„É´Â∫ä„ÅÆ„Éó„É¨„Éè„Éñ")]
     private GameObject _soulFloorObject = default;
 
     private GameObject _currentFloorObject = default;
-
     private bool _isTaked = false;
-
     private int _currentObservationIndex = 0;
+    private bool _initialFloorSpawned = false;
 
-    public override void OnNetworkSpawn()
+    private bool IsServerAuthority =>
+        NetworkManager.Singleton != null &&
+        NetworkManager.Singleton.IsListening &&
+        NetworkManager.Singleton.IsServer;
+
+    private void Start()
     {
-        // ÉTÅ[ÉoÅ[ÅiÉzÉXÉgÅjÇÃÇ›Ç™èoåªä«óùÇçsÇ§
-        if (!IsServer) return;
+        TrySpawnInitialFloor();
+    }
 
+    private void OnDisable()
+    {
+        DespawnCurrentFloor();
+    }
+
+    private void TrySpawnInitialFloor()
+    {
+        if (_initialFloorSpawned || !IsServerAuthority) return;
+
+        _initialFloorSpawned = true;
         SpawnNextFloor();
+    }
+
+    private Vector2 GetWorldSpawnPosition(int index)
+    {
+        Vector2 configuredPos = _floorSpawnPos[index];
+        if (_useRelativeOffset)
+        {
+            return (Vector2)transform.position + configuredPos;
+        }
+        return configuredPos;
     }
 
     private void SpawnNextFloor()
     {
         if (_floorSpawnPos == null || _floorSpawnPos.Length == 0 || _soulFloorObject == null) return;
 
-        Vector2 spawnPos = _floorSpawnPos[_currentObservationIndex];
+        Vector2 spawnPos = GetWorldSpawnPosition(_currentObservationIndex);
         _currentFloorObject = Instantiate(_soulFloorObject, spawnPos, Quaternion.identity);
 
         NetworkObject netObj = _currentFloorObject.GetComponent<NetworkObject>();
         if (netObj != null)
         {
-            netObj.Spawn(); // ÉTÅ[ÉoÅ[Ç©ÇÁëSí[ññÇ÷ìØä˙ÉXÉ|Å[Éì
+            netObj.Spawn(); // „Çµ„Éº„Éê„Éº„Åã„ÇâÂÖ®Á´ØÊú´„Å∏ÂêåÊúü„Çπ„Éù„Éº„É≥
         }
+    }
+
+    private void DespawnCurrentFloor()
+    {
+        if (_currentFloorObject != null && IsServerAuthority)
+        {
+            NetworkObject prevNetFloor = _currentFloorObject.GetComponent<NetworkObject>();
+            if (prevNetFloor != null && prevNetFloor.IsSpawned)
+            {
+                prevNetFloor.Despawn();
+            }
+            else
+            {
+                Destroy(_currentFloorObject);
+            }
+        }
+        _currentFloorObject = null;
+        _initialFloorSpawned = false;
     }
 
     private void FixedUpdate()
     {
-        if (!IsServer) return;
+        if (!IsServerAuthority) return;
+
+        if (!_initialFloorSpawned)
+        {
+            TrySpawnInitialFloor();
+            return;
+        }
+
+        if (_floorSpawnPos == null || _floorSpawnPos.Length == 0 || _soulFloorObject == null) return;
+
         _initWaitTime += Time.fixedDeltaTime;
-        //ì•Ç‹ÇÍÇƒè¡Ç¶ÇΩÇ©êßå¿éûä‘Ç™óàÇΩéûÅAè∞ÇçÌèúÇ∑ÇÈ
+
+        // Ë∏è„Åæ„Çå„Å¶Ê∂à„Åà„Åü„ÅãÂà∂ÈôêÊôÇÈñì„ÅåÊù•„ÅüÊôÇ„ÄÅÂ∫ä„ÇíÂâäÈô§„Åó„Å¶Ê¨°„ÅÆÂ∫ßÊ®ô„Å∏Âá∫„Åô
         if (_currentFloorObject == null || _initWaitTime > _destroyTime)
         {
-
-            if(_currentFloorObject != null)
+            if (_currentFloorObject != null)
             {
                 NetworkObject prevNetFloor = _currentFloorObject.GetComponent<NetworkObject>();
                 if (prevNetFloor != null && prevNetFloor.IsSpawned)
@@ -67,36 +121,29 @@ public class FloorOasis : NetworkBehaviour
                 _currentObservationIndex = 0;
             }
 
-            
-            GameObject floor = Instantiate(_soulFloorObject, _floorSpawnPos[_currentObservationIndex],Quaternion.identity);
+            Vector2 nextPos = GetWorldSpawnPosition(_currentObservationIndex);
+            GameObject floor = Instantiate(_soulFloorObject, nextPos, Quaternion.identity);
             _currentFloorObject = floor;
             NetworkObject netFloor = floor.GetComponent<NetworkObject>();
-            netFloor.Spawn();
+            if (netFloor != null)
+            {
+                netFloor.Spawn();
+            }
 
             _initWaitTime = 0;
             _isTaked = true;
         }
-        //if (_initWaitTime > _destroyTime)
-        //{
-        //    if(_floorObjectList[_currentObservationIndex] == null)
-        //    {
-        //        GameObject floorObj = Instantiate(_soulFloorObject, _floorSpawnPos[_currentObservationIndex], Quaternion.identity);
-        //        NetworkObject netFloor = floorObj.GetComponent<NetworkObject>();
-        //        _floorObjectList[_currentObservationIndex] =floorObj;
-        //        _floorObjectList[_currentObservationIndex].SetActive(false);
-        //    }
-        //    else
-        //    {
-        //        _floorObjectList[_currentObservationIndex].SetActive(false);
-        //    }
-        //    _currentObservationIndex++;
-        //    if (_currentObservationIndex >= _floorObjectList.Length)
-        //    {
-        //        _currentObservationIndex = 0;
-        //    }
-        //    _initWaitTime = 0;
-        //    _floorObjectList[_currentObservationIndex].SetActive(true) ;
-        //    _isTaked = false;
-        //}
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (_floorSpawnPos == null) return;
+
+        Gizmos.color = Color.yellow;
+        for (int i = 0; i < _floorSpawnPos.Length; i++)
+        {
+            Vector2 p = GetWorldSpawnPosition(i);
+            Gizmos.DrawWireSphere(p, 0.7f);
+        }
     }
 }

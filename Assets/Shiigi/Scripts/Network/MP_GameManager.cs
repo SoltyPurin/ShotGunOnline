@@ -166,7 +166,7 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
     }
 
     /// <summary>
-    /// 単一の開始ムービーに合わせて、実機プレイヤー（1〜4人）をムービー制御状態に設定する（パターンB: 時間同期）
+    /// 単一の開始ムービーに合わせて、実機プレイヤー（1〜4人）をムービー制御状態に設定する
     /// </summary>
     private void PrepareCutscenePlayers()
     {
