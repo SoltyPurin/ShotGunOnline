@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: MainStageSequence
   m_EditorClassIdentifier: Assembly-CSharp::StageSequenceSO
   _stages:
+  - StageName: Stage 01 - Wave 1
+    StagePrefab: {fileID: 2633959402831705227, guid: 3cde85795c8d6294fb1084cbf2ae0414, type: 3}
+    WavePrefabOverride: {fileID: 0}
+    WaveStartTextOverride: 
   - StageName: Stage 02 - Wave 2
     StagePrefab: {fileID: 6886306173621862542, guid: 6baabc1f41958bc4c8ea479fb7a30c64, type: 3}
     WavePrefabOverride: {fileID: 0}
