@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerRespawn : NetworkBehaviour
 {
-    [SerializeField, Header("ウェーブごとのステージ移動・リスポーン先リスト")]
+    [SerializeField, Header("ウェーブごとのステージ移動・リスポーン先リスト（レガシー互換用）")]
     private List<GameObject> _respawnPoints = new List<GameObject>();
 
     [SerializeField, Header("プレイヤー1のリスポーン地点の親オブジェクト（個別指定時）")]
@@ -36,11 +36,21 @@ public class PlayerRespawn : NetworkBehaviour
         get { return _currentRespawnIndex; }
     }
 
+    // 新ステージシステム用：現在アクティブなステージと同一ステージ内チェックポイント番号
+    private StageController _activeStage = default;
+    private int _intraStageRespawnIndex = 0;
+
     [SerializeField, Header("プレイヤーのオブジェクト")]
     private List<GameObject> _playerObjects = new List<GameObject>();
 
     public void Start()
     {
+        // 新ステージシステム使用時は既に生成済みのStageControllerを取得
+        if (_activeStage == null && StageController.ActiveStage != null)
+        {
+            _activeStage = StageController.ActiveStage;
+        }
+
         // _respawnPoints がインスペクター未設定の場合、自身の子オブジェクト（First, Second, ...）を自動登録
         if (_respawnPoints == null || _respawnPoints.Count == 0)
         {
@@ -55,6 +65,15 @@ public class PlayerRespawn : NetworkBehaviour
         GetChildRespawnPoints(_p2RespawnPointParent, _p2RespawnPoints);
         GetChildRespawnPoints(_p3RespawnPointParent, _p3RespawnPoints);
         GetChildRespawnPoints(_p4RespawnPointParent, _p4RespawnPoints);
+    }
+
+    /// <summary>
+    /// 新ステージシステムでステージが切り替わった際に呼ばれ、リスポーン参照先を新しいステージへ更新する。
+    /// </summary>
+    public void SetActiveStage(StageController stage)
+    {
+        _activeStage = stage;
+        _intraStageRespawnIndex = 0;
     }
 
     /// <summary>
@@ -77,17 +96,19 @@ public class PlayerRespawn : NetworkBehaviour
     public void CountUp()
     {
         _currentRespawnIndex++;
-        Debug.Log($"[PlayerRespawn] CountUp 実行。現在のステージIndex: {_currentRespawnIndex}");
+        _intraStageRespawnIndex++;
+        Debug.Log($"[PlayerRespawn] CountUp 実行。現在のステージIndex: {_currentRespawnIndex} (Stage内Index: {_intraStageRespawnIndex})");
     }
 
     /// <summary>
-    /// リストに登録されているリスポーンポイントにリスポーン・テレポートする
+    /// リストまたはアクティブなStageControllerに登録されているリスポーンポイントにリスポーン・テレポートする
     /// </summary>
     public void Respawn()
     {
         if (IsServer)
         {
-            RespawnClientRpc(_currentRespawnIndex);
+            int targetStageIndex = WaveManager._instance != null ? WaveManager._instance.WaveIndex : -1;
+            RespawnClientRpc(_currentRespawnIndex, targetStageIndex, _intraStageRespawnIndex);
         }
         else
         {
@@ -99,9 +120,16 @@ public class PlayerRespawn : NetworkBehaviour
     /// 全クライアント端末で各自機プレイヤーのテレポートとカメラ移動を実行する
     /// </summary>
     [ClientRpc]
-    private void RespawnClientRpc(int respawnIndex)
+    private void RespawnClientRpc(int respawnIndex, int targetStageIndex, int intraStageIndex)
     {
+        // クライアント側でも対象ステージが確実にロードされてからテレポートを実行する
+        if (targetStageIndex >= 0 && WaveManager._instance != null && WaveManager._instance.UsesStageSequence)
+        {
+            WaveManager._instance.EnsureStageLoaded(targetStageIndex);
+        }
+
         _currentRespawnIndex = respawnIndex;
+        _intraStageRespawnIndex = intraStageIndex;
         DoLocalRespawn(_currentRespawnIndex);
     }
 
@@ -177,6 +205,13 @@ public class PlayerRespawn : NetworkBehaviour
             }
         }
 
+        // 0. 新ステージシステム使用時: 現在アクティブな StageController からリスポーン位置を取得
+        StageController stage = _activeStage != null ? _activeStage : StageController.ActiveStage;
+        if (stage != null)
+        {
+            return stage.GetRespawnPosition(playerNumber, _intraStageRespawnIndex);
+        }
+
         // 1. 各プレイヤー個別のリスポーンリストがあれば最優先で使用
         List<GameObject> dedicatedList = playerNumber switch
         {
@@ -196,7 +231,7 @@ public class PlayerRespawn : NetworkBehaviour
             }
         }
 
-        // 2. 本線: ウェーブごとのステージ移動先リスト (_respawnPoints: First, Second, Third...) を使用
+        // 2. レガシー本線: ウェーブごとのステージ移動先リスト (_respawnPoints: First, Second, Third...) を使用
         if (_respawnPoints != null && _respawnPoints.Count > 0)
         {
             int clampedIndex = Mathf.Clamp(index, 0, _respawnPoints.Count - 1);
@@ -248,12 +283,15 @@ public class PlayerRespawn : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void FallRespawnRpc(NetworkObjectReference fallPlayerRef)
     {
-        FallRespawnClientRpc(fallPlayerRef);
+        FallRespawnClientRpc(fallPlayerRef, _currentRespawnIndex, _intraStageRespawnIndex);
     }
 
     [ClientRpc]
-    private void FallRespawnClientRpc(NetworkObjectReference fallPlayerRef)
+    private void FallRespawnClientRpc(NetworkObjectReference fallPlayerRef, int respawnIndex, int intraStageIndex)
     {
+        _currentRespawnIndex = respawnIndex;
+        _intraStageRespawnIndex = intraStageIndex;
+
         if (fallPlayerRef.TryGet(out NetworkObject netObj))
         {
             // 落下したプレイヤーの所有者（自機）のみが自身のテレポートとカメラ移動を実行する

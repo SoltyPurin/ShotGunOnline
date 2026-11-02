@@ -158,11 +158,17 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     }
 
     /// <summary>
-    /// 復帰ポイントを名前から安全に取得（スペルミスやシーンごとの差異に対応）
+    /// 復帰ポイントを現在アクティブなStageControllerまたは名前から安全に取得
     /// </summary>
     private void FindReturnPoint()
     {
         if (_returnPointTransform != null) return;
+
+        if (StageController.ActiveStage != null && StageController.ActiveStage.BossReturnPoint != null)
+        {
+            _returnPointTransform = StageController.ActiveStage.BossReturnPoint.gameObject;
+            return;
+        }
 
         if (!string.IsNullOrEmpty(_returnPointName))
         {
@@ -171,9 +177,9 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
 
         if (_returnPointTransform == null)
         {
-            _returnPointTransform = GameObject.Find("SpawnPoint2") 
-                ?? GameObject.Find("SpawonPoint2") 
-                ?? GameObject.Find("BossReturnPoint") 
+            _returnPointTransform = GameObject.Find("SpawnPoint2")
+                ?? GameObject.Find("SpawonPoint2")
+                ?? GameObject.Find("BossReturnPoint")
                 ?? GameObject.Find("SpawnPoint");
         }
     }
@@ -190,8 +196,8 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
 
         FindReturnPoint();
 
-        Vector3 returnPos = _returnPointTransform != null 
-            ? _returnPointTransform.transform.position 
+        Vector3 returnPos = _returnPointTransform != null
+            ? _returnPointTransform.transform.position
             : new Vector3(0, 0, 0);
 
         NetworkTransform netTransform = GetComponent<NetworkTransform>();

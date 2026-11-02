@@ -3,36 +3,36 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// 1‚Â‚ÌƒEƒF[ƒu‚ÉoŒ»‚·‚éƒIƒuƒWƒFƒNƒg‚ğŠÇ—‚·‚éƒNƒ‰ƒX‚ÅAƒIƒuƒWƒFƒNƒg‚ÆoŒ»ƒ^ƒCƒ~ƒ“ƒO‚ğİ’è‚Å‚«‚éB
-/// g‚¤Û‚É‚Í‹óƒIƒuƒWƒFƒNƒg‚É‚±‚ê‚ğƒAƒ^ƒbƒ`‚µAqƒIƒuƒWƒFƒNƒg‚É“G‚ğ”z’uA‚»‚Ì“G‚ğƒŠƒXƒg‚É’Ç‰Á‚µ‚æ‚¤B
+/// 1ã¤ã®ã‚¦ã‚§ãƒ¼ãƒ–ã«å‡ºç¾ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã§ã€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨å‡ºç¾ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’è¨­å®šã§ãã‚‹ã€‚
+/// ä½¿ã†éš›ã«ã¯ç©ºã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã“ã‚Œã‚’ã‚¢ã‚¿ãƒƒãƒã—ã€å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«æ•µã‚’é…ç½®ã€ãã®æ•µã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ ã—ã‚ˆã†ã€‚
 /// </summary>
-public class Wave : NetworkBehaviour
+public class Wave : MonoBehaviour
 {
-    #region yStructsz
+    #region ã€Structsã€‘
 
     [System.Serializable]
     private struct GimmickData
     {
-        [Tooltip("ƒMƒ~ƒbƒNoŒ»‚Ü‚Å‚ÌŠÔiƒtƒŒ[ƒ€j")]
+        [Tooltip("ã‚®ãƒŸãƒƒã‚¯å‡ºç¾ã¾ã§ã®æ™‚é–“ï¼ˆãƒ•ãƒ¬ãƒ¼ãƒ ï¼‰")]
         public int _generateFrame;
-        [Tooltip("WaveGimmick‚ğŒp³‚µ‚½ƒMƒ~ƒbƒN‚ğ“ü‚ê‚éêŠ")]
+        [Tooltip("WaveGimmickã‚’ç¶™æ‰¿ã—ãŸã‚®ãƒŸãƒƒã‚¯ã‚’å…¥ã‚Œã‚‹å ´æ‰€")]
         public WaveGimmick _waveGimmick;
     }
 
     [System.Serializable]
     public struct ObjData
     {
-        [Tooltip("“GoŒ»‚Ü‚Å‚ÌŠÔiƒtƒŒ[ƒ€j")]
+        [Tooltip("æ•µå‡ºç¾ã¾ã§ã®æ™‚é–“ï¼ˆãƒ•ãƒ¬ãƒ¼ãƒ ï¼‰")]
         public int _generateFrame;
-        [Tooltip("WaveObj‚ğŒp³‚µ‚½“G‚ğ“ü‚ê‚éêŠ")]
+        [Tooltip("WaveObjã‚’ç¶™æ‰¿ã—ãŸæ•µã‚’å…¥ã‚Œã‚‹å ´æ‰€")]
         public WaveObj _waveObj;
     }
     #endregion
 
-    #region yEnumsz
+    #region ã€Enumsã€‘
 
     /// <summary>
-    /// ƒEƒF[ƒu‚Ìí—Ş
+    /// ã‚¦ã‚§ãƒ¼ãƒ–ã®ç¨®é¡
     /// </summary>
     public enum WaveEnemyType
     {
@@ -42,7 +42,7 @@ public class Wave : NetworkBehaviour
     }
 
     /// <summary>
-    /// “ïˆÕ“x
+    /// é›£æ˜“åº¦
     /// </summary>
     public enum Difficulty
     {
@@ -52,7 +52,7 @@ public class Wave : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒEƒF[ƒu‚Ìó‘Ô‘JˆÚ
+    /// ã‚¦ã‚§ãƒ¼ãƒ–ã®çŠ¶æ…‹é·ç§»
     /// </summary>
     private enum Transition
     {
@@ -63,47 +63,46 @@ public class Wave : NetworkBehaviour
     }
     #endregion
 
-    #region yŠeí•Ï”z
+    #region ã€å„ç¨®å¤‰æ•°ã€‘
 
-    [Header("ƒEƒF[ƒu‚Ì‘®«")]
+    [Header("ã‚¦ã‚§ãƒ¼ãƒ–ã®å±æ€§")]
     public WaveEnemyType _waveType = WaveEnemyType.Normal;
 
-    [SerializeField, Header("ƒMƒ~ƒbƒN‚ÌŠi”[êŠ")]
-    private List<GimmickData> _gimmickList;
+    [SerializeField, Header("ã‚®ãƒŸãƒƒã‚¯ã®æ ¼ç´å ´æ‰€")]
+    private List<GimmickData> _gimmickList = new List<GimmickData>();
 
-    [SerializeField, Header("“G‚ÌŠi”[êŠ")]
-    private List<ObjData> _objList;
+    [SerializeField, Header("æ•µã®æ ¼ç´å ´æ‰€")]
+    private List<ObjData> _objList = new List<ObjData>();
     public List<ObjData> ObjList
     {
         get { return _objList; }
     }
 
-    [SerializeField, Header("ƒEƒF[ƒu‚Ì“ïˆÕ“x")]
+    [SerializeField, Header("ã‚¦ã‚§ãƒ¼ãƒ–ã®é›£æ˜“åº¦")]
     private Difficulty _difficulty = Difficulty.Easy;
 
-    [SerializeField, Header("©“®‘JˆÚ‚³‚¹‚é‚©‚Ç‚¤‚©")]
+    [SerializeField, Header("è‡ªå‹•é·ç§»ã•ã›ã‚‹ã‹ã©ã†ã‹")]
     private bool _autoTransition = true;
     public bool AutoTransition
     {
         get { return _autoTransition; }
     }
 
-    
-    [SerializeField, Header("ƒEƒF[ƒuŠJn‚É•\¦‚µ‚½‚¢ƒeƒLƒXƒg"),
-        Tooltip("‰½‚à‘‚©‚È‚¢ê‡‚ÍuWavei‚»‚Ì‚ÌƒEƒF[ƒu”jv‚Æ•\¦‚³‚ê‚Ü‚·B")]
+    [SerializeField, Header("ã‚¦ã‚§ãƒ¼ãƒ–é–‹å§‹æ™‚ã«è¡¨ç¤ºã—ãŸã„ãƒ†ã‚­ã‚¹ãƒˆ"),
+        Tooltip("ä½•ã‚‚æ›¸ã‹ãªã„å ´åˆã¯ã€ŒWaveï¼ˆãã®æ™‚ã®ã‚¦ã‚§ãƒ¼ãƒ–æ•°ï¼‰ã€ã¨è¡¨ç¤ºã•ã‚Œã¾ã™ã€‚")]
     private string _waveStartText = default;
     public string WaveStartText
     {
         get { return _waveStartText; }
     }
 
-    //ŠeƒEƒF[ƒu‚ÌƒXƒRƒA‚ğŒvZ‚·‚éƒXƒNƒŠƒvƒg‚ğæ“¾
+    //å„ã‚¦ã‚§ãƒ¼ãƒ–ã®ã‚¹ã‚³ã‚¢ã‚’è¨ˆç®—ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å–å¾—
     private EnemyCountAndCreateTime _counter = default;
 
-    //Œ»İ‚ÌƒEƒF[ƒu‚Ìó‘Ô
+    //ç¾åœ¨ã®ã‚¦ã‚§ãƒ¼ãƒ–ã®çŠ¶æ…‹
     private Transition _nowState = Transition.Wait;
 
-    //‚»‚Ì‘¼•Ï”
+    //ãã®ä»–å¤‰æ•°
     private int _nowGimmick = 0;
     private int _nowObj = 0;
     private int _gimmickFrame = 0;
@@ -113,54 +112,109 @@ public class Wave : NetworkBehaviour
     private int _initEnemyCount = 0;
     private WaveManager _waveManager = default;
 
+    // ã“ã®Waveã‹ã‚‰ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ç”Ÿæˆã•ã‚ŒãŸã‚®ãƒŸãƒƒã‚¯ï¼ˆå²©ãªã©ï¼‰ã®è¿½è·¡ãƒªã‚¹ãƒˆï¼ˆæ¬¡ã‚¹ãƒ†ãƒ¼ã‚¸ç§»è¡Œæ™‚ã«ç¢ºå®Ÿã«ç ´æ£„ã™ã‚‹ç”¨ï¼‰
+    private readonly List<GameObject> _spawnedGimmickObjects = new List<GameObject>();
+
+    private bool IsServerAuthority =>
+        NetworkManager.Singleton == null ||
+        !NetworkManager.Singleton.IsListening ||
+        NetworkManager.Singleton.IsServer;
+
     #endregion
 
-    #region ’è”
+    #region å®šæ•°
     private readonly string WAVE_MANAGER = "WaveManager";
-
     #endregion
+
+    /// <summary>
+    /// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚·ã‚¹ãƒ†ãƒ ã‹ã‚‰ã®æœ‰åŠ¹åŒ–å‰ã«ã€é…ç½®æ¸ˆã¿ã®ãƒ€ãƒŸãƒ¼æ•µãƒ»ã‚®ãƒŸãƒƒã‚¯ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–ã—ã¦æ—©æœŸAwake/OnEnableã‚’é˜²æ­¢
+    /// </summary>
+    public void PrepareDummyObjectsInactive()
+    {
+        ObjSetFalse();
+    }
+
+    /// <summary>
+    /// ã‚¨ãƒ‡ã‚£ã‚¿ç”¨ï¼šå­éšå±¤ã«é…ç½®ã—ãŸæ•µï¼ˆWaveObjï¼‰ãƒ»ã‚®ãƒŸãƒƒã‚¯ï¼ˆWaveGimmickï¼‰ã‚’æ—¢å­˜ã®å‡ºç¾ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ç¶­æŒã—ãŸã¾ã¾è‡ªå‹•ç™»éŒ²
+    /// </summary>
+    [ContextMenu("å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰æ•µãƒ»ã‚®ãƒŸãƒƒã‚¯ã‚’è‡ªå‹•åé›†")]
+    public void CollectChildrenToLists()
+    {
+        if (_gimmickList == null) _gimmickList = new List<GimmickData>();
+        if (_objList == null) _objList = new List<ObjData>();
+
+        var existingGimmickFrames = new Dictionary<WaveGimmick, int>();
+        foreach (var g in _gimmickList)
+        {
+            if (g._waveGimmick != null && !existingGimmickFrames.ContainsKey(g._waveGimmick))
+            {
+                existingGimmickFrames.Add(g._waveGimmick, g._generateFrame);
+            }
+        }
+
+        var existingObjFrames = new Dictionary<WaveObj, int>();
+        foreach (var o in _objList)
+        {
+            if (o._waveObj != null && !existingObjFrames.ContainsKey(o._waveObj))
+            {
+                existingObjFrames.Add(o._waveObj, o._generateFrame);
+            }
+        }
+
+        _gimmickList.Clear();
+        foreach (var gimmick in GetComponentsInChildren<WaveGimmick>(true))
+        {
+            if (gimmick == null) continue;
+            int frame = existingGimmickFrames.TryGetValue(gimmick, out int saved) ? saved : 0;
+            _gimmickList.Add(new GimmickData { _generateFrame = frame, _waveGimmick = gimmick });
+        }
+
+        _objList.Clear();
+        foreach (var waveObj in GetComponentsInChildren<WaveObj>(true))
+        {
+            if (waveObj == null) continue;
+            int frame = existingObjFrames.TryGetValue(waveObj, out int saved) ? saved : 0;
+            _objList.Add(new ObjData { _generateFrame = frame, _waveObj = waveObj });
+        }
+    }
 
     private void Start()
     {
-        //Šeí•Ï”‚Ì‰Šú‰»
+        //å„ç¨®å¤‰æ•°ã®åˆæœŸåŒ–
         _gimmickFrame = 0;
         _objFrame = 0;
 
         ObjSetFalse();
 
-        //ƒEƒF[ƒuƒXƒRƒA‚ğæ“¾
+        // ã‚¦ã‚§ãƒ¼ãƒ–ã‚¹ã‚³ã‚¢ã‚’å–å¾—ï¼ˆWaveScorerã¯NetworkObjectã‚’æŒãŸãªã„ãŸã‚ã€ãƒ›ã‚¹ãƒˆãƒ»ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆåŒæ–¹ã§ãƒ­ãƒ¼ã‚«ãƒ«åˆæœŸåŒ–ã™ã‚‹ï¼‰
         GameObject count = GameObject.FindWithTag("WaveScore");
-
-        //ƒXƒRƒAƒJƒEƒ“ƒgƒIƒuƒWƒF‚ª‘¶İ‚·‚é‚È‚çGetConponent
-        if ((count != null))
+        if (count != null)
         {
             _counter = count.GetComponent<EnemyCountAndCreateTime>();
         }
 
-        //ƒXƒRƒAƒJƒEƒ“ƒ^[“à‚É“G”‚Æ“ïˆÕ“x‚ğ‘—M
+        // ã‚¹ã‚³ã‚¢ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼å†…ã«æ•µæ•°ã¨é›£æ˜“åº¦ã‚’é€ä¿¡ï¼ˆå·¦ä¸Šãƒ©ãƒ³ã‚¯UIã®ã‚¿ã‚¤ãƒãƒ¼é–‹å§‹ï¼‰
         if (_counter != null)
         {
-            _counter.EnemyCount(_objList.Count, (int)_difficulty,_waveType);
+            _counter.EnemyCount(_objList.Count, (int)_difficulty, _waveType);
         }
 
-        //©“®ƒXƒ^[ƒg‚ª—LŒø‚È‚çƒEƒF[ƒu‚Ìó‘Ô‚ğ•ÏX‚µƒXƒ^[ƒg‰Â”\‚É
-        //if (_autoTransition)
-        //{
-            _nowState = Transition.Gimmick;
-        //}
+        //è‡ªå‹•ã‚¹ã‚¿ãƒ¼ãƒˆãŒæœ‰åŠ¹ãªã‚‰ã‚¦ã‚§ãƒ¼ãƒ–ã®çŠ¶æ…‹ã‚’å¤‰æ›´ã—ã‚¹ã‚¿ãƒ¼ãƒˆå¯èƒ½ã«
+        _nowState = Transition.Gimmick;
 
-        _waveManager = FindFirstObjectByType<WaveManager>();
+        _waveManager = FindAnyObjectByType<WaveManager>();
         _prevEnemyCount = EnemyCount();
         _initEnemyCount = EnemyCount();
     }
 
     private void FixedUpdate()
     {
-        if (!IsServer)
+        if (!IsServerAuthority)
         {
             return;
         }
-        //Œ»İ‚ÌƒEƒF[ƒu‚Ìó‘Ô‚É‰‚¶ˆ—‚ğ•ÏX‚·‚éB
+
+        //ç¾åœ¨ã®ã‚¦ã‚§ãƒ¼ãƒ–ã®çŠ¶æ…‹ã«å¿œã˜å‡¦ç†ã‚’å¤‰æ›´ã™ã‚‹ã€‚
         switch (_nowState)
         {
             case Transition.Gimmick:
@@ -173,21 +227,19 @@ public class Wave : NetworkBehaviour
         }
 
         _prevEnemyCount = EnemyCount();
-        if(_prevEnemyCount != _initEnemyCount)
+        if (_prevEnemyCount != _initEnemyCount)
         {
             _initEnemyCount = _prevEnemyCount;
-            //_waveManager.SetChangeCount(_prevEnemyCount);
-            // yˆÀ‘S‘ÎôzNullƒ`ƒFƒbƒN‚ğ’Ç‰Á‚µ‚ÄƒNƒ‰ƒbƒVƒ…‚ğ–h‚®
+            // ã€å®‰å…¨å¯¾ç­–ã€‘Nullãƒã‚§ãƒƒã‚¯ã‚’è¿½åŠ ã—ã¦ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã‚’é˜²ã
             if (_waveManager != null)
             {
                 _waveManager.SetChangeCountClientRpc(_prevEnemyCount);
             }
         }
-        
     }
 
     /// <summary>
-    /// ƒEƒF[ƒu¶¬‚ğŠJn‚³‚¹‚éƒƒ\ƒbƒh
+    /// ã‚¦ã‚§ãƒ¼ãƒ–ç”Ÿæˆã‚’é–‹å§‹ã•ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void StartWave()
     {
@@ -195,62 +247,68 @@ public class Wave : NetworkBehaviour
     }
 
     /// <summary>
-    /// ‘SƒIƒuƒWƒFƒNƒg‚Ì–³Œø‰»ƒƒ\ƒbƒh
+    /// å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç„¡åŠ¹åŒ–ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void ObjSetFalse()
     {
-        //ƒMƒ~ƒbƒN‚ğˆê’U‘S‚Ä–³Œø‰»
-        for(int i = 0; i < _gimmickList.Count; i++)
+        if (_gimmickList != null)
         {
-            if (_gimmickList[i]._waveGimmick)
+            //ã‚®ãƒŸãƒƒã‚¯ã‚’ä¸€æ—¦å…¨ã¦ç„¡åŠ¹åŒ–
+            for (int i = 0; i < _gimmickList.Count; i++)
             {
-                _gimmickList[i]._waveGimmick.gameObject.SetActive(false);
+                if (_gimmickList[i]._waveGimmick != null)
+                {
+                    _gimmickList[i]._waveGimmick.gameObject.SetActive(false);
+                }
             }
         }
 
-        //“G‚ğˆê’U‘S‚Ä–³Œø‰»
-        for(int i = 0; i < _objList.Count; i++)
+        if (_objList != null)
         {
-            if (_objList[i]._waveObj != null )
+            //æ•µã‚’ä¸€æ—¦å…¨ã¦ç„¡åŠ¹åŒ–
+            for (int i = 0; i < _objList.Count; i++)
             {
-                _objList[i]._waveObj.gameObject.SetActive(false);
+                if (_objList[i]._waveObj != null)
+                {
+                    _objList[i]._waveObj.gameObject.SetActive(false);
+                }
             }
         }
     }
 
     /// <summary>
-    /// ƒMƒ~ƒbƒN‚Ì—LŒø‰»—pƒƒ\ƒbƒh
+    /// ã‚®ãƒŸãƒƒã‚¯ã®æœ‰åŠ¹åŒ–ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void GimmickSetTrue()
     {
-        // ƒMƒ~ƒbƒN‚ª‘¶İ‚µ‚È‚¢‚È‚çƒXƒe[ƒg‚ğ•ÏX‚µ‘ŠúƒŠƒ^[ƒ“
-        if (_gimmickList.Count <= 0)
+        // ã‚®ãƒŸãƒƒã‚¯ãŒå­˜åœ¨ã—ãªã„ãªã‚‰ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰æ›´ã—æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³
+        if (_gimmickList == null || _gimmickList.Count <= 0)
         {
             _nowState = Transition.Enemy;
             return;
         }
 
-        // ƒ^ƒCƒ}[‚ğ‰ÁZ
+        // ã‚¿ã‚¤ãƒãƒ¼ã‚’åŠ ç®—
         _gimmickFrame++;
 
-        // generateFrame•ªŠÔ‚ªŒo‚Á‚½‚ç—LŒø‰»‚µ‚ÄŸ‚Ö
+        // generateFrameåˆ†æ™‚é–“ãŒçµŒã£ãŸã‚‰æœ‰åŠ¹åŒ–ã—ã¦æ¬¡ã¸
         while (_gimmickFrame >= _gimmickList[_nowGimmick]._generateFrame)
         {
             WaveGimmick waveGimmickObj = _gimmickList[_nowGimmick]._waveGimmick;
 
             if (waveGimmickObj != null)
             {
-                // 1. ƒV[ƒ“ã‚Ìƒ_ƒ~[‚©‚çƒvƒŒƒnƒu–¼‚ğ®Œ`Eæ“¾
+                // 1. ã‚·ãƒ¼ãƒ³ä¸Šã®ãƒ€ãƒŸãƒ¼ã‹ã‚‰ãƒ—ãƒ¬ãƒãƒ–åã‚’æ•´å½¢ãƒ»å–å¾—
                 string cleanedName = System.Text.RegularExpressions.Regex.Replace(waveGimmickObj.name, @"\s*\(\d+\)", "");
                 string targetPrefabName = cleanedName.Replace("(Clone)", "").Trim();
                 GameObject prefabToSpawn = null;
 
-                // 2. NetworkManager ‚Ì“o˜^ƒŠƒXƒg‚©‚çu–{•¨‚ÌŠâƒvƒŒƒnƒuv‚ğ’T‚·
-                if (Unity.Netcode.NetworkManager.Singleton != null)
+                // 2. NetworkManager ã®ç™»éŒ²ãƒªã‚¹ãƒˆã‹ã‚‰ã€Œæœ¬ç‰©ã®ã‚®ãƒŸãƒƒã‚¯ãƒ—ãƒ¬ãƒãƒ–ã€ã‚’æ¢ã™
+                if (NetworkManager.Singleton != null)
                 {
-                    foreach (Unity.Netcode.NetworkPrefabsList prefabList in Unity.Netcode.NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
+                    foreach (NetworkPrefabsList prefabList in NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
                     {
-                        foreach (Unity.Netcode.NetworkPrefab networkPrefab in prefabList.PrefabList)
+                        foreach (NetworkPrefab networkPrefab in prefabList.PrefabList)
                         {
                             if (networkPrefab.Prefab != null && networkPrefab.Prefab.name == targetPrefabName)
                             {
@@ -262,7 +320,7 @@ public class Wave : NetworkBehaviour
                     }
                 }
 
-                // 3. ƒvƒŒƒnƒu‚ªŒ©‚Â‚©‚Á‚½‚çAƒ_ƒ~[‚Æ“¯‚¶À•WE‰ñ“]‚Å¶¬‚µ‚ÄƒXƒ|[ƒ“
+                // 3. ãƒ—ãƒ¬ãƒãƒ–ãŒè¦‹ã¤ã‹ã£ãŸã‚‰ã€ãƒ€ãƒŸãƒ¼ã¨åŒã˜åº§æ¨™ãƒ»å›è»¢ã§ç”Ÿæˆã—ã¦ã‚¹ãƒãƒ¼ãƒ³
                 if (prefabToSpawn != null)
                 {
                     GameObject spawnedGimmick = Instantiate(
@@ -270,22 +328,23 @@ public class Wave : NetworkBehaviour
                         waveGimmickObj.transform.position,
                         waveGimmickObj.transform.rotation
                     );
+                    _spawnedGimmickObjects.Add(spawnedGimmick);
 
-                    // ƒlƒbƒgƒ[ƒNã‚ÉˆêÄƒXƒ|[ƒ“iƒNƒ‰ƒCƒAƒ“ƒg‘¤‚É‚à©“®“¯Šú¶¬j
+                    // ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ä¸Šã«ä¸€æ–‰ã‚¹ãƒãƒ¼ãƒ³ï¼ˆã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã«ã‚‚è‡ªå‹•åŒæœŸç”Ÿæˆï¼‰
                     NetworkObject netObj = spawnedGimmick.GetComponent<NetworkObject>();
-                    if (netObj != null)
+                    if (netObj != null && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
                     {
-                        netObj.transform.SetParent(null); // eqŠÖŒW‚ğ‰ğÁ
+                        netObj.transform.SetParent(null); // è¦ªå­é–¢ä¿‚ã‚’è§£æ¶ˆ
                         netObj.Spawn();
                     }
 
-                    // 4. ¶¬‚³‚ê‚½–{•¨‚ÌƒMƒ~ƒbƒN‚ÌoŒ»ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶
+                    // 4. ç”Ÿæˆã•ã‚ŒãŸæœ¬ç‰©ã®ã‚®ãƒŸãƒƒã‚¯ã®å‡ºç¾ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿ
                     WaveGimmick newGimmick = spawnedGimmick.GetComponent<WaveGimmick>();
                     if (newGimmick != null)
                     {
                         newGimmick.GimmickPopAnm();
 
-                        // ƒŠƒXƒg“à‚ÌQÆ‚ğAV‚µ‚­¶‚Ü‚ê‚½–{•¨‚É·‚µ‘Ö‚¦‚é
+                        // ãƒªã‚¹ãƒˆå†…ã®å‚ç…§ã‚’ã€æ–°ã—ãç”Ÿã¾ã‚ŒãŸæœ¬ç‰©ã«å·®ã—æ›¿ãˆã‚‹
                         _gimmickList[_nowGimmick] = new GimmickData
                         {
                             _generateFrame = _gimmickList[_nowGimmick]._generateFrame,
@@ -293,16 +352,16 @@ public class Wave : NetworkBehaviour
                         };
                     }
 
-                    // 5. ƒT[ƒo[‘¤‚Å•s—v‚É‚È‚Á‚½”z’u—pƒ_ƒ~[‚ğ”jŠü
+                    // 5. ã‚µãƒ¼ãƒãƒ¼å´ã§ä¸è¦ã«ãªã£ãŸé…ç½®ç”¨ãƒ€ãƒŸãƒ¼ã‚’ç ´æ£„
                     Destroy(waveGimmickObj.gameObject);
                 }
                 else
                 {
-                    Debug.LogError($"[Wave] NetworkManager ‚ÉƒvƒŒƒnƒu '{targetPrefabName}' ‚ª“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñI");
+                    Debug.LogError($"[Wave] NetworkManager ã«ãƒ—ãƒ¬ãƒãƒ– '{targetPrefabName}' ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼");
                 }
             }
 
-            // Ÿ‚ÌƒMƒ~ƒbƒN‚ÖˆÚ“®
+            // æ¬¡ã®ã‚®ãƒŸãƒƒã‚¯ã¸ç§»å‹•
             NextGimmick();
 
             if (_nowState != Transition.Gimmick)
@@ -313,40 +372,39 @@ public class Wave : NetworkBehaviour
     }
 
     /// <summary>
-    /// “G‚Ì—LŒø‰»—pƒƒ\ƒbƒhA“¯‚¶À•W‚Éƒlƒbƒgƒ[ƒN‘Î‰‚Ì“G‚ğoŒ»‚³‚¹‚ÄŒ³‚Ì“G‚ğíœ
+    /// æ•µã®æœ‰åŠ¹åŒ–ç”¨ãƒ¡ã‚½ãƒƒãƒ‰ã€åŒã˜åº§æ¨™ã«ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å¯¾å¿œã®æ•µã‚’å‡ºç¾ã•ã›ã¦å…ƒã®æ•µã‚’å‰Šé™¤
     /// </summary>
     private void ObjSetTrue()
     {
-        // “G‚ª‘¶İ‚µ‚È‚¢‚È‚çƒEƒF[ƒuI—¹‰Â”\AƒXƒe[ƒg‚ğ•ÏX‚µ‘ŠúƒŠƒ^[ƒ“
-        if (_objList.Count <= 0)
+        // æ•µãŒå­˜åœ¨ã—ãªã„ãªã‚‰ã‚¦ã‚§ãƒ¼ãƒ–çµ‚äº†å¯èƒ½ã€ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰æ›´ã—æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³
+        if (_objList == null || _objList.Count <= 0)
         {
             _waveEnd = true;
             _nowState = Transition.End;
             return;
         }
-        int whileCount = 0;
-        // ƒ^ƒCƒ}[‚ğ‰ÁZ
+
+        // ã‚¿ã‚¤ãƒãƒ¼ã‚’åŠ ç®—
         _objFrame++;
 
-        // generateFrameˆÈã‚ÌŠÔ‚ªŒo‚Á‚½‚çƒIƒuƒWƒFƒNƒg‚ğ—LŒø‰»
+        // generateFrameä»¥ä¸Šã®æ™‚é–“ãŒçµŒã£ãŸã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æœ‰åŠ¹åŒ–
         while (_objFrame >= _objList[_nowObj]._generateFrame)
         {
             WaveObj waveChildEnemy = _objList[_nowObj]._waveObj;
 
             if (waveChildEnemy != null)
             {
-                // 1. ”z’u‚³‚ê‚Ä‚¢‚éq‹Ÿ‚Ì“G‚Ì–¼‘O‚ğæ“¾
-                //string targetPrefabName = waveChildEnemy.name.Replace("(Clone)", "").Trim();
+                // 1. é…ç½®ã•ã‚Œã¦ã„ã‚‹å­ä¾›ã®æ•µã®åå‰ã‚’å–å¾—
                 string cleanedName = System.Text.RegularExpressions.Regex.Replace(waveChildEnemy.name, @"\s*\(\d+\)", "");
                 string targetPrefabName = cleanedName.Replace("(Clone)", "").Trim();
                 GameObject prefabToSpawn = null;
 
-                // 2. ƒlƒbƒgƒ[ƒNƒ}ƒl[ƒWƒƒ[‚Ì“o˜^ƒŠƒXƒg‚©‚çu–{•¨‚ÌƒvƒŒƒnƒuv‚ğ’T‚·
-                if (Unity.Netcode.NetworkManager.Singleton != null)
+                // 2. ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®ç™»éŒ²ãƒªã‚¹ãƒˆã‹ã‚‰ã€Œæœ¬ç‰©ã®ãƒ—ãƒ¬ãƒãƒ–ã€ã‚’æ¢ã™
+                if (NetworkManager.Singleton != null)
                 {
-                    foreach (Unity.Netcode.NetworkPrefabsList prefabList in Unity.Netcode.NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
+                    foreach (NetworkPrefabsList prefabList in NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
                     {
-                        foreach (Unity.Netcode.NetworkPrefab networkPrefab in prefabList.PrefabList)
+                        foreach (NetworkPrefab networkPrefab in prefabList.PrefabList)
                         {
                             if (networkPrefab.Prefab != null && networkPrefab.Prefab.name == targetPrefabName)
                             {
@@ -358,7 +416,7 @@ public class Wave : NetworkBehaviour
                     }
                 }
 
-                // 3. –{•¨‚ÌƒvƒŒƒnƒu‚ªŒ©‚Â‚©‚Á‚½‚çAƒ_ƒ~[‚Æ“¯‚¶ˆÊ’u‚É¶¬‚µ‚ÄSpawnI
+                // 3. æœ¬ç‰©ã®ãƒ—ãƒ¬ãƒãƒ–ãŒè¦‹ã¤ã‹ã£ãŸã‚‰ã€ãƒ€ãƒŸãƒ¼ã¨åŒã˜ä½ç½®ã«ç”Ÿæˆã—ã¦Spawnï¼
                 if (prefabToSpawn != null)
                 {
                     GameObject spawnedEnemy = Instantiate(
@@ -367,22 +425,21 @@ public class Wave : NetworkBehaviour
                         waveChildEnemy.transform.rotation
                     );
 
-                    // ƒlƒbƒgƒ[ƒNã‚ÉˆêÄƒXƒ|[ƒ“iƒNƒ‰ƒCƒAƒ“ƒg‘¤‚É‚à©“®oŒ»j
+                    // ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ä¸Šã«ä¸€æ–‰ã‚¹ãƒãƒ¼ãƒ³ï¼ˆã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã«ã‚‚è‡ªå‹•å‡ºç¾ï¼‰
                     NetworkObject netObj = spawnedEnemy.GetComponent<NetworkObject>();
-                    if (netObj != null)
+                    if (netObj != null && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
                     {
-                        netObj.transform.SetParent(null); // eqŠÖŒW‚ğØ‚é
+                        netObj.transform.SetParent(null); // è¦ªå­é–¢ä¿‚ã‚’åˆ‡ã‚‹
                         netObj.Spawn();
-                        whileCount++;
                     }
 
-                    // ¶¬‚³‚ê‚½–{•¨‚Ì“G‚ÌoŒ»ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶
+                    // ç”Ÿæˆã•ã‚ŒãŸæœ¬ç‰©ã®æ•µã®å‡ºç¾ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿ
                     WaveObj newWaveObj = spawnedEnemy.GetComponent<WaveObj>();
                     if (newWaveObj != null)
                     {
                         newWaveObj.PopAnim();
 
-                        // Šù‘¶‚ÌƒŠƒXƒg‚ÌQÆ‚ğAV‚µ‚­¶‚Ü‚ê‚½–{•¨‚Ì“G‚É·‚µ‘Ö‚¦‚é
+                        // æ—¢å­˜ã®ãƒªã‚¹ãƒˆã®å‚ç…§ã‚’ã€æ–°ã—ãç”Ÿã¾ã‚ŒãŸæœ¬ç‰©ã®æ•µã«å·®ã—æ›¿ãˆã‚‹
                         _objList[_nowObj] = new ObjData
                         {
                             _generateFrame = _objList[_nowObj]._generateFrame,
@@ -390,12 +447,16 @@ public class Wave : NetworkBehaviour
                         };
                     }
                 }
+                else
+                {
+                    Debug.LogError($"[Wave] NetworkManager ã«ãƒ—ãƒ¬ãƒãƒ– '{targetPrefabName}' ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼");
+                }
 
-                // ƒT[ƒo[‘¤‚Å‚Ì‚İA—pÏ‚İ‚É‚È‚Á‚½ƒV[ƒ“ã‚Ìƒ_ƒ~[ƒIƒuƒWƒFƒNƒg‚ğ‘¦À‚Éíœ
+                // ã‚µãƒ¼ãƒãƒ¼å´ã§ã®ã¿ã€ç”¨æ¸ˆã¿ã«ãªã£ãŸã‚·ãƒ¼ãƒ³ä¸Šã®ãƒ€ãƒŸãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å³åº§ã«å‰Šé™¤
                 Destroy(waveChildEnemy.gameObject);
             }
 
-            // Ÿ‚Ì“G‚ÖˆÚ“®
+            // æ¬¡ã®æ•µã¸ç§»å‹•
             NextObj();
 
             if (_nowState != Transition.Enemy)
@@ -403,58 +464,57 @@ public class Wave : NetworkBehaviour
                 break;
             }
         }
-
     }
+
     /// <summary>
-    /// Ÿ—LŒø‰»‚·‚éƒMƒ~ƒbƒN‚ÌˆÊ’u‚É‘JˆÚ‚·‚éƒƒ\ƒbƒh
+    /// æ¬¡æœ‰åŠ¹åŒ–ã™ã‚‹ã‚®ãƒŸãƒƒã‚¯ã®ä½ç½®ã«é·ç§»ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void NextGimmick()
     {
-        if(_nowGimmick < (_gimmickList.Count - 1))
+        if (_nowGimmick < (_gimmickList.Count - 1))
         {
-            //w•W‚ğ•ÏX
+            //æŒ‡æ¨™ã‚’å¤‰æ›´
             _nowGimmick++;
             _gimmickFrame = 0;
         }
         else
         {
-            //ƒMƒ~ƒbƒNƒZƒbƒgŠ®—¹‚ğ’Ê’B
+            //ã‚®ãƒŸãƒƒã‚¯ã‚»ãƒƒãƒˆå®Œäº†ã‚’é€šé”
             _nowState = Transition.Enemy;
         }
     }
 
     /// <summary>
-    /// Ÿ‚É—LŒø‰»‚·‚é“G‚ÌˆÊ’u‚É‘JˆÚ‚·‚éƒƒ\ƒbƒh
+    /// æ¬¡ã«æœ‰åŠ¹åŒ–ã™ã‚‹æ•µã®ä½ç½®ã«é·ç§»ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void NextObj()
     {
-        //Ÿ‚ÌƒŠƒXƒg‚ÌˆÊ’u‚ÉˆÚ“®‚µframe‚Ì’l‚ğ‰Šú‰»
-        if(_nowObj < (_objList.Count - 1))
+        //æ¬¡ã®ãƒªã‚¹ãƒˆã®ä½ç½®ã«ç§»å‹•ã—frameã®å€¤ã‚’åˆæœŸåŒ–
+        if (_nowObj < (_objList.Count - 1))
         {
-            //w•W‚ğ•ÏX
+            //æŒ‡æ¨™ã‚’å¤‰æ›´
             ++_nowObj;
-            //_objFrame = 0;
         }
         else
         {
-            //“G”z’uŠ®—¹‚ğ’Ê’B
+            //æ•µé…ç½®å®Œäº†ã‚’é€šé”
             _waveEnd = true;
             _nowState = Transition.End;
         }
     }
 
     /// <summary>
-    /// ƒEƒF[ƒu‚ªI—¹‚Å‚«‚é‚©‚Ç‚¤‚©‚Ì”»’è‚ğ‚·‚éƒƒ\ƒbƒh
+    /// ã‚¦ã‚§ãƒ¼ãƒ–ãŒçµ‚äº†ã§ãã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®šã‚’ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <returns>‘S‚Ä‚Ì“G‚ª—LŒø‚È‚çI—¹</returns>
+    /// <returns>å…¨ã¦ã®æ•µãŒæœ‰åŠ¹ãªã‚‰çµ‚äº†</returns>
     public bool IsEnd()
     {
-        //for•¶‚ÅƒŠƒXƒg“à‚Å‚Ü‚¾oŒ»‚µ‚Ä‚¢‚È‚¢“G‚ğ”»•Ê
-        for(int i = 0; i < _objList.Count; ++i)
+        //foræ–‡ã§ãƒªã‚¹ãƒˆå†…ã§ã¾ã å‡ºç¾ã—ã¦ã„ãªã„æ•µã‚’åˆ¤åˆ¥
+        for (int i = 0; i < _objList.Count; ++i)
         {
             if (_objList[i]._waveObj != null)
             {
-                //oŒ»Š®—¹‚µ‚Ä‚¢‚È‚¢“G‚ª‚¢‚½‚çfalse‚ğ•Ô‚·B
+                //å‡ºç¾å®Œäº†ã—ã¦ã„ãªã„æ•µãŒã„ãŸã‚‰falseã‚’è¿”ã™ã€‚
                 if (!_objList[i]._waveObj.IsEnd())
                 {
                     return false;
@@ -462,8 +522,8 @@ public class Wave : NetworkBehaviour
             }
         }
 
-        //ƒJƒEƒ“ƒ^[‚Ìƒ^ƒCƒ}[‚ğƒXƒgƒbƒv
-        if(_counter != null)
+        //ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®ã‚¿ã‚¤ãƒãƒ¼ã‚’ã‚¹ãƒˆãƒƒãƒ—
+        if (_counter != null)
         {
             _counter.TimerStop();
             _counter.Calculator();
@@ -473,12 +533,12 @@ public class Wave : NetworkBehaviour
     }
 
     /// <summary>
-    /// ‘S‚Ä‚Ì“G‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚Ì”»’è—pƒƒ\ƒbƒh
+    /// å…¨ã¦ã®æ•µãŒæ¶ˆãˆãŸã‹ã©ã†ã‹ã®åˆ¤å®šç”¨ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
-    /// <returns>“G‚ª‚Ü‚¾‘¶İ‚·‚é‚È‚çfalse,‚µ‚È‚©‚Á‚½‚çtrue</returns>
+    /// <returns>æ•µãŒã¾ã å­˜åœ¨ã™ã‚‹ãªã‚‰false,ã—ãªã‹ã£ãŸã‚‰true</returns>
     public bool IsDelete()
     {
-        for(int i = 0; i < _objList.Count; i++)
+        for (int i = 0; i < _objList.Count; i++)
         {
             if (_objList[i]._waveObj != null)
             {
@@ -492,13 +552,65 @@ public class Wave : NetworkBehaviour
     private int EnemyCount()
     {
         int count = 0;
-        for(int i =0; i< _objList.Count; i++)
+        for (int i = 0; i < _objList.Count; i++)
         {
-            if(_objList[i]._waveObj != null)
+            if (_objList[i]._waveObj != null)
             {
                 count++;
             }
         }
         return count;
+    }
+
+    /// <summary>
+    /// ã“ã®ã‚¦ã‚§ãƒ¼ãƒ–ã§ã‚¹ãƒãƒ¼ãƒ³ã—ãŸå²©ï¼ˆWaveGimmickï¼‰ãªã©ã®æ®‹å­˜ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒ‡ã‚¹ãƒãƒ¼ãƒ³ãƒ»ç ´æ£„ã—ã¾ã™ã€‚
+    /// </summary>
+    public void CleanupSpawnedObjects()
+    {
+        if (!IsServerAuthority)
+        {
+            return;
+        }
+
+        for (int i = _spawnedGimmickObjects.Count - 1; i >= 0; i--)
+        {
+            GameObject gimmickGo = _spawnedGimmickObjects[i];
+            if (gimmickGo == null) continue;
+
+            NetworkObject netObj = gimmickGo.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
+            {
+                netObj.Despawn(true);
+            }
+            else
+            {
+                Destroy(gimmickGo);
+            }
+        }
+        _spawnedGimmickObjects.Clear();
+
+        if (_gimmickList != null)
+        {
+            for (int i = 0; i < _gimmickList.Count; i++)
+            {
+                WaveGimmick g = _gimmickList[i]._waveGimmick;
+                if (g == null) continue;
+
+                NetworkObject netObj = g.GetComponent<NetworkObject>();
+                if (netObj != null && netObj.IsSpawned)
+                {
+                    netObj.Despawn(true);
+                }
+                else if (g.transform.parent == null)
+                {
+                    Destroy(g.gameObject);
+                }
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        CleanupSpawnedObjects();
     }
 }

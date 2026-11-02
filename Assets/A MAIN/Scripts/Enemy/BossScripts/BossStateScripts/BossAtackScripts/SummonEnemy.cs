@@ -3,27 +3,26 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// ƒ‰ƒ“ƒ_ƒ€‚ÉG‹›“G‚ğ¶¬‚·‚éƒƒ\ƒbƒh
+/// ãƒ©ãƒ³ãƒ€ãƒ ã«é›‘é­šæ•µã‚’ç”Ÿæˆã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
 /// </summary>
 public class SummonEnemy : NetworkBehaviour
 {
-    #region[•Ï”–¼]
-    //---GameObject,Script,Animator“™---------------------------------
-    [SerializeField, Header("ƒ{ƒ€•º")]
+    #region[å¤‰æ•°å]
+    //---GameObject,Script,Animatorç­‰---------------------------------
+    [SerializeField, Header("ãƒœãƒ å…µ")]
     private GameObject _bombEnemy = default;
     private GameObject _spawnPoint = default;
 
-    [SerializeField, Header("“G‚Ìƒ|ƒbƒvƒŠƒXƒg")]
+    [SerializeField, Header("æ•µã®ãƒãƒƒãƒ—ãƒªã‚¹ãƒˆ")]
     private List<GameObject> _enemyList;
 
-    //---int,float‚È‚Ç‚Ì”’l---------------------------------
-    [SerializeField, Header("“G‚Ìƒ|ƒbƒvˆÊ’uŠÔŠu")]
+    //---int,floatãªã©ã®æ•°å€¤---------------------------------
+    [SerializeField, Header("æ•µã®ãƒãƒƒãƒ—ä½ç½®é–“éš”")]
     private float _enemyPopPos = 7;
-
 
     private float _enemyPopTime = 10f;
 
-    //ƒ^ƒCƒ}[
+    //ã‚¿ã‚¤ãƒãƒ¼
     private float _popTimer = 0;
 
     Vector3[] _spawnPositions = new Vector3[3];
@@ -36,27 +35,26 @@ public class SummonEnemy : NetworkBehaviour
         {
             _enemyPopTime = JsonSaver.Instance.EnemyJson.EnemyPopTime;
         }
-        //_popTimer = _enemyPopTime - 5;
         _popTimer = Mathf.Max(0, _enemyPopTime - 5f);
 
-        _spawnPoint = GameObject.Find("SpawonPoint2");
+        if (StageController.ActiveStage != null && StageController.ActiveStage.BossReturnPoint != null)
+        {
+            _spawnPoint = StageController.ActiveStage.BossReturnPoint.gameObject;
+        }
+        else
+        {
+            _spawnPoint = GameObject.Find("SpawonPoint2") ?? GameObject.Find("SpawnPoint2");
+        }
+
         if (_spawnPoint != null)
         {
+            Vector3 center = _spawnPoint.transform.position;
             _spawnPositions = new Vector3[]
-    {
-    new Vector3(_spawnPoint.transform.position.x,
-    _spawnPoint.transform.position.y + _enemyPopPos,
-    _spawnPoint.transform.position.z),
-
-    new Vector3(_spawnPoint.transform.position.x + _enemyPopPos,
-    _spawnPoint.transform.position.y - _enemyPopPos,
-    _spawnPoint.transform.position.z),
-
-    new Vector3(_spawnPoint.transform.position.x - _enemyPopPos,
-    _spawnPoint.transform.position.y - _enemyPopPos,
-    _spawnPoint.transform.position.z)
-    };
-            //_enemyPopTime = JsonSaver.Instance.EnemyJson.EnemyPopTime;
+            {
+                new Vector3(center.x, center.y + _enemyPopPos, center.z),
+                new Vector3(center.x + _enemyPopPos, center.y - _enemyPopPos, center.z),
+                new Vector3(center.x - _enemyPopPos, center.y - _enemyPopPos, center.z)
+            };
         }
     }
 
@@ -69,17 +67,20 @@ public class SummonEnemy : NetworkBehaviour
             PopEnemy();
         }
     }
-    //“G¶¬
+
+    //æ•µç”Ÿæˆ
     private void PopEnemy()
     {
-
         SpawnEnemy(_bombEnemy, _spawnPositions[0]);
 
-        int index = Random.Range(0, _enemyList.Count);
-        SpawnEnemy(_enemyList[index], _spawnPositions[1]);
+        if (_enemyList != null && _enemyList.Count > 0)
+        {
+            int index = Random.Range(0, _enemyList.Count);
+            SpawnEnemy(_enemyList[index], _spawnPositions[1]);
 
-        int index2 = Random.Range(0, _enemyList.Count);
-        SpawnEnemy(_enemyList[index2], _spawnPositions[2]);
+            int index2 = Random.Range(0, _enemyList.Count);
+            SpawnEnemy(_enemyList[index2], _spawnPositions[2]);
+        }
 
         _popTimer = 0;
     }
@@ -93,7 +94,7 @@ public class SummonEnemy : NetworkBehaviour
 
         if (nEnemy != null)
         {
-            // ƒlƒbƒgƒ[ƒNã‚ÉƒXƒ|[ƒ“‚³‚¹‚éi‘SƒNƒ‰ƒCƒAƒ“ƒg‚É“¯Šúj
+            // ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ä¸Šã«ã‚¹ãƒãƒ¼ãƒ³ã•ã›ã‚‹ï¼ˆå…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã«åŒæœŸï¼‰
             nEnemy.Spawn();
 
             WaveObj waveObj = enemy.GetComponent<WaveObj>();
@@ -102,12 +103,5 @@ public class SummonEnemy : NetworkBehaviour
                 waveObj.PopAnim();
             }
         }
-        //GameObject enemy = Instantiate(prefab, pos, Quaternion.identity);
-        //NetworkObject nEnemy = enemy.GetComponent<NetworkObject>();
-        //WaveObj waveObj = nEnemy.GetComponent<WaveObj>();
-        //nEnemy.Spawn();
-        //waveObj.PopAnim();
-        //Destroy(enemy);
     }
-
 }
