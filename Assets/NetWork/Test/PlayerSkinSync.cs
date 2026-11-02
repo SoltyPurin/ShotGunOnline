@@ -1,18 +1,17 @@
-using NUnit.Framework.Api;
 using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerSkinSync : NetworkBehaviour
 {
-    [SerializeField, Header("³–Ê•ûŒü‚Ì’u‚«Š·‚¦‘ÎÛ‚ÌƒAƒjƒ[ƒ^[")]
+    [SerializeField, Header("æ­£é¢æ–¹å‘ã®ç½®ãæ›ãˆå¯¾è±¡ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     private Animator _flontPlayerAnimator = default;
 
-    [SerializeField, Header("Œã‚ëŒü‚«‚Ì’u‚«Š·‚¦‘ÎÛ‚ÌƒAƒjƒ[ƒ^[")]
+    [SerializeField, Header("å¾Œã‚å‘ãã®ç½®ãæ›ãˆå¯¾è±¡ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     private Animator _backPlayerAnimator = default;
 
-    [SerializeField, Header("ƒLƒƒƒ‰‚²‚Æ‚Ì³–ÊƒI[ƒo[ƒ‰ƒCƒh(0: P1—p, 1: P2—p ...)")]
+    [SerializeField, Header("ã‚­ãƒ£ãƒ©ã”ã¨ã®æ­£é¢ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰(0: P1ç”¨, 1: P2ç”¨ ...)")]
     private AnimatorOverrideController[] _frontSkinOverrideControllers;
-    [SerializeField,Header("ƒLƒƒƒ‰‚²‚Æ‚Ì”wŒãƒI[ƒo[ƒ‰ƒCƒh(0: P1—p, 1: P2—p ...)")]
+    [SerializeField, Header("ã‚­ãƒ£ãƒ©ã”ã¨ã®èƒŒå¾Œã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰(0: P1ç”¨, 1: P2ç”¨ ...)")]
     private AnimatorOverrideController[] _backSkinOverrideControllers;
 
     private readonly NetworkVariable<int> _skinId = new NetworkVariable<int>(
@@ -25,22 +24,27 @@ public class PlayerSkinSync : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        // 1. ’l‚ª•ÏXE“¯Šú‚³‚ê‚½‚Æ‚«‚É‘S’[––‚ÅŒ©‚½–Ú‚ğXV‚·‚éƒCƒxƒ“ƒg“o˜^
+        // 1. å€¤ãŒå¤‰æ›´ãƒ»åŒæœŸã•ã‚ŒãŸã¨ãã«å…¨ç«¯æœ«ã§è¦‹ãŸç›®ã‚’æ›´æ–°ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²
         _skinId.OnValueChanged += OnSkinIdChanged;
 
-        // 2. ƒT[ƒo[iƒzƒXƒgj‘¤‚ÅAƒvƒŒƒCƒ„[‚ÌÚ‘±ID‚É‰‚¶‚ÄƒXƒLƒ“ID‚ğŒˆ’è‚·‚é
+        // 2. ã‚µãƒ¼ãƒãƒ¼ï¼ˆãƒ›ã‚¹ãƒˆï¼‰å´ã§ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ¥ç¶šIDã«å¿œã˜ã¦ã‚¹ã‚­ãƒ³IDã‚’æ±ºå®šã™ã‚‹
         if (IsServer)
         {
-            // —á: Host (ClientId:0) -> 0”Ô–Ú‚ÌƒXƒLƒ“, Client (ClientId:1) -> 1”Ô–Ú‚ÌƒXƒLƒ“
-            int assignedSkinId = (int)(OwnerClientId % (ulong)_frontSkinOverrideControllers.Length);
+            int length = (_frontSkinOverrideControllers != null && _frontSkinOverrideControllers.Length > 0)
+                ? _frontSkinOverrideControllers.Length
+                : 1;
+            int assignedSkinId = (int)(OwnerClientId % (ulong)length);
             _skinId.Value = assignedSkinId;
         }
-        _numberSave = this.GetComponent<PlayerNumberSave>();
 
-        // 3. ƒXƒ|[ƒ“‚µ‚½“_‚ÌŒ©‚½–Ú‚ğ“K—p
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ä¿å­˜ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—ï¼ˆç„¡ã‘ã‚Œã°è‡ªå‹•è¿½åŠ ï¼‰
+        if (_numberSave == null && !TryGetComponent(out _numberSave))
+        {
+            _numberSave = gameObject.AddComponent<PlayerNumberSave>();
+        }
+
+        // 3. ã‚¹ãƒãƒ¼ãƒ³ã—ãŸæ™‚ç‚¹ã®è¦‹ãŸç›®ã‚’é©ç”¨
         ApplySkin(_skinId.Value);
-
-
     }
 
     private void OnSkinIdChanged(int previousValue, int newValue)
@@ -49,27 +53,40 @@ public class PlayerSkinSync : NetworkBehaviour
     }
 
     /// <summary>
-    /// Animator ‚Ì Controller ‚ğ·‚µ‘Ö‚¦‚ÄŒ©‚½–Ú‚ğ“K—p‚·‚é
+    /// Animator ã® Controller ã‚’å·®ã—æ›¿ãˆã¦è¦‹ãŸç›®ã‚’é©ç”¨ã™ã‚‹
     /// </summary>
     private void ApplySkin(int skinId)
     {
-        if (_frontSkinOverrideControllers == null || _frontSkinOverrideControllers.Length == 0) return;
-        if (skinId < 0 || skinId >= _frontSkinOverrideControllers.Length) return;
-
-        if (_flontPlayerAnimator != null && _frontSkinOverrideControllers[skinId] != null)
+        if (_frontSkinOverrideControllers != null && skinId >= 0 && skinId < _frontSkinOverrideControllers.Length)
         {
-            if (_backPlayerAnimator != null)
+            if (_flontPlayerAnimator != null && _frontSkinOverrideControllers[skinId] != null)
             {
                 _flontPlayerAnimator.runtimeAnimatorController = _frontSkinOverrideControllers[skinId];
-                _backPlayerAnimator.runtimeAnimatorController = _backSkinOverrideControllers[skinId];
-                _numberSave.SetPlayerNumber(skinId);
             }
+        }
+
+        if (_backSkinOverrideControllers != null && skinId >= 0 && skinId < _backSkinOverrideControllers.Length)
+        {
+            if (_backPlayerAnimator != null && _backSkinOverrideControllers[skinId] != null)
+            {
+                _backPlayerAnimator.runtimeAnimatorController = _backSkinOverrideControllers[skinId];
+            }
+        }
+
+        if (_numberSave == null && !TryGetComponent(out _numberSave))
+        {
+            _numberSave = gameObject.AddComponent<PlayerNumberSave>();
+        }
+
+        if (_numberSave != null)
+        {
+            _numberSave.SetPlayerNumber(skinId);
         }
     }
 
     public override void OnNetworkDespawn()
     {
-        // ƒCƒxƒ“ƒg‚Ì“o˜^‰ğœiƒƒ‚ƒŠƒŠ[ƒN–h~j
+        // ã‚¤ãƒ™ãƒ³ãƒˆã®ç™»éŒ²è§£é™¤ï¼ˆãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯é˜²æ­¢ï¼‰
         _skinId.OnValueChanged -= OnSkinIdChanged;
     }
 }
