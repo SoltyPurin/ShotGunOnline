@@ -332,7 +332,7 @@ MonoBehaviour:
   _increasedValue: 0.5
   _maxUpValue: 2
   _waitLimitTime: 1
-  _absorbSpeed: 30
+  _absorbSpeed: 50
   _risePowerDecay: 0.95
   _disappearDistance: 1
 --- !u!114 &-5214658887701017976
