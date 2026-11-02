@@ -70,11 +70,11 @@ public class CoinControl : NetworkBehaviour
         base.OnNetworkSpawn();
 
         // 追従移動はクライアント側で完全ローカル計算するため、NetworkTransformの強制位置上書きを無効化
-        var netTransform = GetComponent<NetworkTransform>();
-        if (netTransform != null)
-        {
-            netTransform.enabled = false;
-        }
+        //var netTransform = GetComponent<NetworkTransform>();
+        //if (netTransform != null)
+        //{
+        //    netTransform.enabled = false;
+        //}
 
         if (_playerObj == null)
         {

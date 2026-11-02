@@ -79,21 +79,21 @@ public class MoveCoin : NetworkBehaviour
 
             _canMove = true;
             StartCoroutine(ActiveHitjudgment());
-            MoveStartClientRpc();
+            MoveStartClientRpc(_moveDirection,
+            _firstMoveSpeed,
+            _speedDecValue);
         }
     }
     [ClientRpc]
-    public void MoveStartClientRpc()
+    public void MoveStartClientRpc(Vector2 direction,
+    float speed,
+    float deceleration)
     {
         _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
 
-        _xDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
-        _yDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
-
-        _firstMoveSpeed = Random.Range(_minMoveSpeed, _maxMoveSpeed);
-
-        _moveDirection = new Vector2(_xDirection, _yDirection);
-        _speedDecValue = Random.Range(_speedDecMinLimit, _speedDecMaxLimit);
+        _moveDirection = direction;
+        _firstMoveSpeed = speed;
+        _speedDecValue = deceleration;
 
         _canMove = true;
 
@@ -127,44 +127,85 @@ public class MoveCoin : NetworkBehaviour
     private void FixedUpdate()
     {
 
-        if (_canMove && IsServer)
+        if (!_canMove)
         {
-
-            _initAliveTime += Time.fixedDeltaTime;
-            if (_firstMoveSpeed >= 0)
-            {
-                transform.position += (Vector3)_moveDirection * _firstMoveSpeed * Time.fixedDeltaTime;
-
-                _firstMoveSpeed -= _speedDecValue;
-
-
-            }
-
-            if (_initAliveTime >= _destroyTime && IsServer)
-            {
-                GetComponent<NetworkObject>().Despawn(true);
-
-            }
-
-
-            if (!_canMove) {
-                return; 
-            }
-            if (_initAliveTime >= _blinkingStartTime)
-            {
-                CoinControl control = GetComponent<CoinControl>();
-                if (control != null)
-                {
-                    control.WaitMethod(0);
-                    _canMove = false;
-                }
-                else
-                {
-                    _isActive = !_isActive;
-                    _spriteRenderer.enabled = _isActive;
-                }
-            }
-
+            return;
         }
+
+        // サーバー・クライアント共通の散布移動
+        _initAliveTime += Time.fixedDeltaTime;
+
+        if (_firstMoveSpeed >= 0)
+        {
+            transform.position +=
+                (Vector3)_moveDirection *
+                _firstMoveSpeed *
+                Time.fixedDeltaTime;
+
+            _firstMoveSpeed -= _speedDecValue;
+        }
+
+        // 以下の消滅処理はサーバーだけ
+        if (IsServer && _initAliveTime >= _destroyTime)
+        {
+            GetComponent<NetworkObject>().Despawn(true);
+        }
+
+        // 点滅・吸収開始
+        if (_initAliveTime >= _blinkingStartTime)
+        {
+            CoinControl control = GetComponent<CoinControl>();
+
+            if (control != null)
+            {
+                control.WaitMethod(0);
+                _canMove = false;
+            }
+            else
+            {
+                _isActive = !_isActive;
+                _spriteRenderer.enabled = _isActive;
+            }
+        }
+
+        //if (_canMove && IsServer)
+        //{
+
+        //    _initAliveTime += Time.fixedDeltaTime;
+        //    if (_firstMoveSpeed >= 0)
+        //    {
+        //        transform.position += (Vector3)_moveDirection * _firstMoveSpeed * Time.fixedDeltaTime;
+
+        //        _firstMoveSpeed -= _speedDecValue;
+
+
+        //    }
+
+        //    if (_initAliveTime >= _destroyTime && IsServer)
+        //    {
+        //        GetComponent<NetworkObject>().Despawn(true);
+
+        //    }
+
+
+        //    if (!_canMove) {
+        //        return; 
+        //    }
+        //    if (_initAliveTime >= _blinkingStartTime)
+        //    {
+        //        CoinControl control = GetComponent<CoinControl>();
+        //        if (control != null)
+        //        {
+        //            control.WaitMethod(0);
+        //            _canMove = false;
+        //        }
+        //        else
+        //        {
+        //            _isActive = !_isActive;
+        //            _spriteRenderer.enabled = _isActive;
+        //        }
+        //    }
+
+        //}
     }
 }

@@ -37,7 +37,7 @@ public class CollisionDetect : MonoBehaviour
             }
             if (_releaseSoul != null)
             {
-                _releaseSoul.ReleaseProtocol();
+                _releaseSoul.ReleaseProtocol(collision.gameObject);
             }
         }
     }
