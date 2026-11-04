@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1809219503
+  GlobalObjectIdHash: 2864902951
   InScenePlacedSourceGlobalObjectIdHash: 2864902951
   DeferredDespawnTick: 0
   Ownership: 1
@@ -104,6 +104,7 @@ MonoBehaviour:
   _moveSpeed: 5
   _keepDistance: 0
   _inertiaStrangth: 4
+  _localSimulation: 0
   _bossAnimator: {fileID: 2752926525503953099}
   _needApproachDistance: 9
   _actionCoolTime: 1
@@ -360,7 +361,7 @@ MonoBehaviour:
   _armorMove: {fileID: 0}
   _kyousei: {fileID: 8587264259570551082}
   _returnPointTransform: {fileID: 0}
-  _returnPointName: SpawnPoint2
+  _returnPointName: BossSpawnPoint
   _spawnProtectTime: 2
 --- !u!114 &5236341858051466352
 MonoBehaviour:
@@ -391,6 +392,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _moveSpeed: 10
   _stoppingDistance: 0
+  _repathInterval: 0.15
 --- !u!114 &-4684870887539929373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1731,6 +1733,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 0.8}
   _returnSpeed: 10
   _fadeSpeed: 0.5
+  _effectMaxDuration: 0.9
 --- !u!114 &8587264259570551082
 MonoBehaviour:
   m_ObjectHideFlags: 0
