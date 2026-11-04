@@ -720,6 +720,14 @@ public static class StageMigrationEditor
         NavMeshSourceTag2D groundNav = groundGo.AddComponent<NavMeshSourceTag2D>();
         groundNav.area = 0;
 
+        // Decolation Tilemap (床の装飾・模様：Colliderなし、床の上・キャラの下)
+        GameObject decoGo = new GameObject("Decolation");
+        decoGo.transform.SetParent(mapContainer.transform, false);
+        decoGo.layer = 3;
+        decoGo.AddComponent<Tilemap>();
+        TilemapRenderer decoRenderer = decoGo.AddComponent<TilemapRenderer>();
+        decoRenderer.sortingOrder = -1;
+
         // Wall Tilemap (壁・障害物)
         GameObject wallGo = new GameObject("Wall");
         wallGo.transform.SetParent(mapContainer.transform, false);
