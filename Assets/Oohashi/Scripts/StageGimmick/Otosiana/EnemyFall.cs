@@ -10,6 +10,20 @@ public class EnemyFall : MonoBehaviour
     [SerializeField, Header("ギミックが湧くスクリプト")]
     private WaveGimmickSpawn _waveGimmick = default;
 
+    [SerializeField, Header("床として判定するレイヤー")]
+    private LayerMask _groundLayer;
+
+    [SerializeField, Header("足元判定の横幅")]
+    private float _groundCheckWidth = 0.5f;
+
+    [SerializeField, Header("足元判定の高さ")]
+    private float _groundCheckHeight = 0.1f;
+
+    [SerializeField, Header("足元判定の待機時間")]
+    private float _fallCheckDelay = 0.1f;
+
+
+
     //---アニメーターのトリガー---//
     private readonly string FALLTRIGGER = "Fall";
     //---敵のタグの名前---//
@@ -27,7 +41,7 @@ public class EnemyFall : MonoBehaviour
         bool cantFallObject = collision.gameObject.CompareTag(ENEMYBULLETNAME) || collision.gameObject.CompareTag(PLAYERTAGNAME);
         if (!cantFallObject)
         {
-            FallMethod(collision.gameObject);
+            FallCheckAndDoMethod(collision.gameObject.GetComponent<Collider2D>());
         }
     }
 
@@ -35,8 +49,38 @@ public class EnemyFall : MonoBehaviour
     /// 受け取ったオブジェクトを落下させる
     /// </summary>
     /// <param name="collision">落下させるオブジェクト</param>
-    private void FallMethod(GameObject collision)
+    private IEnumerator FallCheckAndDoMethod(Collider2D collision)
     {
+        // 床の出現・Colliderの更新を待つ
+        yield return new WaitForSeconds(0.1f);
+
+        // プレイヤーの現在のCollider情報を取得
+        Bounds bounds = collision.bounds;
+
+        // 足元を調べるための判定範囲
+        Vector2 checkPosition = new Vector2(
+            bounds.center.x,
+            bounds.min.y - 0.02f
+        );
+
+        Vector2 checkSize = new Vector2(
+            Mathf.Min(bounds.size.x, _groundCheckWidth),
+            _groundCheckHeight
+        );
+
+        // 現在の足元に床があるか確認
+        Collider2D ground = Physics2D.OverlapBox(
+            checkPosition,
+            checkSize,
+            0f,
+            _groundLayer
+        );
+
+        if (ground != null)
+        {
+            yield break;
+        }
+
         EnemyKnockBack enKnockback = collision.gameObject.GetComponent<EnemyKnockBack>();
         //吹き飛び中であれば落下させる
         if (enKnockback.CanKnockBack)

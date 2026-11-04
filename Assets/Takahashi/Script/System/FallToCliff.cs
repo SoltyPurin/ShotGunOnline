@@ -69,12 +69,12 @@ public class FallToCliff : MonoBehaviour
         // 2. 敵（Layer 6: Enemy）の落下判定
         if (collision.gameObject.layer == 6)
         {
-            StartCoroutine(DeathCheck(collision.gameObject, entityFall));
+            StartCoroutine(DeathCheck(collision, entityFall));
         }
         // 3. 岩（StoneFallToCliff）の落下判定
         else if (collision.GetComponent<StoneFallToCliff>() != null)
         {
-            StartCoroutine(StoneFall(collision.gameObject, entityFall));
+            StartCoroutine(StoneFall(collision, entityFall));
         }
     }
 
@@ -123,10 +123,38 @@ public class FallToCliff : MonoBehaviour
         playerFall.Fall();
     }
 
-    private IEnumerator StoneFall(GameObject collision, EntityFall entityFall)
+    private IEnumerator StoneFall(Collider2D collision, EntityFall entityFall)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(_fallCheckDelay);
         if (collision == null || !collision) yield break;
+        // オブジェクトの現在のCollider情報を取得
+        Bounds bounds = collision.bounds;
+
+        // 足元を調べるための判定範囲
+        Vector2 checkPosition = new Vector2(
+            bounds.center.x,
+            bounds.min.y - 0.02f
+        );
+
+        Vector2 checkSize = new Vector2(
+            Mathf.Min(bounds.size.x, _groundCheckWidth),
+            _groundCheckHeight
+        );
+
+        // 現在の足元に床があるか確認
+        Collider2D ground = Physics2D.OverlapBox(
+            checkPosition,
+            checkSize,
+            0f,
+            _groundLayer
+        );
+
+        if (ground != null)
+        {
+            yield break;
+        }
+
+
         StoneFallToCliff stoneFall = collision.GetComponent<StoneFallToCliff>();
         if (stoneFall != null)
         {
@@ -138,9 +166,37 @@ public class FallToCliff : MonoBehaviour
         }
     }
 
-    private IEnumerator DeathCheck(GameObject collision, EntityFall entityFall)
+    private IEnumerator DeathCheck(Collider2D collision, EntityFall entityFall)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(_fallCheckDelay);
+        if (collision == null || !collision) yield break;
+        // オブジェクトの現在のCollider情報を取得
+        Bounds bounds = collision.bounds;
+
+        // 足元を調べるための判定範囲
+        Vector2 checkPosition = new Vector2(
+            bounds.center.x,
+            bounds.min.y - 0.02f
+        );
+
+        Vector2 checkSize = new Vector2(
+            Mathf.Min(bounds.size.x, _groundCheckWidth),
+            _groundCheckHeight
+        );
+
+        // 現在の足元に床があるか確認
+        Collider2D ground = Physics2D.OverlapBox(
+            checkPosition,
+            checkSize,
+            0f,
+            _groundLayer
+        );
+
+        if (ground != null)
+        {
+            yield break;
+        }
+
         if (collision == null || !collision) yield break;
         EnemyTakeDamage enemyTakeDamage = collision.GetComponent<EnemyTakeDamage>();
         if (enemyTakeDamage == null)
