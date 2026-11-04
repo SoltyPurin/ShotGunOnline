@@ -34,7 +34,7 @@ public class ReleaseSoul : NetworkBehaviour
         }
     }
 
-    public void ReleaseProtocol()
+    public void ReleaseProtocol(GameObject StepOnPlayer)
     {
         if (_isReleased) return;
 
@@ -42,12 +42,12 @@ public class ReleaseSoul : NetworkBehaviour
         {
             if (IsServer)
             {
-                ExecuteReleaseOnServer();
+                ExecuteReleaseOnServer(StepOnPlayer);
             }
             else
             {
                 _isReleased = true;
-                RequestReleaseServerRpc();
+                RequestReleaseServerRpc(StepOnPlayer);
             }
         }
         else
@@ -57,12 +57,12 @@ public class ReleaseSoul : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void RequestReleaseServerRpc()
+    private void RequestReleaseServerRpc(NetworkObjectReference StepOnPlayer)
     {
-        ExecuteReleaseOnServer();
+        ExecuteReleaseOnServer(StepOnPlayer);
     }
 
-    private void ExecuteReleaseOnServer()
+    private void ExecuteReleaseOnServer(NetworkObjectReference StepOnPlayer)
     {
         if (_isServerReleased) return;
         _isServerReleased = true;
@@ -87,6 +87,11 @@ public class ReleaseSoul : NetworkBehaviour
             if (moveCoin != null)
             {
                 moveCoin.ChangeWaitTimeMethod(_collectTime);
+            }
+            CoinControl coinControl = coin.GetComponent<CoinControl>();
+            if(coinControl != null)
+            {
+                coinControl.SetTargetPlayer(StepOnPlayer);
             }
         }
 
