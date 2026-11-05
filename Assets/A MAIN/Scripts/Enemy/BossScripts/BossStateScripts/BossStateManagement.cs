@@ -1,25 +1,26 @@
 using UnityEditor;
 using UnityEngine;
+
 /// <summary>
-/// ƒ{ƒX‚Ìs“®ŠÇ——p‚ÌƒXƒNƒŠƒvƒg
-/// ‚¨G‚èŒµ‹Ö
+/// ãƒœã‚¹ã®è¡Œå‹•ç®¡ç†ç”¨ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+/// ãŠè§¦ã‚Šå³ç¦
 /// </summary>
 public class BossStateManagement : EnemyMove
 {
-    #region[•Ï”–¼]
-    //---GameObject,Script,Animator“™---------------------------------
-    /*UŒ‚Œn‚Ìˆ—*/
+    #region[å¤‰æ•°å]
+    //---GameObject,Script,Animatorç­‰---------------------------------
+    /*æ”»æ’ƒç³»ã®å‡¦ç†*/
     private BossJumpAtack _jumpAtack = default;
     private BossMachPunch _machPunch = default;
 
-    /*‚»‚Ì‘¼‚Ìˆ—*/
+    /*ãã®ä»–ã®å‡¦ç†*/
     private BossHP _bossHP = default;
     private BossAnimeManager _bossAtackAnimeManager = default;
     private BossJumpAtackShake _mainCameraShake = default;
     private SecondFormStart _changeSecondForm = default;
 
-    /*‚»‚Ì‘¼‚ÌQÆ*/
-    [SerializeField, Header("ƒ{ƒX‚ÌUŒ‚—pƒAƒjƒ[ƒVƒ‡ƒ“")]
+    /*ãã®ä»–ã®å‚ç…§*/
+    [SerializeField, Header("ãƒœã‚¹ã®æ”»æ’ƒç”¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³")]
     private Animator _bossAnimator = default;
 
     public GameObject Player
@@ -30,14 +31,14 @@ public class BossStateManagement : EnemyMove
     private GameObject _mainCamera = default;
 
 
-    //---int,float‚È‚Ç‚Ì”’l---------------------------------
-    [SerializeField, Header("ƒ{ƒX‚ªÚ‹ß‚ğs‚¤‹——£")]
+    //---int,floatãªã©ã®æ•°å€¤---------------------------------
+    [SerializeField, Header("ãƒœã‚¹ãŒæ¥è¿‘ã‚’è¡Œã†è·é›¢")]
     protected float _needApproachDistance = 7;
-    [SerializeField, Header("ŠeƒAƒNƒVƒ‡ƒ“Œã‚ÌŒ„")]
+    [SerializeField, Header("å„ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¾Œã®éš™")]
     protected float _actionCoolTime = 1.0f;
-    [SerializeField, Header("ƒ{ƒX‚ªUŒ‚‚ğs‚¤‹——£")]
+    [SerializeField, Header("ãƒœã‚¹ãŒæ”»æ’ƒã‚’è¡Œã†è·é›¢")]
     protected float _attackDistance = 7;
-    [SerializeField, Header("ƒ{ƒX‚ªJumpAtack‚ğs‚¤‹——£")]
+    [SerializeField, Header("ãƒœã‚¹ãŒJumpAtackã‚’è¡Œã†è·é›¢")]
     protected float _jumpAttackDistance = 7;
 
 
@@ -46,11 +47,11 @@ public class BossStateManagement : EnemyMove
     protected float _actionCoolTimer = 0;
 
 
-    //‚Ç‚ÌUŒ‚‚ğ‚·‚é‚©Œˆ‚ß‚éƒ‰ƒ“ƒ_ƒ€’l
+    //ã©ã®æ”»æ’ƒã‚’ã™ã‚‹ã‹æ±ºã‚ã‚‹ãƒ©ãƒ³ãƒ€ãƒ å€¤
     private int _randamRange = 0;
-    [SerializeField, Header("ƒWƒƒƒ“ƒvUŒ‚‚ÌoŒ»—¦id‚İj")]
+    [SerializeField, Header("ã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒã®é‡ã¿")]
     private int _jumpWeight = 3;
-    [SerializeField, Header("ƒpƒ“ƒ`UŒ‚‚ÌoŒ»—¦id‚İj")]
+    [SerializeField, Header("ãƒ‘ãƒ³ãƒæ”»æ’ƒã®é‡ã¿")]
     private int _punchWeight = 7;
 
 
@@ -60,7 +61,7 @@ public class BossStateManagement : EnemyMove
     private int _canAttackTimes = 0;
 
 
-    //---string‚È‚Ç‚Ì•¶š—ñ---------------------------------
+    //---stringãªã©ã®æ–‡å­—---------------------------------
 
 
     //---bool------------------------------------------------
@@ -74,13 +75,13 @@ public class BossStateManagement : EnemyMove
     //---enum------------------------------------------------
     public enum BossState
     {
-        Stop,//Ÿ‚Ìs“®‚ğvl
-        Approach,//ƒvƒŒƒCƒ„[‚ÉÚ‹ß
-        Punch,//‰“‹——£UŒ‚
-        JumpAtack,//‹ß‹——£UŒ‚
-        Cooldown,//UŒ‚Œã‚ÌŒãŒ„
-        Drop, //—‰º’†
-        Death,//€–S
+        Stop,//æ¬¡ã®è¡Œå‹•ã‚’æ€æ¡ˆä¸­
+        Approach,//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¸æ¥è¿‘
+        Punch,//è¿‘è·é›¢æ”»æ’ƒ
+        JumpAtack,//é è·é›¢æ”»æ’ƒ
+        Cooldown,//æ”»æ’ƒå¾Œã®å¾Œéš™
+        Drop, //è½ä¸‹
+        Death,//æ­»äº¡
     }
     [SerializeField]public BossState _currentState = BossState.Approach;
     public BossState CurrentState
@@ -94,27 +95,37 @@ public class BossStateManagement : EnemyMove
     {
         base.Start();
 
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
         _bossHP = gameObject.GetComponent<BossHP>();
 
-        //agent‚ÉNavMeshAgent2D‚ğæ“¾
+        //agentã«NavMeshAgent2Dã‚’å–å¾—
         _agent = GetComponent<NavMesh2DAgent>();
 
-        //ƒJƒƒ‰æ“¾
+        //ã‚«ãƒ¡ãƒ©å–å¾—
         _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        _mainCameraShake = _mainCamera.GetComponent<BossJumpAtackShake>();
+        if (_mainCamera != null)
+        {
+            _mainCameraShake = _mainCamera.GetComponent<BossJumpAtackShake>();
+        }
 
-        //Boss‚ÌUŒ‚—pAnimation‚ğæ“¾
+        //Bossã®æ”»æ’ƒç”¨Animationã‚’å–å¾—
         _bossAtackAnimeManager = GetComponent<BossAnimeManager>();
 
-        //JumpAtackˆ—‚ÌƒXƒNƒŠƒvƒg‚ğæ“¾
+        //JumpAtackå‡¦ç†ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å–å¾—
         _jumpAtack = GetComponent<BossJumpAtack>();
 
-        //MachPunchˆ—‚ÌƒXƒNƒŠƒvƒg‚ğæ“¾
+        //MachPunchå‡¦ç†ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å–å¾—
         _machPunch = GetComponent<BossMachPunch>();
 
-        //‘æ“ñŒ`‘ÔˆÚsˆ—‚ÌƒXƒNƒŠƒvƒg‚ğæ“¾
+        //ç¬¬äºŒå½¢æ…‹ç§»è¡Œæ™‚å‡¦ç†ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å–å¾—
         _changeSecondForm = GetComponent<SecondFormStart>();
     }
+
     public void FixedUpdate()
     {
         if (!IsServer) return;
@@ -129,10 +140,13 @@ public class BossStateManagement : EnemyMove
 
         BossStateChange();
 
-        if (_bossHP._secondForm && !_changed)
+        if (_bossHP != null && _bossHP._secondForm && !_changed)
         {
             _changed = true;
-            _changeSecondForm.ToBESecondFormClientRpc();
+            if (_changeSecondForm != null)
+            {
+                _changeSecondForm.ToBESecondFormClientRpc();
+            }
             _currentState = BossState.Stop;
             _hasDecidedNextAction = false;
         }
@@ -142,6 +156,7 @@ public class BossStateManagement : EnemyMove
             _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         }
     }
+
     protected void BossStateChange()
     {
         if(_currentState == BossState.Drop)
@@ -151,15 +166,14 @@ public class BossStateManagement : EnemyMove
 
         switch (_currentState)
         {
-            //‰Šúó‘Ô
+            //åˆæœŸçŠ¶æ…‹
             case BossState.Stop:
                 if (!_hasDecidedNextAction)
                 {
-
                     if (_enemyToPlayerDistance > _needApproachDistance)
                     {
                         _hasDecidedNextAction = true;
-                        _bossAtackAnimeManager.PlayWalk();
+                        if (_bossAtackAnimeManager != null) _bossAtackAnimeManager.PlayWalk();
                         _currentState = BossState.Approach;
                     }
                     else if (_enemyToPlayerDistance <= _needApproachDistance)
@@ -169,76 +183,75 @@ public class BossStateManagement : EnemyMove
                         if (_randamRange < _jumpWeight)
                         {
                             _hasDecidedNextAction = true;
-                            _bossAtackAnimeManager.PlayJumpAtack();
+                            if (_bossAtackAnimeManager != null) _bossAtackAnimeManager.PlayJumpAtack();
                             _currentState = BossState.JumpAtack;
                         }
                         else
                         {
                             _hasDecidedNextAction = true;
-                            _bossAtackAnimeManager.PlayMachPunch();
+                            if (_bossAtackAnimeManager != null) _bossAtackAnimeManager.PlayMachPunch();
                             _currentState = BossState.Punch;
                         }
                     }
                 }
-
                 break;
 
-            //Ú‹ß
+            //æ¥è¿‘
             case BossState.Approach:
                 Moving();
                 if (_enemyToPlayerDistance <= _needApproachDistance)
                 {
-
                     if (_randamRange <= _jumpWeight)
                     {
-                        _bossAtackAnimeManager.StopWalk();
-                        _bossAtackAnimeManager.PlayJumpAtack();
+                        if (_bossAtackAnimeManager != null)
+                        {
+                            _bossAtackAnimeManager.StopWalk();
+                            _bossAtackAnimeManager.PlayJumpAtack();
+                        }
                         _currentState = BossState.JumpAtack;
                     }
                     else
                     {
-                        _bossAtackAnimeManager.StopWalk();
-                        _bossAtackAnimeManager.PlayMachPunch();
+                        if (_bossAtackAnimeManager != null)
+                        {
+                            _bossAtackAnimeManager.StopWalk();
+                            _bossAtackAnimeManager.PlayMachPunch();
+                        }
                         _currentState = BossState.Punch;
                     }
                 }
-
                 break;
 
-            //‰“‹——£UŒ‚
+            //è¿‘è·é›¢æ”»æ’ƒ
             case BossState.Punch:
-
                 _jumpWeight = 7;
                 _punchWeight = 3;
 
-                if (_isPunch)
+                if (_isPunch && _machPunch != null)
                 {
                     _machPunch.PunchToPlayer();
                 }
                 break;
 
-            //‹ß‹——£UŒ‚
+            //é è·é›¢æ”»æ’ƒ
             case BossState.JumpAtack:
-
                 _jumpWeight = 3;
                 _punchWeight = 7;
 
-                if (!_aimFall)
+                if (!_aimFall && _jumpAtack != null)
                     _jumpAtack.MoveToJumpAtackPosition();
-                if (!_hasTriggeredFall)
+                if (!_hasTriggeredFall && _jumpAtack != null)
                 {
                     _jumpAtack.JumpAtackToPlayer();
                     _hasTriggeredFall = true;
                 }
-
                 break;
 
             case BossState.Cooldown:
-                if (_mainCameraShake._beShake != false)
+                if (_mainCameraShake != null && _mainCameraShake._beShake != false)
                 {
                     _mainCameraShake._beShake = false;
                 }
-
 
                 if (_hasTriggeredFall)
                 {
@@ -249,21 +262,17 @@ public class BossStateManagement : EnemyMove
                 {
                     _hasTriggeredSpecialMove = false;
                 }
-                //ƒAƒNƒVƒ‡ƒ“Œã‚ÌŒãŒ„ŠÔŒv‘ª
+                //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¾Œã®å¾Œéš™æ™‚é–“è¨ˆæ¸¬
                 _actionCoolTimer += Time.fixedDeltaTime;
 
                 if (_actionCoolTimer > _actionCoolTime)
                 {
-                    //ƒAƒNƒVƒ‡ƒ“Œã‚ÌŒãŒ„ŠÔƒŠƒZƒbƒg
+                    //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¾Œã®å¾Œéš™æ™‚é–“ãƒªã‚»ãƒƒãƒˆ
                     _actionCoolTimer = 0;
                     _hasDecidedNextAction = false;
-                    transform.rotation = new Quaternion(transform.rotation.x,
-                        transform.rotation.y,
-                        0,
-                        1);
+                    transform.rotation = Quaternion.identity;
                     _currentState = BossState.Stop;
                 }
-
                 break;
         }
     }
@@ -275,17 +284,54 @@ public class BossStateManagement : EnemyMove
     }
 
     /// <summary>
-    /// —‰º‚ÉƒXƒe[ƒg‚ğ•Ï‚¦‚é
+    /// æ”»æ’ƒçŠ¶æ…‹ã‚’å¼·åˆ¶çµ‚äº†ã—ã€çªé€²ãƒ»å½“ãŸã‚Šåˆ¤å®šãƒ»ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     /// </summary>
-    /// <param name="isFalling">true‚Å—‰º’†Afalse‚Å—‰º‰ğœ</param>
+    public void CancelAttack()
+    {
+        if (_machPunch != null)
+        {
+            _machPunch.ResetPunchState();
+        }
+
+        if (_jumpAtack != null)
+        {
+            _jumpAtack.ResetJumpAttackState();
+        }
+
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null)
+        {
+            col.isTrigger = false;
+        }
+
+        _aimFall = true;
+        _hasTriggeredFall = false;
+        _hasDecidedNextAction = false;
+        _actionCoolTimer = 0;
+
+        if (_bossAtackAnimeManager != null)
+        {
+            _bossAtackAnimeManager.ResetToWait();
+        }
+
+        transform.rotation = Quaternion.identity;
+    }
+
+    /// <summary>
+    /// è½ä¸‹ã«ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰ãˆã‚‹
+    /// </summary>
+    /// <param name="isFalling">trueã§è½ä¸‹ä¸­ã€falseã§è½ä¸‹è§£é™¤</param>
     public void FallStateChange(bool isFalling)
     {
         if (isFalling)
         {
+            CancelAttack();
             _currentState = BossState.Drop;
         }
         else
         {
+            CancelAttack();
+            transform.rotation = Quaternion.identity;
             _currentState = BossState.Approach;
         }
     }

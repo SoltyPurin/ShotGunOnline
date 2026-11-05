@@ -1,4 +1,4 @@
-﻿using Unity.Netcode;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -87,10 +87,17 @@ public class BossJumpAtack : BossColliderTriggerSW
     public void JumpAttackEnd()
     {
         if (_jumpAtackArea != null) _jumpAtackArea.SetActive(false);
+        if (_bossCollider != null) _bossCollider.isTrigger = false;
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             _stateManagement._currentState = BossStateManagement.BossState.Cooldown;
         }
+    }
+
+    public void ResetJumpAttackState()
+    {
+        if (_jumpAtackArea != null) _jumpAtackArea.SetActive(false);
+        if (_bossCollider != null) _bossCollider.isTrigger = false;
     }
 
     /// <summary>
