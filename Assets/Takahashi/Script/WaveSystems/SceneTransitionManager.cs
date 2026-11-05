@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// ƒEƒF[ƒu‚ğI—¹‚·‚éÛ‚Ég—p‚·‚éƒNƒ‰ƒX
+/// ã‚¦ã‚§ãƒ¼ãƒ–çµ‚äº†æ™‚ã«ä½¿ç”¨ã‚¯ãƒ©ã‚¹
 /// </summary>
 public class SceneTransitionManager : MonoBehaviour
 {
-    //ƒV[ƒ“‘JˆÚ‚É•K—v‚Èenum
+    // ã‚·ãƒ¼ãƒ³é·ç§»ã«å¿…è¦ãªenum
     public enum TransitionState
     {
         Normal,
@@ -16,21 +16,21 @@ public class SceneTransitionManager : MonoBehaviour
         SceneTransition,
     }
 
-    [SerializeField, Header("æ“¾Œn")]
+    [SerializeField, Header("å–å¾—ç³»")]
     private WaveUIManager _waveUIManager = default;
     [SerializeField]
-    private  WaveManager _waveManager = default;
+    private WaveManager _waveManager = default;
     [SerializeField]
     private BGMControl_Ver2 _bgmControll = default;
 
-    [SerializeField, Header("ƒV[ƒ“‘JˆÚ‚É‚©‚©‚éŠÔ")]
+    [SerializeField, Header("ã‚·ãƒ¼ãƒ³é·ç§»ã«ã‹ã‹ã‚‹æ™‚é–“")]
     private float _transitionTime = 5.0f;
     private float _sceneTransitionTime = 3.0f;
 
-    [SerializeField, Header("ƒtƒF[ƒhƒAƒEƒg‰¹‚Ég‚¤ƒI[ƒfƒBƒIƒ\[ƒX")]
+    [SerializeField, Header("ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã«ä½¿ã†ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã‚½ãƒ¼ã‚¹")]
     private AudioSource _audioSource = default;
 
-    [SerializeField, Header("‘JˆÚ‚Ì‰¹")]
+    [SerializeField, Header("é·ç§»æ™‚ã®éŸ³")]
     private AudioClip _audioClip = default;
 
     private float _score = 0;
@@ -43,7 +43,7 @@ public class SceneTransitionManager : MonoBehaviour
     private TransitionState _state = TransitionState.Normal;
     public TransitionState State
     {
-        set {  _state = value; }
+        set { _state = value; }
     }
 
     [HideInInspector]
@@ -54,7 +54,7 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void Start()
     {
-        //”’l‚Ì‰Šú‰»
+        // å€¤ã®åˆæœŸåŒ–
         _score = 0;
         _timer = 0;
         _transition = false;
@@ -62,7 +62,7 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //ƒV[ƒ“‘JˆÚ‚ğswitch‚É‚æ‚Á‚ÄŠÇ—
+        // ã‚·ãƒ¼ãƒ³é·ç§»ã‚’switchã«ã‚ˆã£ã¦ç®¡ç†
         switch (_state)
         {
             case TransitionState.Normal:
@@ -84,11 +84,11 @@ public class SceneTransitionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒEƒF[ƒuI—¹‚©‚çƒtƒF[ƒhƒAƒEƒg‚Ü‚Å‚ÌŠÇ——p‚Ìƒƒ\ƒbƒh
+    /// ã‚¦ã‚§ãƒ¼ãƒ–çµ‚äº†ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã¾ã§ã®ç®¡ç†ç”¨ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void GameFadeOut()
-    {        
-        if(_timer >= _transitionTime)
+    {
+        if (_timer >= _transitionTime)
         {
             _timer = 0;
             _waveUIManager.FadeOutImageClientRpc();
@@ -102,28 +102,76 @@ public class SceneTransitionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒtƒF[ƒhƒAƒEƒgŒã‚©‚çƒV[ƒ“‘JˆÚ‚Ü‚Å‚ÌŠÇ——pƒƒ\ƒbƒh
+    /// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆå®Œäº†å¾Œã®ã‚·ãƒ¼ãƒ³é·ç§»ç®¡ç†ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void SceneTransition()
     {
-        //_timer‚ª_sceneTransitionTimeˆÈã‚É‚È‚Á‚½‚çƒV[ƒ“‚ğˆÚ“®‚·‚éB
-        if(_timer >= _sceneTransitionTime)
+        // _timerãŒ_sceneTransitionTimeä»¥ä¸Šã«ãªã£ãŸã‚‰ã‚·ãƒ¼ãƒ³ç§»å‹•ã€‚
+        if (_timer >= _sceneTransitionTime)
         {
             _timer = 0;
-            //SceneManager.LoadScene(_waveManager.NextSceneName);
-            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject player in players)
-            {
-                // ŠeƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚©‚ç NetworkObject ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾
-                NetworkObject netObj = player.GetComponent<NetworkObject>();
 
-                // Nullƒ`ƒFƒbƒN‚Æ Spawn Ï‚İ‚©‚ÌŠm”F‚ğs‚Á‚½ã‚Å Despawn ‚ğÀs
-                if (netObj != null && netObj.IsSpawned)
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+            {
+                // æ®‹å­˜ã—ã¦ã„ã‚‹ã™ã¹ã¦ã®ã‚½ã‚¦ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ (MoveCoin) ã‚’å®‰å…¨ã« Despawn
+                MoveCoin[] remainingCoins = Object.FindObjectsByType<MoveCoin>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (MoveCoin coin in remainingCoins)
                 {
-                    netObj.Despawn(true); // ˆø”‚ğ true ‚É‚·‚é‚±‚Æ‚Å Destroy ‚à“¯‚És‚í‚ê‚Ü‚·
+                    if (coin != null)
+                    {
+                        NetworkObject coinNetObj = coin.GetComponent<NetworkObject>();
+                        if (coinNetObj != null && coinNetObj.IsSpawned)
+                        {
+                            coinNetObj.Despawn(true);
+                        }
+                        else
+                        {
+                            Destroy(coin.gameObject);
+                        }
+                    }
+                }
+
+                // æ®‹å­˜ã—ã¦ã„ã‚‹ã™ã¹ã¦ã® CoinControl ã‚’å®‰å…¨ã« Despawn
+                CoinControl[] remainingCoinControls = Object.FindObjectsByType<CoinControl>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (CoinControl coinCtrl in remainingCoinControls)
+                {
+                    if (coinCtrl != null)
+                    {
+                        NetworkObject ctrlNetObj = coinCtrl.GetComponent<NetworkObject>();
+                        if (ctrlNetObj != null && ctrlNetObj.IsSpawned)
+                        {
+                            ctrlNetObj.Despawn(true);
+                        }
+                        else
+                        {
+                            Destroy(coinCtrl.gameObject);
+                        }
+                    }
+                }
+
+                // å„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® NetworkObject ã‚’ Despawn
+                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                foreach (GameObject player in players)
+                {
+                    if (player != null)
+                    {
+                        NetworkObject netObj = player.GetComponent<NetworkObject>();
+                        if (netObj != null && netObj.IsSpawned)
+                        {
+                            netObj.Despawn(true);
+                        }
+                    }
                 }
             }
-            NetworkManager.Singleton.SceneManager.LoadScene(_waveManager.NextSceneName, LoadSceneMode.Single);
+
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null && NetworkManager.Singleton.IsListening)
+            {
+                NetworkManager.Singleton.SceneManager.LoadScene(_waveManager.NextSceneName, LoadSceneMode.Single);
+            }
+            else
+            {
+                SceneManager.LoadScene(_waveManager.NextSceneName);
+            }
             return;
         }
 

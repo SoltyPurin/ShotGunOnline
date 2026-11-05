@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -42,6 +42,7 @@ public class CoinControl : NetworkBehaviour
 
     // サーバー上での二重回収防止フラグ
     private bool _serverAbsorbed = false;
+    private float _noPlayerTimer = 0f;
 
     public void SetTargetPlayer(GameObject target)
     {
@@ -134,7 +135,19 @@ public class CoinControl : NetworkBehaviour
         if (_playerObj == null || !_playerObj.activeInHierarchy)
         {
             FindTargetPlayer();
-            if (_playerObj == null) return;
+            if (_playerObj == null)
+            {
+                if (IsServer)
+                {
+                    _noPlayerTimer += Time.deltaTime;
+                    if (_noPlayerTimer > 2.0f && NetworkObject != null && NetworkObject.IsSpawned)
+                    {
+                        NetworkObject.Despawn(true);
+                    }
+                }
+                return;
+            }
+        _noPlayerTimer = 0f;
         }
 
         // プレイヤーに向かって加速度的に吸い込む

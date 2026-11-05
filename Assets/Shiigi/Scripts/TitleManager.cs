@@ -12,7 +12,6 @@ public class TitleManager : MonoBehaviour
         Time.timeScale = 1.0f;
 
         CleanupNetworkSession();
-        // InitializeScreen();
     }
 
     /// <summary>
@@ -32,13 +31,5 @@ public class TitleManager : MonoBehaviour
             }
             Destroy(NetworkManager.Singleton.gameObject);
         }
-    }
-
-    /// <summary>
-    /// 解像度を設定
-    /// </summary>
-    private void InitializeScreen()
-    {
-        Screen.SetResolution(1920, 1080, false);
     }
 }
