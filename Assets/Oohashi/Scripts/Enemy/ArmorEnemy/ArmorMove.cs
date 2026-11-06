@@ -82,8 +82,15 @@ public class ArmorMove : EnemyMove
         _seManager = seManagerObject.GetComponent<SEManager>();
         _originBackSpeed = _backSpeed;
     }
-    private void FixedUpdate()
+    public override void FixedUpdate()
     {
+
+        _findPlayerTimer += Time.fixedDeltaTime;
+        if (_findPlayerTimer >= FIND_PLAYER_INTERVAL)
+        {
+            FindPlayer();
+            _findPlayerTimer = 0;
+        }
         switch (_initState)
         {
             case ArmorState.Stop:
@@ -139,7 +146,7 @@ public class ArmorMove : EnemyMove
             case ArmorState.Rush:
                 _cantMove = _enemyState.Value == EnemyState.knockback || _enemyState.Value == EnemyState.fall;
                 //ノックバック中または落下中は移動しないようにする
-                if (_cantMove) 
+                if (_cantMove)
                 {
                     return;
                 }
