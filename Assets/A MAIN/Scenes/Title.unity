@@ -8927,6 +8927,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1872951901}
+  - component: {fileID: 1872951902}
   m_Layer: 5
   m_Name: OptionButtons
   m_TagString: Untagged
@@ -8956,6 +8957,29 @@ RectTransform:
   m_AnchoredPosition: {x: 441, y: 87}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1872951902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872951900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f4c12e76d349b281c50e3f9a71b4d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _optionButtonsRoot: {fileID: 1872951901}
+  _fpsValueText: {fileID: 0}
+  _vsyncValueText: {fileID: 0}
+  _fpsLeftButton: {fileID: 0}
+  _fpsRightButton: {fileID: 0}
+  _vsyncLeftButton: {fileID: 0}
+  _vsyncRightButton: {fileID: 0}
+  _autoBuildIfMissing: 1
+  _rowScale: 0.72
+  _firstRowY: 35
+  _rowSpacing: 115
 --- !u!1 &1922417076
 GameObject:
   m_ObjectHideFlags: 0

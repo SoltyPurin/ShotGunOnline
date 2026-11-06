@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -199,7 +199,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                     break;
 
                 case PlayerState.Ultimate:
-                    currentPushState = isShootDown;
+                    currentPushState = isShootPressed || isShootDown;
                     break;
 
                 case PlayerState.DamageKnockBack:

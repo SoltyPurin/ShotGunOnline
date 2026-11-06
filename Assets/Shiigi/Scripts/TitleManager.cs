@@ -1,4 +1,4 @@
-﻿using Unity.Netcode;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -11,8 +11,28 @@ public class TitleManager : MonoBehaviour
         // ポーズ画面などから遷移した際に時間停止状態が残らないよう復帰
         Time.timeScale = 1.0f;
         FrameRateManager.RefreshCurrentSettings();
+        EnsureOptionUISetup();
 
         CleanupNetworkSession();
+    }
+
+    /// <summary>
+    /// OptionButtonsにFrameRateOptionUIが未設定の場合に自動でアタッチする
+    /// </summary>
+    private void EnsureOptionUISetup()
+    {
+        var rects = FindObjectsByType<RectTransform>(FindObjectsInactive.Include);
+        foreach (var rt in rects)
+        {
+            if (rt != null && rt.name == "OptionButtons")
+            {
+                if (rt.GetComponent<FrameRateOptionUI>() == null)
+                {
+                    rt.gameObject.AddComponent<FrameRateOptionUI>();
+                }
+                break;
+            }
+        }
     }
 
     /// <summary>
