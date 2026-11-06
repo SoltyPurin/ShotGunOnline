@@ -1,6 +1,7 @@
 using UnityEngine;
+
 /// <summary>
-/// �{�X��Animation�Ǘ��p�̃��\�b�h
+/// ボスのAnimation管理用のメソッド
 /// </summary>
 public class BossAnimeManager : MonoBehaviour
 {
@@ -10,10 +11,22 @@ public class BossAnimeManager : MonoBehaviour
     public void StopWalk() => _bossAnimator.SetBool("IsWalk", false);
     public void PlayJumpAtack() => _bossAnimator.SetTrigger("IsFall");
     public void PlayMachPunch() => _bossAnimator.SetTrigger("IsPunch");
+
     public void ResetAllTriggers()
     {
+        if (_bossAnimator == null) return;
         _bossAnimator.ResetTrigger("IsFall");
         _bossAnimator.ResetTrigger("IsSpecialMove");
         _bossAnimator.ResetTrigger("IsPunch");
+    }
+
+    public void ResetToWait()
+    {
+        ResetAllTriggers();
+        if (_bossAnimator != null)
+        {
+            _bossAnimator.SetBool("IsWalk", false);
+            _bossAnimator.Play("Wait", 0, 0f);
+        }
     }
 }

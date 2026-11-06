@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// ボスのパンチ攻撃を管理するメソッド
@@ -65,17 +65,24 @@ public class BossMachPunch : MonoBehaviour
 
     public void PunchEnd()
     {
-        _lockRotate = false;
-        if (_punchArea != null) _punchArea.SetActive(false);
-        if (_kaisin != null) _kaisin.SetActive(false);
-
-        BossZanzouken zanzou = GetComponent<BossZanzouken>();
-        if (zanzou != null) zanzou.DelGrow();
+        ResetPunchState();
 
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             _stateManagement._currentState = BossStateManagement.BossState.Cooldown;
         }
+    }
+
+    public void ResetPunchState()
+    {
+        _lockRotate = false;
+        _isTargeting = false;
+        _punchSpeed = _initialPunchSpeed > 0 ? _initialPunchSpeed : _punchSpeed;
+        if (_punchArea != null) _punchArea.SetActive(false);
+        if (_kaisin != null) _kaisin.SetActive(false);
+
+        BossZanzouken zanzou = GetComponent<BossZanzouken>();
+        if (zanzou != null) zanzou.DelGrow();
     }
 
     /// <summary>

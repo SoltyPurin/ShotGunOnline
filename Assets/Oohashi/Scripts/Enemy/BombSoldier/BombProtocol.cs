@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ public class BombProtocol : NetworkBehaviour
 
     [Header("爆発の力")]
     [SerializeField] private float _bombPower = 5f;
-    [SerializeField,Header("爆発で敵に与えるダメージ")]
+    [SerializeField, Header("爆発で敵に与えるダメージ")]
     private float _bombEnemyPower = 2f;
     [SerializeField, Header("爆発で弱点に与えるダメージ")]
     private float _weekDamage = 4;
@@ -24,7 +23,7 @@ public class BombProtocol : NetworkBehaviour
     private GameObject _scaleObj = default;
 
     //プレイヤーに触れたときに爆発するまでの猶予時間
-    private float _bombWaitTime = 1;
+    private float _bombWaitTime = 1f;
 
     private float _initTime = 0;
 
@@ -58,13 +57,37 @@ public class BombProtocol : NetworkBehaviour
 
     private void Start()
     {
-        GameObject effectManager = GameObject.FindWithTag(EFFECTTAGNAME);
-        _playTheBombEffect = effectManager.GetComponent<PlayTheBombEffect>();
-        GameObject seManager = GameObject.FindWithTag(SETAGNAME);
-        _playeTheSEManager = seManager.GetComponent<SEManager>();
+        FindManagers();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        _material = _spriteRenderer.material;
+        if (_spriteRenderer != null)
+        {
+            _material = _spriteRenderer.material;
+        }
         _agent = GetComponent<NavMesh2DAgent>();
+        if (_takeDamage == null)
+        {
+            _takeDamage = GetComponent<BombTakeDamage>();
+        }
+    }
+
+    private void FindManagers()
+    {
+        if (_playTheBombEffect == null)
+        {
+            GameObject effectManager = GameObject.FindWithTag(EFFECTTAGNAME);
+            if (effectManager != null)
+            {
+                _playTheBombEffect = effectManager.GetComponent<PlayTheBombEffect>();
+            }
+        }
+        if (_playeTheSEManager == null)
+        {
+            GameObject seManager = GameObject.FindWithTag(SETAGNAME);
+            if (seManager != null)
+            {
+                _playeTheSEManager = seManager.GetComponent<SEManager>();
+            }
+        }
     }
 
     private void Update()
@@ -77,28 +100,70 @@ public class BombProtocol : NetworkBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (_isExplosion) return;
+
         //プレイヤーに接触したときの自爆処理
         if (collision.gameObject.CompareTag(PLAYERTAGNAME))
         {
-            _isColPlayer = true;
-            _collision = collision.gameObject;
-            _isExplosion = true;
-            _agent.Stop();
+            if (_isColPlayer) return;
+
+            if (IsServer)
+            {
+                StartSelfDestruct();
+            }
+            else
+            {
+                // クライアント側で衝突を検知した場合、ServerRpcでサーバーへ自爆開始を要求
+                RequestStartSelfDestructServerRpc();
+            }
         }
         else
         {
             //吹き飛び中にプレイヤー以外に接触したら爆発
             if (_isBlowing)
             {
-                //爆発のメソッド呼び出し
-                BombCircleCheck();
-                _isExplosion = true;
-                //通常の死亡のメソッド呼び出し
-                _takeDamage.NormalDeath();
-
+                if (IsServer)
+                {
+                    _isExplosion = true;
+                    BombCircleCheck();
+                    if (_takeDamage != null)
+                    {
+                        _takeDamage.NormalDeath();
+                    }
+                }
             }
         }
+    }
 
+    [Rpc(SendTo.Server)]
+    private void RequestStartSelfDestructServerRpc()
+    {
+        StartSelfDestruct();
+    }
+
+    private void StartSelfDestruct()
+    {
+        if (_isColPlayer) return;
+        _isColPlayer = true;
+        _isExplosion = true;
+        if (_agent != null)
+        {
+            _agent.Stop();
+        }
+
+        // 全クライアントに自爆カウントダウン演出の開始を通知
+        StartSelfDestructClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartSelfDestructClientRpc()
+    {
+        _isColPlayer = true;
+        _isExplosion = true;
+        if (_agent != null)
+        {
+            _agent.Stop();
+        }
     }
 
     /// <summary>
@@ -108,32 +173,43 @@ public class BombProtocol : NetworkBehaviour
     {
         _bombWaitTime -= Time.deltaTime;
         _initTime += Time.deltaTime;
-        float speed = 1 / Mathf.Max(_bombWaitTime, 0.1f);
+        float speed = 1f / Mathf.Max(_bombWaitTime, 0.1f);
         ScaleChange(speed);
 
-        if (_bombWaitTime <= 0)
+        if (_bombWaitTime <= 0f)
         {
-            //プレイヤーを吹き飛ばす方向を計算
-            //爆発のメソッド呼び出し
-            BombCircleCheck();
-            _takeDamage.NormalDeath();
+            _isColPlayer = false; // 重複実行防止
+            // 爆発判定・ダメージ・破棄はサーバーでのみ実行
+            if (IsServer)
+            {
+                BombCircleCheck();
+                if (_takeDamage != null)
+                {
+                    _takeDamage.NormalDeath();
+                }
+            }
         }
     }
 
     private void ScaleChange(float speed)
     {
+        if (_scaleObj == null) return;
         float waveSpeed = 3.0f; // 高いほど速く変化する
-        float t = Mathf.InverseLerp(speed, 0, _initTime);
+        float t = Mathf.InverseLerp(speed, 0f, _initTime);
         float scale = 1.0f + Mathf.Sin(t * Mathf.PI * waveSpeed) * 0.5f; // 揺れ幅も調整
         _scaleObj.transform.localScale = Vector3.one * scale;
     }
 
     /// <summary>
-    /// 爆発の判定チェックを行うメソッド
+    /// 爆発の判定チェックを行うメソッド（サーバーのみ実行）
     /// </summary>
     public void BombCircleCheck()
     {
-        BombEffectClientRpc();
+        if (!IsServer) return;
+
+        // 全クライアントに爆発エフェクトとSEの再生を通知（現在座標を渡す）
+        BombEffectClientRpc(transform.position);
+
         //爆弾のパワーで補正値を求める
         float t = Mathf.Clamp01(_bombEnemyPower / 2f);
         //半径を求める
@@ -143,20 +219,18 @@ public class BombProtocol : NetworkBehaviour
 
         foreach (Collider2D hit in hits)
         {
-            if (hit.gameObject == this.gameObject) continue;
-            Vector2 directionToTarget = (hit.transform.position - transform.position).normalized;
-            Vector2 forward = Vector2.right;
-            float angle = Vector2.Angle(forward, directionToTarget);
+            if (hit == null || hit.gameObject == this.gameObject) continue;
             GameObject hitObject = hit.gameObject;
-            if (hit.gameObject.CompareTag(BOMBTAGNAME))
+            if (hitObject.CompareTag(BOMBTAGNAME))
             {
                 BombTakeDamage bombTakedamage = hitObject.GetComponent<BombTakeDamage>();
-                bombTakedamage.NormalDeath();
+                if (bombTakedamage != null)
+                {
+                    bombTakedamage.NormalDeath();
+                }
             }
-            else if (hit.gameObject.CompareTag("Player"))
+            else if (hitObject.CompareTag(PLAYERTAGNAME))
             {
-                //プレイヤーに接触したときのダメージ判定を呼び出す
-                _takeDamage.PlayerCollision();
                 Vector3 direction = (hitObject.transform.position - this.transform.position).normalized;
                 PlayerDamageKnockBack knockback = hitObject.GetComponent<PlayerDamageKnockBack>();
                 if (knockback != null)
@@ -169,26 +243,33 @@ public class BombProtocol : NetworkBehaviour
             {
                 EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
                 EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
-                if (takeDamage != null)
+                if (takeDamage != null && knockback != null)
                 {
-                    knockback.SetDirectionAndForce((Vector2)transform.position, _bombEnemyPower, true,false);
+                    knockback.SetDirectionAndForce((Vector2)transform.position, _bombEnemyPower, true, false);
                     takeDamage.SetExplosionDamgage(_bombEnemyPower);
                 }
                 else if (knockback != null)
                 {
-                    knockback.SetDirectionAndForce((Vector2)transform.position, _bombEnemyPower,true,false);
-
+                    knockback.SetDirectionAndForce((Vector2)transform.position, _bombEnemyPower, true, false);
                 }
-
             }
         }
     }
 
     [ClientRpc]
-    private void BombEffectClientRpc()
+    private void BombEffectClientRpc(Vector3 explosionPos)
     {
-        _playTheBombEffect.BombEffect(transform.position);
-        _playeTheSEManager.PlayBombSound();
+        FindManagers();
+
+        if (_playTheBombEffect != null)
+        {
+            _playTheBombEffect.BombEffect(explosionPos);
+        }
+
+        if (_playeTheSEManager != null)
+        {
+            _playeTheSEManager.PlayBombSound();
+        }
     }
 
     private void OnDrawGizmos()
@@ -198,7 +279,5 @@ public class BombProtocol : NetworkBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radius);
-
     }
-
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -53,6 +53,8 @@ public class EnemyTakeDamage : NetworkBehaviour
     protected EnemyMove _enemyMove = default;
     [SerializeField, Header("HPを表示するUI")]
     protected EnemyDamageUI _hpUI = default;
+    [SerializeField, Header("死亡時にコインをドロップするか")]
+    protected bool _shouldDropCoin = true;
     private PlayerCoinDrop _playerCoinDrop = default;
     [SerializeField, Header("アニメーションのオブジェクト")]
     protected GameObject _deathObject = default;
@@ -322,9 +324,9 @@ public class EnemyTakeDamage : NetworkBehaviour
 
             yield return new WaitForSeconds(1.8f);
 
-            PlayDeathEffectsClientRpc();
+            PlayDeathEffectsClientRpc(_shouldDropCoin);
 
-            if (_playerCoinDrop != null)
+            if (_shouldDropCoin && _playerCoinDrop != null)
             {
                 _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
             }
@@ -346,12 +348,12 @@ public class EnemyTakeDamage : NetworkBehaviour
 
         _isDead = true;
 
-        if (_playerCoinDrop != null)
+        if (_shouldDropCoin && _playerCoinDrop != null)
         {
             _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
         }
 
-        PlayDeathEffectsClientRpc();
+        PlayDeathEffectsClientRpc(_shouldDropCoin);
 
         float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
         yield return new WaitForSeconds(timeLeftUntilDeath);
@@ -376,7 +378,7 @@ public class EnemyTakeDamage : NetworkBehaviour
 
             PlayRoadKillEffectClientRpc();
 
-            if (_playerCoinDrop != null)
+            if (_shouldDropCoin && _playerCoinDrop != null)
             {
                 _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
             }
@@ -392,12 +394,15 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// 全クライアント端末上で死亡音と死亡エフェクトを再生するRPC
     /// </summary>
     [ClientRpc]
-    private void PlayDeathEffectsClientRpc()
+    protected void PlayDeathEffectsClientRpc(bool playMoneySound = true)
     {
         if (_playTheSEManager != null)
         {
             _playTheSEManager.PlayEnemyDeathSound();
-            _playTheSEManager.PlayMoneyDropSound();
+            if (playMoneySound)
+            {
+                _playTheSEManager.PlayMoneyDropSound();
+            }
         }
 
         if (_deathObject != null)
@@ -410,7 +415,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// 全クライアント端末上で轢殺音と死亡エフェクトを再生するRPC
     /// </summary>
     [ClientRpc]
-    private void PlayRoadKillEffectClientRpc()
+    protected void PlayRoadKillEffectClientRpc()
     {
         if (_playTheSEManager != null)
         {
