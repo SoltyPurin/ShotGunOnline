@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -257,7 +257,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
         if (_isFloating)
         {
-            float t = Time.fixedDeltaTime * _inertiaStrangth;
+            float t = 1f - Mathf.Exp(-_inertiaStrangth * Time.deltaTime);
             _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity, targetVelocity, t);
             if (_moveDirection == Vector2.zero)
             {

@@ -1,73 +1,73 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private bool _canMove = false; //e’e‚ªˆÚ“®‚µ‚Ä‚à‚æ‚¢‚©
-    private Vector3 _moveDirection = default; //ˆÚ“®•ûŒü
-    [Header("e’e‚Ì‘¬“x")]
-    [SerializeField] private float _moveSpeed = 5.0f;//e’e‚Ì‘¬“x
-    [Header("e’e‚ÌƒIƒuƒWƒFƒNƒg“o˜^")]
+    private bool _canMove = false; //ï¿½eï¿½eï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½æ‚¢ï¿½ï¿½
+    private Vector3 _moveDirection = default; //ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½
+    [Header("ï¿½eï¿½eï¿½Ì‘ï¿½ï¿½x")]
+    [SerializeField] private float _moveSpeed = 5.0f;//ï¿½eï¿½eï¿½Ì‘ï¿½ï¿½x
+    [Header("ï¿½eï¿½eï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½oï¿½^")]
     [SerializeField] private GameObject _bulletObject = default;
-    private float _disableTimer = 0.0f; //Œ»İ‚Ìe’e‚ª‘¶İ‚µ‚Ä‚éŠÔ
-    private float _chargeTime = 0f; //e’e‚Ì¶‘¶ŠÔA‚½‚¾‚µ‚±‚ê‚Íƒ`ƒƒ[ƒWŠÔ‚É‚æ‚Á‚Ä•Ï“®‚·‚é
-    [SerializeField, Header("Å‘åË’ö")]
+    private float _disableTimer = 0.0f; //ï¿½ï¿½ï¿½İ‚Ìeï¿½eï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½Ä‚éï¿½ï¿½
+    private float _chargeTime = 0f; //ï¿½eï¿½eï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÔAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íƒ`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Ô‚É‚ï¿½ï¿½ï¿½Ä•Ï“ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField, Header("ï¿½Å‘ï¿½Ë’ï¿½")]
     private int _maxRange = 15;
     public float ChargeTime
     {
-        set { _chargeTime = value; }//ƒ`ƒƒ[ƒWŠÔ‚É‚æ‚Á‚Ä¶‘¶ŠÔ‚ª•Ï‚í‚é
+        set { _chargeTime = value; }//ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Ô‚É‚ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½Ï‚ï¿½ï¿½
     }
-    private const float MAXBULLETLIMITTIME = 4;//Å‘å¶‘¶ŠÔA‚±‚±‚©‚çƒ`ƒƒ[ƒWŠÔ‚ğˆø‚¢‚Ä¶‘¶ŠÔ‚ğŒˆ‚ß‚é
-    private Vector3 _firstDirection = new Vector3(0, 0, 0);//‰EƒXƒeƒBƒbƒN‚Ì“ü—Í–³‚µ‚©‚Ç‚¤‚©‚ğ”»’f‚·‚é
+    private const float MAXBULLETLIMITTIME = 4;//ï¿½Å‘å¶ï¿½ï¿½ï¿½ï¿½ï¿½ÔAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ß‚ï¿½
+    private Vector3 _firstDirection = new Vector3(0, 0, 0);//ï¿½Eï¿½Xï¿½eï¿½Bï¿½bï¿½Nï¿½Ì“ï¿½ï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ğ”»’fï¿½ï¿½ï¿½ï¿½
     private Vector3 _startPosition = default;
 
     /// <summary>
-    /// e’e‚ÌŒü‚«‚ğİ’è‚·‚éƒƒ\ƒbƒh
+    /// ï¿½eï¿½eï¿½ÌŒï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚·ï¿½éƒï¿½\ï¿½bï¿½h
     /// </summary>
-    /// <param name="direction">ƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü</param>
-    /// <param name="position">ËŒ‚‚ğs‚Á‚½’n“_</param>
+    /// <param name="direction">ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌŒï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="position">ï¿½ËŒï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_</param>
     public void Init(Vector3 direction, Vector3 position)
     {
-        if(_firstDirection == direction)//ƒXƒeƒBƒbƒN‚É“ü—Í‚¹‚¸‚ÉŒ‚‚Á‚½ê‡
+        if(_firstDirection == direction)//ï¿½Xï¿½eï¿½Bï¿½bï¿½Nï¿½É“ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½ÉŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡
         {
-            _moveDirection = new Vector3(1, 0, 0);//‰EŒü‚«‚É’e‚ğŒ‚‚Â
+            _moveDirection = new Vector3(1, 0, 0);//ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½É’eï¿½ï¿½ï¿½ï¿½ï¿½
         }
         else
         {
-            _moveDirection = direction;//‰EƒXƒeƒBƒbƒN‚Ì“ü—Í•ûŒü‚ğˆÚ“®•ûŒü‚É‘ã“ü
+            _moveDirection = direction;//ï¿½Eï¿½Xï¿½eï¿½Bï¿½bï¿½Nï¿½Ì“ï¿½ï¿½Í•ï¿½ï¿½ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‘ï¿½ï¿½
         }
         _startPosition = position;
-        transform.position = position;//ƒvƒŒƒCƒ„[‚Ìƒ|ƒWƒVƒ‡ƒ“‚©‚çƒXƒ^[ƒg‚³‚¹‚é
-        _canMove = true;//ˆÚ“®‚ğ‹–‰Â‚·‚é
-        //‹°‚ç‚­‚¾‚ª‚±‚±‚ÅMAXBULLETLIMITTIME‚©‚ç_chargeTime‚ğˆø‚­V‚µ‚¢•Ï”‚ğì‚Á‚Ä“n‚·•K—v‚ª‚ ‚é
+        transform.position = position;//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒ|ï¿½Wï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        _canMove = true;//ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½
+        //ï¿½ï¿½ï¿½ç‚­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAXBULLETLIMITTIMEï¿½ï¿½ï¿½ï¿½_chargeTimeï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ïï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä“nï¿½ï¿½ï¿½Kï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     }
 
     private void FixedUpdate()
     {
-        if (_canMove)//ˆÚ“®‚ª‰Â”\‚©
+        if (_canMove)//ï¿½Ú“ï¿½ï¿½ï¿½ï¿½Â”\ï¿½ï¿½
         {
-            Moveing(_moveDirection);//ˆÚ“®‚Ìƒƒ\ƒbƒh‚ÉˆÚ“®•ûŒü‚ğ“n‚·
+            Moveing(_moveDirection);//ï¿½Ú“ï¿½ï¿½Ìƒï¿½ï¿½\ï¿½bï¿½hï¿½ÉˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½ï¿½
         }
         else
         {
-            return;//‚»‚¤‚¶‚á‚È‚¯‚ê‚ÎƒŠƒ^[ƒ“
+            return;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îƒï¿½ï¿½^ï¿½[ï¿½ï¿½
         }
     }
     /// <summary>
-    /// e’e‚ÌˆÚ“®ƒXƒNƒŠƒvƒg
+    /// ï¿½eï¿½eï¿½ÌˆÚ“ï¿½ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½g
     /// </summary>
-    /// <param name="direction">Œü‚©‚¤•ûŒü</param>
+    /// <param name="direction">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
     private void Moveing(Vector3 direction)
     {
         float t = Mathf.Clamp01(_chargeTime / 2f);
-        float radius = Mathf.Lerp(_maxRange, 5f, t); //Å‘å‹——£
+        float radius = Mathf.Lerp(_maxRange, 5f, t); //ï¿½Å‘å‹—ï¿½ï¿½
         float initDistance = (transform.position - _startPosition).magnitude;
-        //w’è•ûŒü‚ÉˆÚ“®‘¬“x‚ğæZ‚µ‚ÄŠÔ’PˆÊ‚ÅˆÚ“®‚³‚¹‚é
-        transform.position += direction * _moveSpeed * Time.deltaTime;
-        if(radius<= initDistance)//Œ»İ‚Ìis‚µ‚½‹——£‚ªÅ‘å‹——£‚É‚Â‚¢‚½‚çˆ—‚ğs‚¤
+        //ï¿½wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉˆÚ“ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Äï¿½ï¿½Ô’Pï¿½Ê‚ÅˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        transform.position += direction * _moveSpeed * Time.fixedDeltaTime;
+        if(radius<= initDistance)//ï¿½ï¿½ï¿½İ‚Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‘å‹—ï¿½ï¿½ï¿½É‚Â‚ï¿½ï¿½ï¿½ï¿½çˆï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
         {
-            _bulletObject.SetActive(false);//e’e‚ÌƒIƒuƒWƒFƒNƒg‚ğ”ñƒAƒNƒeƒBƒu‰»‚·‚é
-            _canMove = false;//ˆÚ“®‹–‰Â‚ğæ‚èÁ‚·
+            _bulletObject.SetActive(false);//ï¿½eï¿½eï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            _canMove = false;//ï¿½Ú“ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
     }
 }

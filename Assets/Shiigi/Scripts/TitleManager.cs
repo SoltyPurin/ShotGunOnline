@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +10,7 @@ public class TitleManager : MonoBehaviour
     {
         // ポーズ画面などから遷移した際に時間停止状態が残らないよう復帰
         Time.timeScale = 1.0f;
+        FrameRateManager.RefreshCurrentSettings();
 
         CleanupNetworkSession();
     }

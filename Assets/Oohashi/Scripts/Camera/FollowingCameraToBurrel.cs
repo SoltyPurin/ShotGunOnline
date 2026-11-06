@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 public class FollowingCameraToBurrel : MonoBehaviour
@@ -111,7 +111,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             }
         }
     }
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if (_player == null)
         {
@@ -155,7 +155,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             Vector3 targetPosition = _boss.transform.position;
             targetPosition.z = transform.position.z;
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.deltaTime);
         }
         //else if (_isMovie)
         //{
@@ -169,7 +169,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
         //    Vector3 targetPosition = _boss.transform.position;
         //    targetPosition.z = transform.position.z;
 
-        //    transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
+        //    transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.deltaTime);
 
         //}
         else if (_isBossWave && !_isMovie) // ボスのウェーブであればボスとプレイヤーにカメラを合わせる
@@ -199,7 +199,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             Vector3 targetPosition = (_player.transform.position + _boss.transform.position) / 2f;
             targetPosition.z = transform.position.z;
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.deltaTime);
 
             // ボスとプレイヤーとの距離に応じてカメラの描画の大きさを変える
             float distance = Vector3.Distance(_player.transform.position, _boss.transform.position);
@@ -222,7 +222,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             Vector3 targetPosition = (_player.transform.position + _midiumBoss.transform.position) / 2f;
             targetPosition.z = transform.position.z;
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.fixedDeltaTime);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, _bossFollowSpeed * Time.deltaTime);
 
             //ボスとプレイヤーとの距離に応じてカメラの描画の大きさを変える
             float distance = Vector3.Distance(_player.transform.position, _midiumBoss.transform.position);
@@ -234,7 +234,7 @@ public class FollowingCameraToBurrel : MonoBehaviour
             Vector3 targetPosition = _burrel.transform.position;
             targetPosition.z = transform.position.z;
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, _followSpeed * Time.fixedDeltaTime);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, _followSpeed * Time.deltaTime);
             if (_camera != null)
             {
                 _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _minSize, Time.deltaTime * _zoomSpeed);
