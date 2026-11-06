@@ -59,16 +59,135 @@ public class PlayerHoleFall : EntityFall
             }
         }
         yield return new WaitForSeconds(2.2f);
-        _rigidbody2D.simulated = true;
-        _fadeAnimator.SetTrigger("FadeIn");
-        _damageKnockBack.ResetForce();
+
+        // 物理シミュレーションや通常状態に戻す前に、自機を確実にリスポーン地点へテレポートさせる
+        TeleportToRespawnPoint();
+
+        // 吹き飛び力をリセット
+        if (_damageKnockBack != null)
+        {
+            _damageKnockBack.ResetForce();
+        }
+
+        // 慣性を確実にゼロにして物理シミュレーションを再開（リスポーン地点に移動後に行う）
+        if (_rigidbody2D != null)
+        {
+            _rigidbody2D.linearVelocity = Vector2.zero;
+            _rigidbody2D.simulated = true;
+        }
+
+        // フェードイン演出開始
+        if (_fadeAnimator != null)
+        {
+            _fadeAnimator.SetTrigger("FadeIn");
+        }
+
+        // プレイヤー状態とアニメーションを通常へ戻す
+        if (_playerStateManager != null)
+        {
+            _playerStateManager.NormalState();
+        }
+        if (_inputChangeState != null)
+        {
+            _inputChangeState.ToNormalAnimation();
+        }
+        _isFalling = false;
+    }
+
+    /// <summary>
+    /// 落下位置からリスポーン位置へ自機を即座にテレポートし、カメラも移動させる
+    /// </summary>
+    private void TeleportToRespawnPoint()
+    {
+        NetworkObject netObj = GetComponent<NetworkObject>();
+        Vector2 targetPos = Vector2.zero;
+        bool hasTarget = false;
+
+        // A. PlayerRespawn から取得
         if (_respawn != null)
+        {
+            targetPos = _respawn.RespawnPlayerLocally(netObj);
+            hasTarget = true;
+        }
+        // B. StageController.ActiveStage から直接取得（_respawn が見つからない場合のフォールバック）
+        else if (StageController.ActiveStage != null)
+        {
+            int playerNumber = GetPlayerNumber(netObj);
+            targetPos = StageController.ActiveStage.GetRespawnPosition(playerNumber);
+            hasTarget = true;
+        }
+        // C. StageSpawnPoints から直接取得
+        else if (StageSpawnPoints.Instance != null)
+        {
+            int playerNumber = GetPlayerNumber(netObj);
+            Transform spawn = StageSpawnPoints.Instance.GetSpawnPoint(playerNumber);
+            if (spawn != null)
+            {
+                targetPos = spawn.position;
+                hasTarget = true;
+            }
+        }
+
+        if (!hasTarget)
+        {
+            Debug.LogWarning("[PlayerHoleFall] リスポーン先が特定できなかったため初期位置 (0, 0) へ移動します。");
+            targetPos = Vector2.zero;
+        }
+
+        // _respawn が null だった場合のフォールバックテレポート処理
+        if (_respawn == null)
+        {
+            Unity.Netcode.Components.NetworkTransform netTransform = GetComponent<Unity.Netcode.Components.NetworkTransform>();
+            if (netTransform != null)
+            {
+                netTransform.Teleport(targetPos, Quaternion.identity, transform.localScale);
+            }
+            else
+            {
+                transform.position = targetPos;
+            }
+
+            MoveCameraTo(targetPos);
+        }
+
+        // ネットワーク同期補完のためサーバーへもRPC通知
+        if (_respawn != null && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
             _respawn.FallRespawnRpc(this.gameObject);
         }
-        _playerStateManager.NormalState();
-        _inputChangeState.ToNormalAnimation();
-        _isFalling = false;
+    }
+
+    private int GetPlayerNumber(NetworkObject netObj)
+    {
+        if (netObj != null)
+        {
+            PlayerNumberSave numberSave = netObj.GetComponent<PlayerNumberSave>();
+            if (numberSave != null)
+            {
+                return numberSave.MyNumber;
+            }
+            return (int)(netObj.OwnerClientId % 4);
+        }
+        return 0;
+    }
+
+    private void MoveCameraTo(Vector2 pos)
+    {
+        Camera cam = Camera.main != null ? Camera.main : (GameObject.FindWithTag("MainCamera") != null ? GameObject.FindWithTag("MainCamera").GetComponent<Camera>() : null);
+        if (cam != null)
+        {
+            FollowingCameraToBurrel follow = cam.GetComponent<FollowingCameraToBurrel>();
+            if (follow != null)
+            {
+                follow.MovieMove(pos);
+            }
+            else
+            {
+                Vector3 camPos = pos;
+                camPos.z = cam.transform.position.z;
+                cam.transform.position = camPos;
+            }
+        }
     }
 
     /// <summary>

@@ -258,7 +258,35 @@ public class PlayerRespawn : NetworkBehaviour
         return transform.position;
     }
 
-    private void MoveCamera(Vector2 pos)
+    /// <summary>
+    /// 自機プレイヤーを即座に現在のリスポーン位置へテレポート・カメラ移動させる
+    /// </summary>
+    public Vector2 RespawnPlayerLocally(NetworkObject netObj)
+    {
+        Vector2 targetPos = GetRespawnPosition(netObj, _currentRespawnIndex);
+        if (netObj != null)
+        {
+            NetworkTransform netTransform = netObj.GetComponent<NetworkTransform>();
+            if (netTransform != null)
+            {
+                netTransform.Teleport(targetPos, Quaternion.identity, netObj.transform.localScale);
+            }
+            else
+            {
+                netObj.transform.position = targetPos;
+            }
+
+            Rigidbody2D rb = netObj.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+            }
+        }
+        MoveCamera(targetPos);
+        return targetPos;
+    }
+
+    public void MoveCamera(Vector2 pos)
     {
         if (_camera == null)
         {
