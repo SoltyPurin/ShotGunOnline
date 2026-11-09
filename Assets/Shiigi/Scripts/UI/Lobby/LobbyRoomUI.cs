@@ -4,7 +4,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyRoomUI : MonoBehaviour
+public class LobbyRoomUI : LobbyViewBase
 {
     [Header("ルーム情報")]
     [SerializeField] private Text _roomNameText;
@@ -25,8 +25,10 @@ public class LobbyRoomUI : MonoBehaviour
     private readonly List<LobbyPlayerEntryUI> _spawnedEntries = new List<LobbyPlayerEntryUI>();
     private bool _localIsReady;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _leaveButton.onClick.AddListener(() => OnLeaveRequested?.Invoke());
         _readyButton.onClick.AddListener(() => OnReadyToggleRequested?.Invoke());
         _startButton.onClick.AddListener(() => OnStartGameRequested?.Invoke());

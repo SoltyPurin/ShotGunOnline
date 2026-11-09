@@ -5,7 +5,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyDiscoverUI : MonoBehaviour
+public class LobbyDiscoverUI : LobbyViewBase
 {
     [Header("マッチング用ボタン")][SerializeField] private Button _refreshButton;
     [SerializeField] private Button _createRoomButton;
@@ -23,28 +23,54 @@ public class LobbyDiscoverUI : MonoBehaviour
 
     private readonly List<RoomCardUI> _spawnedCards = new();
 
-    private void Awake()
+    protected override void Awake()
     {
-        _refreshButton.onClick.AddListener(() => OnRefreshRequested?.Invoke());
-        _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
-    }
-
-    /// <summary>
-    /// ルーム一覧パネルおよび作成・更新ボタンの表示/非表示を一括で切り替える
-    /// </summary>
-    public void SetVisible(bool visible)
-    {
-        gameObject.SetActive(visible);
+        base.Awake();
 
         if (_refreshButton != null)
         {
-            _refreshButton.gameObject.SetActive(visible);
+            _refreshButton.onClick.AddListener(() => OnRefreshRequested?.Invoke());
+            EnsureButtonSound(_refreshButton, UISoundType.Enter);
         }
-
         if (_createRoomButton != null)
         {
-            _createRoomButton.gameObject.SetActive(visible);
+            _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
+            EnsureButtonSound(_createRoomButton, UISoundType.Enter);
         }
+    }
+
+    private static void EnsureButtonSound(Button button, UISoundType soundType)
+    {
+        if (button.GetComponent<UIButtonSound>() == null)
+        {
+            var s = button.gameObject.AddComponent<UIButtonSound>();
+            s.ClickSound = soundType;
+        }
+    }
+
+    protected override void OnShowStarted()
+    {
+        SetButtonsActive(true);
+    }
+
+    protected override void OnHideCompleted()
+    {
+        SetButtonsActive(false);
+    }
+
+    private void SetButtonsActive(bool active)
+    {
+        if (_refreshButton != null) _refreshButton.gameObject.SetActive(active);
+        if (_createRoomButton != null) _createRoomButton.gameObject.SetActive(active);
+    }
+
+    /// <summary>
+    /// ルーム一覧パネルおよび作成・更新ボタンの表示/非表示を一括で切り替える（即時反映）
+    /// </summary>
+    public void SetVisible(bool visible)
+    {
+        SetVisibleInstant(visible);
+        SetButtonsActive(visible);
     }
 
     /// <summary>
