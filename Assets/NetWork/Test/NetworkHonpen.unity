@@ -4863,10 +4863,10 @@ MonoBehaviour:
   _destroyTime: 30
   _floorSpawnValue: 4
   _floorSpawnPos:
-  - {x: 0, y: 624}
-  - {x: 0, y: 571}
-  - {x: -52, y: 571}
-  - {x: -52, y: 620}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   _useRelativeOffset: 0
   _soulFloorObject: {fileID: 1148560922935778647, guid: d4ee5499bca35d244b14dc80352da36f, type: 3}
 --- !u!114 &722822074
@@ -8113,6 +8113,18 @@ PrefabInstance:
     - target: {fileID: 7293574517641374028, guid: 870469d9cfc64bf4cb51928d77a23bf6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794949617877650183, guid: 870469d9cfc64bf4cb51928d77a23bf6, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2465259293
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794949617877650183, guid: 870469d9cfc64bf4cb51928d77a23bf6, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794949617877650183, guid: 870469d9cfc64bf4cb51928d77a23bf6, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3478536928
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

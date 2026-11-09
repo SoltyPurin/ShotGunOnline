@@ -5,22 +5,24 @@ using UnityEngine;
 
 public class EnemyTakeDamage : NetworkBehaviour
 {
-    protected NetworkVariable<int> _enemyHP = new NetworkVariable<int>(
-        1000, 
+    [SerializeField, Header("プレイヤー数に乗算する値、これで複数人の時のHPの計算を調整")]
+    private float _modifyValue = 0.75f;
+    protected NetworkVariable<float> _enemyHP = new NetworkVariable<float>(
+        1000.0f, 
         NetworkVariableReadPermission.Everyone, 
         NetworkVariableWritePermission.Server
     );
-    public NetworkVariable<int> EnemyHP
+    public NetworkVariable<float> EnemyHP
     {
         get { return _enemyHP; }
     }
 
-    protected NetworkVariable<int> _maxHP = new NetworkVariable<int>(
-        1000,
+    protected NetworkVariable<float> _maxHP = new NetworkVariable<float>(
+        1000.0f,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    public NetworkVariable<int> MaxHP
+    public NetworkVariable<float> MaxHP
     {
         get { return _maxHP; }
     }
@@ -32,12 +34,14 @@ public class EnemyTakeDamage : NetworkBehaviour
     {
         if (IsServer)
         {
-            _enemyHP.Value = hp;
-            _maxHP.Value = hp;
+            int curPlayerCount = (NetworkManager.Singleton.ConnectedClientsList.Count);
+            float modifyHPValue = curPlayerCount * _modifyValue;
+            _enemyHP.Value = hp * modifyHPValue;
+            _maxHP.Value = hp * modifyHPValue;
         }
         if (_hpUI != null)
         {
-            _hpUI.Initialize(hp);
+            _hpUI.Initialize(_maxHP.Value);
         }
     }
 
@@ -185,7 +189,7 @@ public class EnemyTakeDamage : NetworkBehaviour
 
         if (_hpUI != null)
         {
-            int initialMax = _maxHP.Value > 0 ? _maxHP.Value : _enemyHP.Value;
+            float initialMax = _maxHP.Value > 0 ? _maxHP.Value : _enemyHP.Value;
             _hpUI.Initialize(initialMax);
             _hpUI.UpdateHP(_enemyHP.Value);
 
@@ -205,7 +209,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 
-    private void OnMaxHPChanged(int previousValue, int newValue)
+    private void OnMaxHPChanged(float previousValue, float newValue)
     {
         if (_hpUI != null)
         {
@@ -214,7 +218,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 
-    private void OnHPChanged(int previousValue, int newValue)
+    private void OnHPChanged(float previousValue, float newValue)
     {
         if (_hpUI != null)
         {

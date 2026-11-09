@@ -45,7 +45,7 @@ public class BossHPUI : EnemyDamageUI
     }
 
     // HP‚ª•Ï‰»‚µ‚½‚¾‚¯Às‚³‚ê‚éŒy—Ê‚Èˆ—
-    private void OnHPChanged(int previousValue, int newValue)
+    private void OnHPChanged(float previousValue, float newValue)
     {
         UpdateHP(newValue);
     }
