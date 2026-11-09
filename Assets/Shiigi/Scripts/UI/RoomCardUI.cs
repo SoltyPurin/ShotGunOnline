@@ -21,7 +21,7 @@ public class RoomCardUI : MonoBehaviour
         if (_joinButton != null && _joinButton.GetComponent<UIButtonSound>() == null)
         {
             var sound = _joinButton.gameObject.AddComponent<UIButtonSound>();
-            sound.ClickSound = UISoundType.Enter;
+            sound.ButtonType = UIButtonType.Default;
         }
     }
 

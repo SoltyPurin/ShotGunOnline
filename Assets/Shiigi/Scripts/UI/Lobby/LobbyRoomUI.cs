@@ -27,11 +27,27 @@ public class LobbyRoomUI : LobbyViewBase
 
     protected override void Awake()
     {
+        _viewType = UIViewType.DefaultWindow;
         base.Awake();
 
         _leaveButton.onClick.AddListener(() => OnLeaveRequested?.Invoke());
         _readyButton.onClick.AddListener(() => OnReadyToggleRequested?.Invoke());
         _startButton.onClick.AddListener(() => OnStartGameRequested?.Invoke());
+
+        EnsureButtonSound(_leaveButton, UIButtonType.Cancel);
+        EnsureButtonSound(_readyButton, UIButtonType.Default);
+        EnsureButtonSound(_startButton, UIButtonType.Default);
+    }
+
+    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
+    {
+        if (button == null) return;
+        var s = button.GetComponent<UIButtonSound>();
+        if (s == null)
+        {
+            s = button.gameObject.AddComponent<UIButtonSound>();
+        }
+        s.ButtonType = buttonType;
     }
 
     public void Refresh(ISession session)

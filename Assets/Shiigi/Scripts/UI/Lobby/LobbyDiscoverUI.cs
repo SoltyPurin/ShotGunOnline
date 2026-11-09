@@ -25,27 +25,30 @@ public class LobbyDiscoverUI : LobbyViewBase
 
     protected override void Awake()
     {
+        _viewType = UIViewType.DefaultWindow;
         base.Awake();
 
         if (_refreshButton != null)
         {
             _refreshButton.onClick.AddListener(() => OnRefreshRequested?.Invoke());
-            EnsureButtonSound(_refreshButton, UISoundType.Enter);
+            EnsureButtonSound(_refreshButton, UIButtonType.SubAction);
         }
         if (_createRoomButton != null)
         {
             _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
-            EnsureButtonSound(_createRoomButton, UISoundType.Enter);
+            EnsureButtonSound(_createRoomButton, UIButtonType.Default);
         }
     }
 
-    private static void EnsureButtonSound(Button button, UISoundType soundType)
+    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
     {
-        if (button.GetComponent<UIButtonSound>() == null)
+        if (button == null) return;
+        var s = button.GetComponent<UIButtonSound>();
+        if (s == null)
         {
-            var s = button.gameObject.AddComponent<UIButtonSound>();
-            s.ClickSound = soundType;
+            s = button.gameObject.AddComponent<UIButtonSound>();
         }
+        s.ButtonType = buttonType;
     }
 
     protected override void OnShowStarted()
