@@ -18,6 +18,11 @@ public class RoomCardUI : MonoBehaviour
     private void Awake()
     {
         _joinButton.onClick.AddListener(() => OnJoinRequested?.Invoke(_sessionInfo));
+        if (_joinButton != null && _joinButton.GetComponent<UIButtonSound>() == null)
+        {
+            var sound = _joinButton.gameObject.AddComponent<UIButtonSound>();
+            sound.ClickSound = UISoundType.Enter;
+        }
     }
 
     /// <summary>

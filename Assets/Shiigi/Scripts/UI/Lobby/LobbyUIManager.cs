@@ -62,7 +62,7 @@ public class LobbyUIManager : MonoBehaviour
 
         // 初期状態に遷移（集会所ステージ移動から開始できるよう _startWithMenuOpen を反映）
         _isMenuOpen = _startWithMenuOpen;
-        TransitionTo(LobbyUIState.Discover);
+        TransitionTo(LobbyUIState.Discover, immediate: true);
     }
 
     private void OnDestroy()
@@ -122,9 +122,14 @@ public class LobbyUIManager : MonoBehaviour
     public void SetMenuOpen(bool isOpen)
     {
         if (!CanToggleMenu()) return;
+        if (_isMenuOpen == isOpen) return;
 
         _isMenuOpen = isOpen;
-        ApplyVisibility();
+
+        // メニュー開閉SEを再生
+        UISound.Play(_isMenuOpen ? UISoundType.Enter : UISoundType.Cancel);
+
+        ApplyVisibility(immediate: false);
 
         // ルーム検索画面を初めて開いた時は一覧を自動更新する
         if (_isMenuOpen && _currentState == LobbyUIState.Discover && !_hasRefreshedOnce)
@@ -137,19 +142,29 @@ public class LobbyUIManager : MonoBehaviour
     /// <summary>
     /// UIの状態を遷移させ、表示・非表示を制御する
     /// </summary>
-    private void TransitionTo(LobbyUIState state)
+    private void TransitionTo(LobbyUIState state, bool immediate = false)
     {
         _currentState = state;
-        ApplyVisibility();
+        ApplyVisibility(immediate);
     }
 
-    private void ApplyVisibility()
+    private void ApplyVisibility(bool immediate = false)
     {
         bool isConnecting = _currentState == LobbyUIState.Connecting;
 
-        // 状態とメニュー開閉フラグに応じたパネル表示切り替え
-        _discoverUI.SetVisible(!isConnecting && _isMenuOpen && _currentState == LobbyUIState.Discover);
-        _roomUI.gameObject.SetActive(!isConnecting && _isMenuOpen && _currentState == LobbyUIState.InRoom);
+        bool discoverTarget = !isConnecting && _isMenuOpen && _currentState == LobbyUIState.Discover;
+        bool roomTarget = !isConnecting && _isMenuOpen && _currentState == LobbyUIState.InRoom;
+
+        if (immediate)
+        {
+            _discoverUI.SetVisible(discoverTarget);
+            _roomUI.SetVisibleInstant(roomTarget);
+        }
+        else
+        {
+            UpdateViewVisibilityAnimated(_discoverUI, discoverTarget);
+            UpdateViewVisibilityAnimated(_roomUI, roomTarget);
+        }
 
         // Connectingステートの場合はローディング表示を出す
         if (isConnecting)
@@ -165,6 +180,26 @@ public class LobbyUIManager : MonoBehaviour
         LobbyMovement.IsInputBlocked = isConnecting || _isMenuOpen;
 
         UpdateToggleButtonVisual();
+    }
+
+    private void UpdateViewVisibilityAnimated(LobbyViewBase view, bool targetVisible)
+    {
+        if (view == null) return;
+
+        if (targetVisible)
+        {
+            if (!view.IsVisible || !view.gameObject.activeSelf)
+            {
+                view.ShowAsync().Forget();
+            }
+        }
+        else
+        {
+            if (view.IsVisible || view.gameObject.activeSelf)
+            {
+                view.HideAsync().Forget();
+            }
+        }
     }
 
     private bool CanToggleMenu()
