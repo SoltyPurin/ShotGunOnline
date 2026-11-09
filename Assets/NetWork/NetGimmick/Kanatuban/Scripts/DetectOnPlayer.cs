@@ -43,12 +43,11 @@ public class DetectOnPlayer : NetworkBehaviour
     }
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
-
         if (_isCleared.Value)
         {
             return;
         }
-
+        Debug.Log("なにかが触れたよ");
         RequestChangeState(true);
     }
 
@@ -65,11 +64,12 @@ public class DetectOnPlayer : NetworkBehaviour
 
     private void RequestChangeState(bool state)
     {
+        Debug.Log("関数呼び出し");
         if (!IsSpawned || _isCleared.Value)
         {
             return;
         }
-
+        Debug.Log("ステート変更が呼び出された");
         if (IsServer)
         {
             SetStateOnServer(state);
@@ -100,6 +100,7 @@ public class DetectOnPlayer : NetworkBehaviour
         }
 
         _isStepped.Value = state;
+        Debug.Log("現在のステートは" +  _isStepped.Value);
     }
     private void OnSteppedChanged(bool previous, bool current)
     {
@@ -117,7 +118,7 @@ public class DetectOnPlayer : NetworkBehaviour
         {
             return;
         }
-
+        Debug.Log("見た目変更");
         // クリア済みなら離れても踏まれた表示を維持
         if (_isCleared.Value || _isStepped.Value)
         {

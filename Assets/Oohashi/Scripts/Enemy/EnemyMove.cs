@@ -60,13 +60,13 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     private float _inertiaStrangth = 4f;
 
     // プレイヤーの再探索タイマー（定期的に最寄りプレイヤーをターゲットにする）
-    private float _findPlayerTimer = 0f;
-    private const float FIND_PLAYER_INTERVAL = 0.5f;
+    protected float _findPlayerTimer = 0f;
+    protected const float FIND_PLAYER_INTERVAL = 0.5f;
 
     [SerializeField, Header("クライアントで敵の移動をローカル計算する(雑魚敵向け)")]
     private bool _localSimulation = false;
     // ローカルシミュレーションを実際に行っているか
-    private bool _localSimulationActive = false;
+    protected bool _localSimulationActive = false;
     private EnemyNetworkTransform _enemyNetworkTransform = default;
 
     // サーバー位置とのずれがこの距離を超えたら徐々に補正する
@@ -160,6 +160,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
             _playerObject = nearestPlayer;
             _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
             _target = _playerObject.transform;
+            Debug.Log("ターゲットは" + _playerObject.name);
         }
     }
 
@@ -230,7 +231,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         if (!IsServer)
         {

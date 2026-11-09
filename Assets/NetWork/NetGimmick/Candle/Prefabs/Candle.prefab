@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: -7355615335968386423}
   - component: {fileID: 7609490546203902196}
   - component: {fileID: 351441091521524191}
+  - component: {fileID: -3672659924475286092}
+  - component: {fileID: 6801335443637429317}
   m_Layer: 0
   m_Name: Candle
   m_TagString: Candle
@@ -155,6 +157,39 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.0625}
   m_EdgeRadius: 0
+--- !u!114 &-3672659924475286092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401915963546186902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d792cd55ff7620e4ab2edbf4a5e72626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveGimmick
+  ShowTopMostFoldoutHeaderGroup: 1
+  _waveGimmickSpawn: {fileID: 6801335443637429317}
+--- !u!114 &6801335443637429317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401915963546186902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7eeb02bdb3fd1141b0fec9723234d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveGimmickSpawn
+  _spawnAnim: {fileID: 0}
+  _spawnPoint: {fileID: 0}
+  _spawnCollider: {fileID: 351441091521524191}
+  _spriteRenderers:
+  - {fileID: 7609490546203902196}
+  _spawnTime: 0.5
+  _colliderOnTime: 0.55
 --- !u!1 &4112157720231000600
 GameObject:
   m_ObjectHideFlags: 0

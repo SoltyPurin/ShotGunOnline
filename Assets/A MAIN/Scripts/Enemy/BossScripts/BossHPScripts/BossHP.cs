@@ -54,7 +54,7 @@ public class BossHP : EnemyTakeDamage
     [SerializeField, Header("岩にぶつかった時のダメージ")]
     private int _stoneDamage = 700;
 
-    public int BossHPVariable
+    public float BossHPVariable
     {
         get { return _enemyHP.Value; }
     }
