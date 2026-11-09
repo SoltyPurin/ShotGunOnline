@@ -2370,8 +2370,8 @@ Tilemap:
   - first: {x: -12, y: -7, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 2
-      m_TileSpriteIndex: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2600,8 +2600,8 @@ Tilemap:
   - first: {x: 11, y: -7, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 4
-      m_TileSpriteIndex: 4
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -5730,19 +5730,19 @@ Tilemap:
   m_AnimatedTiles: {}
   m_TileAssetArray:
   - serializedVersion: 2
-    m_RefCount: 68
+    m_RefCount: 70
     m_Data: {fileID: 11400000, guid: 223ebf7e4bd037247bc381bdfffc0002, type: 2}
   - serializedVersion: 2
     m_RefCount: 0
     m_Data: {fileID: 11400000, guid: b06399aa41ea8c44a98ac5071296a2dd, type: 2}
   - serializedVersion: 2
-    m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: 51cbb6c055140e449978d7bd39dcc14f, type: 2}
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: 4fcbce1067b6cc040aeba6fccd1dd859, type: 2}
   - serializedVersion: 2
     m_RefCount: 264
     m_Data: {fileID: 11400000, guid: 9cb283cf06f7c3b44ad51f718b6b7fc4, type: 2}
   - serializedVersion: 2
-    m_RefCount: 1
+    m_RefCount: 0
     m_Data: {fileID: 11400000, guid: a7c74e5d1e70c8a4da0eecae91749d99, type: 2}
   - serializedVersion: 2
     m_RefCount: 1
@@ -5752,19 +5752,19 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: eeda477f3d19abe41a5208d2d84c4de7, type: 2}
   m_TileSpriteArray:
   - serializedVersion: 2
-    m_RefCount: 68
+    m_RefCount: 70
     m_Data: {fileID: -1450351977, guid: 1fa2295ed27932f4fbd652cf475db349, type: 3}
   - serializedVersion: 2
     m_RefCount: 0
     m_Data: {fileID: -1277322942, guid: fb8ec75a3d7411b48ba4709410844f2c, type: 3}
   - serializedVersion: 2
-    m_RefCount: 1
-    m_Data: {fileID: 51780964, guid: 1fa2295ed27932f4fbd652cf475db349, type: 3}
+    m_RefCount: 0
+    m_Data: {fileID: -976914435, guid: 1fa2295ed27932f4fbd652cf475db349, type: 3}
   - serializedVersion: 2
     m_RefCount: 264
     m_Data: {fileID: 90483788, guid: 1fa2295ed27932f4fbd652cf475db349, type: 3}
   - serializedVersion: 2
-    m_RefCount: 1
+    m_RefCount: 0
     m_Data: {fileID: 1469813149, guid: 1fa2295ed27932f4fbd652cf475db349, type: 3}
   - serializedVersion: 2
     m_RefCount: 1

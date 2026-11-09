@@ -7,9 +7,22 @@ using UnityEngine;
 public class LobbyCameraFollow : MonoBehaviour
 {
     [Header("追従の滑らかさ（大きいほど速く追従）")]
-    [SerializeField] private float _followSpeed = 8f;
+    [SerializeField] private float _followSpeed = 5f;
+
+    [Header("ロビー用カメラの表示サイズ（本編は14～15前後）")]
+    [SerializeField] private float _orthographicSize = 11f;
 
     private Transform _target;
+    private Camera _camera;
+
+    private void Awake()
+    {
+        _camera = GetComponent<Camera>();
+        if (_camera != null && _camera.orthographic && _orthographicSize > 0f)
+        {
+            _camera.orthographicSize = _orthographicSize;
+        }
+    }
 
     /// <summary>
     /// 追従対象を設定する
