@@ -3,36 +3,48 @@ using UnityEngine.UI;
 
 public class FPSLockManager : MonoBehaviour
 {
-    float deltaTime = 0.0f;
+    private float deltaTime = 0.0f;
     [SerializeField] private GameObject _fpsConterObject = default;
     [SerializeField] private Text _fpsText = default;
     private bool _isShowFPSCounter = false;
+
     private void Awake()
     {
-        // Vsync Count �� 0�ɂ��邱�Ƃɂ��AFPS ���Œ�ł���悤�ɂȂ�
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
+        // FrameRateManagerの設定を反映
+        FrameRateManager.RefreshCurrentSettings();
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.T) && !_isShowFPSCounter)
+        // TキーでFPSカウンターの表示/非表示切り替え
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            _isShowFPSCounter = true;
-        }else if(Input.GetKeyDown(KeyCode.T) && _isShowFPSCounter)
-        {
-            _isShowFPSCounter = false;
+            _isShowFPSCounter = !_isShowFPSCounter;
+            if (_fpsConterObject != null)
+            {
+                _fpsConterObject.SetActive(_isShowFPSCounter);
+            }
         }
-        if (_isShowFPSCounter)
+
+        // Yキーでターゲットフレームレートを切り替え (60 -> 120 -> 144 -> Unlimited -> VSync -> 30)
+        if (Input.GetKeyDown(KeyCode.Y))
         {
-            _fpsConterObject.SetActive(true);
+            FrameRateManager.ToggleNextMode();
         }
-        else
+
+        if (_isShowFPSCounter && _fpsText != null)
         {
-            _fpsConterObject.SetActive(false);
+            deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
+            float fps = deltaTime > 0.0001f ? 1.0f / deltaTime : 0f;
+
+            string modeStr = FrameRateManager.CurrentMode switch
+            {
+                FrameRateManager.FrameRateMode.VSync => "VSync",
+                FrameRateManager.FrameRateMode.Unlimited => "NoLimit",
+                _ => $"{(int)FrameRateManager.CurrentMode}cap"
+            };
+
+            _fpsText.text = $"{Mathf.Ceil(fps):F0} FPS [{modeStr}]";
         }
-        deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
-        float fps = 1.0f / deltaTime;
-        _fpsText.text = Mathf.Ceil(fps).ToString() + " FPS";
     }
 }

@@ -104,13 +104,27 @@ public class CoinControl : NetworkBehaviour
 
     private void UpMethod()
     {
-        if (_initIncreasedValue <= _maxUpValue)
+        if (_initIncreasedValue < _maxUpValue)
         {
+            // 60FPS基準の値をdeltaTimeに正しくスケールさせ、FPS非依存に上昇させる
+            float deltaMove = _increasedValue * (Time.deltaTime * 60f);
+            float remaining = _maxUpValue - _initIncreasedValue;
+            if (deltaMove > remaining)
+            {
+                deltaMove = remaining;
+            }
+
             Vector3 initPos = transform.position;
-            initPos.y += _increasedValue * (Time.deltaTime * 60f);
+            initPos.y += deltaMove;
             transform.position = initPos;
+
             _increasedValue *= Mathf.Pow(_risePowerDecay, Time.deltaTime * 60f);
-            _initIncreasedValue += _increasedValue;
+            _initIncreasedValue += deltaMove;
+
+            if (_initIncreasedValue >= _maxUpValue)
+            {
+                _coinState = CoinState.Wait;
+            }
         }
         else
         {

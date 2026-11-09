@@ -1,4 +1,4 @@
-using NUnit.Framework.Constraints;
+﻿using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -595,7 +595,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
                 _playerState.DamageKnockBackState();
             }
             //吹き飛び力を減算
-            _force -= 0.5f;
+            _force -= 25f * Time.fixedDeltaTime;
             //吹き飛びが0以下になったら実行
             if (_force <= 0)
             {
