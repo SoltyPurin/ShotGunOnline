@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 6070838229663696492}
   - component: {fileID: 1421099640677475955}
   - component: {fileID: 2452722595543393343}
+  - component: {fileID: -3801293271510525757}
+  - component: {fileID: 2864276328557466326}
   m_Layer: 0
   m_Name: StoneKanatuBan
   m_TagString: Untagged
@@ -181,3 +183,36 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _notSteppedOnSprite: {fileID: 1129622002134072899, guid: 293810fd803941643b894ffa020f01bb, type: 3}
   _steppedOnSprite: {fileID: -8996358875385928362, guid: 293810fd803941643b894ffa020f01bb, type: 3}
+--- !u!114 &-3801293271510525757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5795006471895422320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d792cd55ff7620e4ab2edbf4a5e72626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveGimmick
+  ShowTopMostFoldoutHeaderGroup: 1
+  _waveGimmickSpawn: {fileID: 2864276328557466326}
+--- !u!114 &2864276328557466326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5795006471895422320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7eeb02bdb3fd1141b0fec9723234d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveGimmickSpawn
+  _spawnAnim: {fileID: 0}
+  _spawnPoint: {fileID: 0}
+  _spawnCollider: {fileID: 1421099640677475955}
+  _spriteRenderers:
+  - {fileID: 2297230831516688604}
+  _spawnTime: 0.5
+  _colliderOnTime: 0.55

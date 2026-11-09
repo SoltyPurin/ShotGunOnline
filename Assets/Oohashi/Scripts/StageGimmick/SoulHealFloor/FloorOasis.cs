@@ -11,7 +11,7 @@ public class FloorOasis : MonoBehaviour
     private int _floorSpawnValue = 4;
 
     [SerializeField, Header("ソウル床を出す座標")]
-    private Vector2[] _floorSpawnPos;
+    private Transform[] _floorSpawnPos;
 
     [SerializeField, Header("自身のTransform座標からの相対オフセットとして扱うか")]
     private bool _useRelativeOffset = false;
@@ -49,7 +49,7 @@ public class FloorOasis : MonoBehaviour
 
     private Vector2 GetWorldSpawnPosition(int index)
     {
-        Vector2 configuredPos = _floorSpawnPos[index];
+        Vector2 configuredPos = _floorSpawnPos[index].position;
         if (_useRelativeOffset)
         {
             return (Vector2)transform.position + configuredPos;
