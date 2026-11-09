@@ -40,11 +40,21 @@ public static class LobbyStageSetupEditor
             return;
         }
 
-        // 既にロビーステージPrefabとロビープレイヤーPrefabが存在する場合は自動ポップアップしない
+        // 既にロビーステージPrefabとロビープレイヤーPrefabが存在し、PlayerSprites階層も含まれている場合はスキップ
+        GameObject existingAvatar = AssetDatabase.LoadAssetAtPath<GameObject>(LocalAvatarPrefabPath);
         if (AssetDatabase.LoadAssetAtPath<GameObject>(LobbyStagePrefabPath) != null &&
-            AssetDatabase.LoadAssetAtPath<GameObject>(LocalAvatarPrefabPath) != null &&
+            existingAvatar != null &&
+            existingAvatar.transform.Find("PlayerSprites") != null &&
             AssetDatabase.LoadAssetAtPath<GameObject>(NetworkPlayerPrefabPath) != null)
         {
+            return;
+        }
+
+        // PlayerSprites 欠落の修正時はダイアログなしで自動再生成する
+        if (existingAvatar != null && existingAvatar.transform.Find("PlayerSprites") == null)
+        {
+            BuildAll();
+            Debug.Log("[LobbyStageSetupEditor] プレイヤーの見た階層(PlayerSprites)とカメラ・移動速度設定を自動更新しました。");
             return;
         }
 
@@ -561,7 +571,7 @@ public static class LobbyStageSetupEditor
     }
 
     /// <summary>
-    /// Player.prefab から見た目に必要な子階層（SpriteManager / Shadow / PlayerLight）だけを抽出したクリーンなGameObjectを作る
+    /// NetWork Player Variant (または Player.prefab) から見た目に必要な子階層（PlayerSprites / Shadow / PlayerLight）を抽出したクリーンなGameObjectを作る
     /// </summary>
     private static GameObject CreateCleanPlayerVisualHierarchy(string name)
     {
@@ -569,7 +579,11 @@ public static class LobbyStageSetupEditor
         root.layer = 8; // Player layer
         root.tag = "Player";
 
-        GameObject basePlayerAsset = AssetDatabase.LoadAssetAtPath<GameObject>(BasePlayerPrefabPath);
+        GameObject basePlayerAsset = AssetDatabase.LoadAssetAtPath<GameObject>(NetworkPlayerVariantPath);
+        if (basePlayerAsset == null)
+        {
+            basePlayerAsset = AssetDatabase.LoadAssetAtPath<GameObject>(BasePlayerPrefabPath);
+        }
         if (basePlayerAsset == null)
         {
             Debug.LogError($"[LobbyStageSetupEditor] {BasePlayerPrefabPath} が見つかりません。");
@@ -579,7 +593,8 @@ public static class LobbyStageSetupEditor
         GameObject tempPlayer = Object.Instantiate(basePlayerAsset);
         try
         {
-            string[] visualChildNames = { "SpriteManager", "Shadow", "PlayerLight" };
+            // Player.prefab では SpriteManager は PlayerSprites の子にあるため PlayerSprites ごと複製する
+            string[] visualChildNames = { "PlayerSprites", "Shadow", "PlayerLight" };
             foreach (string childName in visualChildNames)
             {
                 Transform child = tempPlayer.transform.Find(childName);
@@ -587,6 +602,13 @@ public static class LobbyStageSetupEditor
 
                 GameObject copy = Object.Instantiate(child.gameObject, root.transform, false);
                 copy.name = childName;
+            }
+
+            // ロビーでは不要な必殺技オーラ (UltAura) を非表示化
+            Transform ultAura = root.transform.Find("PlayerSprites/UltAura");
+            if (ultAura != null)
+            {
+                ultAura.gameObject.SetActive(false);
             }
 
             // SpriteDirection や DamageMaterial 等の本編依存・NetworkBehaviour コンポーネントを除去
@@ -722,15 +744,28 @@ public static class LobbyStageSetupEditor
             // 2. 背景スプライト (BackGround) がステージ床(-2)を隠さないよう sortingOrder を -10 に下げる
             foreach (GameObject root in lobbyScene.GetRootGameObjects())
             {
-                if (root == null || !root.name.StartsWith("BackGround")) continue;
-                foreach (var sr in root.GetComponentsInChildren<SpriteRenderer>(true))
+                if (root == null) continue;
+
+                if (root.name.StartsWith("BackGround"))
                 {
-                    sr.sortingOrder = -10;
-                    EditorUtility.SetDirty(sr);
+                    foreach (var sr in root.GetComponentsInChildren<SpriteRenderer>(true))
+                    {
+                        sr.sortingOrder = -10;
+                        EditorUtility.SetDirty(sr);
+                    }
+                }
+                else if (root.name == "Canvas")
+                {
+                    // タイトル画面から流用された巨大立ち絵(ImageShadow)と上下黒帯(Black)を非表示化
+                    Transform shadow = root.transform.Find("ImageShadow");
+                    if (shadow != null) shadow.gameObject.SetActive(false);
+
+                    Transform black = root.transform.Find("Black");
+                    if (black != null) black.gameObject.SetActive(false);
                 }
             }
 
-            // 3. Main Camera に LobbyCameraFollow をアタッチ
+            // 3. Main Camera に LobbyCameraFollow をアタッチし、本編に近いカメラサイズ(11)に設定
             LobbyCameraFollow cameraFollow = null;
             foreach (GameObject root in lobbyScene.GetRootGameObjects())
             {
@@ -738,11 +773,13 @@ public static class LobbyStageSetupEditor
                 Camera cam = root.GetComponentInChildren<Camera>(true);
                 if (cam != null && cam.CompareTag("MainCamera"))
                 {
+                    cam.orthographicSize = 11f;
                     cameraFollow = cam.GetComponent<LobbyCameraFollow>();
                     if (cameraFollow == null)
                     {
                         cameraFollow = cam.gameObject.AddComponent<LobbyCameraFollow>();
                     }
+                    EditorUtility.SetDirty(cam);
                     EditorUtility.SetDirty(cam.gameObject);
                     break;
                 }

@@ -30,6 +30,24 @@ public class LobbyDiscoverUI : MonoBehaviour
     }
 
     /// <summary>
+    /// ルーム一覧パネルおよび作成・更新ボタンの表示/非表示を一括で切り替える
+    /// </summary>
+    public void SetVisible(bool visible)
+    {
+        gameObject.SetActive(visible);
+
+        if (_refreshButton != null)
+        {
+            _refreshButton.gameObject.SetActive(visible);
+        }
+
+        if (_createRoomButton != null)
+        {
+            _createRoomButton.gameObject.SetActive(visible);
+        }
+    }
+
+    /// <summary>
     /// ルーム一覧をグリッドに再描画する
     /// </summary>
     public void UpdateRoomList(List<ISessionInfo> sessions)

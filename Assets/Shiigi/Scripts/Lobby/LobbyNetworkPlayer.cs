@@ -17,7 +17,7 @@ public class LobbyNetworkPlayer : NetworkBehaviour
     public static event Action<LobbyNetworkPlayer> LocalPlayerDespawned;
 
     [Header("移動速度")]
-    [SerializeField] private float _moveSpeed = 10f;
+    [SerializeField] private float _moveSpeed = 6.5f;
 
     [Header("ビジュアル参照（未設定時は子階層から自動取得）")]
     [SerializeField] private PlayerAnimation _playerAnimation;
