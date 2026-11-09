@@ -59,14 +59,15 @@ public class CreateRoomDialogUI : LobbyViewBase
 
     protected override void Awake()
     {
+        _viewType = UIViewType.ModalDialog;
         base.Awake();
 
-        EnsureButtonSound(_confirmCreateButton, UISoundType.Enter);
-        EnsureButtonSound(_cancelDialogButton, UISoundType.Cancel);
-        EnsureButtonSound(_advancedSettingsButton, UISoundType.Enter);
+        EnsureButtonSound(_confirmCreateButton, UIButtonType.Default);
+        EnsureButtonSound(_cancelDialogButton, UIButtonType.Cancel);
+        EnsureButtonSound(_advancedSettingsButton, UIButtonType.SubAction);
     }
 
-    private static void EnsureButtonSound(Button button, UISoundType soundType)
+    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
     {
         if (button == null) return;
         var sound = button.GetComponent<UIButtonSound>();
@@ -74,7 +75,7 @@ public class CreateRoomDialogUI : LobbyViewBase
         {
             sound = button.gameObject.AddComponent<UIButtonSound>();
         }
-        sound.ClickSound = soundType;
+        sound.ButtonType = buttonType;
     }
 
     /// <summary>

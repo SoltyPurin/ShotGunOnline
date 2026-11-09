@@ -1,17 +1,25 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// 通信中・更新中などのローディングオーバーレイ表示を制御するクラス
+/// 通信中・更新中などのローディングオーバーレイ表示を制御するクラス。
+/// LobbyViewBase を継承し、LoadingOverlay タイプのフェード演出を適用します。
 /// 表示時に全画面ブロック用UIを生成し、背後UIのボタン押下を防止します。
 /// </summary>
-public class LoadingOverlayController : MonoBehaviour
+public class LoadingOverlayController : LobbyViewBase
 {
     [SerializeField] private Text _loadingContext;
     [SerializeField] private Color _blockerColor = new Color(0f, 0f, 0f, 0.5f);
 
     private GameObject _blocker;
+
+    protected override void Awake()
+    {
+        _viewType = UIViewType.LoadingOverlay;
+        base.Awake();
+    }
 
     public void SetLoadingState(bool isLoading)
     {
@@ -20,6 +28,11 @@ public class LoadingOverlayController : MonoBehaviour
 
     public void SetLoadingState(bool isLoading, string context)
     {
+        if (_loadingContext != null && context != null)
+        {
+            _loadingContext.text = context;
+        }
+
         if (isLoading)
         {
             EnsureBlocker();
@@ -29,14 +42,22 @@ public class LoadingOverlayController : MonoBehaviour
             {
                 EventSystem.current.SetSelectedGameObject(null);
             }
-        }
 
-        if (_loadingContext != null && context != null)
+            ShowAsync().Forget();
+        }
+        else
         {
-            _loadingContext.text = context;
+            CloseAsync().Forget();
         }
+    }
 
-        gameObject.SetActive(isLoading);
+    private async UniTaskVoid CloseAsync()
+    {
+        if (_blocker != null)
+        {
+            _blocker.SetActive(false);
+        }
+        await HideAsync();
     }
 
     private void EnsureBlocker()
