@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// 【デバッグ用】ショットガン連射（ラピッドファイア）機能およびデバッグUI
-/// Unityエディタまたは Development Build の場合のみ動作します。
-/// リリースビルド（製品版）では自動的に完全に無効化・破棄されます。
+/// UnityエディタまたはDevelopment Buildの場合のみ動作。
+/// リリースビルドでは自動的に無効化・破棄されます。
 /// </summary>
 [DisallowMultipleComponent]
 public class ShotgunRapidFireDebug : MonoBehaviour
@@ -50,7 +50,8 @@ public class ShotgunRapidFireDebug : MonoBehaviour
     [SerializeField] private KeyCode _toggleUIKey = KeyCode.F8;
 
     [Header("UI設定")]
-    [SerializeField] private bool _showUI = true;
+    [Tooltip("デバッグUIを表示するか（デフォルトOFF。F8キーでいつでも表示/非表示を切り替え可能）")]
+    [SerializeField] private bool _showUI = false;
     [SerializeField] private bool _isMinimized = false;
 
     // 内部タイマーとステート
@@ -104,6 +105,7 @@ public class ShotgunRapidFireDebug : MonoBehaviour
         if (IsKeyDownLegacyOrNew(_toggleUIKey, Key.F8))
         {
             _showUI = !_showUI;
+            Debug.Log($"<color=#00ff88>[ShotgunDebug]</color> デバッグUI: {(_showUI ? "表示 (ON)" : "非表示 (OFF)")}");
         }
 
         // 連射モード切替キー (F6)
@@ -266,7 +268,7 @@ public class ShotgunRapidFireDebug : MonoBehaviour
             float miniY = Mathf.Clamp(_windowRect.y, 10, Screen.height - miniH - 10);
             Rect miniRect = new Rect(miniX, miniY, miniW, miniH);
 
-            string miniTitle = _isRapidFireMode ? "🔫 連射: [ON]" : "🔫 連射: [OFF]";
+            string miniTitle = _isRapidFireMode ? "連射: [ON]" : "連射: [OFF]";
             GUIStyle miniStyle = _isRapidFireMode ? _toggleActiveStyle : _toggleNormalStyle;
             if (GUI.Button(miniRect, $"{miniTitle} (展開)", miniStyle))
             {
@@ -285,7 +287,7 @@ public class ShotgunRapidFireDebug : MonoBehaviour
     {
         // ヘッダー
         GUILayout.BeginHorizontal();
-        GUILayout.Label("🔫 [デバッグ] ショットガン連射", _headerStyle);
+        GUILayout.Label("[デバッグ] ショットガン連射", _headerStyle);
         if (GUILayout.Button("━", _miniButtonStyle, GUILayout.Width(22), GUILayout.Height(18)))
         {
             _isMinimized = true;
