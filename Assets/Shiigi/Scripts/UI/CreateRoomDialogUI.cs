@@ -31,7 +31,7 @@ public struct CreateRoomResult
     public RelayProtocol Protocol => AdvancedSettings.Protocol;
 }
 
-public class CreateRoomDialogUI : MonoBehaviour
+public class CreateRoomDialogUI : LobbyViewBase
 {
     [Header("ルーム作成用UI")]
     [SerializeField] private InputField _roomNameInputField;
@@ -57,15 +57,33 @@ public class CreateRoomDialogUI : MonoBehaviour
     private UniTaskCompletionSource<CreateRoomResult> _utcs;
     private GameObject _blocker;
 
+    protected override void Awake()
+    {
+        _viewType = UIViewType.ModalDialog;
+        base.Awake();
+
+        EnsureButtonSound(_confirmCreateButton, UIButtonType.Default);
+        EnsureButtonSound(_cancelDialogButton, UIButtonType.Cancel);
+        EnsureButtonSound(_advancedSettingsButton, UIButtonType.SubAction);
+    }
+
+    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
+    {
+        if (button == null) return;
+        var sound = button.GetComponent<UIButtonSound>();
+        if (sound == null)
+        {
+            sound = button.gameObject.AddComponent<UIButtonSound>();
+        }
+        sound.ButtonType = buttonType;
+    }
+
     /// <summary>
     /// ダイアログを表示し、ユーザーが決定またはキャンセルするまで待機
     /// </summary>
     public async UniTask<CreateRoomResult> ShowAsync()
     {
         EnsureBlocker();
-
-        // ダイアログを表示
-        gameObject.SetActive(true);
 
         // UI初期化
         _roomNameInputField.text = "";
@@ -103,8 +121,7 @@ public class CreateRoomDialogUI : MonoBehaviour
         // 決定ボタンが押されたとき
         _confirmCreateButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
-            _utcs.TrySetResult(new CreateRoomResult
+            CloseAndSetResult(new CreateRoomResult
             {
                 IsCanceled = false,
                 RoomName = _roomNameInputField.text,
@@ -113,17 +130,29 @@ public class CreateRoomDialogUI : MonoBehaviour
                 {
                     Protocol = GetProtocolFromDropdown(_protocolDropdown != null ? _protocolDropdown.value : 0)
                 }
-            });
+            }).Forget();
         });
 
         // キャンセルボタンが押されたとき
         _cancelDialogButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
-            _utcs.TrySetResult(new CreateRoomResult { IsCanceled = true });
+            CloseAndSetResult(new CreateRoomResult { IsCanceled = true }).Forget();
         });
 
+        // フェード＆ポップアニメーションを表示
+        await base.ShowAsync();
+
         return await _utcs.Task;
+    }
+
+    private async UniTaskVoid CloseAndSetResult(CreateRoomResult result)
+    {
+        if (_blocker != null)
+        {
+            _blocker.SetActive(false);
+        }
+        await HideAsync();
+        _utcs?.TrySetResult(result);
     }
 
     private void ToggleAdvancedSettings()

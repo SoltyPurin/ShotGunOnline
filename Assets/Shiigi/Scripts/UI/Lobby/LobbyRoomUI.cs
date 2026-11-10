@@ -4,7 +4,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyRoomUI : MonoBehaviour
+public class LobbyRoomUI : LobbyViewBase
 {
     [Header("ルーム情報")]
     [SerializeField] private Text _roomNameText;
@@ -25,11 +25,36 @@ public class LobbyRoomUI : MonoBehaviour
     private readonly List<LobbyPlayerEntryUI> _spawnedEntries = new List<LobbyPlayerEntryUI>();
     private bool _localIsReady;
 
-    private void Awake()
+    protected override void Awake()
     {
+        _viewType = UIViewType.DefaultWindow;
+        base.Awake();
+
         _leaveButton.onClick.AddListener(() => OnLeaveRequested?.Invoke());
         _readyButton.onClick.AddListener(() => OnReadyToggleRequested?.Invoke());
-        _startButton.onClick.AddListener(() => OnStartGameRequested?.Invoke());
+        _startButton.onClick.AddListener(() =>
+        {
+            if (_startButton != null)
+            {
+                _startButton.interactable = false;
+            }
+            OnStartGameRequested?.Invoke();
+        });
+
+        EnsureButtonSound(_leaveButton, UIButtonType.Cancel);
+        EnsureButtonSound(_readyButton, UIButtonType.Default);
+        EnsureButtonSound(_startButton, UIButtonType.Default);
+    }
+
+    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
+    {
+        if (button == null) return;
+        var s = button.GetComponent<UIButtonSound>();
+        if (s == null)
+        {
+            s = button.gameObject.AddComponent<UIButtonSound>();
+        }
+        s.ButtonType = buttonType;
     }
 
     public void Refresh(ISession session)
