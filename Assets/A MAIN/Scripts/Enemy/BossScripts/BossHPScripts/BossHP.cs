@@ -98,8 +98,11 @@ public class BossHP : EnemyTakeDamage
         if (!_isAnimeGot)
         {
             _bossHPGage = GameObject.FindGameObjectWithTag("BossHPGageUI");
-            _hPGageAnimeCon = _bossHPGage.GetComponent<BossHPGageAnimeCon>();
-            _isAnimeGot = true;
+            if (_bossHPGage != null)
+            {
+                _hPGageAnimeCon = _bossHPGage.GetComponent<BossHPGageAnimeCon>();
+                _isAnimeGot = true;
+            }
         }
         else
         {
@@ -172,9 +175,17 @@ public class BossHP : EnemyTakeDamage
     [ClientRpc]
     private void BossTakeDamageEffectClientRpc()
     {
-        _damageAnimator.SetTrigger("Damage");
-        _hitFlash.DoFlash();
-        _hPGageAnimeCon.HitGageAnime();
+        if (_damageAnimator != null) _damageAnimator.SetTrigger("Damage");
+        if (_hitFlash != null) _hitFlash.DoFlash();
+        if (_hPGageAnimeCon != null)
+        {
+            _hPGageAnimeCon.HitGageAnime();
+        }
+        else if (_bossHPGage != null)
+        {
+            _hPGageAnimeCon = _bossHPGage.GetComponent<BossHPGageAnimeCon>();
+            if (_hPGageAnimeCon != null) _hPGageAnimeCon.HitGageAnime();
+        }
     }
     public override void FallDamage()
     {

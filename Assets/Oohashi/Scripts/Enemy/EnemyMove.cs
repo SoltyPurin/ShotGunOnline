@@ -160,7 +160,6 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
             _playerObject = nearestPlayer;
             _playerStateManager = _playerObject.GetComponent<PlayerStateManager>();
             _target = _playerObject.transform;
-            Debug.Log("ターゲットは" + _playerObject.name);
         }
     }
 

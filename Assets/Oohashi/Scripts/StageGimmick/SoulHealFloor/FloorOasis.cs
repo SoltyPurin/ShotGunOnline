@@ -42,13 +42,44 @@ public class FloorOasis : MonoBehaviour
     private void TrySpawnInitialFloor()
     {
         if (_initialFloorSpawned || !IsServerAuthority) return;
+        if (!HasValidSpawnPosition() || _soulFloorObject == null) return;
 
         _initialFloorSpawned = true;
         SpawnNextFloor();
     }
 
+    private bool HasValidSpawnPosition()
+    {
+        if (_floorSpawnPos == null || _floorSpawnPos.Length == 0) return false;
+        for (int i = 0; i < _floorSpawnPos.Length; i++)
+        {
+            if (_floorSpawnPos[i] != null) return true;
+        }
+        return false;
+    }
+
+    private int GetNextValidSpawnIndex(int startIndex)
+    {
+        if (!HasValidSpawnPosition()) return -1;
+        int idx = startIndex;
+        for (int i = 0; i < _floorSpawnPos.Length; i++)
+        {
+            if (idx >= 0 && idx < _floorSpawnPos.Length && _floorSpawnPos[idx] != null)
+            {
+                return idx;
+            }
+            idx = (idx + 1) % _floorSpawnPos.Length;
+        }
+        return -1;
+    }
+
     private Vector2 GetWorldSpawnPosition(int index)
     {
+        if (_floorSpawnPos == null || index < 0 || index >= _floorSpawnPos.Length || _floorSpawnPos[index] == null)
+        {
+            return transform.position;
+        }
+
         Vector2 configuredPos = _floorSpawnPos[index].position;
         if (_useRelativeOffset)
         {
@@ -59,7 +90,10 @@ public class FloorOasis : MonoBehaviour
 
     private void SpawnNextFloor()
     {
-        if (_floorSpawnPos == null || _floorSpawnPos.Length == 0 || _soulFloorObject == null) return;
+        if (!HasValidSpawnPosition() || _soulFloorObject == null) return;
+
+        _currentObservationIndex = GetNextValidSpawnIndex(_currentObservationIndex);
+        if (_currentObservationIndex < 0) return;
 
         Vector2 spawnPos = GetWorldSpawnPosition(_currentObservationIndex);
         _currentFloorObject = Instantiate(_soulFloorObject, spawnPos, Quaternion.identity);
@@ -93,13 +127,13 @@ public class FloorOasis : MonoBehaviour
     {
         if (!IsServerAuthority) return;
 
+        if (!HasValidSpawnPosition() || _soulFloorObject == null) return;
+
         if (!_initialFloorSpawned)
         {
             TrySpawnInitialFloor();
             return;
         }
-
-        if (_floorSpawnPos == null || _floorSpawnPos.Length == 0 || _soulFloorObject == null) return;
 
         _initWaitTime += Time.fixedDeltaTime;
 
@@ -115,11 +149,9 @@ public class FloorOasis : MonoBehaviour
                 }
             }
 
-            _currentObservationIndex++;
-            if (_currentObservationIndex >= _floorSpawnPos.Length)
-            {
-                _currentObservationIndex = 0;
-            }
+            int nextIndex = (_currentObservationIndex + 1) % _floorSpawnPos.Length;
+            _currentObservationIndex = GetNextValidSpawnIndex(nextIndex);
+            if (_currentObservationIndex < 0) return;
 
             Vector2 nextPos = GetWorldSpawnPosition(_currentObservationIndex);
             GameObject floor = Instantiate(_soulFloorObject, nextPos, Quaternion.identity);
@@ -142,6 +174,7 @@ public class FloorOasis : MonoBehaviour
         Gizmos.color = Color.yellow;
         for (int i = 0; i < _floorSpawnPos.Length; i++)
         {
+            if (_floorSpawnPos[i] == null) continue;
             Vector2 p = GetWorldSpawnPosition(i);
             Gizmos.DrawWireSphere(p, 0.7f);
         }
