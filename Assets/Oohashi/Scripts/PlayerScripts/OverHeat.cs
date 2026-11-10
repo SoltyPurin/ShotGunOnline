@@ -3,25 +3,25 @@ using UnityEngine;
 
 public class OverHeat : MonoBehaviour
 {
-    [SerializeField, Header("ƒvƒŒƒCƒ„[‚Ì“ü—ÍƒXƒe[ƒg‚ğ•ÏX‚·‚é‚½‚ß‚ÌƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å…¥åŠ›ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰æ›´ã™ã‚‹ãŸã‚ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private InputPlayerShot _playerInput = default;
-    [SerializeField, Header("ƒI[ƒo[ƒq[ƒg‚Ü‚Å‚ÌÅ‘å’l")]
+    [SerializeField, Header("ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã¾ã§ã®æœ€å¤§å€¤")]
     private float _maxHeatValue = 9;
     public float MaxHeatValue
     {
         get { return _maxHeatValue; }
     }
-    [SerializeField, Header("ƒIƒoƒqŒ¸Z‚ÉæZ‚·‚é’l")]
+    [SerializeField, Header("ã‚ªãƒãƒ’æ¸›ç®—ã«ä¹—ç®—ã™ã‚‹å€¤")]
     private float _substructionMultiplier = 1.0f;
-    [SerializeField, Header("Š®‘SƒI[ƒo[ƒq[ƒg‚µ‚½‚ÌŒ¸Z‚ÉæZ‚·‚é’l")]
+    [SerializeField, Header("å®Œå…¨ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã—ãŸæ™‚ã®æ¸›ç®—ã«ä¹—ç®—ã™ã‚‹å€¤")]
     private float _overHeatSubstructionMultiplier = 2.0f;
-    [SerializeField, Header("ƒIƒoƒq‚ÌƒAƒjƒ[ƒVƒ‡ƒ“")]
+    [SerializeField, Header("ã‚ªãƒãƒ’ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³")]
     private Animator _overHeatAnimator = default;
-    [SerializeField,Header("Œø‰Ê‰¹Ä¶")]
+    [SerializeField,Header("åŠ¹æœéŸ³å†ç”Ÿ")]
     private PlayerSEControlScript _seScript = default;
-    //‘O‚ÌƒIƒoƒqŒ¸Z’l‚ğ•Û‘¶
+    //å‰ã®ã‚ªãƒãƒ’æ¸›ç®—å€¤ã‚’ä¿å­˜
     private float _tempMultiplier = 0.0f;
-    //Œ»İ‚ÌƒIƒoƒq‚Ì’l
+    //ç¾åœ¨ã®ã‚ªãƒãƒ’ã®å€¤
     private float _initHeatGage = 0;
     public float InitHeatGageValue
     {
@@ -33,13 +33,13 @@ public class OverHeat : MonoBehaviour
     {
         get { return _complementValue; }
     }
-    //ƒI[ƒo[ƒq[ƒg’†‚©”Û‚©
+    //ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆä¸­ã‹å¦ã‹
     private bool _isOverHeating = false;
-    //‘Å‚Â‚½‚Ñ‚Éƒvƒ‰ƒX1‚µ‚ÄƒQ[ƒW‚É’Ç‰ÁB
-    //í‚ÉƒI[ƒo[ƒq[ƒgƒQ[ƒW‚ÍŒ¸‚é‚ªƒ`ƒƒ[ƒWƒVƒ‡ƒbƒg‚ÍƒN[ƒ‹ƒ^ƒCƒ€‚à‚ ‚é‚Ì‚ÅŠî–{ƒI[ƒo[ƒq[ƒg‚µ‚È‚¢
+    //æ‰“ã¤ãŸã³ã«ãƒ—ãƒ©ã‚¹1ã—ã¦ã‚²ãƒ¼ã‚¸ã«è¿½åŠ ã€‚
+    //å¸¸ã«ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã‚²ãƒ¼ã‚¸ã¯æ¸›ã‚‹ãŒãƒãƒ£ãƒ¼ã‚¸ã‚·ãƒ§ãƒƒãƒˆã¯ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ã‚‚ã‚ã‚‹ã®ã§åŸºæœ¬ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã—ãªã„
 
     /// <summary>
-    /// ƒI[ƒo[ƒq[ƒgƒQ[ƒW‚É+1‚·‚é
+    /// ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã‚²ãƒ¼ã‚¸ã«+1ã™ã‚‹
     /// </summary>
     public void ShotCountPlus()
     {
@@ -49,45 +49,70 @@ public class OverHeat : MonoBehaviour
     private void FixedUpdate()
     {
         _complementValue = _initHeatGage / _maxHeatValue;
-        //ƒIƒoƒqƒQ[ƒW‚ª0ˆÈã‚Ì‚ÉŒ¸Z‚µ‚Ä‚¢‚­
+        //ã‚ªãƒãƒ’ã‚²ãƒ¼ã‚¸ãŒ0ä»¥ä¸Šã®æ™‚ã«æ¸›ç®—ã—ã¦ã„ã
         if (_initHeatGage >= 0)
         {
             _initHeatGage -= Time.fixedDeltaTime * _substructionMultiplier;
         }
 
-        //Œ»İ‚ÌƒIƒoƒqƒQ[ƒW‚ªÅ‘å’lˆÈã‚É‚È‚Á‚Ä‚È‚¨‚©‚ÂƒIƒoƒq’†‚Å‚È‚¢‚Æ‚«‚ÉÀs
+        //ç¾åœ¨ã®ã‚ªãƒãƒ’ã‚²ãƒ¼ã‚¸ãŒæœ€å¤§å€¤ä»¥ä¸Šã«ãªã£ã¦ãªãŠã‹ã¤ã‚ªãƒãƒ’ä¸­ã§ãªã„ã¨ãã«å®Ÿè¡Œ
         if(_initHeatGage >= _maxHeatValue && !_isOverHeating)
         {
-            //ƒI[ƒo[ƒq[ƒg‚Ìƒtƒ‰ƒO‚ğON
+            //ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã®ãƒ•ãƒ©ã‚°ã‚’ON
             _isOverHeating = true;
-            //ƒXƒe[ƒg‚ğƒIƒo[ƒq[ƒg‚É‚·‚é
+            //ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã‚ªãƒãƒ¼ãƒ’ãƒ¼ãƒˆã«ã™ã‚‹
             _playerInput.ShootState = ShootState.OverHeat;
-            //-----------‚±‚±‚©‚çŸ‚ÌƒRƒƒ“ƒgƒAƒEƒg‚Ü‚Å‚ÅƒQ[ƒWŒ¸Z‚Ì’l‚ğ“ü‚ê‘Ö‚¦‚é
+            //-----------ã“ã“ã‹ã‚‰æ¬¡ã®ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã¾ã§ã§ã‚²ãƒ¼ã‚¸æ¸›ç®—ã®å€¤ã‚’å…¥ã‚Œæ›¿ãˆã‚‹
             _tempMultiplier = _substructionMultiplier;
             _substructionMultiplier = _overHeatSubstructionMultiplier;
             _overHeatSubstructionMultiplier = _tempMultiplier;
             //-----------
-            //ƒIƒoƒq‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶
+            //ã‚ªãƒãƒ’ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿ
             _overHeatAnimator.SetTrigger("Start");
-            //ƒIƒoƒq‚ÌŒø‰Ê‰¹‚ğÄ¶
+            //ã‚ªãƒãƒ’ã®åŠ¹æœéŸ³ã‚’å†ç”Ÿ
             _seScript.PlayTheOverHeat();
         }
-        //ƒIƒoƒq‚ÌƒQ[ƒW‚ª0ˆÈ‰º‚É‚È‚Á‚Ä‚È‚¨‚©‚ÂƒIƒoƒq’†‚Å‡‚Á‚½ê‡Às
+        //ã‚ªãƒãƒ’ã®ã‚²ãƒ¼ã‚¸ãŒ0ä»¥ä¸‹ã«ãªã£ã¦ãªãŠã‹ã¤ã‚ªãƒãƒ’ä¸­ã§åˆã£ãŸå ´åˆå®Ÿè¡Œ
         else if(_initHeatGage <= 0 && _isOverHeating)
         {
-            //ƒXƒe[ƒg‚ğËŒ‚‰Â”\‚É•Ï‚¦‚é
+            //ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å°„æ’ƒå¯èƒ½ã«å¤‰ãˆã‚‹
             _playerInput.ShootState = ShootState.CanShoot;
-            //-----------‚±‚±‚©‚çŸ‚ÌƒRƒƒ“ƒgƒAƒEƒg‚Ü‚Å‚ÅƒQ[ƒWŒ¸Z‚Ì’l‚ğ“ü‚ê‘Ö‚¦‚é
+            //-----------ã“ã“ã‹ã‚‰æ¬¡ã®ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã¾ã§ã§ã‚²ãƒ¼ã‚¸æ¸›ç®—ã®å€¤ã‚’å…¥ã‚Œæ›¿ãˆã‚‹
             _tempMultiplier = _substructionMultiplier;
             _substructionMultiplier = _overHeatSubstructionMultiplier;
             _overHeatSubstructionMultiplier = _tempMultiplier;
             //-----------
-            //ƒI[ƒo[ƒq[ƒg‚Ìƒtƒ‰ƒO‚ğOFF
+            //ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã®ãƒ•ãƒ©ã‚°ã‚’OFF
             _isOverHeating = false;
-            //ƒIƒoƒq‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒgƒŠƒK[‚ğƒŠƒZƒbƒg
+            //ã‚ªãƒãƒ’ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒˆãƒªã‚¬ãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆ
             _overHeatAnimator.ResetTrigger("Start");
-            //ƒIƒoƒq‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ÌWait‚ğÄ¶
+            //ã‚ªãƒãƒ’ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®Waitã‚’å†ç”Ÿ
             _overHeatAnimator.SetTrigger("Wait");
+        }
+    }
+
+    /// <summary>
+    /// ã‚ªãƒ¼ãƒãƒ¼ãƒ’ãƒ¼ãƒˆã‚²ãƒ¼ã‚¸ãŠã‚ˆã³çŠ¶æ…‹ã‚’å³åº§ã«ãƒªã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ãƒ»å¤–éƒ¨åˆ¶å¾¡ç”¨ï¼‰
+    /// </summary>
+    public void ResetOverHeat()
+    {
+        _initHeatGage = 0f;
+        if (_isOverHeating)
+        {
+            _isOverHeating = false;
+            if (_playerInput != null)
+            {
+                _playerInput.ShootState = ShootState.CanShoot;
+            }
+            if (_tempMultiplier > 0f)
+            {
+                _substructionMultiplier = _tempMultiplier;
+            }
+            if (_overHeatAnimator != null)
+            {
+                _overHeatAnimator.ResetTrigger("Start");
+                _overHeatAnimator.SetTrigger("Wait");
+            }
         }
     }
 }
