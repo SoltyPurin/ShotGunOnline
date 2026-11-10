@@ -23,10 +23,15 @@ public class LoadingOverlayController : LobbyViewBase
 
     public void SetLoadingState(bool isLoading)
     {
-        SetLoadingState(isLoading, null);
+        SetLoadingState(isLoading, null, false);
     }
 
     public void SetLoadingState(bool isLoading, string context)
+    {
+        SetLoadingState(isLoading, context, false);
+    }
+
+    public void SetLoadingState(bool isLoading, string context, bool immediate)
     {
         if (_loadingContext != null && context != null)
         {
@@ -43,11 +48,29 @@ public class LoadingOverlayController : LobbyViewBase
                 EventSystem.current.SetSelectedGameObject(null);
             }
 
-            ShowAsync().Forget();
+            if (immediate)
+            {
+                SetVisibleInstant(true);
+            }
+            else
+            {
+                ShowAsync().Forget();
+            }
         }
         else
         {
-            CloseAsync().Forget();
+            if (immediate)
+            {
+                if (_blocker != null)
+                {
+                    _blocker.SetActive(false);
+                }
+                SetVisibleInstant(false);
+            }
+            else
+            {
+                CloseAsync().Forget();
+            }
         }
     }
 

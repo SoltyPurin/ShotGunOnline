@@ -28,7 +28,8 @@ public class NetworkPlayerSpawner
 
         foreach (var netObj in spawnManager.SpawnedObjectsList)
         {
-            if (netObj != null && netObj.IsPlayerObject)
+            // 本編用プレイヤー（PlayerStateManager所持）のみを対象とする（ロビー用プレイヤー等の残骸を除外）
+            if (netObj != null && netObj.IsPlayerObject && netObj.GetComponent<PlayerStateManager>() != null)
             {
                 result.Add(netObj);
             }
@@ -69,12 +70,22 @@ public class NetworkPlayerSpawner
 
         foreach (var client in clients)
         {
-            // 既にそのクライアント用の PlayerObject が存在する場合はスキップ（重複防止）
-            if (client.PlayerObject != null)
+            // 本編用プレイヤー（PlayerStateManager所持）が既に存在するか確認
+            bool hasValidInGamePlayer = client.PlayerObject != null &&
+                                        client.PlayerObject.GetComponent<PlayerStateManager>() != null;
+
+            if (hasValidInGamePlayer)
             {
-                Debug.Log($"[MP_GameManager] ClientId {client.ClientId} のプレイヤーは既にスポーン済みです。");
+                Debug.Log($"[MP_GameManager] ClientId {client.ClientId} の本編プレイヤーは既にスポーン済みです。");
                 RegisterPlayer(client.PlayerObject);
                 continue;
+            }
+
+            // ロビー用の古いPlayerObject（LobbyNetworkPlayer等）が残っている場合はデスポーンして除去
+            if (client.PlayerObject != null && client.PlayerObject.IsSpawned)
+            {
+                Debug.Log($"[MP_GameManager] ClientId {client.ClientId} のロビー用プレイヤーをデスポーンします。");
+                client.PlayerObject.Despawn(true);
             }
 
             Transform spawnPoint = spawnPoints != null ? spawnPoints.GetSpawnPoint(index) : null;
@@ -88,7 +99,7 @@ public class NetworkPlayerSpawner
             netObj.SpawnAsPlayerObject(client.ClientId, destroyWithScene: true);
             RegisterPlayer(netObj);
 
-            Debug.Log($"[MP_GameManager] ClientId {client.ClientId} のプレイヤーをスポーンしました (位置: {pos})");
+            Debug.Log($"[MP_GameManager] ClientId {client.ClientId} の本編プレイヤーをスポーンしました (位置: {pos})");
             index++;
         }
     }

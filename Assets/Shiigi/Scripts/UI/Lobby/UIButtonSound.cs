@@ -152,7 +152,6 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler
         if (_animCts != null)
         {
             _animCts.Cancel();
-            _animCts.Dispose();
             _animCts = null;
         }
 

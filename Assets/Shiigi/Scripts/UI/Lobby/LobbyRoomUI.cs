@@ -32,7 +32,14 @@ public class LobbyRoomUI : LobbyViewBase
 
         _leaveButton.onClick.AddListener(() => OnLeaveRequested?.Invoke());
         _readyButton.onClick.AddListener(() => OnReadyToggleRequested?.Invoke());
-        _startButton.onClick.AddListener(() => OnStartGameRequested?.Invoke());
+        _startButton.onClick.AddListener(() =>
+        {
+            if (_startButton != null)
+            {
+                _startButton.interactable = false;
+            }
+            OnStartGameRequested?.Invoke();
+        });
 
         EnsureButtonSound(_leaveButton, UIButtonType.Cancel);
         EnsureButtonSound(_readyButton, UIButtonType.Default);

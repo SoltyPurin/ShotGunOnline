@@ -169,11 +169,11 @@ public class LobbyUIManager : MonoBehaviour
         // Connectingステートの場合はローディング表示を出す
         if (isConnecting)
         {
-            _loadingOverlay.SetLoadingState(true, "通信中...");
+            _loadingOverlay.SetLoadingState(true, "通信中...", immediate);
         }
         else
         {
-            _loadingOverlay.SetLoadingState(false);
+            _loadingOverlay.SetLoadingState(false, null, immediate);
         }
 
         // メニュー表示中または通信中は集会所キャラの移動入力をブロックする
@@ -468,18 +468,44 @@ public class LobbyUIManager : MonoBehaviour
         await _sessionService.SetReadyStatusAsync(!isReady);
     }
 
+    private bool _isStartingGame;
+
     /// <summary>
     /// ホストがゲームを開始する処理
     /// </summary>
     private void StartGame()
     {
-        // ホスト自身はネットワーク通知を待たず、ボタン押下時に即座に表示する
-        TransitionTo(LobbyUIState.Connecting);
-        _sessionManager.StartMultiplayGame();
+        if (_isStartingGame) return;
+        _isStartingGame = true;
+        StartGameAsync().Forget();
+    }
+
+    private async UniTaskVoid StartGameAsync()
+    {
+        // EventSystem の OnPointerClick イベント処理ループ中（および UIButtonSound のクリック処理前）に
+        // 同一コールスタック上でボタン自身の親パネル非アクティブ化・EventSystem選択解除・LoadScene を
+        // 同時実行するとエディタ側で競合・フリーズするため、まず1フレーム待ってイベントループを抜ける
+        await UniTask.Yield(PlayerLoopTiming.Update);
+        if (this == null) return;
+
+        TransitionTo(LobbyUIState.Connecting, immediate: true);
+
+        if (_sessionManager != null)
+        {
+            _sessionManager.StartMultiplayGame();
+        }
     }
 
     private void ShowGameStarting()
     {
-        TransitionTo(LobbyUIState.Connecting);
+        ShowGameStartingAsync().Forget();
+    }
+
+    private async UniTaskVoid ShowGameStartingAsync()
+    {
+        await UniTask.Yield(PlayerLoopTiming.Update);
+        if (this == null) return;
+
+        TransitionTo(LobbyUIState.Connecting, immediate: true);
     }
 }

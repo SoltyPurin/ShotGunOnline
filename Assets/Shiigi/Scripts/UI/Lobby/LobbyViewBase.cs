@@ -83,16 +83,23 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        _rectTransform = GetComponent<RectTransform>();
-        _canvasGroup = GetComponent<CanvasGroup>();
-        if (_canvasGroup == null)
-        {
-            _canvasGroup = gameObject.AddComponent<CanvasGroup>();
-        }
+        EnsureComponents();
 
         if (_autoAttachButtonSounds)
         {
             AutoAttachButtonSounds();
+        }
+    }
+
+    private void EnsureComponents()
+    {
+        if (_rectTransform == null)
+        {
+            _rectTransform = GetComponent<RectTransform>();
+        }
+        if (_canvasGroup == null && !TryGetComponent(out _canvasGroup))
+        {
+            _canvasGroup = gameObject.AddComponent<CanvasGroup>();
         }
     }
 
@@ -221,14 +228,7 @@ public abstract class LobbyViewBase : MonoBehaviour
         CancelCurrentAnimation();
         _isVisible = visible;
 
-        if (_canvasGroup == null)
-        {
-            _canvasGroup = GetComponent<CanvasGroup>() ?? gameObject.AddComponent<CanvasGroup>();
-        }
-        if (_rectTransform == null)
-        {
-            _rectTransform = GetComponent<RectTransform>();
-        }
+        EnsureComponents();
 
         _canvasGroup.alpha = visible ? 1f : 0f;
         _canvasGroup.interactable = visible;
@@ -259,7 +259,6 @@ public abstract class LobbyViewBase : MonoBehaviour
         if (_animCts != null)
         {
             _animCts.Cancel();
-            _animCts.Dispose();
             _animCts = null;
         }
     }
