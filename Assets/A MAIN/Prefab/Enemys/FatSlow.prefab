@@ -222,12 +222,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _modifyValue: 0.25
   _damageMultiplier: 500
   _minDamage: 200
   _explosionMultiplier: 1000
   _deathTimeMultiplier: 2.5
   _enemyMove: {fileID: 7770524671479040250}
   _hpUI: {fileID: 5391267963959678444}
+  _shouldDropCoin: 1
   _deathObject: {fileID: 4077739663397625596, guid: bca7cc0fd6d9d3e48afc6799969a1ebe, type: 3}
   _damageAnimator: {fileID: 3966911391919814419}
   _damageMaterial: {fileID: 4069649930399869321}
