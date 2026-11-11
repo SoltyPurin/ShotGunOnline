@@ -23,6 +23,9 @@ public class BossHP : EnemyTakeDamage
     [SerializeField, Header("BossのState管理のスクリプト")]
     private BossStateManagement _stateManagement = default;
 
+    private BossJumpAtack _jumpAtack = default;
+    private BossMachPunch _machPunch = default;
+
     [SerializeField, Header("雑魚敵召喚のスクリプト")]
     private SummonEnemy _summonEnemy = default;
 
@@ -67,13 +70,15 @@ public class BossHP : EnemyTakeDamage
     internal bool _secondForm = false;
     internal bool _isInvincible = true;
     private bool _isAnimeGot = false;
-    private bool canDieState = false;
 
     #endregion
 
     public override void Start()
     {
         base.Start();
+
+        _jumpAtack = GetComponent<BossJumpAtack>();
+        _machPunch = GetComponent<BossMachPunch>();
 
         Scene currentScene = SceneManager.GetActiveScene();
 
@@ -113,62 +118,31 @@ public class BossHP : EnemyTakeDamage
 
     public override void SetMirrorDamage(float chargeTime)
     {
+        if (!IsServer || _isDead) return;
+
         float damage = chargeTime * _damageMultiplier;
         damage = Mathf.Max(damage, _minDamage);
         _enemyHP.Value = (_enemyHP.Value - (int)damage);
         _playTheSEManager.PlayEnemyDamageSound();
         if (_enemyHP.Value <= 0)
         {
-            StartCoroutine(DeathProtocol(chargeTime));
+            DeadBossProcess();
         }
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
-        if (!IsServer) //鯖以外は即リターン
-        {
-            return;
-        }
-        if (_isInvincible)//無敵状態なら即リターン
-        {
-            return;
-        }
+        if (!IsServer || _isDead) return;
+        if (_isInvincible) return;
+
         BossTakeDamageEffectClientRpc();
-            //_damageAnimator.SetTrigger("Damage");
-            //_hitFlash.DoFlash();
-            //    _hPGageAnimeCon.HitGageAnime();
-                if (state == PlayerState.Ultimate)
-                {
-                    float damage = _ultMultiplier;
-                    _enemyHP.Value = (_enemyHP.Value - (int)damage);
 
-                    if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
-                && _stateManagement._currentState != BossStateManagement.BossState.Punch)
-                    {
-                        canDieState = true;
-                    }
+        float damage = (state == PlayerState.Ultimate) ? _ultMultiplier : Mathf.Max(chargeTime * _damageMultiplier, _minDamage);
+        _enemyHP.Value = (_enemyHP.Value - (int)damage);
 
-                    if (_enemyHP.Value <= 0 && canDieState)
-                    {
-                        DeadBossProcess();
-                    }
-                }
-                else
-                {
-                    float damage = chargeTime * _damageMultiplier;
-                    damage = Mathf.Max(damage, _minDamage);
-                    _enemyHP.Value = (_enemyHP.Value - (int)damage);
-
-                    if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
-                && _stateManagement._currentState != BossStateManagement.BossState.Punch)
-                    {
-                        canDieState = true;
-                    }
-
-                    if (_enemyHP.Value <= 0 && canDieState)
-                    {
-                        DeadBossProcess();
-                    }
-                }
+        if (_enemyHP.Value <= 0)
+        {
+            DeadBossProcess();
+        }
     }
 
 
@@ -208,16 +182,12 @@ public class BossHP : EnemyTakeDamage
 
     public override void SetExplosionDamgage(float chargeTime)
     {
+        if (!IsServer || _isDead) return;
+
         float damage = _explosionMultiplier;
         _enemyHP.Value = (_enemyHP.Value - (int)damage);
 
-        if (_stateManagement._currentState != BossStateManagement.BossState.JumpAtack
-            && _stateManagement._currentState != BossStateManagement.BossState.Punch)
-        {
-            canDieState = true;
-        }
-
-        if (_enemyHP.Value <= 0 && canDieState)
+        if (_enemyHP.Value <= 0)
         {
             DeadBossProcess();
         }
@@ -291,23 +261,41 @@ public class BossHP : EnemyTakeDamage
     [ClientRpc]
     private void DeactivateBossClientRpc()
     {
-        _stateManagement.enabled = false;
-        _summonEnemy.enabled = false;
-        _bossEffects.SetActive(false);
+        if (_jumpAtack != null) _jumpAtack.ResetJumpAttackState();
+        if (_machPunch != null) _machPunch.ResetPunchState();
 
-        _animeManager.ResetAllTriggers();
-        _bossAnimator.SetBool("isDead", true);
+        if (_stateManagement != null)
+        {
+            _stateManagement.SetBossState(BossStateManagement.BossState.Death);
+            _stateManagement.enabled = false;
+        }
+        if (_summonEnemy != null) _summonEnemy.enabled = false;
+        if (_bossEffects != null) _bossEffects.SetActive(false);
+
+        if (_animeManager != null) _animeManager.ResetAllTriggers();
+        if (_bossAnimator != null) _bossAnimator.SetBool("isDead", true);
     }
 
     private void DeadBossProcess()
     {
+        if (_isDead) return;
+        _isDead = true;
+
+        if (_jumpAtack != null) _jumpAtack.ResetJumpAttackState();
+        if (_machPunch != null) _machPunch.ResetPunchState();
+        if (_stateManagement != null)
+        {
+            _stateManagement.SetBossState(BossStateManagement.BossState.Death);
+            _stateManagement.enabled = false;
+        }
+
         DeactivateBossClientRpc();
-        _collider.isTrigger = true;
+        if (_collider != null) _collider.isTrigger = true;
         if (_deathTimeline != null)
         {
             _deathTimeline.SetActive(true);
         }
-        _shadow.SetActive(false);
+        if (_shadow != null) _shadow.SetActive(false);
         StartCoroutine(DeathProtocol(1.0f));
     }
 }
