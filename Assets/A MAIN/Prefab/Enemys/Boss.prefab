@@ -764,7 +764,6 @@ GameObject:
   - component: {fileID: 8780277872402020311}
   - component: {fileID: 3288765638726778936}
   - component: {fileID: 5385504464020250953}
-  - component: {fileID: 5076583061705950722}
   m_Layer: 0
   m_Name: SecondAula (2)
   m_TagString: Untagged
@@ -868,26 +867,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &5076583061705950722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1912156772893483337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkAnimatorExpanded: 0
-  AuthorityMode: 0
-  m_Animator: {fileID: 3288765638726778936}
-  TransitionStateInfoList: []
-  AnimatorParameterEntries:
-    ParameterEntries: []
-  AnimatorParametersExpanded: 0
 --- !u!1 &1991681381894418910
 GameObject:
   m_ObjectHideFlags: 0
@@ -969,7 +948,6 @@ GameObject:
   - component: {fileID: 5431098809528654282}
   - component: {fileID: 8994824760185223296}
   - component: {fileID: 2333821008831355912}
-  - component: {fileID: 5613575282328031832}
   m_Layer: 0
   m_Name: DustFromJumpAttack
   m_TagString: Untagged
@@ -1086,26 +1064,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isJumpDust: 1
---- !u!114 &5613575282328031832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2884795811750620419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkAnimatorExpanded: 0
-  AuthorityMode: 0
-  m_Animator: {fileID: 8994824760185223296}
-  TransitionStateInfoList: []
-  AnimatorParameterEntries:
-    ParameterEntries: []
-  AnimatorParametersExpanded: 0
 --- !u!1 &3144455058963434899
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,7 +1231,6 @@ GameObject:
   - component: {fileID: 6073697316532560033}
   - component: {fileID: 3837733939572568088}
   - component: {fileID: 6213929450474029607}
-  - component: {fileID: 4788364952129349705}
   m_Layer: 0
   m_Name: SecondAula
   m_TagString: Untagged
@@ -1377,26 +1334,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &4788364952129349705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5119598869106311996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkAnimatorExpanded: 0
-  AuthorityMode: 0
-  m_Animator: {fileID: 3837733939572568088}
-  TransitionStateInfoList: []
-  AnimatorParameterEntries:
-    ParameterEntries: []
-  AnimatorParametersExpanded: 0
 --- !u!1 &5372191958188824440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1914,7 +1851,6 @@ GameObject:
   - component: {fileID: 3723192962551003597}
   - component: {fileID: 8332838919019849434}
   - component: {fileID: 1331667530610737987}
-  - component: {fileID: 3237964284983744779}
   m_Layer: 0
   m_Name: SecondAula (1)
   m_TagString: Untagged
@@ -2018,26 +1954,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &3237964284983744779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6600155313467951033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkAnimatorExpanded: 0
-  AuthorityMode: 0
-  m_Animator: {fileID: 8332838919019849434}
-  TransitionStateInfoList: []
-  AnimatorParameterEntries:
-    ParameterEntries: []
-  AnimatorParametersExpanded: 0
 --- !u!1 &9011707360181079306
 GameObject:
   m_ObjectHideFlags: 0

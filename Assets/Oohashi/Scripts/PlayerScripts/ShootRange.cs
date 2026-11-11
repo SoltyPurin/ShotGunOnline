@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class ShootRange : MonoBehaviour
@@ -238,12 +239,36 @@ public class ShootRange : MonoBehaviour
     }
 
     /// <summary>
+    /// 対象オブジェクトがネットワーク上で有効かつ生存しているか検証（Despawn済み・死亡後の死体撃ちRPCを防止）
+    /// </summary>
+    private bool IsTargetValid(GameObject hitObject, EnemyTakeDamage takeDamage = null)
+    {
+        if (hitObject == null) return false;
+
+        // ネットワークオブジェクトがすでに Despawn 済み、または破棄中の場合はRPC送信しない
+        if (hitObject.TryGetComponent<NetworkObject>(out var netObj) && !netObj.IsSpawned)
+        {
+            return false;
+        }
+
+        // すでにHP0（死亡演出・Despawn待ちコルーチン中）の敵にはRPC送信しない
+        if (takeDamage != null && takeDamage.IsDead)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
     /// 岩を撃った時のメソッド
     /// </summary>
     /// <param name="hitObject">渡されたオブジェクト</param>
     /// <param name="chargeTime">チャージ時間</param>
     private void StoneBlowAway(GameObject hitObject, float chargeTime)
     {
+        if (!IsTargetValid(hitObject)) return;
+
         SetKnockBackStone stoneBlowAway = hitObject.GetComponent<SetKnockBackStone>();
         if (stoneBlowAway != null)
         {
@@ -259,6 +284,8 @@ public class ShootRange : MonoBehaviour
     private void BossHitObject(GameObject hitObject, float chargeTime, bool isCritical)
     {
         BossHP bossHP = hitObject.GetComponent<BossHP>();
+        if (!IsTargetValid(hitObject, bossHP)) return;
+
         BossKnockBack knockback = hitObject.GetComponent<BossKnockBack>();
         if (knockback != null)
         {
@@ -279,8 +306,10 @@ public class ShootRange : MonoBehaviour
     /// <param name="isCritical">クリティカルかどうか</param>
     private void ArmorHitObject(GameObject hitObject, float chargeTime, bool isCritical)
     {
-        ArmorKnockBack armorKnockback = hitObject.GetComponent<ArmorKnockBack>();
         ArmorTakeDamage armorTakeDamage = hitObject.GetComponent<ArmorTakeDamage>();
+        if (!IsTargetValid(hitObject, armorTakeDamage)) return;
+
+        ArmorKnockBack armorKnockback = hitObject.GetComponent<ArmorKnockBack>();
         if (armorKnockback != null)
         {
             armorKnockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isCritical, false);
@@ -297,8 +326,10 @@ public class ShootRange : MonoBehaviour
     /// <param name="chargeTime">チャージ時間</param>
     private void NormalHitObject(GameObject hitObject, float chargeTime, bool isSpecial)
     {
-        EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
+        if (!IsTargetValid(hitObject, takeDamage)) return;
+
+        EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         if (knockback != null)
         {
             knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isSpecial, false);
