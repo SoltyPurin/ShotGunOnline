@@ -224,6 +224,22 @@ public class BossHP : EnemyTakeDamage
     }
 
 
+    private void SafeDespawnOrDestroy(GameObject target)
+    {
+        if (target == null) return;
+        if (target.TryGetComponent<NetworkObject>(out var netObj) && netObj.IsSpawned)
+        {
+            if (IsServer)
+            {
+                netObj.Despawn(true);
+            }
+        }
+        else
+        {
+            Destroy(target);
+        }
+    }
+
     public override IEnumerator DeathProtocol(float chargeTime)
     {
         if(_coinKeep == null)
@@ -238,11 +254,11 @@ public class BossHP : EnemyTakeDamage
         _enemyObjects2 = GameObject.FindGameObjectsWithTag("Armor");
         foreach (GameObject enemy in _enemyObjects)
         {
-            GameObject.Destroy(enemy);
+            SafeDespawnOrDestroy(enemy);
         }
         foreach (GameObject enemy2 in _enemyObjects2)
         {
-            GameObject.Destroy(enemy2);
+            SafeDespawnOrDestroy(enemy2);
         }
         DeathObjectClientRpc();
         GetComponent<BossStateManagement>().SetBossState(BossStateManagement.BossState.Death);

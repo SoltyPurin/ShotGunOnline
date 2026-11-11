@@ -131,53 +131,42 @@ public class SceneTransitionManager : MonoBehaviour
 
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
-                // 残存しているすべてのソウルオブジェクト (MoveCoin) を安全に Despawn
+                // 1. スポーン中の全 NetworkObject（DontDestroyOnLoad 除く）を安全に一括 Despawn
+                // (NGO の Single シーン遷移で未 Despawn のオブジェクトが自動破棄される際の同期破綻・クライアントフリーズを防止)
+                if (NetworkManager.Singleton.SpawnManager != null)
+                {
+                    var spawnedList = new System.Collections.Generic.List<NetworkObject>(NetworkManager.Singleton.SpawnManager.SpawnedObjectsList);
+                    foreach (var netObj in spawnedList)
+                    {
+                        if (netObj != null && netObj.IsSpawned)
+                        {
+                            // DontDestroyOnLoad 内のオブジェクト（NetworkManager自身やセッション管理等）は維持
+                            if (netObj.gameObject.scene.name == "DontDestroyOnLoad")
+                            {
+                                continue;
+                            }
+
+                            netObj.Despawn(true);
+                        }
+                    }
+                }
+
+                // 2. ネットワーク同期されていないローカルオブジェクト（ローカルコイン等）を安全に破棄
                 MoveCoin[] remainingCoins = Object.FindObjectsByType<MoveCoin>(FindObjectsInactive.Include, FindObjectsSortMode.None);
                 foreach (MoveCoin coin in remainingCoins)
                 {
                     if (coin != null)
                     {
-                        NetworkObject coinNetObj = coin.GetComponent<NetworkObject>();
-                        if (coinNetObj != null && coinNetObj.IsSpawned)
-                        {
-                            coinNetObj.Despawn(true);
-                        }
-                        else
-                        {
-                            Destroy(coin.gameObject);
-                        }
+                        Destroy(coin.gameObject);
                     }
                 }
 
-                // 残存しているすべての CoinControl を安全に Despawn
                 CoinControl[] remainingCoinControls = Object.FindObjectsByType<CoinControl>(FindObjectsInactive.Include, FindObjectsSortMode.None);
                 foreach (CoinControl coinCtrl in remainingCoinControls)
                 {
                     if (coinCtrl != null)
                     {
-                        NetworkObject ctrlNetObj = coinCtrl.GetComponent<NetworkObject>();
-                        if (ctrlNetObj != null && ctrlNetObj.IsSpawned)
-                        {
-                            ctrlNetObj.Despawn(true);
-                        }
-                        else
-                        {
-                            Destroy(coinCtrl.gameObject);
-                        }
-                    }
-                }
-
-                // 各プレイヤーオブジェクトの NetworkObject を Despawn
-                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-                foreach (GameObject player in players)
-                {
-                    if (player != null)
-                    {
-                        NetworkObject netObj = player.GetComponent<NetworkObject>();
-                        if (netObj != null && netObj.IsSpawned)
-                        {
-                            netObj.Despawn(true);
-                        }
+                        Destroy(coinCtrl.gameObject);
                     }
                 }
             }
