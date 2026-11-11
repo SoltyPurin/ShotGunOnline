@@ -51,6 +51,7 @@ public class SceneTransitionManager : MonoBehaviour
 
     private float _timer = 0;
     private bool _sceneLoadTransition = false;
+    private int _despawnFrame = -1;
 
     private void Start()
     {
@@ -111,6 +112,23 @@ public class SceneTransitionManager : MonoBehaviour
         {
             _timer = 0;
 
+            // Despawn 後に1フレーム以上待ってから LoadScene する (同一フレーム実行による競合対策)
+            if (_sceneLoadTransition)
+            {
+                if (Time.frameCount <= _despawnFrame)
+                {
+                    // 同一フレームの FixedUpdate が複数回呼ばれた場合は次フレームまで待つ
+                    _timer = _sceneTransitionTime;
+                    return;
+                }
+
+                LoadNextScene();
+                return;
+            }
+            _sceneLoadTransition = true;
+            _despawnFrame = Time.frameCount;
+            Debug.Log("[SceneTransition] 遷移開始: Despawn処理を開始します");
+
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
                 // 残存しているすべてのソウルオブジェクト (MoveCoin) を安全に Despawn
@@ -164,17 +182,33 @@ public class SceneTransitionManager : MonoBehaviour
                 }
             }
 
-            if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null && NetworkManager.Singleton.IsListening)
-            {
-                NetworkManager.Singleton.SceneManager.LoadScene(_waveManager.NextSceneName, LoadSceneMode.Single);
-            }
-            else
-            {
-                SceneManager.LoadScene(_waveManager.NextSceneName);
-            }
+            Debug.Log("[SceneTransition] Despawn処理完了: 次フレームで LoadScene します");
+            // 次回の FixedUpdate で (フレームが進んでいれば) すぐ LoadScene できるようにする
+            _timer = _sceneTransitionTime;
             return;
         }
 
         _timer += Time.deltaTime;
+    }
+
+    /// <summary>
+    /// Despawn 完了後に次のシーンをロードする
+    /// </summary>
+    private void LoadNextScene()
+    {
+        // 二重ロード防止のため、以降は FixedUpdate で処理しない
+        _state = TransitionState.Normal;
+
+        string nextScene = _waveManager.NextSceneName;
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null && NetworkManager.Singleton.IsListening)
+        {
+            Debug.Log($"[SceneTransition] NetworkSceneManager.LoadScene({nextScene}) を実行します");
+            NetworkManager.Singleton.SceneManager.LoadScene(nextScene, LoadSceneMode.Single);
+        }
+        else
+        {
+            Debug.Log($"[SceneTransition] SceneManager.LoadScene({nextScene}) を実行します");
+            SceneManager.LoadScene(nextScene);
+        }
     }
 }
