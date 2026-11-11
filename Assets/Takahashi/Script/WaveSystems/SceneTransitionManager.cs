@@ -43,6 +43,7 @@ public class SceneTransitionManager : MonoBehaviour
     private TransitionState _state = TransitionState.Normal;
     public TransitionState State
     {
+        get { return _state; }
         set { _state = value; }
     }
 
@@ -101,9 +102,26 @@ public class SceneTransitionManager : MonoBehaviour
         if (_timer >= _transitionTime)
         {
             _timer = 0;
-            _waveUIManager.FadeOutImageClientRpc();
-            _audioSource.PlayOneShot(_audioClip);
-            _bgmControll.BGMFade_Out(1, 0);
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            {
+                if (NetworkManager.Singleton.IsServer && _waveUIManager != null)
+                {
+                    _waveUIManager.FadeOutImageClientRpc();
+                }
+            }
+            else if (_waveUIManager != null)
+            {
+                _waveUIManager.FadeOutImage();
+            }
+
+            if (_audioSource != null && _audioClip != null)
+            {
+                _audioSource.PlayOneShot(_audioClip);
+            }
+            if (_bgmControll != null)
+            {
+                _bgmControll.BGMFade_Out(1, 0);
+            }
             _state = TransitionState.SceneTransition;
             return;
         }
@@ -203,11 +221,19 @@ public class SceneTransitionManager : MonoBehaviour
         // 二重ロード防止のため、以降は Update で処理しない
         _state = TransitionState.Normal;
 
-        string nextScene = _waveManager.NextSceneName;
+        string nextScene = _waveManager != null ? _waveManager.NextSceneName : "ResultScene";
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null && NetworkManager.Singleton.IsListening)
         {
-            Debug.Log($"[SceneTransition] NetworkSceneManager.LoadScene({nextScene}) を実行します");
-            NetworkManager.Singleton.SceneManager.LoadScene(nextScene, LoadSceneMode.Single);
+            // サーバーのみが NetworkSceneManager.LoadScene を呼び出す（クライアントはサーバー主導で自動同期ロード）
+            if (NetworkManager.Singleton.IsServer)
+            {
+                Debug.Log($"[SceneTransition] NetworkSceneManager.LoadScene({nextScene}) を実行します");
+                NetworkManager.Singleton.SceneManager.LoadScene(nextScene, LoadSceneMode.Single);
+            }
+            else
+            {
+                Debug.Log("[SceneTransition] クライアントはサーバーからのシーン遷移指示を待機します");
+            }
         }
         else
         {

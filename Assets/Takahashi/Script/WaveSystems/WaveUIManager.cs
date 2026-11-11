@@ -55,9 +55,14 @@ public class WaveUIManager : NetworkBehaviour
     [ClientRpc]
     public void FadeOutImageClientRpc()
     {
+        FadeOutImage();
+    }
+
+    public void FadeOutImage()
+    {
         // ヒットストップ等で Time.timeScale が 0 のままになっていてもフェードが止まらないようリセット＋UnscaledTime化
         Time.timeScale = 1.0f;
-        if(_fadeAnimator != null)
+        if (_fadeAnimator != null)
         {
             _fadeAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
             _fadeAnimator.SetTrigger("FadeOut");

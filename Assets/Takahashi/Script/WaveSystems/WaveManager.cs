@@ -183,6 +183,12 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
 
     private void FixedUpdate()
     {
+        // サーバー（ホスト）のみがウェーブ進行・終了・次ウェーブ遷移を管理する
+        if (!IsServer)
+        {
+            return;
+        }
+
         if (!_startWave)
         {
             return;
