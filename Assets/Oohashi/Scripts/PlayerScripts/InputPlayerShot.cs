@@ -181,7 +181,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         if (!_isAlive) return;
 
         // ★操作しているプレイヤー（IsOwner）のみが自身の入力を検出して同期する
-        if (this.IsOwner)
+        if (this.IsOwner && IsSpawned)
         {
             if (Gamepad.current != null)
             {
@@ -509,7 +509,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 {
                     _knockBackScriput.SetDirection(_playerAiming.Direction, _criticalKnockBackValue);
                 }
-                if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                if (!IsRapidFireActive && _hitstop != null) _hitstop.CriticalHitStopMethod();
                 if (_bloom != null) _bloom.UseCritical();
                 if (_shootRange != null) _shootRange.ShotgunHitCheck(shotCharge, true);
             }
@@ -517,7 +517,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             {
                 if (isMaxCharge)
                 {
-                    if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                    if (!IsRapidFireActive && _hitstop != null) _hitstop.CriticalHitStopMethod();
                     if (_bloom != null) _bloom.UseCritical();
                     if (_shootRange != null) _shootRange.ShotgunHitCheck(shotCharge, true);
                 }

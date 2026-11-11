@@ -61,9 +61,9 @@ public class SceneTransitionManager : MonoBehaviour
         _transition = false;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        // シーン遷移をswitchによって管理
+        // シーン遷移をswitchによって管理 (Time.timeScale = 0 でも停止しないよう Update + unscaledDeltaTime を使用)
         switch (_state)
         {
             case TransitionState.Normal:
@@ -81,6 +81,10 @@ public class SceneTransitionManager : MonoBehaviour
 
     public void StartSceneTransition()
     {
+        Time.timeScale = 1.0f;
+        _timer = 0;
+        _sceneLoadTransition = false;
+        _despawnFrame = -1;
         _state = TransitionState.FadeOut;
     }
 
@@ -89,6 +93,11 @@ public class SceneTransitionManager : MonoBehaviour
     /// </summary>
     private void GameFadeOut()
     {
+        if (Time.timeScale != 1.0f)
+        {
+            Time.timeScale = 1.0f;
+        }
+
         if (_timer >= _transitionTime)
         {
             _timer = 0;
@@ -99,7 +108,7 @@ public class SceneTransitionManager : MonoBehaviour
             return;
         }
 
-        _timer += Time.deltaTime;
+        _timer += Time.unscaledDeltaTime;
     }
 
     /// <summary>
@@ -107,6 +116,11 @@ public class SceneTransitionManager : MonoBehaviour
     /// </summary>
     private void SceneTransition()
     {
+        if (Time.timeScale != 1.0f)
+        {
+            Time.timeScale = 1.0f;
+        }
+
         // _timerが_sceneTransitionTime以上になったらシーン移動。
         if (_timer >= _sceneTransitionTime)
         {
@@ -117,7 +131,7 @@ public class SceneTransitionManager : MonoBehaviour
             {
                 if (Time.frameCount <= _despawnFrame)
                 {
-                    // 同一フレームの FixedUpdate が複数回呼ばれた場合は次フレームまで待つ
+                    // 同一フレーム内で複数回呼ばれた場合は次フレームまで待つ
                     _timer = _sceneTransitionTime;
                     return;
                 }
@@ -172,12 +186,12 @@ public class SceneTransitionManager : MonoBehaviour
             }
 
             Debug.Log("[SceneTransition] Despawn処理完了: 次フレームで LoadScene します");
-            // 次回の FixedUpdate で (フレームが進んでいれば) すぐ LoadScene できるようにする
+            // 次回の Update で (フレームが進んでいれば) すぐ LoadScene できるようにする
             _timer = _sceneTransitionTime;
             return;
         }
 
-        _timer += Time.deltaTime;
+        _timer += Time.unscaledDeltaTime;
     }
 
     /// <summary>
@@ -185,7 +199,8 @@ public class SceneTransitionManager : MonoBehaviour
     /// </summary>
     private void LoadNextScene()
     {
-        // 二重ロード防止のため、以降は FixedUpdate で処理しない
+        Time.timeScale = 1.0f;
+        // 二重ロード防止のため、以降は Update で処理しない
         _state = TransitionState.Normal;
 
         string nextScene = _waveManager.NextSceneName;

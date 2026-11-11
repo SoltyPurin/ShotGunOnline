@@ -55,7 +55,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void SetDirection(Vector3 direction,float chargeTime)
     {
-        if (!IsOwner)
+        if (!IsOwner || !IsSpawned)
         {
             return;
         }
@@ -73,7 +73,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void Fall()
     {
-        if (!IsOwner)
+        if (!IsOwner || !IsSpawned)
         {
             return;
         }
@@ -83,7 +83,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void TakeDamage()
     {
-        if (!IsOwner)
+        if (!IsOwner || !IsSpawned)
         {
             return;
         }
@@ -94,7 +94,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
+        if (!IsOwner || !IsSpawned)
         {
             return;
         }

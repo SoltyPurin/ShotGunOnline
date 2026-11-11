@@ -4,19 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-///ƒEƒF[ƒu’†‚Éo‚Ä‚­‚éUI‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚â•¶Œ¾‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+///ã‚¦ã‚§ãƒ¼ãƒ–ä¸­ã«å‡ºã¦ãã‚‹UIã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚„æ–‡è¨€ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 /// </summary>
 public class WaveUIManager : NetworkBehaviour
 {
-    [SerializeField, Header("•\¦—pƒeƒLƒXƒg")]
+    [SerializeField, Header("è¡¨ç¤ºç”¨ãƒ†ã‚­ã‚¹ãƒˆ")]
     private Text[] _waveTexts = new Text[3];
 
-    [SerializeField, Header("ƒeƒLƒXƒg‚ÌƒAƒjƒ[ƒ^")]
+    [SerializeField, Header("ãƒ†ã‚­ã‚¹ãƒˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿")]
     private Animator[] _animators = new Animator[2];
-    [SerializeField, Header("ƒtƒF[ƒh‚ÌƒAƒjƒ[ƒ^")]
+    [SerializeField, Header("ãƒ•ã‚§ãƒ¼ãƒ‰ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿")]
     private Animator _fadeAnimator = default;
 
-    [SerializeField, Header("“G‚Ì”‚ğ•\¦‚·‚éƒeƒLƒXƒg")]
+    [SerializeField, Header("æ•µã®æ•°ã‚’è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆ")]
     private Text _enemyCountText = default;
 
     private int _firstEnemyCount = 0;
@@ -55,8 +55,11 @@ public class WaveUIManager : NetworkBehaviour
     [ClientRpc]
     public void FadeOutImageClientRpc()
     {
+        // ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—ç­‰ã§ Time.timeScale ãŒ 0 ã®ã¾ã¾ã«ãªã£ã¦ã„ã¦ã‚‚ãƒ•ã‚§ãƒ¼ãƒ‰ãŒæ­¢ã¾ã‚‰ãªã„ã‚ˆã†ãƒªã‚»ãƒƒãƒˆï¼‹UnscaledTimeåŒ–
+        Time.timeScale = 1.0f;
         if(_fadeAnimator != null)
         {
+            _fadeAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
             _fadeAnimator.SetTrigger("FadeOut");
         }
     }
@@ -74,7 +77,7 @@ public class WaveUIManager : NetworkBehaviour
         if(_enemyCountText != null)
         {
             _firstEnemyCount = count;
-            _enemyCountText.text = "ƒmƒRƒŠ : " +count.ToString();
+            _enemyCountText.text = "ãƒã‚³ãƒª : " +count.ToString();
         }
     }
 
@@ -82,7 +85,7 @@ public class WaveUIManager : NetworkBehaviour
     {
         if(_enemyCountText != null)
         {
-            _enemyCountText.text = "ƒmƒRƒŠ : " + count.ToString();
+            _enemyCountText.text = "ãƒã‚³ãƒª : " + count.ToString();
         }
     }
 

@@ -725,11 +725,21 @@ public class NetworkDebugOverlay : MonoBehaviour
 }
 #else
 // リリースビルド用の空実装。
-// コードサイズやパフォーマンスへの影響をなくす
+// コードサイズやパフォーマンスへの影響をなくしつつシリアライズレイアウトを一致させる
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class NetworkDebugOverlay : MonoBehaviour
 {
+    public enum DisplayMode { Full, Mini, Hidden }
+    public enum ScreenPosition { TopRight, TopLeft, BottomRight, BottomLeft }
+
+    [SerializeField] private bool _onlyInDevelopmentBuild = true;
+    [SerializeField] private DisplayMode _displayMode = DisplayMode.Full;
+    [SerializeField] private ScreenPosition _position = ScreenPosition.TopRight;
+    [SerializeField] private KeyCode _toggleKey = KeyCode.F3;
+    [SerializeField] private bool _dontDestroyOnLoad = true;
+
     private void Awake()
     {
         Destroy(gameObject);
