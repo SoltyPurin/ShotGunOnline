@@ -11,7 +11,7 @@ public class PlayerCoinDrop : NetworkBehaviour
     /// </summary>
     /// <param name="coinDrops">ドロップ数</param>
     /// <param name="targetPlayer">ソウルが向かうターゲットプレイヤー（未指定の場合は最寄りプレイヤー）</param>
-    public void CoinDrop(int coinDrops, GameObject targetPlayer = null)
+    public void CoinDrop(int coinDrops, bool isPlayerSoulGot, GameObject targetPlayer = null)
     {
         if (!IsServer)
         {
@@ -45,7 +45,7 @@ public class PlayerCoinDrop : NetworkBehaviour
             var coinCtrl = coin.GetComponent<CoinControl>();
             if (coinCtrl != null)
             {
-                coinCtrl.SetTargetPlayer(targetPlayer);
+                coinCtrl.SetTargetPlayer(targetPlayer,isPlayerSoulGot);
             }
         }
     }

@@ -2323,7 +2323,7 @@ MonoBehaviour:
   _bgmControll: {fileID: 1486883738}
   _optionButtons: {fileID: 1872951900}
   _optionFirstSelectButton: {fileID: 248355028}
-  _firstTitleSelectButton: {fileID: 479971956}
+  _firstTitleSelectButton: {fileID: 736172916}
   _reallyExitButtons: {fileID: 1503073386}
   _noExitButton: {fileID: 1329676378}
   _hardOptions: {fileID: 1931053075}
@@ -6872,7 +6872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 479971956}
+  m_FirstSelected: {fileID: 736172916}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1383300386
@@ -9534,7 +9534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2060282608
 RectTransform:
   m_ObjectHideFlags: 0

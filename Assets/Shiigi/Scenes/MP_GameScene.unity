@@ -6155,6 +6155,18 @@ PrefabInstance:
       propertyPath: _realTimeCircle
       value: 
       objectReference: {fileID: 432753344}
+    - target: {fileID: 2945730754455849690, guid: 99dd01a87949a0547b4d143e33d38a6c, type: 3}
+      propertyPath: _bossTimeARankRatio
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2945730754455849690, guid: 99dd01a87949a0547b4d143e33d38a6c, type: 3}
+      propertyPath: _modifyTimeForPlayers
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2945730754455849690, guid: 99dd01a87949a0547b4d143e33d38a6c, type: 3}
+      propertyPath: _mediumBossExpectedTime
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 7664692419977884460, guid: 99dd01a87949a0547b4d143e33d38a6c, type: 3}
       propertyPath: m_Name
       value: WaveScorer

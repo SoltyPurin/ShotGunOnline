@@ -44,9 +44,11 @@ public class CoinControl : NetworkBehaviour
     private bool _serverAbsorbed = false;
     private float _noPlayerTimer = 0f;
 
-    public void SetTargetPlayer(GameObject target)
+    private bool _isPlayerSoulGot = false;
+    public void SetTargetPlayer(GameObject target, bool isPlayerSoulgot)
     {
         _playerObj = target;
+        _isPlayerSoulGot = isPlayerSoulgot;
         if (IsServer && target != null)
         {
             var netObj = target.GetComponent<NetworkObject>() ?? target.GetComponentInParent<NetworkObject>();
@@ -200,12 +202,17 @@ public class CoinControl : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// ソウルの吸収処理
+    /// </summary>
+    /// <param name="playerNetObj"></param>
+    /// <param name="isPlayerSoulgot">プレイヤーが既にそのソウルを吸収済みか否か</param>
     private void ApplyAbsorb(NetworkObject playerNetObj)
     {
         if (!IsServer || _serverAbsorbed) return;
         _serverAbsorbed = true;
 
-        if (playerNetObj != null)
+        if (playerNetObj != null && !_isPlayerSoulGot)
         {
             SoulKeep soul = playerNetObj.GetComponent<SoulKeep>() ?? playerNetObj.GetComponentInChildren<SoulKeep>();
             if (soul != null)
