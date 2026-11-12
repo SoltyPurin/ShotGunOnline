@@ -3285,44 +3285,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1723004922054505539, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2247130800683049983}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
 --- !u!1 &5627342651441952626 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1723004922054505539, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
   m_PrefabInstance: {fileID: 6480963033627935537}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2247130800683049983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5627342651441952626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkAnimatorExpanded: 0
-  AuthorityMode: 0
-  m_Animator: {fileID: 8773340320474262683}
-  TransitionStateInfoList: []
-  AnimatorParameterEntries:
-    ParameterEntries: []
-  AnimatorParametersExpanded: 0
 --- !u!4 &7721861680928276419 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3663838567827438834, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
-  m_PrefabInstance: {fileID: 6480963033627935537}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &8773340320474262683 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 2319401101367848874, guid: b31c497afb0fbd6429d6d6081125881b, type: 3}
   m_PrefabInstance: {fileID: 6480963033627935537}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7405107193565189794
