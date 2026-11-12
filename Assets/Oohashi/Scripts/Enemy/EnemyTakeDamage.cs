@@ -332,7 +332,7 @@ public class EnemyTakeDamage : NetworkBehaviour
 
             if (_shouldDropCoin && _playerCoinDrop != null)
             {
-                _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
+                _playerCoinDrop.CoinDrop(1,false, GetTargetPlayer());
             }
 
             if (NetworkObject != null && NetworkObject.IsSpawned)
@@ -352,9 +352,16 @@ public class EnemyTakeDamage : NetworkBehaviour
 
         _isDead = true;
 
+        SoulKeep soul = _lastAttackerPlayer.GetComponent<SoulKeep>();
+        if(soul != null)
+        {
+            //ソウルが直接触れて入手する形式だとバグった時にソウルが獲得できないため、直接付与する仕組みにする
+            soul.CollectCoin();
+        }
         if (_shouldDropCoin && _playerCoinDrop != null)
         {
-            _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
+            bool isPlayerSoulGot = _lastAttackerPlayer;
+            _playerCoinDrop.CoinDrop(1,isPlayerSoulGot, GetTargetPlayer());
         }
 
         PlayDeathEffectsClientRpc(_shouldDropCoin);
@@ -384,7 +391,7 @@ public class EnemyTakeDamage : NetworkBehaviour
 
             if (_shouldDropCoin && _playerCoinDrop != null)
             {
-                _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
+                _playerCoinDrop.CoinDrop(1,false, GetTargetPlayer());
             }
 
             if (NetworkObject != null && NetworkObject.IsSpawned)

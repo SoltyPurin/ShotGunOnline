@@ -91,7 +91,7 @@ public class ReleaseSoul : NetworkBehaviour
             CoinControl coinControl = coin.GetComponent<CoinControl>();
             if(coinControl != null)
             {
-                coinControl.SetTargetPlayer(StepOnPlayer);
+                coinControl.SetTargetPlayer(StepOnPlayer,false);
             }
         }
 

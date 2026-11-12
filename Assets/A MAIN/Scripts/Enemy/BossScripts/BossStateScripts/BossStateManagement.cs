@@ -126,7 +126,7 @@ public class BossStateManagement : EnemyMove
         _changeSecondForm = GetComponent<SecondFormStart>();
     }
 
-    public void FixedUpdate()
+    public override void FixedUpdate()
     {
         if (!IsServer) return;
         if (_playerObject == null)
@@ -155,6 +155,8 @@ public class BossStateManagement : EnemyMove
         {
             _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         }
+
+        Debug.Log("現在のステートは" + _currentState);
     }
 
     protected void BossStateChange()
