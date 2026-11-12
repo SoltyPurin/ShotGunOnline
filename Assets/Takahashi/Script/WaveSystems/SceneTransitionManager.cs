@@ -147,12 +147,12 @@ public class SceneTransitionManager : MonoBehaviour
             _timer = 0;
             FreezeWatchdogLogger.Checkpoint("SceneTransitionManager.SceneTransition: シーン遷移時間到達");
 
-            // Despawn 後に1フレーム以上待ってから LoadScene する (同一フレーム実行による競合対策)
+            // Despawn 後に数フレーム待機してから LoadScene する (破棄キューのフラッシュと非同期シーンロードの競合対策)
             if (_sceneLoadTransition)
             {
-                if (Time.frameCount <= _despawnFrame)
+                if (Time.frameCount < _despawnFrame + 3)
                 {
-                    // 同一フレーム内で複数回呼ばれた場合は次フレームまで待つ
+                    // 破棄処理完了から最低3フレーム待機してUnityのDelayedCallManagerを安全に完了させる
                     _timer = _sceneTransitionTime;
                     return;
                 }
@@ -162,12 +162,14 @@ public class SceneTransitionManager : MonoBehaviour
             }
             _sceneLoadTransition = true;
             _despawnFrame = Time.frameCount;
-            Debug.Log("[SceneTransition] 遷移開始: Despawn処理を開始します");
+            Debug.Log("[SceneTransition] 遷移開始: 残存ネットワークオブジェクトの同期解除を開始します");
 
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
-                // 1. 動的スポーンされた残存オブジェクト（敵・弾など）のみ安全にDespawn
-                // ※ プレイヤーキャラクター（IsPlayerObject）やシーン配置オブジェクト（IsSceneObject）は絶対に破壊しない
+                // 1. 動的スポーンされた残存オブジェクト（敵・弾など）のネットワーク追跡のみ安全に解除
+                // ※ netObj.Despawn(false) を使用し、手動 Destroy は行わない（旧シーン破棄時に自動回収）
+                // ※ 手動 Destroy を行うと、Unityの DelayedCallManager (SpriteRenderer::MainThreadCleanup) と
+                //    非同期シーンロードの PersistentManager::Lock が衝突してデッドロックするため
                 if (NetworkManager.Singleton.SpawnManager != null)
                 {
                     var spawnedList = new System.Collections.Generic.List<NetworkObject>(NetworkManager.Singleton.SpawnManager.SpawnedObjectsList);
@@ -181,34 +183,35 @@ public class SceneTransitionManager : MonoBehaviour
                         // DontDestroyOnLoad 内のオブジェクト（NetworkManager自身やセッション管理等）は維持
                         if (netObj.gameObject.scene.name == "DontDestroyOnLoad") continue;
 
-                        // シーンに最初から配置されていたオブジェクトはDespawn(true)で破壊しない（NGO同期破損を防止）
+                        // シーン配置オブジェクトはDespawnしない
                         if (netObj.IsSceneObject == true) continue;
 
-                        netObj.Despawn(true);
+                        // SpriteRenderer があれば事前に非アクティブ化してアセットロック競合を防止
+                        SpriteRenderer[] renderers = netObj.GetComponentsInChildren<SpriteRenderer>(true);
+                        foreach (var sr in renderers)
+                        {
+                            if (sr != null) sr.enabled = false;
+                        }
+
+                        // Destroy(true) ではなく Despawn(false) で同期のみ安全に解除
+                        netObj.Despawn(false);
                     }
                 }
 
-                // 2. ネットワーク同期されていないローカルオブジェクト（ローカルコイン等）を安全に破棄
+                // 2. ローカルのコインや演出オブジェクトも手動 Destroy せず、非表示化のみ行う
+                // (GameObject 自体は LoadSceneMode.Single による旧シーンアンロードで自動的かつ安全に一括破棄される)
                 MoveCoin[] remainingCoins = Object.FindObjectsByType<MoveCoin>(FindObjectsInactive.Include, FindObjectsSortMode.None);
                 foreach (MoveCoin coin in remainingCoins)
                 {
                     if (coin != null)
                     {
-                        Destroy(coin.gameObject);
-                    }
-                }
-
-                CoinControl[] remainingCoinControls = Object.FindObjectsByType<CoinControl>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-                foreach (CoinControl coinCtrl in remainingCoinControls)
-                {
-                    if (coinCtrl != null)
-                    {
-                        Destroy(coinCtrl.gameObject);
+                        SpriteRenderer sr = coin.GetComponent<SpriteRenderer>();
+                        if (sr != null) sr.enabled = false;
                     }
                 }
             }
 
-            Debug.Log("[SceneTransition] Despawn処理完了: 次フレームで LoadScene します");
+            Debug.Log("[SceneTransition] 同期解除完了: 破棄キューフラッシュ後に LoadScene します");
             // 次回の Update で (フレームが進んでいれば) すぐ LoadScene できるようにする
             _timer = _sceneTransitionTime;
             return;
