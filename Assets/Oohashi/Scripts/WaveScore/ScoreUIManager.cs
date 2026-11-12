@@ -49,30 +49,13 @@ public class ScoreUIManager : MonoBehaviour
     /// <param name="time">時間</param>
     /// <param name="damage">緋弾のランク</param>
     /// <param name="total">合計のランク</param>
-    [ClientRpc]
-    public void PopTextClientRpc(float time,int damage,string total,int wave)
+    public void PopTextClientRpc(float time, int damage, string total, int wave)
     {
-        if(_itemText == null)
-        {
-            return;
-        }
-        int nowWave = wave + 1;
-        Debug.Log("現在のウェーブは" + nowWave);
-
-        _scoreText[0].text = time.ToString("F1");
-        _scoreText[1].text = damage.ToString();
-        _totalScoreText.text = total;
-        _waveText.text = "Wave " + nowWave;
-
-        _scorePrefab.SetActive(true);
-        if (_scoreTimeLine != null)
-        {
-            _scoreTimeLine.Play();
-        }
+        PopText(time, damage, total, wave);
     }
 
     /// <summary>
-    /// オフライン／ローカル用のスコア表示メソッド
+    /// ウェーブごとのスコア表示メソッド（各端末でローカル実行）
     /// </summary>
     public void PopText(float time, int damage, string total, int wave)
     {
@@ -95,7 +78,6 @@ public class ScoreUIManager : MonoBehaviour
         }
     }
 
-    [ClientRpc]
     public void PlayTimelineClientRpc()
     {
         if (_scoreTimeLine != null)

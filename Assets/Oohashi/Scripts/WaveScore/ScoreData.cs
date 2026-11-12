@@ -154,20 +154,14 @@ public class ScoreData : MonoBehaviour
                 waveIndex = waveManager.WaveIndex;
             }
             Debug.Log("取得したウェーブのインデックスは" + waveIndex);
+            if (_scoreUIManager == null)
+            {
+                _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();
+            }
             if (_scoreUIManager != null)
             {
-                if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
-                {
-                    // サーバーのみが ClientRpc を呼ぶ（クライアントから呼ぶと例外・通信停止）
-                    if (NetworkManager.Singleton.IsServer)
-                    {
-                        _scoreUIManager.PopTextClientRpc(clearTime, hitCount, _scoreCharList[_initListIndex], waveIndex);
-                    }
-                }
-                else
-                {
-                    _scoreUIManager.PopText(clearTime, hitCount, _scoreCharList[_initListIndex], waveIndex);
-                }
+                // SyncScoreClientRpc によって全端末で SetScore が実行されているため、直接ローカルUIを表示
+                _scoreUIManager.PopText(clearTime, hitCount, _scoreCharList[_initListIndex], waveIndex);
             }
 
             _initListIndex++;
