@@ -35,11 +35,17 @@ public class BossAttackFunction : MonoBehaviour
         }
     }
 
+    private bool IsBossDead()
+    {
+        return _stateManagement == null || _stateManagement.CurrentState == BossStateManagement.BossState.Death;
+    }
+
     /// <summary>
     /// 各攻撃終了メソッド
     /// </summary>
     public void AttackEnd()
     {
+        if (IsBossDead()) return;
 
         if (_stateManagement._currentState == BossStateManagement.BossState.JumpAtack)
         {
@@ -56,6 +62,8 @@ public class BossAttackFunction : MonoBehaviour
     /// </summary>
     public void JumpAtackAreaPop()
     {
+        if (IsBossDead()) return;
+
         // サーバーからのみ ClientRpc を送信する（クライアント側で呼ぶと例外発生）
         if (_stateManagement != null && _stateManagement.IsServer)
         {
@@ -65,6 +73,8 @@ public class BossAttackFunction : MonoBehaviour
 
     public void JumpAimStart()
     {
+        if (IsBossDead()) return;
+
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             if (_jumpAtack != null) _jumpAtack.AimStart();
@@ -73,6 +83,8 @@ public class BossAttackFunction : MonoBehaviour
 
     public void JumpAimEnd()
     {
+        if (IsBossDead()) return;
+
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             if (_jumpAtack != null) _jumpAtack.AimEnd();
@@ -81,6 +93,8 @@ public class BossAttackFunction : MonoBehaviour
 
     public void StartPunch()
     {
+        if (IsBossDead()) return;
+
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             if (_machPunch != null) _machPunch.MachPunch();
@@ -89,6 +103,8 @@ public class BossAttackFunction : MonoBehaviour
 
     public void EndPunchTargeting()
     {
+        if (IsBossDead()) return;
+
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             if (_machPunch != null) _machPunch.EndTargeting();

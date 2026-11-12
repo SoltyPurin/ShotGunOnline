@@ -7,21 +7,26 @@ public class TrenbleEnemy : MonoBehaviour
 
     public void TrenbleProtocol(float durationTime)
     {
-        transform.DOShakePosition(duration: durationTime,              // —h‚ê‚éŠÔi‚±‚±‚ÍŒÅ’è‚ÅOKj
-        strength: _trenblePower,    // —h‚ê‚Ì‹­‚³
-        vibrato: 50,                // —h‚ê‚Ì×‚©‚³
-        randomness: 90,             // —h‚ê‚é•ûŒü‚Ì‚Î‚ç‚Â‚«
+        transform.DOShakePosition(duration: durationTime,              // æºã‚Œã‚‹æ™‚é–“ï¼ˆã“ã“ã¯å›ºå®šã§OKï¼‰
+        strength: _trenblePower,    // æºã‚Œã®å¼·ã•
+        vibrato: 50,                // æºã‚Œã®ç´°ã‹ã•
+        randomness: 90,             // æºã‚Œã‚‹æ–¹å‘ã®ã°ã‚‰ã¤ã
         snapping: false,
-        fadeOut: true);
+        fadeOut: true).SetLink(gameObject);
     }
 
     public void NormalTrenbleProtocol(float durationTime,float strength)
     {
-        transform.DOShakePosition(duration: durationTime,              // —h‚ê‚éŠÔi‚±‚±‚ÍŒÅ’è‚ÅOKj
-        strength: strength,    // —h‚ê‚Ì‹­‚³
-        vibrato: 90,                // —h‚ê‚Ì×‚©‚³
-        randomness: 90,             // —h‚ê‚é•ûŒü‚Ì‚Î‚ç‚Â‚«
+        transform.DOShakePosition(duration: durationTime,              // æºã‚Œã‚‹æ™‚é–“ï¼ˆã“ã“ã¯å›ºå®šã§OKï¼‰
+        strength: strength,    // æºã‚Œã®å¼·ã•
+        vibrato: 90,                // æºã‚Œã®ç´°ã‹ã•
+        randomness: 90,             // æºã‚Œã‚‹æ–¹å‘ã®ã°ã‚‰ã¤ã
         snapping: false,
-        fadeOut: true);
+        fadeOut: true).SetLink(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
     }
 }

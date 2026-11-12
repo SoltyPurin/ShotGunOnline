@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class PlayBossDeadExplosion : MonoBehaviour
 {
-    [SerializeField,Header("1‰ñ–Ú”š”­‚ÌƒGƒtƒFƒNƒg“o˜^—pƒŠƒXƒg")]
+    [SerializeField,Header("1å›ç›®çˆ†ç™ºã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆç™»éŒ²ç”¨ãƒªã‚¹ãƒˆ")]
     private List<ParticleSystem> _firstExplosion = new List<ParticleSystem>();
-    [SerializeField, Header("2‰ñ–Ú”š”­‚ÌƒGƒtƒFƒNƒg“o˜^—pƒŠƒXƒg")]
+    [SerializeField, Header("2å›ç›®çˆ†ç™ºã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆç™»éŒ²ç”¨ãƒªã‚¹ãƒˆ")]
     private List<ParticleSystem> _secondExplosion = new List<ParticleSystem>();
 
-    [SerializeField, Header("ƒ{ƒXŒ‚”j‚ÌƒXƒ[‰‰o‚Ìƒ^ƒCƒ€ƒXƒP[ƒ‹")]
+    [SerializeField, Header("ãƒœã‚¹æ’ƒç ´æ™‚ã®ã‚¹ãƒ­ãƒ¼æ¼”å‡ºã®ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«")]
     private float _slowTimeScale = 0.5f;
 
+    private Coroutine _explosionCoroutine = null;
+
     /// <summary>
-    /// ˆê‰ñ–Ú‚Ìƒ{ƒX‚Ì”š€ƒGƒtƒFƒNƒgÄ¶
+    /// ä¸€å›ç›®ã®ãƒœã‚¹ã®çˆ†æ­»ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå†ç”Ÿ
     /// </summary>
-    /// <param name="position">ƒ{ƒX‚ª€‚ñ‚¾êŠ</param>
+    /// <param name="position">ãƒœã‚¹ãŒæ­»ã‚“ã å ´æ‰€</param>
     public void Explosion(Vector2 position)
     {
         Time.timeScale = _slowTimeScale;
@@ -24,11 +26,15 @@ public class PlayBossDeadExplosion : MonoBehaviour
         {
             _firstExplosion[i].Play();
         }
-        StartCoroutine(SecondExplosion());
+        if (_explosionCoroutine != null)
+        {
+            StopCoroutine(_explosionCoroutine);
+        }
+        _explosionCoroutine = StartCoroutine(SecondExplosion());
     }
 
     /// <summary>
-    /// “ñ‰ñ–Ú‚Ì”š”­‚ÌƒRƒ‹[ƒ`ƒ“
+    /// äºŒå›ç›®ã®çˆ†ç™ºã®ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
     /// <returns></returns>
     private IEnumerator SecondExplosion()
@@ -39,5 +45,27 @@ public class PlayBossDeadExplosion : MonoBehaviour
             _secondExplosion[i].Play();
         }
         Time.timeScale = 1;
+        _explosionCoroutine = null;
+    }
+
+    private void OnDisable()
+    {
+        if (_explosionCoroutine != null)
+        {
+            StopCoroutine(_explosionCoroutine);
+            _explosionCoroutine = null;
+        }
+        if (Time.timeScale != 1.0f)
+        {
+            Time.timeScale = 1.0f;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Time.timeScale != 1.0f)
+        {
+            Time.timeScale = 1.0f;
+        }
     }
 }

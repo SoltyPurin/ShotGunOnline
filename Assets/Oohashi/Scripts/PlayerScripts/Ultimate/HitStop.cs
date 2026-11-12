@@ -4,40 +4,76 @@ using UnityEngine;
 
 public class HitStop : MonoBehaviour
 {
-    //•KE‹Z‚Ì‚É‹Šo“I‚É‚à‚Á‚Æ‚í‚©‚è‚â‚·‚­
-    //—áASF6‚ÌSA‘Å‚Â‚Æ‚«‚Ì‚æ‚¤‚ÉƒLƒƒƒ‰ƒNƒ^[‚É
-    //‚±‚Ì‹É’[‚É’Z‚¢’â~ŠÔ‚Ì’†‚ÉŒø‰Ê‰¹‚ğ“ü‚ê‚é
-    //ƒqƒbƒgƒXƒgƒbƒv‚Ìƒ^ƒCƒ€ƒXƒP[ƒ‹
+    //å¿…æ®ºæŠ€ã®æ™‚ã«è¦–è¦šçš„ã«ã‚‚ã£ã¨ã‚ã‹ã‚Šã‚„ã™ã
+    //ä¾‹ã€SF6ã®SAæ‰“ã¤ã¨ãã®ã‚ˆã†ã«ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã«
+    //ã“ã®æ¥µç«¯ã«çŸ­ã„åœæ­¢æ™‚é–“ã®ä¸­ã«åŠ¹æœéŸ³ã‚’å…¥ã‚Œã‚‹
+    //ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—ã®ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«
     private float _ultHitStopTimeScale = 0.0f;
-    //ƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğ–ß‚·‚Ü‚Å‚ÌŠÔ
+    //ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’æˆ»ã™ã¾ã§ã®æ™‚é–“
     private float _returnTimeScaleTime = 0.1f;
 
+    private Coroutine _hitStopCoroutine = null;
+
     /// <summary>
-    /// ƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğ•ÏX‚·‚éƒƒ\ƒbƒh
+    /// ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’å¤‰æ›´ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void UltHitStopMethod()
     {
+        if (!isActiveAndEnabled) return;
+
         Time.timeScale = _ultHitStopTimeScale;
-        StartCoroutine(ReturnTimeScale());
+        if (_hitStopCoroutine != null)
+        {
+            StopCoroutine(_hitStopCoroutine);
+        }
+        _hitStopCoroutine = StartCoroutine(ReturnTimeScale());
     }
 
     /// <summary>
-    /// ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg‚Ìƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğ•ÏX
+    /// ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆã®ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’å¤‰æ›´
     /// </summary>
     public void CriticalHitStopMethod()
     {
+        if (!isActiveAndEnabled) return;
+
         Time.timeScale = _ultHitStopTimeScale;
-        StartCoroutine(ReturnTimeScale());
+        if (_hitStopCoroutine != null)
+        {
+            StopCoroutine(_hitStopCoroutine);
+        }
+        _hitStopCoroutine = StartCoroutine(ReturnTimeScale());
     }
 
     /// <summary>
-    /// ƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğ–ß‚·ƒRƒ‹[ƒ`ƒ“
+    /// ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’æˆ»ã™ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
     /// <returns></returns>
     private IEnumerator ReturnTimeScale()
     {
-        //ÀÛ‚ÌŠÔ‚ğŒ³‚Éƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğ–ß‚·
+        //å®Ÿéš›ã®æ™‚é–“ã‚’å…ƒã«ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’æˆ»ã™
         yield return new WaitForSecondsRealtime(_returnTimeScaleTime);
         Time.timeScale = 1;
+        _hitStopCoroutine = null;
+    }
+
+    private void OnDisable()
+    {
+        if (_hitStopCoroutine != null)
+        {
+            StopCoroutine(_hitStopCoroutine);
+            _hitStopCoroutine = null;
+        }
+        if (Time.timeScale == 0.0f)
+        {
+            Time.timeScale = 1.0f;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Time.timeScale == 0.0f)
+        {
+            Time.timeScale = 1.0f;
+        }
     }
 }

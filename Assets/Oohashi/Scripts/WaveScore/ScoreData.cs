@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -155,7 +156,18 @@ public class ScoreData : MonoBehaviour
             Debug.Log("取得したウェーブのインデックスは" + waveIndex);
             if (_scoreUIManager != null)
             {
-                _scoreUIManager.PopTextClientRpc(clearTime, hitCount, _scoreCharList[_initListIndex], waveIndex);
+                if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+                {
+                    // サーバーのみが ClientRpc を呼ぶ（クライアントから呼ぶと例外・通信停止）
+                    if (NetworkManager.Singleton.IsServer)
+                    {
+                        _scoreUIManager.PopTextClientRpc(clearTime, hitCount, _scoreCharList[_initListIndex], waveIndex);
+                    }
+                }
+                else
+                {
+                    _scoreUIManager.PopText(clearTime, hitCount, _scoreCharList[_initListIndex], waveIndex);
+                }
             }
 
             _initListIndex++;

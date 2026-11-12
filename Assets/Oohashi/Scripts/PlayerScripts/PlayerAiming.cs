@@ -130,7 +130,7 @@ public class PlayerAiming : NetworkBehaviour
         if (_playerObject == null) return;
 
         // 操作している側（Owner）の場合の処理
-        if (this.IsOwner)
+        if (this.IsOwner && IsSpawned)
         {
             if (CanAim())
             {

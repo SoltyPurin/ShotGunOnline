@@ -76,6 +76,8 @@ public class ShootRange : MonoBehaviour
     private bool _didSwingStart = false;
     private float _swingStartTime = 0f;
 
+    private SceneTransitionManager _sceneTransitionManager = default;
+
 
     #endregion
 
@@ -149,6 +151,18 @@ public class ShootRange : MonoBehaviour
     /// <param name="isCritical">クリティカルショットかどうか</param>
     public void ShotgunHitCheck(float chargeTime,bool isCritical)
     {
+        // シーン遷移中・フェードアウト中は当たり判定とRPC送信を行わない
+        if (_sceneTransitionManager == null)
+        {
+            _sceneTransitionManager = FindAnyObjectByType<SceneTransitionManager>();
+        }
+        if (_sceneTransitionManager != null && _sceneTransitionManager.State != SceneTransitionManager.TransitionState.Normal)
+        {
+            return;
+        }
+
+        if (_playerAiming == null) return;
+
         //当たり判定の中心
         Vector2 center = (Vector3)transform.position + _playerAiming.Direction.normalized * (_range / 2);
         //箱のサイズ
@@ -249,6 +263,11 @@ public class ShootRange : MonoBehaviour
         if (hitObject.TryGetComponent<NetworkObject>(out var netObj) && !netObj.IsSpawned)
         {
             return false;
+        }
+
+        if (takeDamage == null)
+        {
+            takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
         }
 
         // すでにHP0（死亡演出・Despawn待ちコルーチン中）の敵にはRPC送信しない
@@ -378,6 +397,7 @@ public class ShootRange : MonoBehaviour
     /// </summary>
     private void OnDrawGizmos()
     {
+        if (_playerAiming == null) return;
 
         // プレイヤーの位置（このスクリプトがアタッチされてるオブジェクト）
         Vector3 origin = transform.position;

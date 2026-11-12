@@ -135,6 +135,8 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     private float _rightTriggerValue = default;
     private bool _isKeyboardShootPressed = false;
     private bool _isKeyboardShootDown = false;
+    private float _lastShotRpcTime = 0f;
+    private const float MIN_SHOT_RPC_INTERVAL = 0.05f;
 
     private void Start()
     {
@@ -181,7 +183,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         if (!_isAlive) return;
 
         // ★操作しているプレイヤー（IsOwner）のみが自身の入力を検出して同期する
-        if (this.IsOwner)
+        if (this.IsOwner && IsSpawned)
         {
             if (Gamepad.current != null)
             {
@@ -509,7 +511,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 {
                     _knockBackScriput.SetDirection(_playerAiming.Direction, _criticalKnockBackValue);
                 }
-                if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                if (!IsRapidFireActive && _hitstop != null) _hitstop.CriticalHitStopMethod();
                 if (_bloom != null) _bloom.UseCritical();
                 if (_shootRange != null) _shootRange.ShotgunHitCheck(shotCharge, true);
             }
@@ -517,7 +519,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             {
                 if (isMaxCharge)
                 {
-                    if (_hitstop != null) _hitstop.CriticalHitStopMethod();
+                    if (!IsRapidFireActive && _hitstop != null) _hitstop.CriticalHitStopMethod();
                     if (_bloom != null) _bloom.UseCritical();
                     if (_shootRange != null) _shootRange.ShotgunHitCheck(shotCharge, true);
                 }
@@ -576,10 +578,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         // 発射処理を実行
         ExecuteShot(chargeTime, isCrit, isMaxCharge, ignoreKnockback, ignoreOverheat);
 
-        // マルチプレイ時の非Ownerクライアントへの視覚・音声同期
+        // マルチプレイ時の非Ownerクライアントへの視覚・音声同期（パケットバースト・キュー枯渇防止のためスロットリング）
         if (IsSpawned)
         {
-            PlayShotEffectsRpc(chargeTime, isCrit, isMaxCharge);
+            if (Time.unscaledTime - _lastShotRpcTime >= MIN_SHOT_RPC_INTERVAL)
+            {
+                _lastShotRpcTime = Time.unscaledTime;
+                PlayShotEffectsRpc(chargeTime, isCrit, isMaxCharge);
+            }
         }
     }
 
