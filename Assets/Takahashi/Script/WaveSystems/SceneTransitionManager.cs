@@ -166,23 +166,25 @@ public class SceneTransitionManager : MonoBehaviour
 
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
-                // 1. スポーン中の全 NetworkObject（DontDestroyOnLoad 除く）を安全に一括 Despawn
-                // (NGO の Single シーン遷移で未 Despawn のオブジェクトが自動破棄される際の同期破綻・クライアントフリーズを防止)
+                // 1. 動的スポーンされた残存オブジェクト（敵・弾など）のみ安全にDespawn
+                // ※ プレイヤーキャラクター（IsPlayerObject）やシーン配置オブジェクト（IsSceneObject）は絶対に破壊しない
                 if (NetworkManager.Singleton.SpawnManager != null)
                 {
                     var spawnedList = new System.Collections.Generic.List<NetworkObject>(NetworkManager.Singleton.SpawnManager.SpawnedObjectsList);
                     foreach (var netObj in spawnedList)
                     {
-                        if (netObj != null && netObj.IsSpawned)
-                        {
-                            // DontDestroyOnLoad 内のオブジェクト（NetworkManager自身やセッション管理等）は維持
-                            if (netObj.gameObject.scene.name == "DontDestroyOnLoad")
-                            {
-                                continue;
-                            }
+                        if (netObj == null || !netObj.IsSpawned) continue;
 
-                            netObj.Despawn(true);
-                        }
+                        // プレイヤー本体は絶対にDespawnしない（切断やNullRefフリーズを防止）
+                        if (netObj.IsPlayerObject) continue;
+
+                        // DontDestroyOnLoad 内のオブジェクト（NetworkManager自身やセッション管理等）は維持
+                        if (netObj.gameObject.scene.name == "DontDestroyOnLoad") continue;
+
+                        // シーンに最初から配置されていたオブジェクトはDespawn(true)で破壊しない（NGO同期破損を防止）
+                        if (netObj.IsSceneObject == true) continue;
+
+                        netObj.Despawn(true);
                     }
                 }
 
