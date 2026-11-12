@@ -1,24 +1,24 @@
-using DG.Tweening;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Threading.Tasks;
 
 public class ScoreCircle : MonoBehaviour
 {
-    #region •Ï”
-    [SerializeField, Header("‰ñ“]‘Ì‚ÌƒCƒ[ƒW")]
+    #region å¤‰æ•°
+    [SerializeField, Header("å›è»¢ä½“ã®ã‚¤ãƒ¡ãƒ¼ã‚¸")]
     private Image _progressRing = default;
-    [SerializeField,Header("‘Ò‹@ŠÔ")]
+    [SerializeField, Header("å¾…æ©Ÿæ™‚é–“")]
     private float _waitTime = 2.0f;
-    [SerializeField,Header("I—¹ŠÔ‚ÌƒfƒBƒŒƒC")]
+    [SerializeField, Header("çµ‚äº†æ™‚é–“ã®ãƒ‡ã‚£ãƒ¬ã‚¤")]
     public float _finishDelay = 1.0f;
 
-    /// ƒQ[ƒW‚Ìã‚ª‚è•A1‚ªÅ‘å‚Å0‚ªÅ’á
-    [SerializeField,Header("ã‚ª‚è•")]
+    /// ã‚²ãƒ¼ã‚¸ã®ä¸ŠãŒã‚Šå¹…ã€1ãŒæœ€å¤§ã§0ãŒæœ€ä½
+    [SerializeField, Header("ä¸ŠãŒã‚Šå¹…")]
     private float _rankGage = 1;
 
     private bool progress;
+    private Coroutine _delayCoroutine;
 
     public Action OnFinish;
 
@@ -27,26 +27,51 @@ public class ScoreCircle : MonoBehaviour
     private void Start()
     {
     }
-    public void Initialize(float maxValue,float totalScore)
+
+    public void Initialize(float maxValue, float totalScore)
     {
-        _rankGage = totalScore/maxValue;
+        if (maxValue <= 0)
+        {
+            _rankGage = 0;
+        }
+        else
+        {
+            _rankGage = Mathf.Clamp01(totalScore / maxValue);
+        }
+
         CancelTimer();
         StartTimer();
     }
 
-    async Task Update()
+    private void Update()
     {
-        if (progress)
+        if (progress && _progressRing != null)
         {
-            _progressRing.fillAmount += 1 / _waitTime * Time.deltaTime;
-            if (_rankGage <= _progressRing.fillAmount)
+            float step = _waitTime > 0 ? (1f / _waitTime) * Time.deltaTime : 1f;
+            _progressRing.fillAmount += step;
+
+            if (_progressRing.fillAmount >= _rankGage)
             {
                 progress = false;
-                await Task.Delay((int)(_finishDelay * 1000));
-                //_progressRing.fillAmount = 0;
-                OnFinish?.Invoke();
+                _progressRing.fillAmount = _rankGage;
+
+                if (_delayCoroutine != null)
+                {
+                    StopCoroutine(_delayCoroutine);
+                }
+                _delayCoroutine = StartCoroutine(DelayFinishCoroutine());
             }
         }
+    }
+
+    private IEnumerator DelayFinishCoroutine()
+    {
+        if (_finishDelay > 0)
+        {
+            yield return new WaitForSeconds(_finishDelay);
+        }
+        _delayCoroutine = null;
+        OnFinish?.Invoke();
     }
 
     public void StartTimer()
@@ -56,7 +81,21 @@ public class ScoreCircle : MonoBehaviour
 
     public void CancelTimer()
     {
-        _progressRing.fillAmount = 0;
+        if (_delayCoroutine != null)
+        {
+            StopCoroutine(_delayCoroutine);
+            _delayCoroutine = null;
+        }
+
+        if (_progressRing != null)
+        {
+            _progressRing.fillAmount = 0;
+        }
         progress = false;
+    }
+
+    private void OnDisable()
+    {
+        CancelTimer();
     }
 }
