@@ -451,6 +451,10 @@ public class EnemyTakeDamage : NetworkBehaviour
             if (_hpUI != null) _hpUI.UpdateHP(_enemyHP.Value);
             if (_enemyHP.Value <= 0)
             {
+                if (_lastAttackerPlayer == null)
+                {
+                    _lastAttackerPlayer = GetTargetPlayer();
+                }
                 _isDead = true;
                 StartCoroutine(DeathProtocol(chargeTime));
             }
