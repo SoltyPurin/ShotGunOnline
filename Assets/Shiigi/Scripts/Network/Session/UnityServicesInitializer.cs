@@ -12,7 +12,7 @@ using UnityEngine;
 public class UnityServicesInitializer : IUnityServicesInitializer
 {
     public const string DevelopmentEnvironment = "development";
-    public const string ProductEnvironment = "product";
+    public const string ProductEnvironment = "production";
 
     public bool IsInitialized { get; private set; }
 
