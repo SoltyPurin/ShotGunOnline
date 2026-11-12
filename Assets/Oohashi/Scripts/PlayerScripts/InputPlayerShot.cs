@@ -135,6 +135,8 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     private float _rightTriggerValue = default;
     private bool _isKeyboardShootPressed = false;
     private bool _isKeyboardShootDown = false;
+    private float _lastShotRpcTime = 0f;
+    private const float MIN_SHOT_RPC_INTERVAL = 0.05f;
 
     private void Start()
     {
@@ -576,10 +578,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         // 発射処理を実行
         ExecuteShot(chargeTime, isCrit, isMaxCharge, ignoreKnockback, ignoreOverheat);
 
-        // マルチプレイ時の非Ownerクライアントへの視覚・音声同期
+        // マルチプレイ時の非Ownerクライアントへの視覚・音声同期（パケットバースト・キュー枯渇防止のためスロットリング）
         if (IsSpawned)
         {
-            PlayShotEffectsRpc(chargeTime, isCrit, isMaxCharge);
+            if (Time.unscaledTime - _lastShotRpcTime >= MIN_SHOT_RPC_INTERVAL)
+            {
+                _lastShotRpcTime = Time.unscaledTime;
+                PlayShotEffectsRpc(chargeTime, isCrit, isMaxCharge);
+            }
         }
     }
 

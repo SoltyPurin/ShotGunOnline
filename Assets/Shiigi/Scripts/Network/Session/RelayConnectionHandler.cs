@@ -37,6 +37,7 @@ public class RelayConnectionHandler
             transport.UseWebSockets = protocol == RelayProtocol.WSS;
             transport.ConnectTimeoutMS = ConnectTimeoutMs;
             transport.MaxConnectAttempts = MaxConnectAttempts;
+            transport.MaxPacketQueueSize = 1024;
         }
     }
 

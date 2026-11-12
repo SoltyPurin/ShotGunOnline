@@ -704,15 +704,18 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     {
         _listEnd = true;
         _scoreManager.TextAlpha(true);
+        FreezeWatchdogLogger.Checkpoint("WaveManager.BossWaveEnd: 開始");
 
         if (IsServer)
         {
             int min = _scoreManager.Minute;
             float sec = _scoreManager.Second;
             int totalDamage = ScoreData._scoreData != null ? ScoreData._scoreData.TotalTakenDamage : 0;
+            FreezeWatchdogLogger.Checkpoint("WaveManager.BossWaveEnd: SyncFinalScoreClientRpc 送信直前");
             SyncFinalScoreClientRpc(min, sec, totalDamage);
         }
 
+        FreezeWatchdogLogger.Checkpoint("WaveManager.BossWaveEnd: StartSceneTransition 呼出直前");
         _sceneTransitionManager.StartSceneTransition();
     }
 
@@ -722,6 +725,7 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     [ClientRpc]
     private void SyncFinalScoreClientRpc(int minute, float seconds, int totalDamageCount)
     {
+        FreezeWatchdogLogger.Checkpoint("WaveManager.SyncFinalScoreClientRpc: 受信");
         if (GetScoreManager._this != null)
         {
             GetScoreManager._this.GetScore(minute, seconds);

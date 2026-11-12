@@ -82,6 +82,7 @@ public class SceneTransitionManager : MonoBehaviour
 
     public void StartSceneTransition()
     {
+        FreezeWatchdogLogger.Checkpoint("SceneTransitionManager.StartSceneTransition");
         Time.timeScale = 1.0f;
         _timer = 0;
         _sceneLoadTransition = false;
@@ -102,6 +103,7 @@ public class SceneTransitionManager : MonoBehaviour
         if (_timer >= _transitionTime)
         {
             _timer = 0;
+            FreezeWatchdogLogger.Checkpoint("SceneTransitionManager.GameFadeOut: フェードアウト時間到達");
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
             {
                 if (NetworkManager.Singleton.IsServer && _waveUIManager != null)
@@ -143,6 +145,7 @@ public class SceneTransitionManager : MonoBehaviour
         if (_timer >= _sceneTransitionTime)
         {
             _timer = 0;
+            FreezeWatchdogLogger.Checkpoint("SceneTransitionManager.SceneTransition: シーン遷移時間到達");
 
             // Despawn 後に1フレーム以上待ってから LoadScene する (同一フレーム実行による競合対策)
             if (_sceneLoadTransition)
@@ -217,6 +220,7 @@ public class SceneTransitionManager : MonoBehaviour
     /// </summary>
     private void LoadNextScene()
     {
+        FreezeWatchdogLogger.Checkpoint($"SceneTransitionManager.LoadNextScene: 開始 (IsServer: {NetworkManager.Singleton?.IsServer})");
         Time.timeScale = 1.0f;
         // 二重ロード防止のため、以降は Update で処理しない
         _state = TransitionState.Normal;

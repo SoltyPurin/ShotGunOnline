@@ -149,6 +149,7 @@ public class BossHP : EnemyTakeDamage
     [ClientRpc]
     private void BossTakeDamageEffectClientRpc()
     {
+        if (_isDead) return;
         if (_damageAnimator != null) _damageAnimator.SetTrigger("Damage");
         if (_hitFlash != null) _hitFlash.DoFlash();
         if (_hPGageAnimeCon != null)
@@ -232,6 +233,7 @@ public class BossHP : EnemyTakeDamage
         }
         DeathObjectClientRpc();
         GetComponent<BossStateManagement>().SetBossState(BossStateManagement.BossState.Death);
+        FreezeWatchdogLogger.Checkpoint("BossHP.DeathProtocol: Despawn 直前");
         // ネットワークオブジェクトの場合は Despawn、ローカルの場合は Destroy
         if (NetworkObject != null && NetworkObject.IsSpawned)
         {
@@ -241,6 +243,7 @@ public class BossHP : EnemyTakeDamage
         {
             Destroy(gameObject);
         }
+        FreezeWatchdogLogger.Checkpoint("BossHP.DeathProtocol: 完了");
     }
 
     [ClientRpc]
@@ -261,8 +264,14 @@ public class BossHP : EnemyTakeDamage
     [ClientRpc]
     private void DeactivateBossClientRpc()
     {
+        FreezeWatchdogLogger.Checkpoint("BossHP.DeactivateBossClientRpc: 受信");
         if (_jumpAtack != null) _jumpAtack.ResetJumpAttackState();
         if (_machPunch != null) _machPunch.ResetPunchState();
+
+        if (TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTrans))
+        {
+            netTrans.enabled = false;
+        }
 
         if (_stateManagement != null)
         {
@@ -280,6 +289,12 @@ public class BossHP : EnemyTakeDamage
     {
         if (_isDead) return;
         _isDead = true;
+        FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: 開始");
+
+        if (TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTrans))
+        {
+            netTrans.enabled = false;
+        }
 
         if (_jumpAtack != null) _jumpAtack.ResetJumpAttackState();
         if (_machPunch != null) _machPunch.ResetPunchState();
@@ -296,6 +311,7 @@ public class BossHP : EnemyTakeDamage
             _deathTimeline.SetActive(true);
         }
         if (_shadow != null) _shadow.SetActive(false);
+        FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: DeathProtocol 開始");
         StartCoroutine(DeathProtocol(1.0f));
     }
 }
