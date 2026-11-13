@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Services.Multiplayer;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class LobbyRoomUI : LobbyViewBase
@@ -44,6 +45,10 @@ public class LobbyRoomUI : LobbyViewBase
         EnsureButtonSound(_leaveButton, UIButtonType.Cancel);
         EnsureButtonSound(_readyButton, UIButtonType.Default);
         EnsureButtonSound(_startButton, UIButtonType.Default);
+
+        LobbyModernTheme.AttachMetallicVisual(_leaveButton);
+        LobbyModernTheme.AttachMetallicVisual(_readyButton);
+        LobbyModernTheme.AttachMetallicVisual(_startButton);
     }
 
     private static void EnsureButtonSound(Button button, UIButtonType buttonType)
@@ -91,6 +96,60 @@ public class LobbyRoomUI : LobbyViewBase
             // ゲストの場合は自身の準備状況を取得してテキスト更新
             _localIsReady = SessionPlayerPropertyHelper.IsPlayerReady(session.CurrentPlayer);
             _readyButtonText.text = _localIsReady ? "取り消し" : "準備完了";
+        }
+
+        RebuildControllerNavigation(isLocalHost);
+    }
+
+    /// <summary>
+    /// コントローラー／キーボード操作向けにデフォルトの選択要素へフォーカスを当てる
+    /// </summary>
+    public void FocusDefaultElement()
+    {
+        if (EventSystem.current == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+
+        var target = GetDefaultFocusTarget();
+        if (target != null)
+        {
+            EventSystem.current.SetSelectedGameObject(target);
+        }
+    }
+
+    public override GameObject GetDefaultFocusTarget()
+    {
+        if (_startButton != null && _startButton.gameObject.activeInHierarchy && _startButton.IsInteractable())
+        {
+            return _startButton.gameObject;
+        }
+        if (_readyButton != null && _readyButton.gameObject.activeInHierarchy && _readyButton.IsInteractable())
+        {
+            return _readyButton.gameObject;
+        }
+        if (_leaveButton != null && _leaveButton.gameObject.activeInHierarchy && _leaveButton.IsInteractable())
+        {
+            return _leaveButton.gameObject;
+        }
+        return null;
+    }
+
+    private void RebuildControllerNavigation(bool isLocalHost)
+    {
+        Button primary = isLocalHost ? _startButton : _readyButton;
+        if (primary != null && _leaveButton != null)
+        {
+            var primaryNav = new Navigation { mode = Navigation.Mode.Explicit };
+            primaryNav.selectOnUp = _leaveButton;
+            primaryNav.selectOnDown = _leaveButton;
+            primaryNav.selectOnLeft = _leaveButton;
+            primaryNav.selectOnRight = _leaveButton;
+            primary.navigation = primaryNav;
+
+            var leaveNav = new Navigation { mode = Navigation.Mode.Explicit };
+            leaveNav.selectOnUp = primary.IsInteractable() ? primary : null;
+            leaveNav.selectOnDown = primary.IsInteractable() ? primary : null;
+            leaveNav.selectOnLeft = primary.IsInteractable() ? primary : null;
+            leaveNav.selectOnRight = primary.IsInteractable() ? primary : null;
+            _leaveButton.navigation = leaveNav;
         }
     }
 

@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -44,10 +46,33 @@ public abstract class LobbyViewBase : MonoBehaviour
     protected CanvasGroup _canvasGroup;
     protected RectTransform _rectTransform;
 
+    private static readonly List<LobbyViewBase> _activeViews = new();
+
+    public static LobbyViewBase TopActiveView
+    {
+        get
+        {
+            PruneDestroyedViews();
+            return _activeViews.Count > 0 ? _activeViews[_activeViews.Count - 1] : null;
+        }
+    }
+
+    public static bool IsModalOpen
+    {
+        get
+        {
+            var top = TopActiveView;
+            return top != null && top._viewType == UIViewType.ModalDialog;
+        }
+    }
+
+    public static event Action OnActiveViewStackChanged;
+
     private CancellationTokenSource _animCts;
     private bool _isVisible;
 
     public bool IsVisible => _isVisible;
+    public bool IsTopActiveView => TopActiveView == this;
 
     public UIViewType ViewType
     {
@@ -106,6 +131,25 @@ public abstract class LobbyViewBase : MonoBehaviour
     protected virtual void OnDestroy()
     {
         CancelCurrentAnimation();
+        RemoveActiveView(this);
+    }
+
+    protected virtual void LateUpdate()
+    {
+        if (!_isVisible || !IsTopActiveView || _canvasGroup == null || !_canvasGroup.interactable) return;
+        if (EventSystem.current == null) return;
+
+        var selected = EventSystem.current.currentSelectedGameObject;
+        if (selected != null && !IsOwnedByThisView(selected.transform))
+        {
+            var fallback = GetDefaultFocusTarget();
+            EventSystem.current.SetSelectedGameObject(fallback);
+        }
+    }
+
+    protected virtual bool IsOwnedByThisView(Transform target)
+    {
+        return target != null && target.IsChildOf(transform);
     }
 
     /// <summary>
@@ -122,6 +166,7 @@ public abstract class LobbyViewBase : MonoBehaviour
 
         _isVisible = true;
         gameObject.SetActive(true);
+        PushActiveView(this);
 
         // 表示アニメーション中は誤操作を防ぐため入力を遮断
         _canvasGroup.interactable = false;
@@ -158,10 +203,16 @@ public abstract class LobbyViewBase : MonoBehaviour
 
         _canvasGroup.alpha = 1f;
         _rectTransform.localScale = Vector3.one;
-        _canvasGroup.interactable = true;
+        bool isTop = IsTopActiveView;
+        _canvasGroup.interactable = isTop;
         _canvasGroup.blocksRaycasts = true;
+        OnActiveInteractableChanged(isTop);
 
         OnShowCompleted();
+        if (isTop)
+        {
+            RestoreDefaultFocus();
+        }
     }
 
     /// <summary>
@@ -179,9 +230,11 @@ public abstract class LobbyViewBase : MonoBehaviour
         var ct = _animCts.Token;
 
         _isVisible = false;
-        // 非表示開始時点で直ちに入力受付を遮断
+        // 非表示開始時点で直ちに入力受付を遮断し、アクティブUIスタックから外す
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
+        OnActiveInteractableChanged(false);
+        RemoveActiveView(this);
 
         var style = CurrentStyle;
         UISound.Play(style.HideSound);
@@ -231,10 +284,23 @@ public abstract class LobbyViewBase : MonoBehaviour
         EnsureComponents();
 
         _canvasGroup.alpha = visible ? 1f : 0f;
-        _canvasGroup.interactable = visible;
         _canvasGroup.blocksRaycasts = visible;
         _rectTransform.localScale = Vector3.one;
         gameObject.SetActive(visible);
+
+        if (visible)
+        {
+            PushActiveView(this);
+            bool isTop = IsTopActiveView;
+            _canvasGroup.interactable = isTop;
+            OnActiveInteractableChanged(isTop);
+        }
+        else
+        {
+            _canvasGroup.interactable = false;
+            OnActiveInteractableChanged(false);
+            RemoveActiveView(this);
+        }
     }
 
     /// <summary>
@@ -261,6 +327,62 @@ public abstract class LobbyViewBase : MonoBehaviour
             _animCts.Cancel();
             _animCts = null;
         }
+    }
+
+    public void RestoreDefaultFocus()
+    {
+        if (!IsTopActiveView || !_isVisible || EventSystem.current == null) return;
+        var target = GetDefaultFocusTarget();
+        if (target != null && target.activeInHierarchy)
+        {
+            EventSystem.current.SetSelectedGameObject(target);
+        }
+    }
+
+    public virtual GameObject GetDefaultFocusTarget() => null;
+    protected virtual void OnActiveInteractableChanged(bool interactable) { }
+
+    private static void PruneDestroyedViews()
+    {
+        _activeViews.RemoveAll(v => v == null);
+    }
+
+    private static void PushActiveView(LobbyViewBase view)
+    {
+        if (view == null) return;
+        PruneDestroyedViews();
+        _activeViews.Remove(view);
+        _activeViews.Add(view);
+        RefreshActiveViewInteractability(restoreFocusOnTop: false);
+    }
+
+    private static void RemoveActiveView(LobbyViewBase view)
+    {
+        PruneDestroyedViews();
+        if (_activeViews.Remove(view))
+        {
+            RefreshActiveViewInteractability(restoreFocusOnTop: true);
+        }
+    }
+
+    private static void RefreshActiveViewInteractability(bool restoreFocusOnTop)
+    {
+        PruneDestroyedViews();
+        var top = _activeViews.Count > 0 ? _activeViews[_activeViews.Count - 1] : null;
+        foreach (var v in _activeViews)
+        {
+            bool isTop = (v == top);
+            v.EnsureComponents();
+            v._canvasGroup.interactable = isTop && v._isVisible;
+            v.OnActiveInteractableChanged(isTop && v._isVisible);
+        }
+
+        if (restoreFocusOnTop && top != null)
+        {
+            top.RestoreDefaultFocus();
+        }
+
+        OnActiveViewStackChanged?.Invoke();
     }
 
     protected virtual void OnShowStarted() { }

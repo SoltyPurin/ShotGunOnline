@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Unity.Services.Multiplayer;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -54,8 +55,16 @@ public class LobbyUIManager : MonoBehaviour
         {
             _sessionManager.OnGameStarting += ShowGameStarting;
         }
+        LobbyViewBase.OnActiveViewStackChanged += UpdateToggleButtonVisual;
 
-        _createRoomDialogUI.gameObject.SetActive(false);
+        if (_createRoomDialogUI != null)
+        {
+            _createRoomDialogUI.gameObject.SetActive(false);
+        }
+        if (_confirmDialogUI != null)
+        {
+            _confirmDialogUI.gameObject.SetActive(false);
+        }
 
         HideLegacyTitleBackdropIfNeeded();
         EnsureToggleHudButtonCreated();
@@ -98,14 +107,110 @@ public class LobbyUIManager : MonoBehaviour
         {
             _sessionManager.OnGameStarting -= ShowGameStarting;
         }
+        LobbyViewBase.OnActiveViewStackChanged -= UpdateToggleButtonVisual;
     }
 
     private void Update()
     {
-        if (WasMenuTogglePressedThisFrame() && CanToggleMenu())
+        if (WasMenuTogglePressedThisFrame())
         {
-            ToggleMenuVisibility();
+            if (CanToggleMenu())
+            {
+                ToggleMenuVisibility();
+                return;
+            }
+            else
+            {
+                Debug.LogWarning($"[LobbyUIManager] メニュー開閉がブロックされました: state={_currentState}, createDialogActive={_createRoomDialogUI != null && _createRoomDialogUI.gameObject.activeInHierarchy}, confirmDialogActive={_confirmDialogUI != null && _confirmDialogUI.gameObject.activeInHierarchy}");
+            }
         }
+
+        HandleControllerMenuInput();
+    }
+
+    private void HandleControllerMenuInput()
+    {
+        if (!_isMenuOpen || !CanToggleMenu()) return;
+
+        var gamepad = Gamepad.current;
+        if (gamepad != null)
+        {
+            // Bボタン: メニューを閉じて集会所へ戻る
+            if (gamepad.buttonEast.wasPressedThisFrame)
+            {
+                SetMenuOpen(false);
+                return;
+            }
+
+            // Xボタン: Discover中はルーム作成ダイアログを開く
+            if (gamepad.buttonWest.wasPressedThisFrame && _currentState == LobbyUIState.Discover)
+            {
+                UISound.Play(UISoundType.Enter);
+                OpenCreateRoomDialog();
+                return;
+            }
+
+            // Yボタン: Discover中は一覧更新 / InRoom(ゲスト)中は準備完了トグル
+            if (gamepad.buttonNorth.wasPressedThisFrame)
+            {
+                if (_currentState == LobbyUIState.Discover)
+                {
+                    UISound.Play(UISoundType.Enter);
+                    RefreshRoomList();
+                    return;
+                }
+                else if (_currentState == LobbyUIState.InRoom && _sessionService?.CurrentSession != null && !_sessionService.CurrentSession.IsHost)
+                {
+                    UISound.Play(UISoundType.Enter);
+                    ToggleReadyState();
+                    return;
+                }
+            }
+        }
+
+        // マウス操作などでフォーカスが外れた場合、十字キー/スティック入力で自動復帰
+        if (EventSystem.current != null && !IsCurrentSelectionValid() && WasNavigationInputPressedThisFrame())
+        {
+            FocusCurrentViewDefaultElement();
+        }
+    }
+
+    private static bool IsCurrentSelectionValid()
+    {
+        var selected = EventSystem.current.currentSelectedGameObject;
+        if (selected == null || !selected.activeInHierarchy) return false;
+        var sel = selected.GetComponent<Selectable>();
+        return sel == null || sel.IsInteractable();
+    }
+
+    private static bool WasNavigationInputPressedThisFrame()
+    {
+        var gamepad = Gamepad.current;
+        if (gamepad != null)
+        {
+            if (gamepad.dpad.up.wasPressedThisFrame || gamepad.dpad.down.wasPressedThisFrame ||
+                gamepad.dpad.left.wasPressedThisFrame || gamepad.dpad.right.wasPressedThisFrame ||
+                gamepad.leftStick.ReadValue().sqrMagnitude > 0.25f ||
+                gamepad.buttonSouth.wasPressedThisFrame)
+            {
+                return true;
+            }
+        }
+
+        var keyboard = Keyboard.current;
+        if (keyboard != null)
+        {
+            if (keyboard.upArrowKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame ||
+                keyboard.leftArrowKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame ||
+                keyboard.wKey.wasPressedThisFrame || keyboard.sKey.wasPressedThisFrame ||
+                keyboard.aKey.wasPressedThisFrame || keyboard.dKey.wasPressedThisFrame ||
+                keyboard.enterKey.wasPressedThisFrame)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -137,6 +242,15 @@ public class LobbyUIManager : MonoBehaviour
             _hasRefreshedOnce = true;
             RefreshRoomList();
         }
+
+        if (_isMenuOpen)
+        {
+            FocusCurrentViewDefaultElementDelayed().Forget();
+        }
+        else if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     /// <summary>
@@ -146,6 +260,11 @@ public class LobbyUIManager : MonoBehaviour
     {
         _currentState = state;
         ApplyVisibility(immediate);
+
+        if (_isMenuOpen && state != LobbyUIState.Connecting)
+        {
+            FocusCurrentViewDefaultElementDelayed().Forget();
+        }
     }
 
     private void ApplyVisibility(bool immediate = false)
@@ -233,6 +352,7 @@ public class LobbyUIManager : MonoBehaviour
 
         bool canShowButton = _currentState != LobbyUIState.Connecting;
         _menuToggleButton.gameObject.SetActive(canShowButton);
+        _menuToggleButton.interactable = canShowButton && !LobbyViewBase.IsModalOpen;
 
         if (_menuToggleButtonText == null) return;
 
@@ -313,6 +433,28 @@ public class LobbyUIManager : MonoBehaviour
 
         _menuToggleButton.onClick.RemoveListener(ToggleMenuVisibility);
         _menuToggleButton.onClick.AddListener(ToggleMenuVisibility);
+        LobbyModernTheme.AttachMetallicVisual(_menuToggleButton);
+    }
+
+    private async UniTaskVoid FocusCurrentViewDefaultElementDelayed()
+    {
+        await UniTask.Yield(PlayerLoopTiming.Update);
+        if (this == null || !_isMenuOpen) return;
+        FocusCurrentViewDefaultElement();
+    }
+
+    private void FocusCurrentViewDefaultElement()
+    {
+        if (!_isMenuOpen || !CanToggleMenu()) return;
+
+        if (_currentState == LobbyUIState.Discover && _discoverUI != null)
+        {
+            _discoverUI.FocusDefaultElement();
+        }
+        else if (_currentState == LobbyUIState.InRoom && _roomUI != null)
+        {
+            _roomUI.FocusDefaultElement();
+        }
     }
 
     /// <summary>
@@ -344,6 +486,10 @@ public class LobbyUIManager : MonoBehaviour
         finally
         {
             _loadingOverlay.SetLoadingState(false);
+            if (_isMenuOpen && _currentState == LobbyUIState.Discover)
+            {
+                FocusCurrentViewDefaultElementDelayed().Forget();
+            }
         }
     }
 
@@ -355,7 +501,11 @@ public class LobbyUIManager : MonoBehaviour
         // ダイアログを開いて結果を待機
         var result = await _createRoomDialogUI.ShowAsync();
 
-        if (result.IsCanceled) return;
+        if (result.IsCanceled)
+        {
+            FocusCurrentViewDefaultElementDelayed().Forget();
+            return;
+        }
 
         // バリデーション
         while (string.IsNullOrWhiteSpace(result.RoomName))
@@ -363,10 +513,15 @@ public class LobbyUIManager : MonoBehaviour
             if (await _confirmDialogUI.ShowAsync("ルーム名を正しく入力してください"))
             {
                 result = await _createRoomDialogUI.ShowAsync();
-                if (result.IsCanceled) return;
+                if (result.IsCanceled)
+                {
+                    FocusCurrentViewDefaultElementDelayed().Forget();
+                    return;
+                }
             }
             else
             {
+                FocusCurrentViewDefaultElementDelayed().Forget();
                 return;
             }
         }
@@ -428,7 +583,11 @@ public class LobbyUIManager : MonoBehaviour
     private async void LeaveRoom()
     {
         // 確認ダイアログを表示して、ユーザーがキャンセルした場合は処理を中断
-        if (!await _confirmDialogUI.ShowAsync("退出しますか？")) return;
+        if (!await _confirmDialogUI.ShowAsync("退出しますか？"))
+        {
+            FocusCurrentViewDefaultElementDelayed().Forget();
+            return;
+        }
 
         TransitionTo(LobbyUIState.Connecting);
         try

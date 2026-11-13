@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// UISettingsConfig に設定されたSEとバウンス演出を自動適用するコンポーネント。
 /// </summary>
 [RequireComponent(typeof(Button))]
-public class UIButtonSound : MonoBehaviour, ISelectHandler
+public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler, ISubmitHandler
 {
     [Header("UIタイプ設定")]
     [Tooltip("ボタンの役割タイプ（決定・キャンセル・サブ操作など）。タイプに応じたSE・演出が一括適用されます。")]
@@ -76,17 +76,22 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler
         {
             _originalScale = _rectTransform.localScale;
         }
-
-        _button.onClick.AddListener(HandleClick);
     }
 
     private void OnDestroy()
     {
         CancelAnimation();
-        if (_button != null)
-        {
-            _button.onClick.RemoveListener(HandleClick);
-        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button != PointerEventData.InputButton.Left) return;
+        HandleClick();
+    }
+
+    public void OnSubmit(BaseEventData eventData)
+    {
+        HandleClick();
     }
 
     private void HandleClick()

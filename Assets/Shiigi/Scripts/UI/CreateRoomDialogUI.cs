@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Services.Multiplayer;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
@@ -65,6 +67,78 @@ public class CreateRoomDialogUI : LobbyViewBase
         EnsureButtonSound(_confirmCreateButton, UIButtonType.Default);
         EnsureButtonSound(_cancelDialogButton, UIButtonType.Cancel);
         EnsureButtonSound(_advancedSettingsButton, UIButtonType.SubAction);
+
+        LobbyModernTheme.AttachMetallicVisual(_confirmCreateButton);
+        LobbyModernTheme.AttachMetallicVisual(_cancelDialogButton);
+        LobbyModernTheme.AttachMetallicVisual(_advancedSettingsButton);
+
+        if (_roomNameInputField != null)
+        {
+            // フォーカスしただけでは入力開始せず、決定(Enter/A/クリック)で入力開始にする
+            _roomNameInputField.shouldActivateOnSelect = false;
+        }
+
+        RebuildNavigation();
+    }
+
+    private void Update()
+    {
+        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+
+        // ルーム名「編集中」のときだけ、Enter/Esc/Bで編集終了、Tabで次項目へ移動
+        if (_roomNameInputField != null && _roomNameInputField.isFocused)
+        {
+            if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame)
+            {
+                _roomNameInputField.DeactivateInputField();
+                GameObject nextTarget = _maxPlayersDropDown != null && _maxPlayersDropDown.gameObject.activeInHierarchy
+                    ? _maxPlayersDropDown.gameObject
+                    : (_confirmCreateButton != null ? _confirmCreateButton.gameObject : null);
+                if (nextTarget != null && EventSystem.current != null)
+                {
+                    EventSystem.current.SetSelectedGameObject(nextTarget);
+                }
+                return;
+            }
+
+            bool finishEdit =
+                (Keyboard.current != null && (Keyboard.current.enterKey.wasPressedThisFrame ||
+                                              Keyboard.current.numpadEnterKey.wasPressedThisFrame ||
+                                              Keyboard.current.escapeKey.wasPressedThisFrame)) ||
+                (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame);
+
+            if (finishEdit)
+            {
+                _roomNameInputField.DeactivateInputField();
+                return;
+            }
+
+            // 編集中はダイアログのキャンセル判定へ進まない
+            return;
+        }
+
+        bool cancelPressed =
+            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
+            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
+
+        if (cancelPressed)
+        {
+            UISound.Play(UISoundType.Cancel);
+            CloseAndSetResult(new CreateRoomResult { IsCanceled = true }).Forget();
+        }
+    }
+
+    public override GameObject GetDefaultFocusTarget()
+    {
+        if (Gamepad.current != null && _confirmCreateButton != null && _confirmCreateButton.gameObject.activeInHierarchy)
+        {
+            return _confirmCreateButton.gameObject;
+        }
+        if (_roomNameInputField != null && _roomNameInputField.gameObject.activeInHierarchy)
+        {
+            return _roomNameInputField.gameObject;
+        }
+        return _confirmCreateButton != null ? _confirmCreateButton.gameObject : null;
     }
 
     private static void EnsureButtonSound(Button button, UIButtonType buttonType)
@@ -106,6 +180,7 @@ public class CreateRoomDialogUI : LobbyViewBase
                 LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
             }
         }
+        RebuildNavigation();
 
         // イベントの多重登録を防ぐため、一度クリアして再アタッチ
         _confirmCreateButton.onClick.RemoveAllListeners();
@@ -142,6 +217,17 @@ public class CreateRoomDialogUI : LobbyViewBase
         // フェード＆ポップアニメーションを表示
         await base.ShowAsync();
 
+        if (EventSystem.current != null)
+        {
+            GameObject initialFocus = Gamepad.current != null && _confirmCreateButton != null
+                ? _confirmCreateButton.gameObject
+                : (_roomNameInputField != null ? _roomNameInputField.gameObject : _confirmCreateButton?.gameObject);
+            if (initialFocus != null)
+            {
+                EventSystem.current.SetSelectedGameObject(initialFocus);
+            }
+        }
+
         return await _utcs.Task;
     }
 
@@ -163,6 +249,70 @@ public class CreateRoomDialogUI : LobbyViewBase
         if (_advancedSettingsPanel.transform.parent is RectTransform parentRect)
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+        }
+        RebuildNavigation();
+    }
+
+    private void RebuildNavigation()
+    {
+        bool protocolVisible = _advancedSettingsPanel != null && _advancedSettingsPanel.activeSelf && _protocolDropdown != null;
+        Selectable bottomPrimary = _confirmCreateButton != null ? (Selectable)_confirmCreateButton : _cancelDialogButton;
+        Selectable afterAdvanced = protocolVisible ? (Selectable)_protocolDropdown : bottomPrimary;
+
+        if (_roomNameInputField != null)
+        {
+            var nav = new Navigation { mode = Navigation.Mode.Explicit };
+            nav.selectOnDown = _maxPlayersDropDown != null ? (Selectable)_maxPlayersDropDown : _advancedSettingsButton;
+            nav.selectOnUp = bottomPrimary;
+            _roomNameInputField.navigation = nav;
+        }
+
+        if (_maxPlayersDropDown != null)
+        {
+            var nav = new Navigation { mode = Navigation.Mode.Explicit };
+            nav.selectOnUp = _roomNameInputField;
+            nav.selectOnDown = _advancedSettingsButton != null ? (Selectable)_advancedSettingsButton : bottomPrimary;
+            _maxPlayersDropDown.navigation = nav;
+        }
+
+        if (_advancedSettingsButton != null)
+        {
+            var nav = new Navigation { mode = Navigation.Mode.Explicit };
+            nav.selectOnUp = _maxPlayersDropDown != null ? (Selectable)_maxPlayersDropDown : _roomNameInputField;
+            nav.selectOnDown = afterAdvanced;
+            _advancedSettingsButton.navigation = nav;
+        }
+
+        if (protocolVisible)
+        {
+            var nav = new Navigation { mode = Navigation.Mode.Explicit };
+            nav.selectOnUp = _advancedSettingsButton;
+            nav.selectOnDown = bottomPrimary;
+            _protocolDropdown.navigation = nav;
+        }
+
+        Selectable aboveBottom = protocolVisible
+            ? (Selectable)_protocolDropdown
+            : (_advancedSettingsButton != null ? (Selectable)_advancedSettingsButton : _maxPlayersDropDown);
+
+        if (_confirmCreateButton != null)
+        {
+            var nav = new Navigation { mode = Navigation.Mode.Explicit };
+            nav.selectOnUp = aboveBottom;
+            nav.selectOnDown = _roomNameInputField;
+            nav.selectOnLeft = _cancelDialogButton;
+            nav.selectOnRight = _cancelDialogButton;
+            _confirmCreateButton.navigation = nav;
+        }
+
+        if (_cancelDialogButton != null)
+        {
+            var nav = new Navigation { mode = Navigation.Mode.Explicit };
+            nav.selectOnUp = aboveBottom;
+            nav.selectOnDown = _roomNameInputField;
+            nav.selectOnLeft = _confirmCreateButton;
+            nav.selectOnRight = _confirmCreateButton;
+            _cancelDialogButton.navigation = nav;
         }
     }
 

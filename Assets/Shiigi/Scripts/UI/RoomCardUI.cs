@@ -14,9 +14,12 @@ public class RoomCardUI : MonoBehaviour
 
     // 参加ボタンが押されたことを通知するイベント
     public event Action<ISessionInfo> OnJoinRequested;
+    public Button JoinButton => _joinButton;
 
     private void Awake()
     {
+        LobbyModernTheme.AttachMetallicVisual(_joinButton);
+
         _joinButton.onClick.AddListener(() => OnJoinRequested?.Invoke(_sessionInfo));
         if (_joinButton != null && _joinButton.GetComponent<UIButtonSound>() == null)
         {
