@@ -1,4 +1,6 @@
+using DG.Tweening;
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -20,6 +22,7 @@ public class DetectOnPlayer : NetworkBehaviour
     }
 
     private NetworkVariable<bool> _isCleared = new NetworkVariable<bool>(false);
+
 
     private void Start()
     {
@@ -58,10 +61,8 @@ public class DetectOnPlayer : NetworkBehaviour
         {
             return;
         }
-
         RequestChangeState(false);
     }
-
     private void RequestChangeState(bool state)
     {
         Debug.Log("ä÷êîåƒÇ—èoÇµ");
@@ -139,4 +140,5 @@ public class DetectOnPlayer : NetworkBehaviour
         _isCleared.Value = true;
         RefreshSprite();
     }
+
 }

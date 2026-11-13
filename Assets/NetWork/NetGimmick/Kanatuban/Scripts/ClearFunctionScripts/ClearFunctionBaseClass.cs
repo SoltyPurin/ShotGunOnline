@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 public class ClearFunctionBaseClass : NetworkBehaviour
 {
@@ -9,6 +10,14 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     [Space(10)]
     [SerializeField] private bool _dummy;
 
+    [SerializeField, Header("踏まれた後何秒で消えるか")]
+    private float _deactiveTime = 3;
+
+    private float _saveTheDeactiveTime = 0;
+
+    private Coroutine _deactiveCoroutine;
+
+    private NetworkVariable<bool> _isStepOn = new NetworkVariable<bool>();
 
 
     [SerializeField, Header("クリアしたら消えるオブジェクト？")]
@@ -68,6 +77,9 @@ public class ClearFunctionBaseClass : NetworkBehaviour
             _sprite.enabled = false;
             _collider.enabled = false;
         }
+
+        _saveTheDeactiveTime = _deactiveTime;
+
     }
     /// <summary>
     /// 感圧板が全部押された時に作動するメソッド
@@ -116,13 +128,66 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     /// <param name="isPress"></param>
     public virtual void SyncGimmickFunction(bool isPress)
     {
-        if (!IsServer)
+        //if (!IsServer)
+        //{
+        //    return;
+        //}
+        //_isStepOn.Value = isPress;
+        //SyncGimmickFunctionClientRpc(isPress);
+        if (isPress)
         {
-            return;
-        }
-        SyncGimmickFunctionClientRpc(isPress);
-    }
+            // 踏まれたら点滅処理を停止
+            if (_deactiveCoroutine != null)
+            {
+                StopCoroutine(_deactiveCoroutine);
+                _deactiveCoroutine = null;
+            }
 
+            // オブジェクトを表示
+            if (!_isClearedVanishObj)
+            {
+                _sprite.enabled = true;
+                _collider.enabled = true;
+            }
+            else
+            {
+                _sprite.enabled = false;
+                _collider.enabled = false;
+            }
+        }
+        else
+        {
+            // 離れたら点滅・消滅処理を開始
+            if (_deactiveCoroutine != null)
+            {
+                StopCoroutine(_deactiveCoroutine);
+            }
+
+            _deactiveCoroutine = StartCoroutine(DeactiveProtocol());
+        }
+    }
+    private IEnumerator DeactiveProtocol()
+    {
+        //経過時間
+        float elapsed = 0f;
+        //点滅のタイミング
+        float blinkInterval = 0.2f;
+
+        while (elapsed < _saveTheDeactiveTime)
+        {
+            _sprite.enabled = !_sprite.enabled;
+
+            yield return new WaitForSeconds(blinkInterval);
+
+            elapsed += blinkInterval;
+        }
+
+        // 最後に完全に非表示にする
+        _sprite.enabled = false;
+        _collider.enabled = false;
+
+        _deactiveCoroutine = null;
+    }
     [ClientRpc]
     private void SyncGimmickFunctionClientRpc(bool isPress)
     {
