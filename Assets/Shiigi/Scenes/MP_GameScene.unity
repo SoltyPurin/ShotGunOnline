@@ -5537,7 +5537,7 @@ PrefabInstance:
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: _stageSequence
       value: 
-      objectReference: {fileID: 11400000, guid: 18442faf443de264a848890e9686b81c, type: 2}
+      objectReference: {fileID: 11400000, guid: 05bbcb92424e6694eab37d1d08230089, type: 2}
     - target: {fileID: 4857914789793552881, guid: f6cc869eb23d4ca4aa507de903e09185, type: 3}
       propertyPath: _waveTransition
       value: 
