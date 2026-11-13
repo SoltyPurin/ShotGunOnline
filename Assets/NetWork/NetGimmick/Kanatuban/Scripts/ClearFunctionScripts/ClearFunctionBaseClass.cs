@@ -128,14 +128,9 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     /// <param name="isPress"></param>
     public virtual void SyncGimmickFunction(bool isPress)
     {
-        //if (!IsServer)
-        //{
-        //    return;
-        //}
-        //_isStepOn.Value = isPress;
-        //SyncGimmickFunctionClientRpc(isPress);
         if (isPress)
         {
+            _saveTheDeactiveTime = _deactiveTime;
             // 踏まれたら点滅処理を停止
             if (_deactiveCoroutine != null)
             {
@@ -170,16 +165,38 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     {
         //経過時間
         float elapsed = 0f;
-        //点滅のタイミング
-        float blinkInterval = 0.2f;
+        float startInterval = 0.2f;
+        float minInterval = 0.03f;
+        //float intervalMinusTime = blinkInterval / _saveTheDeactiveTime;
 
         while (elapsed < _saveTheDeactiveTime)
         {
             _sprite.enabled = !_sprite.enabled;
 
-            yield return new WaitForSeconds(blinkInterval);
+            // 残り時間に応じて点滅間隔を短くする
+            float progress = elapsed / _saveTheDeactiveTime;
 
-            elapsed += blinkInterval;
+            float blinkInterval = Mathf.Lerp(
+                startInterval,
+                minInterval,
+                progress
+            );
+
+            // 最後の待機で設定時間を超えないようにする
+            float waitTime = Mathf.Min(
+                blinkInterval,
+                _saveTheDeactiveTime - elapsed
+            );
+
+            yield return new WaitForSeconds(waitTime);
+
+            elapsed += waitTime;
+            //_sprite.enabled = !_sprite.enabled;
+
+            //yield return new WaitForSeconds(blinkInterval);
+
+            //elapsed += 0.2f;
+            //blinkInterval -= intervalMinusTime;
         }
 
         // 最後に完全に非表示にする
