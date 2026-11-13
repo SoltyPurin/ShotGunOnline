@@ -24,7 +24,7 @@ public static class LobbyMovement
     /// </summary>
     public static Vector2 ReadMoveInput()
     {
-        if (IsInputBlocked) return Vector2.zero;
+        if (IsInputBlocked || LobbyViewBase.TopActiveView != null) return Vector2.zero;
 
         Vector2 input = Vector2.zero;
 

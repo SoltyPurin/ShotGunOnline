@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
@@ -25,6 +26,34 @@ public class ConfirmDialogUI : LobbyViewBase
 
         EnsureButtonSound(_yesButton, UIButtonType.Default);
         EnsureButtonSound(_noButton, UIButtonType.Cancel);
+
+        LobbyModernTheme.AttachMetallicVisual(_yesButton);
+        LobbyModernTheme.AttachMetallicVisual(_noButton);
+    }
+
+    private void Update()
+    {
+        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+
+        bool cancelPressed =
+            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
+            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
+
+        if (cancelPressed)
+        {
+            UISound.Play(UISoundType.Cancel);
+            bool hasNo = _noButton != null && _noButton.gameObject.activeSelf;
+            CloseAndSetResult(!hasNo).Forget();
+        }
+    }
+
+    public override GameObject GetDefaultFocusTarget()
+    {
+        if (_yesButton != null && _yesButton.gameObject.activeInHierarchy)
+        {
+            return _yesButton.gameObject;
+        }
+        return _noButton != null && _noButton.gameObject.activeInHierarchy ? _noButton.gameObject : null;
     }
 
     private static void EnsureButtonSound(Button button, UIButtonType type)
