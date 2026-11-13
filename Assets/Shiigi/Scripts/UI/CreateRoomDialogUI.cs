@@ -85,9 +85,15 @@ public class CreateRoomDialogUI : LobbyViewBase
     {
         if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
 
-        // ルーム名「編集中」のときだけ、Enter/Esc/Bで編集終了、Tabで次項目へ移動
+        // ルーム名「編集中」のときだけ、Esc/Bで編集終了、Tabで次項目へ移動
+        // ※日本語IME変換中の Enter / Esc で入力欄が閉じないよう、Enterでは終了せず IME確定文字列も確認する
         if (_roomNameInputField != null && _roomNameInputField.isFocused)
         {
+            if (!string.IsNullOrEmpty(Input.compositionString))
+            {
+                return;
+            }
+
             if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame)
             {
                 _roomNameInputField.DeactivateInputField();
@@ -102,9 +108,7 @@ public class CreateRoomDialogUI : LobbyViewBase
             }
 
             bool finishEdit =
-                (Keyboard.current != null && (Keyboard.current.enterKey.wasPressedThisFrame ||
-                                              Keyboard.current.numpadEnterKey.wasPressedThisFrame ||
-                                              Keyboard.current.escapeKey.wasPressedThisFrame)) ||
+                (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) ||
                 (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame);
 
             if (finishEdit)
