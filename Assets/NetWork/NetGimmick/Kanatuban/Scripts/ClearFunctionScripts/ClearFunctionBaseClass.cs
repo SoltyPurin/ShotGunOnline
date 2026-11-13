@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 public class ClearFunctionBaseClass : NetworkBehaviour
 {
@@ -9,6 +10,14 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     [Space(10)]
     [SerializeField] private bool _dummy;
 
+    [SerializeField, Header("踏まれた後何秒で消えるか")]
+    private float _deactiveTime = 3;
+
+    private float _saveTheDeactiveTime = 0;
+
+    private Coroutine _deactiveCoroutine;
+
+    private NetworkVariable<bool> _isStepOn = new NetworkVariable<bool>();
 
 
     [SerializeField, Header("クリアしたら消えるオブジェクト？")]
@@ -68,6 +77,9 @@ public class ClearFunctionBaseClass : NetworkBehaviour
             _sprite.enabled = false;
             _collider.enabled = false;
         }
+
+        _saveTheDeactiveTime = _deactiveTime;
+
     }
     /// <summary>
     /// 感圧板が全部押された時に作動するメソッド
@@ -116,13 +128,83 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     /// <param name="isPress"></param>
     public virtual void SyncGimmickFunction(bool isPress)
     {
-        if (!IsServer)
+        if (isPress)
         {
-            return;
-        }
-        SyncGimmickFunctionClientRpc(isPress);
-    }
+            _saveTheDeactiveTime = _deactiveTime;
+            // 踏まれたら点滅処理を停止
+            if (_deactiveCoroutine != null)
+            {
+                StopCoroutine(_deactiveCoroutine);
+                _deactiveCoroutine = null;
+            }
 
+            // オブジェクトを表示
+            if (!_isClearedVanishObj)
+            {
+                _sprite.enabled = true;
+                _collider.enabled = true;
+            }
+            else
+            {
+                _sprite.enabled = false;
+                _collider.enabled = false;
+            }
+        }
+        else
+        {
+            // 離れたら点滅・消滅処理を開始
+            if (_deactiveCoroutine != null)
+            {
+                StopCoroutine(_deactiveCoroutine);
+            }
+
+            _deactiveCoroutine = StartCoroutine(DeactiveProtocol());
+        }
+    }
+    private IEnumerator DeactiveProtocol()
+    {
+        //経過時間
+        float elapsed = 0f;
+        float startInterval = 0.2f;
+        float minInterval = 0.03f;
+        //float intervalMinusTime = blinkInterval / _saveTheDeactiveTime;
+
+        while (elapsed < _saveTheDeactiveTime)
+        {
+            _sprite.enabled = !_sprite.enabled;
+
+            // 残り時間に応じて点滅間隔を短くする
+            float progress = elapsed / _saveTheDeactiveTime;
+
+            float blinkInterval = Mathf.Lerp(
+                startInterval,
+                minInterval,
+                progress
+            );
+
+            // 最後の待機で設定時間を超えないようにする
+            float waitTime = Mathf.Min(
+                blinkInterval,
+                _saveTheDeactiveTime - elapsed
+            );
+
+            yield return new WaitForSeconds(waitTime);
+
+            elapsed += waitTime;
+            //_sprite.enabled = !_sprite.enabled;
+
+            //yield return new WaitForSeconds(blinkInterval);
+
+            //elapsed += 0.2f;
+            //blinkInterval -= intervalMinusTime;
+        }
+
+        // 最後に完全に非表示にする
+        _sprite.enabled = false;
+        _collider.enabled = false;
+
+        _deactiveCoroutine = null;
+    }
     [ClientRpc]
     private void SyncGimmickFunctionClientRpc(bool isPress)
     {

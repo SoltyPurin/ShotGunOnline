@@ -13,24 +13,8 @@ MonoBehaviour:
   m_Name: TestSequence
   m_EditorClassIdentifier: Assembly-CSharp::StageSequenceSO
   _stages:
-  - StageName: wave_1
-    StagePrefab: {fileID: 2633959402831705227, guid: 3cde85795c8d6294fb1084cbf2ae0414, type: 3}
+  - StageName: testwave
+    StagePrefab: {fileID: 6952941111589211781, guid: 7c1373fa9de506d449a631ee9fd07952, type: 3}
     WavePrefabOverride: {fileID: 0}
-    WaveStartTextOverride: 
-  - StageName: wave_2
-    StagePrefab: {fileID: 6886306173621862542, guid: 6baabc1f41958bc4c8ea479fb7a30c64, type: 3}
-    WavePrefabOverride: {fileID: 0}
-    WaveStartTextOverride: 
-  - StageName: wave_3
-    StagePrefab: {fileID: 1384865120023780516, guid: 6f66eacf7e7dfc0429db7c9c921489a8, type: 3}
-    WavePrefabOverride: {fileID: 0}
-    WaveStartTextOverride: 
-  - StageName: wave_4
-    StagePrefab: {fileID: 4568654757707315643, guid: 297c6b92ad737ec4d9ab6cc41a542dd0, type: 3}
-    WavePrefabOverride: {fileID: 0}
-    WaveStartTextOverride: 
-  - StageName: wave_5
-    StagePrefab: {fileID: 1949084431084868266, guid: 7c6ce12427e44624eacfaeeb0576336a, type: 3}
-    WavePrefabOverride: {fileID: 0}
-    WaveStartTextOverride: 
+    WaveStartTextOverride: TestWave
   _nextSceneNameOverride: 
