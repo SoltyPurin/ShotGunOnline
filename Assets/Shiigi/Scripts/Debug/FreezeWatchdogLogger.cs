@@ -36,6 +36,7 @@ public class FreezeWatchdogLogger : MonoBehaviour
     private static int _currentFrame = 0;
     private static float _currentTimeScale = 1.0f;
     private static string _lastCheckpoint = "Initialized";
+    private static volatile string _networkStatusSummary = "[NetworkManager] Singleton is NULL";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
@@ -144,6 +145,18 @@ public class FreezeWatchdogLogger : MonoBehaviour
         _currentTimeScale = Time.timeScale;
         _currentSceneName = SceneManager.GetActiveScene().name;
 
+        var netMgr = NetworkManager.Singleton;
+        if (netMgr != null)
+        {
+            _networkStatusSummary =
+                $"[NetworkManager] IsListening: {netMgr.IsListening}, IsServer: {netMgr.IsServer}, IsClient: {netMgr.IsClient}\n" +
+                $"[NetworkManager] ConnectedClients: {netMgr.ConnectedClientsList.Count}";
+        }
+        else
+        {
+            _networkStatusSummary = "[NetworkManager] Singleton is NULL";
+        }
+
         // 一度フリーズダンプを出力したが復帰した場合
         if (_freezeDumped)
         {
@@ -188,16 +201,8 @@ public class FreezeWatchdogLogger : MonoBehaviour
             sb.AppendLine($"最終チェックポイント: {_lastCheckpoint}");
             sb.AppendLine("================================================================================");
 
-            // ネットワーク状態
-            if (NetworkManager.Singleton != null)
-            {
-                sb.AppendLine($"[NetworkManager] IsListening: {NetworkManager.Singleton.IsListening}, IsServer: {NetworkManager.Singleton.IsServer}, IsClient: {NetworkManager.Singleton.IsClient}");
-                sb.AppendLine($"[NetworkManager] ConnectedClients: {NetworkManager.Singleton.ConnectedClientsList.Count}");
-            }
-            else
-            {
-                sb.AppendLine("[NetworkManager] Singleton is NULL");
-            }
+            // ネットワーク状態（メインスレッドでキャッシュした値を出力）
+            sb.AppendLine(_networkStatusSummary);
 
             sb.AppendLine("--------------------------------------------------------------------------------");
             sb.AppendLine("【直前に出力されたログ（最新 30 件）】");

@@ -165,7 +165,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
+    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
     private void PlayDamageEffectsClientRpc()
     {
         if (_damageAnimator != null)

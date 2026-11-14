@@ -21,6 +21,8 @@ public class LobbySessionService : ILobbySessionService
     private CancellationTokenSource _connectionCts;
     private bool _isSessionConnected;
     private bool _isLeavingIntentionally;
+    private bool _isConnecting;
+    private bool _isLeaving;
 
     public ISession CurrentSession => _currentSession;
 
@@ -43,7 +45,13 @@ public class LobbySessionService : ILobbySessionService
     public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers, RelayProtocol protocol = RelayProtocol.DTLS)
     {
         if (!EnsureServicesInitialized()) return false;
+        if (_isConnecting || _isLeaving)
+        {
+            Debug.LogWarning("[MSM]: 既に接続または退出処理が進行中のため、ルーム作成をスキップしました。");
+            return false;
+        }
 
+        _isConnecting = true;
         var cancellationToken = BeginConnectionAttempt(protocol);
 
         try
@@ -69,6 +77,8 @@ public class LobbySessionService : ILobbySessionService
                 return false;
             }
 
+            CompleteConnectionAttempt($"ホストとして接続完了 ({protocol})");
+
             await SaveRelayConnectedPropertyAsync();
 
             // Relay接続が確立したのでルームを公開（ルーム一覧に表示されるようにする）
@@ -76,7 +86,7 @@ public class LobbySessionService : ILobbySessionService
             hostSession.IsPrivate = false;
             await hostSession.SavePropertiesAsync();
 
-            CompleteConnectionAttempt($"ホストとして接続完了、ルーム一覧に公開しました ({protocol})");
+            Debug.Log($"[MSM]: ルーム一覧に公開しました ({protocol})");
             return true;
         }
         catch (Exception ex)
@@ -84,6 +94,10 @@ public class LobbySessionService : ILobbySessionService
             Debug.LogError($"ルーム作成失敗: {ex.Message}");
             await LeaveRoomSessionAsync();
             return false;
+        }
+        finally
+        {
+            _isConnecting = false;
         }
     }
 
@@ -110,7 +124,13 @@ public class LobbySessionService : ILobbySessionService
     public async UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom)
     {
         if (!EnsureServicesInitialized()) return false;
+        if (_isConnecting || _isLeaving)
+        {
+            Debug.LogWarning("[MSM]: 既に接続または退出処理が進行中のため、ルーム参加をスキップしました。");
+            return false;
+        }
 
+        _isConnecting = true;
         // ルーム一覧情報（ISessionInfo）の公開プロパティから通信プロトコルを自動取得
         var protocol = SessionPlayerPropertyHelper.GetSessionRelayProtocol(targetRoom);
         var cancellationToken = BeginConnectionAttempt(protocol);
@@ -130,9 +150,11 @@ public class LobbySessionService : ILobbySessionService
                 return false;
             }
 
+            // 接続直後からネットワークイベントを購読し、UGSプロパティ保存中のゲーム開始・切断を取りこぼさないようにする
+            CompleteConnectionAttempt($"クライアントとして接続完了 ({protocol})");
+
             await SaveRelayConnectedPropertyAsync();
 
-            CompleteConnectionAttempt($"クライアントとして接続完了 ({protocol})");
             return true;
         }
         catch (Exception ex)
@@ -141,10 +163,16 @@ public class LobbySessionService : ILobbySessionService
             await LeaveRoomSessionAsync();
             return false;
         }
+        finally
+        {
+            _isConnecting = false;
+        }
     }
 
     public async UniTask LeaveRoomSessionAsync()
     {
+        if (_isLeaving) return;
+        _isLeaving = true;
         _isLeavingIntentionally = true;
         _isSessionConnected = false;
         CancelPendingConnectionAttempt();
@@ -175,6 +203,7 @@ public class LobbySessionService : ILobbySessionService
             _currentSession = null;
             _relayConnectionHandler.Shutdown();
             _isLeavingIntentionally = false;
+            _isLeaving = false;
         }
     }
 

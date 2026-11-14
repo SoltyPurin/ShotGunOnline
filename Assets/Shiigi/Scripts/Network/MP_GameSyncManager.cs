@@ -138,12 +138,18 @@ public class MP_GameSyncManager : NetworkBehaviour
 
         if (phase == GamePhase.Waiting)
         {
-            MP_GameManager.Instance?.OnWaitingForPlayers();
+            if (MP_GameManager.Instance != null)
+            {
+                MP_GameManager.Instance.OnWaitingForPlayers();
+            }
         }
         else if (phase == GamePhase.Playing)
         {
             Debug.Log("[MP_GameSyncManager] GamePhase.Playing を受信。ゲーム本編を開始します。");
-            MP_GameManager.Instance?.OnGameStart();
+            if (MP_GameManager.Instance != null)
+            {
+                MP_GameManager.Instance.OnGameStart();
+            }
         }
     }
 }

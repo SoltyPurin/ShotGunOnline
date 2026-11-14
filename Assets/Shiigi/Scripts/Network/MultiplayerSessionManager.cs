@@ -111,6 +111,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         if (Instance == this)
         {
             UnsubscribeNetworkEvents();
+            Instance = null;
         }
     }
 
@@ -157,8 +158,14 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
                 {
                     Debug.Log("[MSM]: NetworkManager(Relay)をシャットダウンします。");
                     NetworkManager.Singleton.Shutdown();
+                    // NGOの内部シャットダウン完了を待ってから破棄する
+                    await UniTask.Yield(PlayerLoopTiming.Update);
                 }
-                Destroy(NetworkManager.Singleton.gameObject);
+
+                if (NetworkManager.Singleton != null)
+                {
+                    Destroy(NetworkManager.Singleton.gameObject);
+                }
             }
 
             Debug.Log("[MSM]: ルームおよびRelayの切断とクリーンアップが完了しました。");

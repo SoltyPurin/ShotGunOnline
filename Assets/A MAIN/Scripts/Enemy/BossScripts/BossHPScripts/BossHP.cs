@@ -146,7 +146,7 @@ public class BossHP : EnemyTakeDamage
     }
 
 
-    [ClientRpc]
+    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
     private void BossTakeDamageEffectClientRpc()
     {
         if (_isDead) return;
