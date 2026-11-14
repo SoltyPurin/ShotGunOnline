@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4522cd1f3b24cffab73892786486276, type: 3}
+  m_Name: UISettingsConfig
+  m_EditorClassIdentifier: Assembly-CSharp::UISettingsConfig
+  _defaultButtonStyle:
+    ClickSound: 1
+    PlayHoverSound: 0
+    HoverSound: 3
+    UseScaleBounce: 1
+    PressedScale: 0.95
+    BounceDuration: 0.08
+  _cancelButtonStyle:
+    ClickSound: 2
+    PlayHoverSound: 0
+    HoverSound: 3
+    UseScaleBounce: 1
+    PressedScale: 0.95
+    BounceDuration: 0.08
+  _subActionButtonStyle:
+    ClickSound: 1
+    PlayHoverSound: 0
+    HoverSound: 3
+    UseScaleBounce: 0
+    PressedScale: 0.95
+    BounceDuration: 0.08
+  _defaultWindowStyle:
+    ShowDuration: 0.16
+    HideDuration: 0.12
+    UseScalePop: 1
+    StartScale: 0.95
+    ShowSound: 0
+    HideSound: 0
+  _modalDialogStyle:
+    ShowDuration: 0.2
+    HideDuration: 0.14
+    UseScalePop: 1
+    StartScale: 0.9
+    ShowSound: 0
+    HideSound: 0
+  _overlayDrawerStyle:
+    ShowDuration: 0.14
+    HideDuration: 0.1
+    UseScalePop: 1
+    StartScale: 0.98
+    ShowSound: 0
+    HideSound: 0

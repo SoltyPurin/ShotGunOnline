@@ -93,6 +93,14 @@ public class KeepDistanceMove : EnemyMove
                 //停止時間が射撃時間を上回ったら射撃
                 if (_stoppingTime >= _timeUntilNextShot)
                 {
+                    _stoppingTime = 0.0f;
+
+                    // ネットワークマルチプレイ時はサーバーのみが弾を生成・スポーンする（クライアント側では生成しない）
+                    if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && !IsServer)
+                    {
+                        break;
+                    }
+
                     if (_playerObject == null)
                     {
                         FindPlayer();
@@ -112,15 +120,24 @@ public class KeepDistanceMove : EnemyMove
                     //ネットワーク上にスポーンさせる
                     if (nBullet != null)
                     {
-                        nBullet.Spawn();
+                        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+                        {
+                            if (IsServer)
+                            {
+                                nBullet.Spawn();
+                            }
+                        }
                     }
-                    //音を再生
-                    if (_seManager != null)
+
+                    //音を再生（マルチプレイ時は全クライアントへ同期、オフライン時はローカル再生）
+                    if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && IsServer)
+                    {
+                        PlayShotSoundClientRpc();
+                    }
+                    else if (_seManager != null)
                     {
                         _seManager.PlayEnemyShotSound();
                     }
-                    //停止時間をリセット
-                    _stoppingTime = 0.0f;
                 }
 
                 //距離が再起動距離を上回ったら移動
@@ -147,6 +164,23 @@ public class KeepDistanceMove : EnemyMove
                 }
 
                 break;
+        }
+    }
+
+    [ClientRpc]
+    private void PlayShotSoundClientRpc()
+    {
+        if (_seManager == null)
+        {
+            GameObject seManagerObject = GameObject.FindWithTag("SEManager");
+            if (seManagerObject != null)
+            {
+                _seManager = seManagerObject.GetComponent<SEManager>();
+            }
+        }
+        if (_seManager != null)
+        {
+            _seManager.PlayEnemyShotSound();
         }
     }
 }

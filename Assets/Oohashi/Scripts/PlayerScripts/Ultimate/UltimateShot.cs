@@ -109,7 +109,15 @@ public class UltimateShot : MonoBehaviour
         {
             //反射弾でない場合はエフェクトを沸かせてデストロイする
             Instantiate(_destroyEffect, hitObject.transform.position, Quaternion.identity);
-            Destroy(hitObject);
+            EnemyShotBullet bullet = hitObject.GetComponent<EnemyShotBullet>();
+            if (bullet != null)
+            {
+                bullet.DestroyProtocol();
+            }
+            else
+            {
+                Destroy(hitObject);
+            }
         }
     }
 

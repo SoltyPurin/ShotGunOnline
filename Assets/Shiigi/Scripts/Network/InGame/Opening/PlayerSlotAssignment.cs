@@ -66,6 +66,8 @@ public struct PlayerSlotAssignment : INetworkSerializable
         return false;
     }
 
+    private const int MaxSlotCount = 64;
+
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         int length = PlayerCount;
@@ -73,6 +75,11 @@ public struct PlayerSlotAssignment : INetworkSerializable
 
         if (serializer.IsReader)
         {
+            if (length < 0 || length > MaxSlotCount)
+            {
+                _clientIdsBySlot = Array.Empty<ulong>();
+                return;
+            }
             _clientIdsBySlot = new ulong[length];
         }
 

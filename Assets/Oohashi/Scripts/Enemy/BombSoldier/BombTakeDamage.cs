@@ -1,71 +1,104 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class BombTakeDamage : EnemyTakeDamage
 {
-    [SerializeField,Header("�����v���g�R���̃X�N���v�g")]
+    [SerializeField, Header("自爆プロトコルのスクリプト")]
     private BombProtocol _bombProtocol = default;
-    //�����������ǂ����̃t���O
+
     private bool _hasExploted = false;
 
     public override void Start()
     {
         base.Start();
         SetMaxHP(JsonSaver.Instance.EnemyJson.BombHP);
-    }
-
-    /// <summary>
-    /// �����̃_���[�W��ݒ�
-    /// </summary>
-    /// <param name="chargeTime">�`���[�W����</param>
-    public override void SetExplosionDamgage(float chargeTime)
-    {
-        if (_hasExploted) return;
-        float damage = chargeTime * _explosionMultiplier;
-        _enemyHP.Value = (_enemyHP.Value - (int)damage);
-        if (_enemyHP.Value <= 0)
+        if (_bombProtocol == null)
         {
-            _isDead = true;
-            _bombProtocol.BombCircleCheck();
-            _hasExploted = true;
-            Destroy(this.gameObject);
+            _bombProtocol = GetComponent<BombProtocol>();
         }
     }
 
     /// <summary>
-    /// ���S���̃R���[�`��
+    /// 爆発のダメージ設定
     /// </summary>
-    /// <param name="chargeTime">�`���[�W����</param>
+    /// <param name="chargeTime">チャージ時間</param>
+    public override void SetExplosionDamgage(float chargeTime)
+    {
+        if (!IsServer || _hasExploted) return;
+        float damage = chargeTime * _explosionMultiplier;
+        _enemyHP.Value = (_enemyHP.Value - (int)damage);
+        if (_hpUI != null) _hpUI.UpdateHP(_enemyHP.Value);
+        if (_enemyHP.Value <= 0)
+        {
+            _isDead = true;
+            _hasExploted = true;
+            if (_bombProtocol != null)
+            {
+                _bombProtocol.BombCircleCheck();
+            }
+            NormalDeath();
+        }
+    }
+
+    /// <summary>
+    /// 死亡時のコルーチン
+    /// </summary>
+    /// <param name="chargeTime">チャージ時間</param>
     /// <returns></returns>
     public override IEnumerator DeathProtocol(float chargeTime)
     {
+        if (!IsServer) yield break;
+        if (!gameObject.scene.isLoaded) yield break;
+
         _isDead = true;
         float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
-        _playTheSEManager.PlayEnemyDeathSound();
-        ComboCounter counter = GameObject.FindWithTag(COMBOCOUNTER_TAGNAME).GetComponent<ComboCounter>();
-        //�R���{�J�E���^�[�Ƀv���X
-        counter.ComboPlus();
-        yield return new WaitForSeconds(timeLeftUntilDeath);
-        _bombProtocol.BombCircleCheck();
-        _playTheSEManager.PlayMoneyDropSound();
-        Instantiate(_deathObject, transform.position, Quaternion.identity);
-        Destroy(this.gameObject);
 
+        GameObject counterObj = GameObject.FindWithTag(COMBOCOUNTER_TAGNAME);
+        if (counterObj != null)
+        {
+            ComboCounter counter = counterObj.GetComponent<ComboCounter>();
+            if (counter != null && gameObject.activeInHierarchy)
+            {
+                counter.ComboPlus();
+            }
+        }
+
+        PlayDeathEffectsClientRpc(_shouldDropCoin);
+
+        yield return new WaitForSeconds(timeLeftUntilDeath);
+
+        if (_bombProtocol != null)
+        {
+            _bombProtocol.BombCircleCheck();
+        }
+
+        NormalDeath();
     }
 
     /// <summary>
-    /// �v���C���[�ɐڐG
+    /// プレイヤーに接触したときの死亡
     /// </summary>
     public void PlayerCollision()
     {
-        Destroy(this.gameObject);
+        NormalDeath();
     }
+
     /// <summary>
-    /// �����ł͂Ȃ��ʏ�̎��S
+    /// 爆発・自爆による死亡（安全なネットワークDespawn）
     /// </summary>
     public void NormalDeath()
     {
-        Destroy(this.gameObject);
+        if (!IsServer) return;
+
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

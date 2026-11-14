@@ -29,7 +29,7 @@ public class SoulMeter : MonoBehaviour
     private int _soulFirstPos = -780;
     private int _upValue = 0;
 
-    private void Start()
+    private void Awake()
     {
         _maxCeil = _soulFirstPos;
         _upValue = (_soulFirstPos * -1) / SOUL_MAX_VALUE;

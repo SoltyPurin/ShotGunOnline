@@ -146,6 +146,8 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
         {
             _animator.SetTrigger(FALLTRIGGER);
         }
+
+        transform.rotation = Quaternion.identity;
     }
 
     /// <summary>
@@ -158,11 +160,17 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
     }
 
     /// <summary>
-    /// 復帰ポイントを名前から安全に取得（スペルミスやシーンごとの差異に対応）
+    /// 復帰ポイントを現在アクティブなStageControllerまたは名前から安全に取得
     /// </summary>
     private void FindReturnPoint()
     {
         if (_returnPointTransform != null) return;
+
+        if (StageController.ActiveStage != null && StageController.ActiveStage.BossReturnPoint != null)
+        {
+            _returnPointTransform = StageController.ActiveStage.BossReturnPoint.gameObject;
+            return;
+        }
 
         if (!string.IsNullOrEmpty(_returnPointName))
         {
@@ -171,9 +179,9 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
 
         if (_returnPointTransform == null)
         {
-            _returnPointTransform = GameObject.Find("SpawnPoint2") 
-                ?? GameObject.Find("SpawonPoint2") 
-                ?? GameObject.Find("BossReturnPoint") 
+            _returnPointTransform = GameObject.Find("SpawnPoint2")
+                ?? GameObject.Find("SpawonPoint2")
+                ?? GameObject.Find("BossReturnPoint")
                 ?? GameObject.Find("SpawnPoint");
         }
     }
@@ -190,19 +198,21 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
 
         FindReturnPoint();
 
-        Vector3 returnPos = _returnPointTransform != null 
-            ? _returnPointTransform.transform.position 
+        Vector3 returnPos = _returnPointTransform != null
+            ? _returnPointTransform.transform.position
             : new Vector3(0, 0, 0);
 
+        Vector3 initialScale = Vector3.one;
         NetworkTransform netTransform = GetComponent<NetworkTransform>();
         if (netTransform != null)
         {
-            netTransform.Teleport(returnPos, Quaternion.identity, transform.localScale);
+            netTransform.Teleport(returnPos, Quaternion.identity, initialScale);
         }
         else
         {
             transform.position = returnPos;
             transform.rotation = Quaternion.identity;
+            transform.localScale = initialScale;
         }
 
         Debug.Log("ボスリターン: " + returnPos);
@@ -225,8 +235,26 @@ public class BossFallToCliffAndHole : EnemyFallToCliff
 
     private void PlayReturnEffectLocal(Vector2 targetPos)
     {
-        if (_returnAnim != null)
+        // 落下アニメーション（FallAnimu1によるZ軸回転・スケール縮小）をリセットしてWait状態に戻す
+        if (_animator != null)
         {
+            _animator.Play("Wait", 0, 0f);
+            _animator.Update(0f);
+        }
+
+        transform.rotation = Quaternion.identity;
+        transform.localScale = Vector3.one;
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.angularVelocity = 0f;
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        if (_returnAnim != null && _returnAnim != _animator)
+        {
+            // _animatorと別の復帰用アニメーターが登録されている場合のみトリガー
             _returnAnim.SetTrigger(RETURNFALL);
         }
 

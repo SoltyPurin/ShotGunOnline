@@ -74,20 +74,24 @@ public class EnemyKnockBack : NetworkBehaviour
             //最後まで気づかれないのは絶対ダメ
             _force = Mathf.Lerp(_minForce, _powValue, 0.5f);
 
+            // 通常ショット時も含め、ノックバック開始時は即座にステートを knockback に変更する
+            if (_enemyMove != null)
+            {
+                _enemyMove.EnemyState = EnemyState.knockback;
+            }
+
             if (_trenble != null)
             {
                 if (isCrit)
                 {
                     StartCoroutine(HitStop(_force, _critStiffnessTime));
                     _force = 0;
-                    _enemyMove.EnemyState = EnemyState.knockback;
                     _trenble.TrenbleProtocol(_critStiffnessTime);
                 }
                 else if (isUlt)
                 {
                     StartCoroutine(HitStop(_force, _ultStiffnessTime));
                     _force = 0;
-                    _enemyMove.EnemyState = EnemyState.knockback;
                     _trenble.TrenbleProtocol(_ultStiffnessTime);
                 }
                 else if (!isCrit && !isUlt)
@@ -95,6 +99,10 @@ public class EnemyKnockBack : NetworkBehaviour
                     _trenble.NormalTrenbleProtocol(0.1f, chargeTime);
                     _canKnockBack = true;
                 }
+            }
+            else
+            {
+                _canKnockBack = true;
             }
 
             DamageEffect damageEffect = GetComponentInChildren<DamageEffect>();
@@ -117,6 +125,13 @@ public class EnemyKnockBack : NetworkBehaviour
     protected void PlayKnockBackEffectsClientRpc(bool isCrit, bool isUlt, float chargeTime, ulong attackerClientId)
     {
         if (IsServer) return; // サーバー（ホスト）側では SetDirectionAndForce 内で既に再生済み
+
+        // クライアント側でも前進移動を即座に停止してノックバック追従に備える
+        if (_enemyMove != null)
+        {
+            _enemyMove.OnKnockBackStarted();
+        }
+
         // 攻撃者本人は ShootRange.PlayLocalHitFeedback で再生済み(ウルトはローカル再生なしのため除外しない)
         if (!isUlt && NetworkManager.LocalClientId == attackerClientId) return;
 

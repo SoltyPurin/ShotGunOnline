@@ -221,8 +221,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1526366481295745493}
   - component: {fileID: 8488607981163897503}
-  - component: {fileID: 1904543879169403520}
   - component: {fileID: -5274994381569185111}
+  - component: {fileID: 1904543879169403520}
   - component: {fileID: 1267024824855801258}
   m_Layer: 0
   m_Name: GroundCoin
@@ -294,18 +294,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1904543879169403520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6448248149618343989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 900c47e02f4ca6742b37f24d39a6d093, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-5274994381569185111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +320,19 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &1904543879169403520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6448248149618343989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 900c47e02f4ca6742b37f24d39a6d093, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!114 &1267024824855801258
 MonoBehaviour:
   m_ObjectHideFlags: 0

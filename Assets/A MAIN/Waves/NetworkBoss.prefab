@@ -148,6 +148,7 @@ Transform:
   m_Children:
   - {fileID: 5144768488054062825}
   - {fileID: 961980971548176815}
+  - {fileID: 5956628046434961152}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2814779266558285818
@@ -162,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1017916438
+  GlobalObjectIdHash: 2390173502
   InScenePlacedSourceGlobalObjectIdHash: 2488626245
   DeferredDespawnTick: 0
   Ownership: 1
@@ -188,9 +189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b18f95ad80cc24eb361c444aa8ce50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wave
-  ShowTopMostFoldoutHeaderGroup: 1
   _waveType: 1
-  _gimmickList: []
+  _gimmickList:
+  - _generateFrame: 0
+    _waveGimmick: {fileID: 1667034248522854760}
   _objList:
   - _generateFrame: 0
     _waveObj: {fileID: 7730701731999936075}
@@ -800,6 +802,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 0.8}
   _returnSpeed: 10
   _fadeSpeed: 0.5
+  _effectMaxDuration: 0.9
 --- !u!114 &3061139487866105975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1508,7 +1511,7 @@ Transform:
   m_GameObject: {fileID: 7735347502137762513}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -52, y: 3.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1544,7 +1547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1512561888
+  GlobalObjectIdHash: 2055370500
   InScenePlacedSourceGlobalObjectIdHash: 2488626245
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1574,6 +1577,7 @@ MonoBehaviour:
   _moveSpeed: 5
   _keepDistance: 0
   _inertiaStrangth: 4
+  _localSimulation: 0
   _bossAnimator: {fileID: 5608777152012203185}
   _needApproachDistance: 9
   _actionCoolTime: 1
@@ -1861,6 +1865,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _moveSpeed: 10
   _stoppingDistance: 0
+  _repathInterval: 0.15
 --- !u!114 &307597609895706768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2849,6 +2854,87 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!1001 &2697723950391961216
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6727715949584306090}
+    m_Modifications:
+    - target: {fileID: 429553839114807513, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3128896130
+      objectReference: {fileID: 0}
+    - target: {fileID: 429553839114807513, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 2033089261
+      objectReference: {fileID: 0}
+    - target: {fileID: 7489009533188883926, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_Name
+      value: Stone
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.0518703
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -25.810547
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+--- !u!114 &1667034248522854760 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3626034810493884392, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+  m_PrefabInstance: {fileID: 2697723950391961216}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d792cd55ff7620e4ab2edbf4a5e72626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &5956628046434961152 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8636228454470099328, guid: 05624422b96bf4a499c94aadcd91f3de, type: 3}
+  m_PrefabInstance: {fileID: 2697723950391961216}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3890505359112929824
 PrefabInstance:
   m_ObjectHideFlags: 0

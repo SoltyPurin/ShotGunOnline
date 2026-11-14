@@ -87,10 +87,17 @@ public class BossJumpAtack : BossColliderTriggerSW
     public void JumpAttackEnd()
     {
         if (_jumpAtackArea != null) _jumpAtackArea.SetActive(false);
+        if (_bossCollider != null) _bossCollider.isTrigger = false;
         if (_stateManagement != null && _stateManagement.IsServer)
         {
             _stateManagement._currentState = BossStateManagement.BossState.Cooldown;
         }
+    }
+
+    public void ResetJumpAttackState()
+    {
+        if (_jumpAtackArea != null) _jumpAtackArea.SetActive(false);
+        if (_bossCollider != null) _bossCollider.isTrigger = false;
     }
 
     /// <summary>
@@ -108,7 +115,9 @@ public class BossJumpAtack : BossColliderTriggerSW
             transform.position.z);
 
         // Lerpで移動
-        Vector3 newPos = Vector3.Lerp(transform.position, targetPosition, 0.1f);
+        // フレームレート/fixedDeltaTimeに依存しない減衰補間
+        float t = 1f - Mathf.Exp(-5.26f * Time.fixedDeltaTime);
+        Vector3 newPos = Vector3.Lerp(transform.position, targetPosition, t);
 
         // プレイヤーからの距離を制限
         Vector3 offset = newPos - targetPosition;

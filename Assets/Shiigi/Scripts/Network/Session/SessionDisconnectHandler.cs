@@ -102,8 +102,10 @@ public class SessionDisconnectHandler
         if (_isApplicationQuitting || !Application.isPlaying || !_isMonitoring || _isHandlingDisconnect) return;
 
         var networkManager = NetworkManager.Singleton;
-        // クライアント側で切断コールバックが発火した場合はホスト（サーバー）との接続切断を意味する
-        if (networkManager != null && !networkManager.IsServer)
+        // クライアント側で自身またはサーバーの切断コールバックが発火した場合はホストとの接続切断を意味する
+        if (networkManager != null &&
+            !networkManager.IsServer &&
+            (clientId == networkManager.LocalClientId || clientId == NetworkManager.ServerClientId))
         {
             Debug.LogWarning($"[MSM]: ホストとの通信が切断されました (ClientId: {clientId})");
             HandleUnexpectedDisconnectAsync().Forget();
@@ -159,7 +161,7 @@ public class SessionDisconnectHandler
             }
             Time.timeScale = 1.0f;
 
-            if (SceneManager.GetActiveScene().name != _titleSceneName)
+            if (!_isApplicationQuitting && SceneManager.GetActiveScene().name != _titleSceneName)
             {
                 SceneManager.LoadScene(_titleSceneName);
             }
@@ -172,10 +174,14 @@ public class SessionDisconnectHandler
                 _canvasObj.SetActive(false);
             }
             Time.timeScale = 1.0f;
-            SceneManager.LoadScene(_titleSceneName);
+            if (!_isApplicationQuitting && SceneManager.GetActiveScene().name != _titleSceneName)
+            {
+                SceneManager.LoadScene(_titleSceneName);
+            }
         }
         finally
         {
+            Time.timeScale = 1.0f;
             _isHandlingDisconnect = false;
         }
     }

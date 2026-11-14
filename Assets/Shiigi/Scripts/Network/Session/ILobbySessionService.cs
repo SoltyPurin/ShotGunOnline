@@ -11,10 +11,9 @@ public interface ILobbySessionService
     ISession CurrentSession { get; }
     event Action OnSessionChanged;
 
-    UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers);
+    UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers, RelayProtocol protocol = RelayProtocol.DTLS);
     UniTask<List<ISessionInfo>> SearchRoomSessionsAsync();
     UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom);
     UniTask LeaveRoomSessionAsync();
     UniTask SetReadyStatusAsync(bool isReady);
 }
-

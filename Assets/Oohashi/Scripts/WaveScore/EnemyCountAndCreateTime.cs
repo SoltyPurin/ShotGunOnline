@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,6 +11,9 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     [SerializeField, Header("敵一体倒すのに想定される最大時間")]
     private float _expectedClearTime = 10;
+
+    [SerializeField, Header("プレイヤー一人当たりの制限時間の増量を抑制する値")]
+    private float _modifyTimeForPlayers = 1.25f;
 
     [SerializeField, Header("被弾スコアを出す際に敵の数に掛ける数字")]
     private float _damageMultiplication = 0.3f;
@@ -94,10 +98,6 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     public void EnemyCount(int count,int difficulty, Wave.WaveEnemyType type)
     {
-        //if (IsServer)
-        //{
-        //    EnemyCountClientRpc(count, difficulty, type);
-        //}
 
         // ネットワーク接続中かつサーバーなら ClientRpc で全端末に同期
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && IsServer)
@@ -122,24 +122,26 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
         _currentWaveTime = 0f;
         _canCountTimer = false;
         _realTimeCircle.StartTimer();
+        int curPlayerCount = (NetworkManager.Singleton.ConnectedClientsList.Count);
+        float modifyValue = curPlayerCount * _modifyTimeForPlayers;
         switch (type)
         {
             case Wave.WaveEnemyType.Normal:
-                _baseTime = count * _expectedClearTime;
+                _baseTime = count * _expectedClearTime * modifyValue;
                 _sRankTime = _baseTime * _timeSRankRatio;
                 _aRankTime = _baseTime * _timeARankRatio;
                 StartCoroutine(TimerFlagStart(false));
                 break;
 
             case Wave.WaveEnemyType.Boss:
-                _baseTime = count * _bossExpectedTime;
+                _baseTime = count * _bossExpectedTime * modifyValue;
                 _sRankTime = _baseTime * _bossTimeSRankRatio;
                 _aRankTime = _baseTime * _bossTimeARankRatio;
                 StartCoroutine(TimerFlagStart(true));
                 break;
 
             case Wave.WaveEnemyType.MediumBoss:
-                _baseTime = count * _mediumBossExpectedTime;
+                _baseTime = count * _mediumBossExpectedTime * modifyValue;
                 _sRankTime = _baseTime * _bossTimeSRankRatio;
                 _aRankTime = _baseTime * _bossTimeARankRatio;
                 StartCoroutine(TimerFlagStart(false));
@@ -163,7 +165,6 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     public void TakeDamage()
     {
-        Debug.Log("スコアの被弾処理呼び出し");
         _currentWaveTime += _damageDecValue;
 
         _realTimeCircle.Trenble();

@@ -5,50 +5,48 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GetAndDisplayScores : NetworkBehaviour
+public class GetAndDisplayScores : MonoBehaviour
 {
-    [SerializeField, Header("×‚©‚¢ƒXƒRƒA‚ğ•\¦‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ç´°ã‹ã„ã‚¹ã‚³ã‚¢ã‚’è¡¨ç¤ºã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private CreateWavesTexts _nextScores = default;
-    [SerializeField, Header("Sƒ‰ƒ“ƒN‚ÌƒCƒ‰ƒXƒg")]
+    [SerializeField, Header("Sãƒ©ãƒ³ã‚¯ã®ã‚¤ãƒ©ã‚¹ãƒˆ")]
     private GameObject _sRankImage = default;
-    [SerializeField,Header("Aƒ‰ƒ“ƒN‚ÌƒCƒ‰ƒXƒg")]
-    private GameObject _aRankImage =default;
-    [SerializeField,Header("Bƒ‰ƒ“ƒN‚ÌƒCƒ‰ƒXƒg")]
+    [SerializeField, Header("Aãƒ©ãƒ³ã‚¯ã®ã‚¤ãƒ©ã‚¹ãƒˆ")]
+    private GameObject _aRankImage = default;
+    [SerializeField, Header("Bãƒ©ãƒ³ã‚¯ã®ã‚¤ãƒ©ã‚¹ãƒˆ")]
     private GameObject _bRankImage = default;
 
-    [SerializeField,Header("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚ÌƒCƒ‰ƒXƒg")]
-    private GameObject _multiPlayImage =default;
-    [SerializeField, Header("{‚ÌƒeƒLƒXƒg")]
+    [SerializeField, Header("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã®ã‚¤ãƒ©ã‚¹ãƒˆ")]
+    private GameObject _multiPlayImage = default;
+    [SerializeField, Header("ï¼‹ã®ãƒ†ã‚­ã‚¹ãƒˆ")]
     private GameObject _plusText = default;
 
-    [SerializeField, Header("Å‰‚É•\¦‚·‚éƒXƒRƒA")]
+    [SerializeField, Header("æœ€åˆã«è¡¨ç¤ºã™ã‚‹ã‚¹ã‚³ã‚¢")]
     private GameObject _firstScores = default;
-    //sƒ‰ƒ“ƒN‚ğæ‚é‚Ì‚É•K—v‚È“_”AƒEƒF[ƒu”‚©‚ç‹‚ß‚é
+    //sãƒ©ãƒ³ã‚¯ã‚’å–ã‚‹ã®ã«å¿…è¦ãªç‚¹æ•°ã€ã‚¦ã‚§ãƒ¼ãƒ–æ•°ã‹ã‚‰æ±‚ã‚ã‚‹
     private int _sRankValue = 0;
-    //aƒ‰ƒ“ƒN‚ğæ‚é‚Ì‚É•K—v‚È“_”
+    //aãƒ©ãƒ³ã‚¯ã‚’å–ã‚‹ã®ã«å¿…è¦ãªç‚¹æ•°
     private int _aRankValue = 0;
-    [SerializeField, Header("Sƒ‰ƒ“ƒN‚ğæ‚é‚Ì‚É•K—v‚ÈŠ„‡")]
+    [SerializeField, Header("Sãƒ©ãƒ³ã‚¯ã‚’å–ã‚‹ã®ã«å¿…è¦ãªå‰²åˆ")]
     private float _sRankRatio = 7;
-    [SerializeField,Header("Aƒ‰ƒ“ƒN‚ğæ‚é‚Ì‚É•K—v‚ÈŠ„‡")]
+    [SerializeField, Header("Aãƒ©ãƒ³ã‚¯ã‚’å–ã‚‹ã®ã«å¿…è¦ãªå‰²åˆ")]
     private float _aRankRatio = 4;
 
-    [SerializeField, Header("Å‘åƒXƒRƒA")]
+    [SerializeField, Header("æœ€å¤§ã‚¹ã‚³ã‚¢")]
     private float _maxScore = 36;
 
-    [SerializeField, Header("ƒXƒRƒA•\¦‚ğ‚·‚éƒeƒLƒXƒg")]
+    [SerializeField, Header("ã‚¹ã‚³ã‚¢è¡¨ç¤ºã‚’ã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆ")]
     private Text _totalScoreShowText = default;
-    [SerializeField, Header("”í’e”‚ğ•\¦‚·‚éƒeƒLƒXƒg")]
+    [SerializeField, Header("è¢«å¼¾æ•°ã‚’è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆ")]
     private Text _hitsTakenText = default;
-    //[SerializeField,Header("ƒRƒ“ƒ{”‚ğ•\¦‚·‚éƒeƒLƒXƒg")]
-    //private Text _maxComboText = default;
 
-    [SerializeField,Header("–ß‚éƒ{ƒ^ƒ“")]
+    [SerializeField, Header("æˆ»ã‚‹ãƒœã‚¿ãƒ³")]
     private GameObject _returnButton = default;
 
-    [SerializeField,Header("Ú×‚ğ•\¦‚·‚éƒ{ƒ^ƒ“")]
+    [SerializeField, Header("è©³ç´°ã‚’è¡¨ç¤ºã™ã‚‹ãƒœã‚¿ãƒ³")]
     private GameObject _showDetailButton = default;
 
-    [SerializeField, Header("ƒ^ƒCƒgƒ‹‚É–ß‚éƒ{ƒ^ƒ“")]
+    [SerializeField, Header("ã‚¿ã‚¤ãƒˆãƒ«ã«æˆ»ã‚‹ãƒœã‚¿ãƒ³")]
     private Button _titleButton = default;
 
     private int _maxPoint = 3;
@@ -57,126 +55,186 @@ public class GetAndDisplayScores : NetworkBehaviour
     private readonly string SCOREDATA = "WaveScore";
 
     private int _scoreSize = 0;
-
     private int _totalScore = 0;
-
     private string[] _testList = { "a", "b", "c", "d", "e", "f" };
 
-    private NetworkVariable<int> _onlinePlayerCount = new NetworkVariable<int>(
-        1,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner
-    );
     /// <summary>
-    /// 1ƒQ[ƒ€‚Ì‡ŒvƒXƒRƒA‚ğŒvZA‚»‚ê‚ÆŠeƒEƒF[ƒu‚ÌƒXƒRƒA‚ğ•\¦‚·‚éƒXƒNƒŠƒvƒg‚É¶¬–½—ß‚ğo‚·
+    /// 1ã‚²ãƒ¼ãƒ ã®åˆè¨ˆã‚¹ã‚³ã‚¢ã‚’è¨ˆç®—ã€ãã‚Œã¨å„ã‚¦ã‚§ãƒ¼ãƒ–ã®ã‚¹ã‚³ã‚¢ã‚’è¡¨ç¤ºã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆã«ç”Ÿæˆå‘½ä»¤ã‚’å‡ºã™
     /// </summary>
     private void Start()
     {
+        FreezeWatchdogLogger.Checkpoint("GetAndDisplayScores.Start: é–‹å§‹");
+
+        // ãƒªã‚¶ãƒ«ãƒˆç”»é¢ã§ä¸è¦ãªæ®‹å­˜ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚²ãƒ¼ãƒ å‹•ä½œã‚’åœæ­¢
+        DisableResidualPlayers();
+
+        int onlinePlayerCount = 1;
         bool isMultiplay = false;
 
-        // 1. ƒlƒbƒgƒ[ƒNƒZƒbƒVƒ‡ƒ“‚ª‰Ò“­‚µ‚Ä‚¢‚é‚©ƒ`ƒFƒbƒN
+        // 1. ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚»ãƒƒã‚·ãƒ§ãƒ³ãŒç¨¼åƒã—ã¦ã„ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
-            // ƒzƒXƒgEƒT[ƒo[‘¤‚Å‚ ‚ê‚Î NetworkManager ‚©‚ç’¼Úl”‚ğæ“¾‰Â”\
-            if (NetworkManager.Singleton.IsServer)
-            {
-                _onlinePlayerCount.Value = NetworkManager.Singleton.ConnectedClientsIds.Count;
-                isMultiplay = (_onlinePlayerCount.Value > 1);
-            }
-            else
-            {
-                // ƒNƒ‰ƒCƒAƒ“ƒg‘¤‚Í“¯Šú‚³‚ê‚½ NetworkVariable ‚â RPC ‚Ì’l‚ğQÆ
-                isMultiplay = (_onlinePlayerCount.Value > 1);
-            }
-        }
-        else
-        {
-            // ƒlƒbƒgƒ[ƒN”ñÚ‘±‚ÍƒVƒ“ƒOƒ‹ƒvƒŒƒCˆµ‚¢
-            isMultiplay = false;
+            onlinePlayerCount = Mathf.Max(1, NetworkManager.Singleton.ConnectedClientsIds.Count);
+            isMultiplay = (onlinePlayerCount > 1);
         }
 
         _sRankRatio *= 0.1f;
         _aRankRatio *= 0.1f;
         GameObject scoreObject = GameObject.FindWithTag(SCOREDATA);
-        if(scoreObject != null)
+        if (scoreObject != null)
         {
             _scoreData = scoreObject.GetComponent<ScoreData>();
-            _scoreSize = _scoreData.ScoreList.Length;
-            _sRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _sRankRatio);
-            _aRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _aRankRatio);
-            _nextScores.CreateWaves(_scoreSize, _scoreData.ScoreCharList);
-        }
-        else
-        {
-            _scoreSize = _testList.Length;
-            _sRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _sRankRatio);
-            _aRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _aRankRatio);
-            _nextScores.CreateWaves(6, _testList);
-        }
-        _scoreCircle = GetComponent<ScoreCircle>();
-        for (int i =0; i < _scoreSize; i++)
-        {
-            _totalScore += _scoreData.ScoreList[i];
-        }
-        _scoreCircle.Initialize(_maxScore,_totalScore);
-        if(_totalScore >= _sRankValue)
-        {
-            _totalScoreShowText.text = "S";
-            if (isMultiplay)
+            if (_scoreData != null && _scoreData.ScoreList != null && _scoreData.ScoreList.Length > 0)
             {
-                _multiPlayImage.SetActive(true);
-                MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
-                imageChanger.ChangeResutlImage(_onlinePlayerCount.Value);
+                _scoreSize = _scoreData.ScoreList.Length;
+                _sRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _sRankRatio);
+                _aRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _aRankRatio);
+                _nextScores?.CreateWaves(_scoreSize, _scoreData.ScoreCharList);
             }
             else
             {
-                _sRankImage.SetActive(true);
+                UseFallbackScoreData();
+            }
+        }
+        else
+        {
+            UseFallbackScoreData();
+        }
+
+        FreezeWatchdogLogger.Checkpoint("GetAndDisplayScores.Start: ã‚¹ã‚³ã‚¢é›†è¨ˆã¨ScoreCircleåˆæœŸåŒ–");
+        _scoreCircle = GetComponent<ScoreCircle>();
+        _totalScore = 0;
+        if (_scoreData != null && _scoreData.ScoreList != null)
+        {
+            for (int i = 0; i < Mathf.Min(_scoreSize, _scoreData.ScoreList.Length); i++)
+            {
+                _totalScore += _scoreData.ScoreList[i];
+            }
+        }
+
+        if (_scoreCircle != null)
+        {
+            _scoreCircle.Initialize(_maxScore, _totalScore);
+        }
+
+        FreezeWatchdogLogger.Checkpoint("GetAndDisplayScores.Start: ãƒ©ãƒ³ã‚¯åˆ¤å®šãƒ»UIè¡¨ç¤º");
+        if (_totalScore >= _sRankValue)
+        {
+            if (_totalScoreShowText != null) _totalScoreShowText.text = "S";
+            if (isMultiplay)
+            {
+                if (_multiPlayImage != null)
+                {
+                    _multiPlayImage.SetActive(true);
+                    MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
+                    imageChanger?.ChangeResutlImage(onlinePlayerCount);
+                }
+            }
+            else
+            {
+                if (_sRankImage != null) _sRankImage.SetActive(true);
             }
 
-            if (_totalScore >= _maxScore)
+            if (_totalScore >= _maxScore && _plusText != null)
             {
                 _plusText.SetActive(true);
             }
         }
-        else if( _totalScore >= _aRankValue)
+        else if (_totalScore >= _aRankValue)
         {
-            _totalScoreShowText.text = "A";
+            if (_totalScoreShowText != null) _totalScoreShowText.text = "A";
             if (isMultiplay)
             {
-                _multiPlayImage.SetActive(true);
-                MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
-                imageChanger.ChangeResutlImage(_onlinePlayerCount.Value);
-
+                if (_multiPlayImage != null)
+                {
+                    _multiPlayImage.SetActive(true);
+                    MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
+                    imageChanger?.ChangeResutlImage(onlinePlayerCount);
+                }
             }
             else
             {
-                _aRankImage.SetActive(true);
+                if (_aRankImage != null) _aRankImage.SetActive(true);
             }
         }
         else
         {
-            _totalScoreShowText.text = "B";
+            if (_totalScoreShowText != null) _totalScoreShowText.text = "B";
             if (isMultiplay)
             {
-                _multiPlayImage.SetActive(true);
-                MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
-                imageChanger.ChangeResutlImage(_onlinePlayerCount.Value);
+                if (_multiPlayImage != null)
+                {
+                    _multiPlayImage.SetActive(true);
+                    MultiPlayResultImageChanger imageChanger = _multiPlayImage.GetComponent<MultiPlayResultImageChanger>();
+                    imageChanger?.ChangeResutlImage(onlinePlayerCount);
+                }
             }
             else
             {
-                _bRankImage.SetActive(true);
+                if (_bRankImage != null) _bRankImage.SetActive(true);
             }
         }
 
-        //_hitsTakenText.text = _scoreData.DamageTakenCount.ToString();
-        _hitsTakenText.text = _scoreData.TotalTakenDamage.ToString();
+        if (_hitsTakenText != null && _scoreData != null)
+        {
+            _hitsTakenText.text = _scoreData.TotalTakenDamage.ToString();
+        }
 
-        Destroy(scoreObject);
+        if (scoreObject != null)
+        {
+            Destroy(scoreObject);
+        }
+
+        FreezeWatchdogLogger.Checkpoint("GetAndDisplayScores.Start: å®Œäº†");
+    }
+
+    private void UseFallbackScoreData()
+    {
+        _scoreSize = _testList.Length;
+        _sRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _sRankRatio);
+        _aRankValue = (int)Mathf.Floor(_scoreSize * _maxPoint * _aRankRatio);
+        _nextScores?.CreateWaves(6, _testList);
     }
 
     /// <summary>
-    /// ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚çÀsB
-    /// ŠeƒEƒF[ƒu‚ÌƒXƒRƒA•\¦‚ğs‚¤AÅ‰‚É•\¦‚µ‚Ä‚é‚â‚Â‚ç‚ğ”ñ•\¦‚É‚µ‚ÄÚ×î•ñ‚ğ•\¦‚·‚é
+    /// MP_GameScene ã‹ã‚‰ DontDestroyOnLoad ã§æŒã¡è¶Šã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–ã—ã€
+    /// ãƒªã‚¶ãƒ«ãƒˆç”»é¢ã§ã®ã‚«ãƒ¡ãƒ©æ¢ç´¢ãƒ»å…¥åŠ›å—ä»˜ãƒ»ç‰©ç†æ¼”ç®—ç­‰ã®æš´èµ°ã‚’é˜²æ­¢ã™ã‚‹
+    /// </summary>
+    private void DisableResidualPlayers()
+    {
+        FreezeWatchdogLogger.Checkpoint("GetAndDisplayScores: æ®‹å­˜ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç„¡åŠ¹åŒ–é–‹å§‹");
+        try
+        {
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.SpawnManager != null)
+            {
+                foreach (var netObj in NetworkManager.Singleton.SpawnManager.SpawnedObjectsList)
+                {
+                    if (netObj != null && netObj.IsPlayerObject && netObj.gameObject != null)
+                    {
+                        netObj.gameObject.SetActive(false);
+                    }
+                }
+            }
+
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (var player in players)
+            {
+                if (player != null)
+                {
+                    player.SetActive(false);
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[GetAndDisplayScores] æ®‹å­˜ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç„¡åŠ¹åŒ–æ™‚ã®è»½å¾®ãªä¾‹å¤–: {ex.Message}");
+        }
+        FreezeWatchdogLogger.Checkpoint("GetAndDisplayScores: æ®‹å­˜ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç„¡åŠ¹åŒ–å®Œäº†");
+    }
+
+    /// <summary>
+    /// ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‚‰å®Ÿè¡Œã€‚
+    /// å„ã‚¦ã‚§ãƒ¼ãƒ–ã®ã‚¹ã‚³ã‚¢è¡¨ç¤ºã‚’è¡Œã†ã€æœ€åˆã«è¡¨ç¤ºã—ã¦ã‚‹ã‚„ã¤ã‚‰ã‚’éè¡¨ç¤ºã«ã—ã¦è©³ç´°æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void NextScoreShow()
     {
@@ -192,8 +250,8 @@ public class GetAndDisplayScores : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚çÀsB
-    /// ŠeƒEƒF[ƒu‚ÌƒXƒRƒA‚ğ”ñ•\¦‚É‚µ‚ÄÅ‰‚Ìƒg[ƒ^ƒ‹ƒXƒRƒA‚ğ•\¦
+    /// ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‚‰å®Ÿè¡Œã€‚
+    /// å„ã‚¦ã‚§ãƒ¼ãƒ–ã®ã‚¹ã‚³ã‚¢ã‚’éè¡¨ç¤ºã«ã—ã¦æœ€åˆã®ãƒˆãƒ¼ã‚¿ãƒ«ã‚¹ã‚³ã‚¢ã‚’è¡¨ç¤º
     /// </summary>
     public void FirstScoreShow()
     {

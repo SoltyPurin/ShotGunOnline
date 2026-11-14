@@ -3,15 +3,15 @@ using DG.Tweening;
 
 public class PlayerTrenble : MonoBehaviour
 {
-    [SerializeField, Header("—h‚ê‚éŠÔ")]
+    [SerializeField, Header("æºã‚Œã‚‹æ™‚é–“")]
     private float _durationTime = 0.2f;
-    [SerializeField, Header("—h‚ê‚Ì‹­‚³")]
+    [SerializeField, Header("æºã‚Œã®å¼·ã•")]
     private float _trenblePower = 2;
-    [SerializeField, Header("—h‚ê‚Ì×‚©‚³")]
+    [SerializeField, Header("æºã‚Œã®ç´°ã‹ã•")]
     private int _vibrato = 50;
-    [SerializeField, Header("—h‚ê‚é•ûŒü‚Ìƒoƒ‰ƒcƒL")]
+    [SerializeField, Header("æºã‚Œã‚‹æ–¹å‘ã®ãƒãƒ©ãƒ„ã‚­")]
     private float _randomness = 90;
-    //[SerializeField, Header("—h‚ç‚·ƒIƒuƒWƒFƒNƒg")]
+    //[SerializeField, Header("æºã‚‰ã™ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     //private GameObject _player = default;
     public void DamageTrenble()
     {
@@ -20,7 +20,7 @@ public class PlayerTrenble : MonoBehaviour
         vibrato: _vibrato,                
         randomness: _randomness,           
         snapping: false,
-        fadeOut: true);
+        fadeOut: true).SetLink(gameObject);
     }
 
     public void RushTrenble()
@@ -30,6 +30,11 @@ public class PlayerTrenble : MonoBehaviour
             vibrato: 90,
             randomness: 90,
             snapping: false,
-            fadeOut: true);
+            fadeOut: true).SetLink(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
     }
 }

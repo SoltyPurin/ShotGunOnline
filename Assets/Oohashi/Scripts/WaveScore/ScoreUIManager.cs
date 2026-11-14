@@ -12,22 +12,22 @@ public class ScoreUIManager : MonoBehaviour
 {
     private WaveManager _waveManager = default;
 
-    [SerializeField,Header("‡ŒvƒXƒRƒA•\¦ƒeƒLƒXƒg")]
+    [SerializeField,Header("åˆè¨ˆã‚¹ã‚³ã‚¢è¡¨ç¤ºãƒ†ã‚­ã‚¹ãƒˆ")]
     private Text _totalScoreText = default;
 
-    [SerializeField, Header("ƒXƒRƒA•\¦UI")]
+    [SerializeField, Header("ã‚¹ã‚³ã‚¢è¡¨ç¤ºUI")]
     private GameObject _scorePrefab = default;
 
-    [SerializeField,Header("€–Ú—pƒeƒLƒXƒg")]
+    [SerializeField,Header("é …ç›®ç”¨ãƒ†ã‚­ã‚¹ãƒˆ")]
     private Text[] _itemText = new Text[2];
 
-    [SerializeField, Header("ƒXƒRƒA—pƒeƒLƒXƒgAã‚©‚çƒ^ƒCƒ€A”ê’eAƒRƒ“ƒ{")]
+    [SerializeField, Header("ã‚¹ã‚³ã‚¢ç”¨ãƒ†ã‚­ã‚¹ãƒˆã€ä¸Šã‹ã‚‰ã‚¿ã‚¤ãƒ ã€ç·‹å¼¾ã€ã‚³ãƒ³ãƒœ")]
     private Text[] _scoreText = new Text[3];
 
-    [SerializeField, Header("ƒEƒF[ƒu”•\¦—pƒeƒLƒXƒg")]
+    [SerializeField, Header("ã‚¦ã‚§ãƒ¼ãƒ–æ•°è¡¨ç¤ºç”¨ãƒ†ã‚­ã‚¹ãƒˆ")]
     private Text _waveText = default;
 
-    //ƒ^ƒCƒ€ƒ‰ƒCƒ“
+    //ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³
     private PlayableDirector _scoreTimeLine = default;
 
     private readonly string WAVEMANAGER = "WaveManager";
@@ -44,20 +44,27 @@ public class ScoreUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒEƒF[ƒu‚²‚Æ‚ÌƒXƒRƒA•\¦‚·‚é
+    /// ã‚¦ã‚§ãƒ¼ãƒ–ã”ã¨ã®ã‚¹ã‚³ã‚¢è¡¨ç¤ºã™ã‚‹
     /// </summary>
-    /// <param name="time">ŠÔ</param>
-    /// <param name="damage">”ê’e‚Ìƒ‰ƒ“ƒN</param>
-    /// <param name="total">‡Œv‚Ìƒ‰ƒ“ƒN</param>
-    [ClientRpc]
-    public void PopTextClientRpc(float time,int damage,string total,int wave)
+    /// <param name="time">æ™‚é–“</param>
+    /// <param name="damage">ç·‹å¼¾ã®ãƒ©ãƒ³ã‚¯</param>
+    /// <param name="total">åˆè¨ˆã®ãƒ©ãƒ³ã‚¯</param>
+    public void PopTextClientRpc(float time, int damage, string total, int wave)
     {
-        if(_itemText == null)
+        PopText(time, damage, total, wave);
+    }
+
+    /// <summary>
+    /// ã‚¦ã‚§ãƒ¼ãƒ–ã”ã¨ã®ã‚¹ã‚³ã‚¢è¡¨ç¤ºãƒ¡ã‚½ãƒƒãƒ‰ï¼ˆå„ç«¯æœ«ã§ãƒ­ãƒ¼ã‚«ãƒ«å®Ÿè¡Œï¼‰
+    /// </summary>
+    public void PopText(float time, int damage, string total, int wave)
+    {
+        if (_itemText == null)
         {
             return;
         }
         int nowWave = wave + 1;
-        Debug.Log("Œ»İ‚ÌƒEƒF[ƒu‚Í" + nowWave);
+        Debug.Log("ç¾åœ¨ã®ã‚¦ã‚§ãƒ¼ãƒ–ã¯" + nowWave);
 
         _scoreText[0].text = time.ToString("F1");
         _scoreText[1].text = damage.ToString();
@@ -65,10 +72,12 @@ public class ScoreUIManager : MonoBehaviour
         _waveText.text = "Wave " + nowWave;
 
         _scorePrefab.SetActive(true);
-        PlayTimelineClientRpc();
+        if (_scoreTimeLine != null)
+        {
+            _scoreTimeLine.Play();
+        }
     }
 
-    [ClientRpc]
     public void PlayTimelineClientRpc()
     {
         if (_scoreTimeLine != null)

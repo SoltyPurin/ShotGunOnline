@@ -14,7 +14,7 @@ public class PlayerAiming : NetworkBehaviour
     );
     public Vector3 Direction
     {
-        get { return _netAimDirection.Value; } //directionを取得できるようにする
+        get { return IsOwner ? _prevDirection : _netAimDirection.Value; } // Ownerはローカル値を即時参照し遅延を防ぐ
     }
 
 
@@ -91,18 +91,59 @@ public class PlayerAiming : NetworkBehaviour
         return true;
     }
 
+    private const float AimSyncDotThreshold = 0.9995f; // 約1.8度以上の変化時のみネットワーク同期
+
     private void Update()
     {
-        // 入力の取得は「操作している時(Owner)」かつ「エイム操作可能な時」に行う
-        if (this.IsOwner)
-        {
-            if (!CanAim())
-            {
-                _rightStickInput = Vector2.zero;
-                return;
-            }
+        if (!this.IsOwner) return;
 
-            InputAiming();
+        if (!CanAim())
+        {
+            _rightStickInput = Vector2.zero;
+            if (_playerObject != null)
+            {
+                _playerObject.transform.rotation = Quaternion.identity;
+            }
+            if (_shape != null)
+            {
+                _shape.NotShootTimeDirection = Vector3.right;
+            }
+            return;
+        }
+
+        InputAiming();
+        UpdateLocalAimDirection();
+        ApplyAimVisuals(_prevDirection, immediate: true);
+
+        // 一定角度以上変化したときだけ NetworkVariable を更新（毎フレーム送信を防止）
+        if (IsSpawned && Vector3.Dot(_netAimDirection.Value, _prevDirection) < AimSyncDotThreshold)
+        {
+            _netAimDirection.Value = _prevDirection;
+        }
+    }
+
+    private void UpdateLocalAimDirection()
+    {
+        if (!_useMouseAim)
+        {
+            if (_rightStickInput.sqrMagnitude > 0.04f)
+            {
+                _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0f).normalized;
+            }
+            return;
+        }
+
+        if (Camera.main == null) return;
+
+        Vector3 mousePos = Mouse.current != null
+            ? (Vector3)Mouse.current.position.ReadValue()
+            : Input.mousePosition;
+        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z - transform.position.z)));
+        Vector3 diff = worldMousePos - transform.position;
+        diff.z = 0f;
+        if (diff.sqrMagnitude > 0.01f)
+        {
+            _prevDirection = diff.normalized;
         }
     }
 
@@ -129,47 +170,8 @@ public class PlayerAiming : NetworkBehaviour
     {
         if (_playerObject == null) return;
 
-        // 操作している側（Owner）の場合の処理
-        if (this.IsOwner)
-        {
-            if (CanAim())
-            {
-                if (!_useMouseAim)
-                {
-                    if (_rightStickInput.sqrMagnitude > 0.04f)
-                    {
-                        _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0).normalized;
-                    }
-                }
-                else
-                {
-                    // マウスでの照準
-                    if (Camera.main != null)
-                    {
-                        Vector3 mousePos = Vector3.zero;
-                        if (Mouse.current != null)
-                        {
-                            mousePos = Mouse.current.position.ReadValue();
-                        }
-                        else
-                        {
-                            mousePos = Input.mousePosition;
-                        }
-                        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z - transform.position.z)));
-                        Vector3 playerPos = transform.position;
-                        Vector3 diff = worldMousePos - playerPos;
-                        diff.z = 0;
-                        if (diff.sqrMagnitude > 0.01f)
-                        {
-                            _prevDirection = diff.normalized;
-                        }
-                    }
-                }
-
-                // ネットワーク変数に現在の向きを入力（自動的にホスト・クライアント全員に同期）
-                _netAimDirection.Value = _prevDirection;
-            }
-        }
+        // Owner は Update() 側で入力・描画を即時反映済みのため、ここでは非 Owner のみ補間適用する
+        if (this.IsOwner) return;
 
         // ムービー・カットシーン再生中は向きをデフォルト（右向き水平）に維持し、視点移動させない
         if (!CanAim())
@@ -182,25 +184,22 @@ public class PlayerAiming : NetworkBehaviour
             return;
         }
 
-        // 【ホスト・クライアント全員が共通で実行する】処理
-        // 同期されて届いた「エイム方向」のデータを使って、各画面のローカルで体とエイム範囲を動かす
-        Vector3 currentAimDir = _netAimDirection.Value;
+        ApplyAimVisuals(_netAimDirection.Value, immediate: false);
+    }
 
-        if (currentAimDir.sqrMagnitude > 0.001f)
+    private void ApplyAimVisuals(Vector3 aimDir, bool immediate)
+    {
+        if (_playerObject == null || aimDir.sqrMagnitude <= 0.001f) return;
+
+        float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+        _playerObject.transform.rotation = immediate
+            ? targetRotation
+            : Quaternion.Lerp(_playerObject.transform.rotation, targetRotation, _correctionValue);
+
+        if (_shape != null)
         {
-            // 体（グラフィック）の回転処理
-            Quaternion pRotate = _playerObject.transform.rotation;
-            float angle = Mathf.Atan2(currentAimDir.y, currentAimDir.x) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-            // Lerpで滑らかに回転（他人の画面でもカクつかずに綺麗に回ります）
-            _playerObject.transform.rotation = Quaternion.Lerp(pRotate, targetRotation, _correctionValue);
-
-            // エイム範囲（見た目の演出）の更新
-            // （全員が同じデータを受け取っているので、複雑なelse分岐や逆算が不要になります）
-            if (_shape != null)
-            {
-                _shape.NotShootTimeDirection = currentAimDir;
-            }
+            _shape.NotShootTimeDirection = aimDir;
         }
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,37 +8,37 @@ public class MoveCoin : NetworkBehaviour
     private float _xDirection = 0;
     private float _yDirection = 0;
 
-    [SerializeField, Header("ƒvƒ‰ƒX•ûŒü‚Ö‚ÌÅ‘åˆÚ“®—Ê")]
+    [SerializeField, Header("ãƒ—ãƒ©ã‚¹æ–¹å‘ã¸ã®æœ€å¤§ç§»å‹•é‡")]
     private float _movePlusLimit = 10;
 
-    [SerializeField,Header("ƒ}ƒCƒiƒX•ûŒü‚Ö‚ÌÅ‘åˆÚ“®—Ê")]
+    [SerializeField,Header("ãƒã‚¤ãƒŠã‚¹æ–¹å‘ã¸ã®æœ€å¤§ç§»å‹•é‡")]
     private float _moveMinusLimit = -10;
 
-    [SerializeField, Header("Å‚‰‘¬")]
+    [SerializeField, Header("æœ€é«˜åˆé€Ÿ")]
     private float _maxMoveSpeed = 2;
 
-    [SerializeField, Header("Å’á‰‘¬")]
+    [SerializeField, Header("æœ€ä½åˆé€Ÿ")]
     private float _minMoveSpeed = 0.1f;
 
-    //‰‘¬
+    //åˆé€Ÿ
     private float _firstMoveSpeed = 0;
 
-    [SerializeField, Header("ƒXƒs[ƒhŒ¸Z‚É—p‚¢‚é’l‚ÌÅ’á’l")]
+    [SerializeField, Header("ã‚¹ãƒ”ãƒ¼ãƒ‰æ¸›ç®—ã«ç”¨ã„ã‚‹å€¤ã®æœ€ä½å€¤")]
     private float _speedDecMinLimit = 0.1f;
 
-    [SerializeField, Header("ƒXƒs[ƒhŒ¸Z‚É—p‚¢‚é’l‚ÌÅ‘å’l")]
+    [SerializeField, Header("ã‚¹ãƒ”ãƒ¼ãƒ‰æ¸›ç®—ã«ç”¨ã„ã‚‹å€¤ã®æœ€å¤§å€¤")]
     private float _speedDecMaxLimit = 1.0f;
 
-    [SerializeField, Header("“–‚½‚è”»’è‚ªƒAƒNƒeƒBƒu‚É‚È‚é‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField, Header("å½“ãŸã‚Šåˆ¤å®šãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã‚‹ã¾ã§ã®æ™‚é–“")]
     private float _colliderActiveTime = 0.5f;
 
-    [SerializeField,Header("ƒXƒvƒ‰ƒCƒgƒŒƒ“ƒ_ƒ‰[")]
+    [SerializeField,Header("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼")]
     private SpriteRenderer _spriteRenderer;
 
-    [SerializeField,Header("ƒRƒCƒ“‚ªÁ‚¦‚é‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField,Header("ã‚³ã‚¤ãƒ³ãŒæ¶ˆãˆã‚‹ã¾ã§ã®æ™‚é–“")]
     private float _destroyTime = 5.0f;
 
-    [SerializeField,Header("“_–Å‚ğŠJn‚·‚é‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField,Header("ç‚¹æ»…ã‚’é–‹å§‹ã™ã‚‹ã¾ã§ã®æ™‚é–“")]
     private float _blinkingStartTime = 3.0f;
 
     private float _initAliveTime = 0.0f;
@@ -47,7 +47,7 @@ public class MoveCoin : NetworkBehaviour
 
     private float _speedDecValue = 0;
 
-    //‚±‚±‚ğØ‚è‘Ö‚¦‚é‚±‚Æ‚Å“_–Å‚³‚¹‚é
+    //ã“ã“ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã“ã¨ã§ç‚¹æ»…ã•ã›ã‚‹
     private bool _isActive = true;
 
     private bool _canMove = false;
@@ -55,17 +55,17 @@ public class MoveCoin : NetworkBehaviour
     private SoulGraduallyMoveToPlayer _soulCollectRange = default;
 
     /// <summary>
-    /// ƒlƒbƒgƒ[ƒNã‚ÉƒXƒ|[ƒ“‚³‚ê‚½uŠÔ‚ÉƒT[ƒo[‘¤‚ÅˆÚ“®ƒpƒ‰ƒ[ƒ^‚ğƒZƒbƒgƒAƒbƒv‚·‚é
+    /// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ä¸Šã«ã‚¹ãƒãƒ¼ãƒ³ã•ã‚ŒãŸç¬é–“ã«ã‚µãƒ¼ãƒãƒ¼å´ã§ç§»å‹•ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã™ã‚‹
     /// </summary>
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
 
-        // “–‚½‚è”»’è‚Í‘S’[––‚ÅÅ‰‚ÍƒIƒt‚É‚µ‚Ä‚¨‚­
+        // å½“ãŸã‚Šåˆ¤å®šã¯å…¨ç«¯æœ«ã§æœ€åˆã¯ã‚ªãƒ•ã«ã—ã¦ãŠã
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
         if (boxCollider2D != null) boxCollider2D.enabled = false;
 
-        // ˆÚ“®ŒvZ‚Æƒpƒ‰ƒ[ƒ^Œˆ’è‚ÍƒT[ƒo[‘¤‚Å‚Ì‚İs‚¤
+        // ç§»å‹•è¨ˆç®—ã¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ±ºå®šã¯ã‚µãƒ¼ãƒãƒ¼å´ã§ã®ã¿è¡Œã†
         if (IsServer)
         {
             _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
@@ -79,22 +79,21 @@ public class MoveCoin : NetworkBehaviour
 
             _canMove = true;
             StartCoroutine(ActiveHitjudgment());
-            MoveStartClientRpc();
+            MoveStartClientRpc(_moveDirection,
+            _firstMoveSpeed,
+            _speedDecValue);
         }
     }
     [ClientRpc]
-    public void MoveStartClientRpc()
+    public void MoveStartClientRpc(Vector2 direction,
+    float speed,
+    float deceleration)
     {
-        Debug.Log("ƒ\ƒEƒ‹ˆÚ“®ŠJn");
         _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
 
-        _xDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
-        _yDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
-
-        _firstMoveSpeed = Random.Range(_minMoveSpeed, _maxMoveSpeed);
-
-        _moveDirection = new Vector2(_xDirection, _yDirection);
-        _speedDecValue = Random.Range(_speedDecMinLimit, _speedDecMaxLimit);
+        _moveDirection = direction;
+        _firstMoveSpeed = speed;
+        _speedDecValue = deceleration;
 
         _canMove = true;
 
@@ -128,44 +127,93 @@ public class MoveCoin : NetworkBehaviour
     private void FixedUpdate()
     {
 
-        if (_canMove && IsServer)
+        if (!_canMove)
         {
-
-            _initAliveTime += Time.fixedDeltaTime;
-            if (_firstMoveSpeed >= 0)
-            {
-                transform.position += (Vector3)_moveDirection * _firstMoveSpeed * Time.fixedDeltaTime;
-
-                _firstMoveSpeed -= _speedDecValue;
-
-
-            }
-
-            if (_initAliveTime >= _destroyTime && IsServer)
-            {
-                GetComponent<NetworkObject>().Despawn(true);
-
-            }
-
-
-            if (!_canMove) {
-                return; 
-            }
-            if (_initAliveTime >= _blinkingStartTime)
-            {
-                CoinControl control = GetComponent<CoinControl>();
-                if (control != null)
-                {
-                    control.WaitMethod(0);
-                    _canMove = false;
-                }
-                else
-                {
-                    _isActive = !_isActive;
-                    _spriteRenderer.enabled = _isActive;
-                }
-            }
-
+            return;
         }
+
+        // ã‚µãƒ¼ãƒãƒ¼ãƒ»ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå…±é€šã®æ•£å¸ƒç§»å‹•
+        _initAliveTime += Time.fixedDeltaTime;
+
+        if (_firstMoveSpeed >= 0)
+        {
+            transform.position +=
+                (Vector3)_moveDirection *
+                _firstMoveSpeed *
+                Time.fixedDeltaTime;
+
+            _firstMoveSpeed -= _speedDecValue;
+        }
+
+        // ä»¥ä¸‹ã®æ¶ˆæ»…å‡¦ç†ã¯ã‚µãƒ¼ãƒãƒ¼ã ã‘
+        if (IsServer && _initAliveTime >= _destroyTime)
+        {
+            NetworkObject netObj = GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
+            {
+                netObj.Despawn(true);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        // ç‚¹æ»…ãƒ»å¸åé–‹å§‹
+        if (_initAliveTime >= _blinkingStartTime)
+        {
+            CoinControl control = GetComponent<CoinControl>();
+
+            if (control != null)
+            {
+                control.WaitMethod(0);
+                _canMove = false;
+            }
+            else
+            {
+                _isActive = !_isActive;
+                _spriteRenderer.enabled = _isActive;
+            }
+        }
+
+        //if (_canMove && IsServer)
+        //{
+
+        //    _initAliveTime += Time.fixedDeltaTime;
+        //    if (_firstMoveSpeed >= 0)
+        //    {
+        //        transform.position += (Vector3)_moveDirection * _firstMoveSpeed * Time.fixedDeltaTime;
+
+        //        _firstMoveSpeed -= _speedDecValue;
+
+
+        //    }
+
+        //    if (_initAliveTime >= _destroyTime && IsServer)
+        //    {
+        //        GetComponent<NetworkObject>().Despawn(true);
+
+        //    }
+
+
+        //    if (!_canMove) {
+        //        return; 
+        //    }
+        //    if (_initAliveTime >= _blinkingStartTime)
+        //    {
+        //        CoinControl control = GetComponent<CoinControl>();
+        //        if (control != null)
+        //        {
+        //            control.WaitMethod(0);
+        //            _canMove = false;
+        //        }
+        //        else
+        //        {
+        //            _isActive = !_isActive;
+        //            _spriteRenderer.enabled = _isActive;
+        //        }
+        //    }
+
+        //}
     }
 }

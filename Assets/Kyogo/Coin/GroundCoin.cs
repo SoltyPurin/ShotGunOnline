@@ -43,7 +43,7 @@ public class GroundCoin : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void RequestCollectServerRpc(NetworkObjectReference playerRef)
     {
         if (_isCollected) return;

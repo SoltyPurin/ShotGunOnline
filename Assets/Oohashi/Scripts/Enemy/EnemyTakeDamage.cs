@@ -1,26 +1,28 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public class EnemyTakeDamage : NetworkBehaviour
 {
-    protected NetworkVariable<int> _enemyHP = new NetworkVariable<int>(
-        1000, 
+    [SerializeField, Header("プレイヤー数に乗算する値、これで複数人の時のHPの計算を調整")]
+    private float _modifyValue = 0.75f;
+    protected NetworkVariable<float> _enemyHP = new NetworkVariable<float>(
+        1000.0f, 
         NetworkVariableReadPermission.Everyone, 
         NetworkVariableWritePermission.Server
     );
-    public NetworkVariable<int> EnemyHP
+    public NetworkVariable<float> EnemyHP
     {
         get { return _enemyHP; }
     }
 
-    protected NetworkVariable<int> _maxHP = new NetworkVariable<int>(
-        1000,
+    protected NetworkVariable<float> _maxHP = new NetworkVariable<float>(
+        1000.0f,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    public NetworkVariable<int> MaxHP
+    public NetworkVariable<float> MaxHP
     {
         get { return _maxHP; }
     }
@@ -32,12 +34,14 @@ public class EnemyTakeDamage : NetworkBehaviour
     {
         if (IsServer)
         {
-            _enemyHP.Value = hp;
-            _maxHP.Value = hp;
+            int curPlayerCount = (NetworkManager.Singleton.ConnectedClientsList.Count);
+            float modifyHPValue = curPlayerCount * _modifyValue;
+            _enemyHP.Value = hp * modifyHPValue;
+            _maxHP.Value = hp * modifyHPValue;
         }
         if (_hpUI != null)
         {
-            _hpUI.Initialize(hp);
+            _hpUI.Initialize(_maxHP.Value);
         }
     }
 
@@ -53,6 +57,8 @@ public class EnemyTakeDamage : NetworkBehaviour
     protected EnemyMove _enemyMove = default;
     [SerializeField, Header("HPを表示するUI")]
     protected EnemyDamageUI _hpUI = default;
+    [SerializeField, Header("死亡時にコインをドロップするか")]
+    protected bool _shouldDropCoin = true;
     private PlayerCoinDrop _playerCoinDrop = default;
     [SerializeField, Header("アニメーションのオブジェクト")]
     protected GameObject _deathObject = default;
@@ -159,7 +165,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
+    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
     private void PlayDamageEffectsClientRpc()
     {
         if (_damageAnimator != null)
@@ -185,7 +191,7 @@ public class EnemyTakeDamage : NetworkBehaviour
 
         if (_hpUI != null)
         {
-            int initialMax = _maxHP.Value > 0 ? _maxHP.Value : _enemyHP.Value;
+            float initialMax = _maxHP.Value > 0 ? _maxHP.Value : _enemyHP.Value;
             _hpUI.Initialize(initialMax);
             _hpUI.UpdateHP(_enemyHP.Value);
 
@@ -205,7 +211,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 
-    private void OnMaxHPChanged(int previousValue, int newValue)
+    private void OnMaxHPChanged(float previousValue, float newValue)
     {
         if (_hpUI != null)
         {
@@ -214,7 +220,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 
-    private void OnHPChanged(int previousValue, int newValue)
+    private void OnHPChanged(float previousValue, float newValue)
     {
         if (_hpUI != null)
         {
@@ -322,11 +328,11 @@ public class EnemyTakeDamage : NetworkBehaviour
 
             yield return new WaitForSeconds(1.8f);
 
-            PlayDeathEffectsClientRpc();
+            PlayDeathEffectsClientRpc(_shouldDropCoin);
 
-            if (_playerCoinDrop != null)
+            if (_shouldDropCoin && _playerCoinDrop != null)
             {
-                _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
+                _playerCoinDrop.CoinDrop(1,false, GetTargetPlayer());
             }
 
             if (NetworkObject != null && NetworkObject.IsSpawned)
@@ -346,12 +352,19 @@ public class EnemyTakeDamage : NetworkBehaviour
 
         _isDead = true;
 
-        if (_playerCoinDrop != null)
+        SoulKeep soul = _lastAttackerPlayer.GetComponent<SoulKeep>();
+        if(soul != null)
         {
-            _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
+            //ソウルが直接触れて入手する形式だとバグった時にソウルが獲得できないため、直接付与する仕組みにする
+            soul.CollectCoin();
+        }
+        if (_shouldDropCoin && _playerCoinDrop != null)
+        {
+            bool isPlayerSoulGot = _lastAttackerPlayer;
+            _playerCoinDrop.CoinDrop(1,isPlayerSoulGot, GetTargetPlayer());
         }
 
-        PlayDeathEffectsClientRpc();
+        PlayDeathEffectsClientRpc(_shouldDropCoin);
 
         float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
         yield return new WaitForSeconds(timeLeftUntilDeath);
@@ -376,9 +389,9 @@ public class EnemyTakeDamage : NetworkBehaviour
 
             PlayRoadKillEffectClientRpc();
 
-            if (_playerCoinDrop != null)
+            if (_shouldDropCoin && _playerCoinDrop != null)
             {
-                _playerCoinDrop.CoinDrop(1, GetTargetPlayer());
+                _playerCoinDrop.CoinDrop(1,false, GetTargetPlayer());
             }
 
             if (NetworkObject != null && NetworkObject.IsSpawned)
@@ -392,12 +405,15 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// 全クライアント端末上で死亡音と死亡エフェクトを再生するRPC
     /// </summary>
     [ClientRpc]
-    private void PlayDeathEffectsClientRpc()
+    protected void PlayDeathEffectsClientRpc(bool playMoneySound = true)
     {
         if (_playTheSEManager != null)
         {
             _playTheSEManager.PlayEnemyDeathSound();
-            _playTheSEManager.PlayMoneyDropSound();
+            if (playMoneySound)
+            {
+                _playTheSEManager.PlayMoneyDropSound();
+            }
         }
 
         if (_deathObject != null)
@@ -410,7 +426,7 @@ public class EnemyTakeDamage : NetworkBehaviour
     /// 全クライアント端末上で轢殺音と死亡エフェクトを再生するRPC
     /// </summary>
     [ClientRpc]
-    private void PlayRoadKillEffectClientRpc()
+    protected void PlayRoadKillEffectClientRpc()
     {
         if (_playTheSEManager != null)
         {
@@ -435,6 +451,10 @@ public class EnemyTakeDamage : NetworkBehaviour
             if (_hpUI != null) _hpUI.UpdateHP(_enemyHP.Value);
             if (_enemyHP.Value <= 0)
             {
+                if (_lastAttackerPlayer == null)
+                {
+                    _lastAttackerPlayer = GetTargetPlayer();
+                }
                 _isDead = true;
                 StartCoroutine(DeathProtocol(chargeTime));
             }

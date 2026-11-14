@@ -212,6 +212,7 @@ public class CutsceneControlledPlayer : MonoBehaviour
         for (int i = 0; i < _networkTransforms.Length; i++)
         {
             var nt = _networkTransforms[i];
+            if (nt == null) continue;
             _networkTransformEnabledCache[i] = nt.enabled;
             if (!nt.CanCommitToTransform)
             {
@@ -407,15 +408,20 @@ public class CutsceneControlledPlayer : MonoBehaviour
         }
 
         // NetworkTransform を復旧
-        for (int i = 0; i < _networkTransforms.Length; i++)
+        if (_networkTransforms != null)
         {
-            if (_networkTransformEnabledCache != null && i < _networkTransformEnabledCache.Length)
+            for (int i = 0; i < _networkTransforms.Length; i++)
             {
-                _networkTransforms[i].enabled = _networkTransformEnabledCache[i];
-            }
-            else
-            {
-                _networkTransforms[i].enabled = true;
+                var nt = _networkTransforms[i];
+                if (nt == null) continue;
+                if (_networkTransformEnabledCache != null && i < _networkTransformEnabledCache.Length)
+                {
+                    nt.enabled = _networkTransformEnabledCache[i];
+                }
+                else
+                {
+                    nt.enabled = true;
+                }
             }
         }
 
@@ -431,15 +437,24 @@ public class CutsceneControlledPlayer : MonoBehaviour
             _rigidbody.isKinematic = _rigidbodyKinematicCache;
         }
 
-        // オーナー端末が最終位置へ Teleport して全端末の位置を同期確定
-        foreach (var nt in _networkTransforms)
+        // オーナー端末が最終位置へ Teleport して全端末の位置を同期確定（シャットダウン・破棄中は送信しない）
+        var networkManager = NetworkManager.Singleton;
+        bool canTeleport = _networkTransforms != null &&
+                           networkManager != null &&
+                           networkManager.IsListening &&
+                           !networkManager.ShutdownInProgress &&
+                           gameObject.activeInHierarchy;
+        if (canTeleport)
         {
-            if (nt != null && nt.enabled && nt.IsSpawned && nt.CanCommitToTransform)
+            foreach (var nt in _networkTransforms)
             {
-                var t = nt.transform;
-                var pos = nt.InLocalSpace ? t.localPosition : t.position;
-                var rot = nt.InLocalSpace ? t.localRotation : t.rotation;
-                nt.Teleport(pos, rot, t.localScale);
+                if (nt != null && nt.enabled && nt.IsSpawned && nt.CanCommitToTransform)
+                {
+                    var t = nt.transform;
+                    var pos = nt.InLocalSpace ? t.localPosition : t.position;
+                    var rot = nt.InLocalSpace ? t.localRotation : t.rotation;
+                    nt.Teleport(pos, rot, t.localScale);
+                }
             }
         }
     }

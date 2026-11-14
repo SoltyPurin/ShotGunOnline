@@ -1,13 +1,15 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// 確認・エラー表示用のモーダルダイアログUI
+/// 確認・エラー表示用のモーダルダイアログUI。
+/// LobbyViewBase を継承し、ModalDialog タイプのポップ演出とSE自動再生機能を提供します。
 /// 表示時に全画面ブロック用UIを生成し、背後UIのボタン押下を遮断します。
 /// </summary>
-public class ConfirmDialogUI : MonoBehaviour
+public class ConfirmDialogUI : LobbyViewBase
 {
     [SerializeField] private Text _messageText;
     [SerializeField] private Button _yesButton;
@@ -16,6 +18,54 @@ public class ConfirmDialogUI : MonoBehaviour
 
     private UniTaskCompletionSource<bool> _utcs;
     private GameObject _blocker;
+
+    protected override void Awake()
+    {
+        _viewType = UIViewType.ModalDialog;
+        base.Awake();
+
+        EnsureButtonSound(_yesButton, UIButtonType.Default);
+        EnsureButtonSound(_noButton, UIButtonType.Cancel);
+
+        LobbyModernTheme.AttachMetallicVisual(_yesButton);
+        LobbyModernTheme.AttachMetallicVisual(_noButton);
+    }
+
+    private void Update()
+    {
+        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+
+        bool cancelPressed =
+            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
+            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
+
+        if (cancelPressed)
+        {
+            UISound.Play(UISoundType.Cancel);
+            bool hasNo = _noButton != null && _noButton.gameObject.activeSelf;
+            CloseAndSetResult(!hasNo).Forget();
+        }
+    }
+
+    public override GameObject GetDefaultFocusTarget()
+    {
+        if (_yesButton != null && _yesButton.gameObject.activeInHierarchy)
+        {
+            return _yesButton.gameObject;
+        }
+        return _noButton != null && _noButton.gameObject.activeInHierarchy ? _noButton.gameObject : null;
+    }
+
+    private static void EnsureButtonSound(Button button, UIButtonType type)
+    {
+        if (button == null) return;
+        var sound = button.GetComponent<UIButtonSound>();
+        if (sound == null)
+        {
+            sound = button.gameObject.AddComponent<UIButtonSound>();
+        }
+        sound.ButtonType = type;
+    }
 
     public async UniTask<bool> ShowAsync(string message, bool showNoButton = true, string yesButtonText = null)
     {
@@ -27,8 +77,6 @@ public class ConfirmDialogUI : MonoBehaviour
         {
             _messageText.text = message;
         }
-
-        gameObject.SetActive(true);
 
         if (_yesButton != null)
         {
@@ -66,8 +114,7 @@ public class ConfirmDialogUI : MonoBehaviour
         {
             _yesButton.onClick.AddListener(() =>
             {
-                gameObject.SetActive(false);
-                _utcs.TrySetResult(true);
+                CloseAndSetResult(true).Forget();
             });
         }
 
@@ -75,12 +122,24 @@ public class ConfirmDialogUI : MonoBehaviour
         {
             _noButton.onClick.AddListener(() =>
             {
-                gameObject.SetActive(false);
-                _utcs.TrySetResult(false);
+                CloseAndSetResult(false).Forget();
             });
         }
 
+        // ポップ演出＆フェードイン
+        await base.ShowAsync();
+
         return await _utcs.Task;
+    }
+
+    private async UniTaskVoid CloseAndSetResult(bool result)
+    {
+        if (_blocker != null)
+        {
+            _blocker.SetActive(false);
+        }
+        await HideAsync();
+        _utcs?.TrySetResult(result);
     }
 
     private void EnsureBlocker()

@@ -175,6 +175,10 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             return;
         }
+        else if (collision.gameObject.CompareTag("Candle"))
+        {
+            return;
+        }
         else if (collision.gameObject.CompareTag(MIRRORBULLETTAGNAME))
         {
             //吹き飛ぶ方向のメソッド呼び出し
@@ -182,7 +186,15 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //ダメージのレバブルを設定
             if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
-            Destroy(collision.gameObject);
+            EnemyShotBullet bullet = collision.gameObject.GetComponent<EnemyShotBullet>();
+            if (bullet != null)
+            {
+                bullet.DestroyProtocol();
+            }
+            else
+            {
+                Destroy(collision.gameObject);
+            }
         }
         else if (collision.gameObject.CompareTag(ENEMYBULLETTAGNAME))
         {
@@ -191,7 +203,15 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //ダメージのレバブルを設定
             if (_viblration != null) _viblration.ViblartionSettingLeftAndRight((Vector2)collision.gameObject.transform.position);
             //ぶつかってきた銃弾を削除
-            Destroy(collision.gameObject);
+            EnemyShotBullet bullet = collision.gameObject.GetComponent<EnemyShotBullet>();
+            if (bullet != null)
+            {
+                bullet.DestroyProtocol();
+            }
+            else
+            {
+                Destroy(collision.gameObject);
+            }
         }
         else if (collision.gameObject.CompareTag(MEDIUMARMORTAGNAME))
         {
@@ -540,7 +560,6 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         }
         _force = 0;
         _isKnockBacking = false;
-        Debug.Log("落下");
     }
 
     /// <summary>
@@ -555,7 +574,6 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         }
         _force = 0f;
         _isKnockBacking = false;
-        Debug.Log("力をリセット");
     }
 
     private void FixedUpdate()
@@ -577,7 +595,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
                 _playerState.DamageKnockBackState();
             }
             //吹き飛び力を減算
-            _force -= 0.5f;
+            _force -= 25f * Time.fixedDeltaTime;
             //吹き飛びが0以下になったら実行
             if (_force <= 0)
             {

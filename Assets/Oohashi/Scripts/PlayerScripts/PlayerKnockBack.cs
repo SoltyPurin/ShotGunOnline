@@ -1,45 +1,45 @@
-using Unity.Netcode;
+ï»¿using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerKnockBack : NetworkBehaviour
 {
-    //[Header("ƒŠƒWƒbƒhƒ{ƒfƒB‚ğİ’è")]
+    //[Header("ï¿½ï¿½ï¿½Wï¿½bï¿½hï¿½{ï¿½fï¿½Bï¿½ï¿½İ’ï¿½")]
     //[SerializeField] private Rigidbody2D _rigidbody = default;
-    [Header("ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg")]
+    [Header("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½g")]
     [SerializeField] private GameObject _playerObject = default;
 
-    [Header("ƒXƒNƒŠƒvƒg‚ğİ’è")]
+    [Header("ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½gï¿½ï¿½İ’ï¿½")]
     [SerializeField] private PlayerMove _playerMove = default;
 
-    [SerializeField, Header("ƒXƒe[ƒg‚ğ“Á’è‚·‚éƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ï¿½Xï¿½eï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½g")]
     private PlayerStateManager _playerState = default;
 
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌƒAƒjƒ[ƒVƒ‡ƒ“Ä¶ƒXƒNƒŠƒvƒg")]
+    [SerializeField,Header("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒAï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½g")]
     private PlayerAnimation _animation = default;
 
     private Rigidbody2D _rigidBody = default;
 
     private NetworkVariable<bool> _isKnockBacking = new NetworkVariable<bool>(
-        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); //ƒmƒbƒNƒoƒbƒN’†‚©
+        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); //ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½
 
     public bool IsKnockBacking
     {
         get { return _isKnockBacking.Value;}
     }
 
-    private Vector3 _minusDiretion = default; //Œ©‚Ä‚é•ûŒü‚Æ‚Í‹t•ûŒü‚ğ“ü‚ê‚é
+    private Vector3 _minusDiretion = default; //ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚Í‹tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    private float _powValue = default; //ƒ`ƒƒ[ƒWŠÔ‚Ìæ”‚ğ“ü‚ê‚é
+    private float _powValue = default; //ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Ô‚Ìæ”ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     private  NetworkVariable<float> _force = new NetworkVariable<float>(
         0f,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
-    );//üŒ`•â³‚µ‚½’l‚ğ“ü‚ê‚é
+    );//ï¿½ï¿½ï¿½`ï¿½â³ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    private bool _isInputLeftStick = false; //¶ƒXƒeƒBƒbƒN‚ğ“ü—Í‚µ‚Ä‚é‚©‚Ç‚¤‚©
+    private bool _isInputLeftStick = false; //ï¿½ï¿½ï¿½Xï¿½eï¿½Bï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ä‚é‚©ï¿½Ç‚ï¿½ï¿½ï¿½
 
-    //’è”
+    //ï¿½è”
     private readonly float KNOCKBACK_FORCE = 5.0f;
 
 
@@ -55,25 +55,25 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void SetDirection(Vector3 direction,float chargeTime)
     {
-        if (!IsOwner)
+        if (!IsOwner || !IsSpawned)
         {
             return;
         }
-        //Œ»İŒ©‚Ä‚é•ûŒü‚Æ‹t‚Ì•ûŒü‚ğo‚·
+        //ï¿½ï¿½ï¿½İŒï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½Æ‹tï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½
         _minusDiretion = (direction * -1).normalized;
-        //ƒ`ƒƒ[ƒWŠÔ‚Ìæ‚ğ‹‚ß‚é
+        //ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Ô‚Ìï¿½ï¿½ï¿½ï¿½ß‚ï¿½
         _powValue = Mathf.Pow(chargeTime, 5f);
-        //Å’á1‚©‚çpowValue‚Ü‚Å‚ÌŠÔ‚ÅüŒ`•â³‚ğs‚¢Aƒ`ƒƒ[ƒW’l‚²‚Æ‚Ì‚«”ò‚Î‚µ‚ğ‚È‚ß‚ç‚©‚É
+        //ï¿½Å’ï¿½1ï¿½ï¿½ï¿½ï¿½powValueï¿½Ü‚Å‚ÌŠÔ‚Åï¿½ï¿½`ï¿½â³ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½lï¿½ï¿½ï¿½Æ‚Ìï¿½ï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½ï¿½È‚ß‚ç‚©ï¿½ï¿½
         _force.Value = Mathf.Lerp(3, _powValue, 0.5f);
 
         _isKnockBacking.Value = true;
-        //Œ©‚Ä‚é•ûŒü‚Æ”½‘Î•ûŒü‚É—Í‚ğ‰Á‚¦‚é
-        //‚Á”ò‚Ñ‚ª’x‚¢‚½‚ßƒtƒƒtƒ‚ÉŒ©‚¦‚é
+        //ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½Æ”ï¿½ï¿½Î•ï¿½ï¿½ï¿½ï¿½É—Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ‚ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ßƒtï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ÉŒï¿½ï¿½ï¿½ï¿½ï¿½
     }
 
     public void Fall()
     {
-        if (!IsOwner)
+        if (!IsOwner || !IsSpawned)
         {
             return;
         }
@@ -83,7 +83,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void TakeDamage()
     {
-        if (!IsOwner)
+        if (!IsOwner || !IsSpawned)
         {
             return;
         }
@@ -94,6 +94,11 @@ public class PlayerKnockBack : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner || !IsSpawned)
+        {
+            return;
+        }
+
         if (!_isKnockBacking.Value)
         {
             return;
@@ -107,10 +112,10 @@ public class PlayerKnockBack : NetworkBehaviour
 
     private void Update()
     {
-        // ”í’eƒmƒbƒNƒoƒbƒN’†‚Í”í’eƒAƒjƒ‚ğ—Dæ
+        // ï¿½ï¿½eï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Í”ï¿½eï¿½Aï¿½jï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½
         if (_playerState != null && _playerState.PlayerState == PlayerState.DamageKnockBack) return;
 
-        //”½“®ƒmƒbƒNƒoƒbƒN’†‚Ì‚İƒAƒjƒ[ƒVƒ‡ƒ“‚ğ“K—p‚·‚é
+        //ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Ì‚İƒAï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Kï¿½pï¿½ï¿½ï¿½ï¿½
         if (_isKnockBacking.Value)
         {
             if (_animation != null)
@@ -126,7 +131,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     private void KnockBacking()
     {
-        //Œ©‚Ä‚é•ûŒü‚Æ”½‘Î•ûŒü‚É—Í‚ğ‰Á‚¦‚é
+        //ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½Æ”ï¿½ï¿½Î•ï¿½ï¿½ï¿½ï¿½É—Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         transform.position += _minusDiretion * _force.Value * Time.fixedDeltaTime;
         _playerMove.SaveDirection = _minusDiretion * _force.Value;
 
@@ -135,32 +140,15 @@ public class PlayerKnockBack : NetworkBehaviour
             _animation.KnockBack();
         }
 
-        switch (_isInputLeftStick)
+        // ç§’å˜ä½ã®æ¸›è¡°ç‡ (0.02sæ›ç®—ã§ å…ƒã® 0.5f -> 25f/s, 0.2f -> 10f/s)
+        float decayRate = _isInputLeftStick ? 25f : 10f;
+        _force.Value -= decayRate * Time.fixedDeltaTime;
+
+        if (_force.Value <= 0f)
         {
-            case true:
-                if (_force.Value >= 0)
-                {
-                    _force.Value -= 0.5f;
-                }
-                else
-                {
-                    _animation.Wait();
-                    _isKnockBacking.Value = false;
-                }
-
-                break;
-
-            case false:
-                if (_force.Value >= 0)
-                {
-                    _force.Value -= 0.2f;
-                }
-                else
-                {
-                    _animation.Wait();
-                    _isKnockBacking.Value = false;
-                }
-                break;
+            _force.Value = 0f;
+            _animation.Wait();
+            _isKnockBacking.Value = false;
         }
     }
 

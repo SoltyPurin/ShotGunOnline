@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ScoreData : MonoBehaviour
 {
-    #region •Ï”
+    #region å¤‰æ•°
     public static ScoreData _scoreData = default;
 
     private int _total = 0;
@@ -14,18 +15,18 @@ public class ScoreData : MonoBehaviour
 
     private EnemyCountAndCreateTime _enemyCountAndCreateTime = default;
 
-    [SerializeField, Header("‡ŒvSƒ‰ƒ“ƒN‚Ì“_”")]
+    [SerializeField, Header("åˆè¨ˆSãƒ©ãƒ³ã‚¯ã®ç‚¹æ•°")]
     private int _sRankValue = 7;
-    [SerializeField, Header("‡ŒvAƒ‰ƒ“ƒN‚Ì“_”")]
+    [SerializeField, Header("åˆè¨ˆAãƒ©ãƒ³ã‚¯ã®ç‚¹æ•°")]
     private int _aRankValue = 5;
     #endregion
 
-    #region ƒQƒbƒ^[•Ï”ŒQ
+    #region ã‚²ãƒƒã‚¿ãƒ¼å¤‰æ•°ç¾¤
 
     private int[] _scoreList = new int[0];
     public int[] ScoreList
     {
-        get {  return _scoreList; }
+        get { return _scoreList; }
     }
 
     private string[] _scoreCharList = new string[0];
@@ -46,20 +47,20 @@ public class ScoreData : MonoBehaviour
 
     public int DamageTakenCount
     {
-        get { return _damageTakenCount;}
+        get { return _damageTakenCount; }
     }
 
     private int _totalTakenDamage = 0;
     public int TotalTakenDamage
     {
-        get { return _totalTakenDamage;}
+        get { return _totalTakenDamage; }
     }
     #endregion
-    #region ’è”
+    #region å®šæ•°
     private readonly string WAVEMANAGER = "WaveManager";
     #endregion
 
-    #region ƒVƒ“ƒOƒ‹ƒgƒ“‰»
+    #region ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³åŒ–
     private void Awake()
     {
         if (_scoreData != null && _scoreData != this)
@@ -75,7 +76,7 @@ public class ScoreData : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (this == null || gameObject == null) return; // •ÛŒ¯
+        if (this == null || gameObject == null) return; // ä¿é™º
         bool destroyScene = scene.name == "TutorialScene" || scene.name == "Title" || scene.name == "Cushion";
         if (destroyScene && gameObject != null)
         {
@@ -83,8 +84,6 @@ public class ScoreData : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-
     #endregion
 
     private void Start()
@@ -92,10 +91,10 @@ public class ScoreData : MonoBehaviour
         _enemyCountAndCreateTime = GetComponent<EnemyCountAndCreateTime>();
         _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();
         _waveManager = GameObject.FindWithTag(WAVEMANAGER).GetComponent<WaveManager>();
-        _scoreList = new int[_waveManager.WaveList.Count];
-        _scoreCharList = new string[_waveManager.WaveList.Count];
+        int waveCount = _waveManager.TotalWaveCount;
+        _scoreList = new int[waveCount];
+        _scoreCharList = new string[waveCount];
     }
-
 
     public void SaveMaxCombo(int maxCombo)
     {
@@ -103,16 +102,13 @@ public class ScoreData : MonoBehaviour
     }
 
     /// <summary>
-    /// ”í’e‚ÉƒvƒŒƒCƒ„[‚©‚çŒÄ‚Î‚ê‚éƒƒ\ƒbƒh
+    /// è¢«å¼¾æ™‚ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void TakeDamageCountPlus()
     {
-        Debug.Log("”í’e‰ñ”‘‚¦‚éƒƒ\ƒbƒhŒÄ‚Ño‚µ");
         WaveManager waveManager = FindAnyObjectByType<WaveManager>();
         if (waveManager != null)
         {
-            Debug.Log("ƒEƒF[ƒuƒ}ƒl[ƒWƒƒ[‚ ‚Á‚½‚æ");
-
             waveManager.NotifyTakeDamageServerRpc();
         }
         else
@@ -122,7 +118,7 @@ public class ScoreData : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒT[ƒo[iƒzƒXƒgj‘¤‚Å ServerRpc ó—ÌŒã‚ÉŒÄ‚Î‚ê‚éAƒˆ‚È‰ÁZˆ—
+    /// ã‚µãƒ¼ãƒãƒ¼ï¼ˆãƒ›ã‚¹ãƒˆï¼‰å´ã§ ServerRpc å—é ˜å¾Œã«å‘¼ã°ã‚Œã‚‹ã€ç´”ç²‹ãªåŠ ç®—å‡¦ç†
     /// </summary>
     public void AddDamageCount()
     {
@@ -130,47 +126,53 @@ public class ScoreData : MonoBehaviour
         _totalTakenDamage++;
     }
 
-    public void SetScore(int timeScore, int hitCount,float clearTime)
+    public void SetScore(int timeScore, int hitCount, float clearTime)
     {
         _total = timeScore;
 
-        if(_total >= _sRankValue)
+        if (_initListIndex < _scoreCharList.Length)
         {
-            _scoreCharList[_initListIndex] = "S";
-        }
-        else if(_total >= _aRankValue)
-        {
-            _scoreCharList[_initListIndex] = "A";
-        }
-        else
-        {
-            _scoreCharList[_initListIndex] = "B";
-        }
+            if (_total >= _sRankValue)
+            {
+                _scoreCharList[_initListIndex] = "S";
+            }
+            else if (_total >= _aRankValue)
+            {
+                _scoreCharList[_initListIndex] = "A";
+            }
+            else
+            {
+                _scoreCharList[_initListIndex] = "B";
+            }
 
-        _scoreList[_initListIndex] = _total;
+            _scoreList[_initListIndex] = _total;
 
-        int waveIndex = 0;
-        WaveManager waveManager = FindAnyObjectByType<WaveManager>();
-        if (waveManager)
-        {
-            waveIndex = waveManager.WaveIndex;
+            int waveIndex = 0;
+            WaveManager waveManager = FindAnyObjectByType<WaveManager>();
+            if (waveManager)
+            {
+                waveIndex = waveManager.WaveIndex;
+            }
+            Debug.Log("å–å¾—ã—ãŸã‚¦ã‚§ãƒ¼ãƒ–ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯" + waveIndex);
+            if (_scoreUIManager == null)
+            {
+                _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();
+            }
+            if (_scoreUIManager != null)
+            {
+                // SyncScoreClientRpc ã«ã‚ˆã£ã¦å…¨ç«¯æœ«ã§ SetScore ãŒå®Ÿè¡Œã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€ç›´æ¥ãƒ­ãƒ¼ã‚«ãƒ«UIã‚’è¡¨ç¤º
+                _scoreUIManager.PopText(clearTime, hitCount, _scoreCharList[_initListIndex], waveIndex);
+            }
+
+            _initListIndex++;
         }
-        Debug.Log("æ“¾‚µ‚½ƒEƒF[ƒu‚ÌƒCƒ“ƒfƒbƒNƒX‚Í" + waveIndex);
-        _scoreUIManager.PopTextClientRpc(clearTime, hitCount, _scoreCharList[_initListIndex],waveIndex);
-
-
-        _initListIndex++;
 
         _total = 0;
-
-
-        //_shownDamageCount = _damageTakenCount;
         _damageTakenCount = 0;
-
     }
 
     /// <summary>
-    /// ƒzƒXƒg‚©‚çÅIƒŠƒUƒ‹ƒg—p‚É’ÊZ”í’e”‚ğ‘S’[––‚Ö“¯Šú‚³‚¹‚é‚½‚ß‚Ìƒƒ\ƒbƒh
+    /// ãƒ›ã‚¹ãƒˆã‹ã‚‰æœ€çµ‚ãƒªã‚¶ãƒ«ãƒˆç”¨ã«é€šç®—è¢«å¼¾æ•°ã‚’å…¨ç«¯æœ«ã¸åŒæœŸã•ã›ã‚‹ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void SyncTotalDamageFromHost(int totalDamage)
     {

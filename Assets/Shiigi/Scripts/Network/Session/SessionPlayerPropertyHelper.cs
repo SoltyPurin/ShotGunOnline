@@ -1,16 +1,46 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using Unity.Services.Multiplayer;
 
 /// <summary>
-/// セッション内のプレイヤープロパティ（Ready状態・Relay接続状態など）と開始条件判定のドメインルールを集約するヘルパークラス (SRP)
-/// UI層や通信層に文字列キー（"IsReady", "IsRelayConnected"）や判定ロジックが散在するのを防ぎます。
+/// セッション内のプロパティ（通信プロトコル・Ready状態・Relay接続状態など）と開始条件判定のドメインルールを集約するヘルパークラス (SRP)
+/// UI層や通信層に文字列キー（"RelayProtocol", "IsReady", "IsRelayConnected"）や判定ロジックが散在するのを防ぎます。
 /// </summary>
 public static class SessionPlayerPropertyHelper
 {
+    public const string RelayProtocolPropertyKey = "RelayProtocol";
     public const string ReadyPropertyKey = "IsReady";
     public const string RelayConnectedPropertyKey = "IsRelayConnected";
     private const string TrueValue = "true";
     private const string FalseValue = "false";
+
+    /// <summary>
+    /// ルーム作成時に公開する通信プロトコルのセッションプロパティ辞書を生成する
+    /// </summary>
+    public static Dictionary<string, SessionProperty> CreateSessionProtocolProperties(RelayProtocol protocol)
+    {
+        return new Dictionary<string, SessionProperty>
+        {
+            { RelayProtocolPropertyKey, new SessionProperty(protocol.ToString(), VisibilityPropertyOptions.Public) }
+        };
+    }
+
+    /// <summary>
+    /// ルーム情報（ISessionInfo）から設定されている通信プロトコルを取得する（未設定・不正時は既定値を返す）
+    /// </summary>
+    public static RelayProtocol GetSessionRelayProtocol(ISessionInfo sessionInfo, RelayProtocol defaultProtocol = RelayProtocol.DTLS)
+    {
+        if (sessionInfo?.Properties != null &&
+            sessionInfo.Properties.TryGetValue(RelayProtocolPropertyKey, out var prop) &&
+            !string.IsNullOrEmpty(prop?.Value) &&
+            Enum.TryParse<RelayProtocol>(prop.Value, ignoreCase: true, out var parsed) &&
+            (parsed == RelayProtocol.DTLS || parsed == RelayProtocol.UDP || parsed == RelayProtocol.WSS))
+        {
+            return parsed;
+        }
+
+        return defaultProtocol;
+    }
 
     /// <summary>
     /// 指定したプレイヤーが準備完了状態かどうかを取得する

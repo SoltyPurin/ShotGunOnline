@@ -97,9 +97,8 @@ public class WaveTransition : NetworkBehaviour
         _canWaveDestroy = false;
 
         GameObject uiObj = GameObject.FindWithTag(WAVESCORE);
-        if(uiObj != null)
+        if (uiObj != null)
         {
-            //_scoreUIManager = FindFirstObjectByType<ScoreUIManager>();
             _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();
         }
     }
@@ -109,7 +108,6 @@ public class WaveTransition : NetworkBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        //if (!IsServer) return;
         //Switchを使い、各ウェーブの種類に応じて処理を変更
         switch (_nowState)
         {
@@ -155,13 +153,12 @@ public class WaveTransition : NetworkBehaviour
         }
 
         //代入された値に応じて、switchで遷移方法を変更
-        switch(type)
+        switch (type)
         {
             //次が通常ウェーブだった場合通常遷移を実行
             case Wave.WaveEnemyType.Normal:
                 _nowState = State.TransitionToNormal;
                 break;
-
 
             //次がボスウェーブだった場合ボス戦遷移を実行
             case Wave.WaveEnemyType.Boss:
@@ -184,14 +181,11 @@ public class WaveTransition : NetworkBehaviour
         if (_intervalTimer <= 0.0f)
         {
             //画面を暗くし、音楽のHighをカットする。
-
-            //_fadeAnimator.SetTrigger("In");
             FadeAnimationClientRpc(0);
-            //_scoreManager.TextAlpha(true);
             _bgmControll.HiCutOn(CUT_ON_VALUE, CUT_ON_TIME);
         }
         //タイマーが一定の値以上になったら実行
-        else if(_intervalTimer >= _transitionInterval)
+        else if (_intervalTimer >= _transitionInterval)
         {
             //ステートを変更する。
             _intervalTimer = 0;
@@ -212,9 +206,7 @@ public class WaveTransition : NetworkBehaviour
         {
             //画面を暗くし、音楽をフェードアウトさせる。
             FadeAnimationClientRpc(0);
-            //_fadeAnimator.SetTrigger("In");
             _bgmControll.BGMFade_Out(FADE_OUT_TIME, 0);
-            //_scoreManager.TextAlpha(true);
         }
         //タイマーが一定の値以上になったら実行
         else if (_intervalTimer >= _bossTransitionInterval)
@@ -236,10 +228,18 @@ public class WaveTransition : NetworkBehaviour
     private void TutorialTransition()
     {
         //タイマーが一定の値以上になったら実行
-        if( _intervalTimer >= _tutorialTransitionInterval)
+        if (_intervalTimer >= _tutorialTransitionInterval)
         {
             //リスポーン地点を更新し、ステートを変更
             _respawn.CountUp();
+            if (WaveManager._instance != null && WaveManager._instance.UsesStageSequence)
+            {
+                WaveManager._instance.TransitionToStage(WaveManager._instance.WaveIndex);
+                if (_respawn != null)
+                {
+                    _respawn.Respawn();
+                }
+            }
             _intervalTimer = 0;
             _nowState = State.Wait;
             return;
@@ -253,59 +253,62 @@ public class WaveTransition : NetworkBehaviour
     /// </summary>
     private void FadeOutStage()
     {
-        if(_playerMove == null || _playerMove.Count <=0)
+        if (_playerMove == null || _playerMove.Count <= 0)
         {
             GameObject[] player = GameObject.FindGameObjectsWithTag("Player");
-            foreach(GameObject gameObject in player)
+            foreach (GameObject gameObject in player)
             {
-                if(gameObject != null)
+                if (gameObject != null)
                 {
                     PlayerMove pMove = gameObject.GetComponent<PlayerMove>();
-                    _playerMove.Add(pMove);
+                    if (pMove != null)
+                    {
+                        _playerMove.Add(pMove);
+                    }
                 }
             }
         }
-        if(_intervalTimer <= 0.0f)
+        if (_intervalTimer <= 0.0f)
         {
-            //_fadeAnimator.SetTrigger("Max");
             FadeAnimationClientRpc(2);
             _isWaveChangeMoment = true;
-            //_playerMove.IsFadeing = true;
             _respawn.CountUp();
             _respawnCheck = false;
-            foreach(PlayerMove playerMoves in _playerMove)
+            foreach (PlayerMove playerMoves in _playerMove)
             {
-                playerMoves.IsFadeing = true;
+                if (playerMoves != null) playerMoves.IsFadeing = true;
             }
         }
-        else if ( _intervalTimer >= _fadeOutInterval)
+        else if (_intervalTimer >= _fadeOutInterval)
         {
-            //_fadeAnimator.SetTrigger("Out");
             FadeAnimationClientRpc(1);
-            //_scoreManager.TextAlpha(false);
             _isWaveChangeMoment = false;
             foreach (PlayerMove playerMoves in _playerMove)
             {
-                playerMoves.IsFadeing = false;
+                if (playerMoves != null) playerMoves.IsFadeing = false;
             }
             _bgmControll.HiCutOff(MAX_VALUE, CUT_OFF_TIME);
             _intervalTimer = 0;
             _nowState = State.Wait;
             return;
         }
-        else if(_intervalTimer >= _fadeOutInterval * 0.5f && !_respawnCheck)
+        else if (_intervalTimer >= _fadeOutInterval * 0.5f && !_respawnCheck)
         {
+            // 暗転中に次ステージのプレハブ生成・旧ステージ破棄・NavMesh再ベイクを行ってからプレイヤーをテレポートさせる
+            if (WaveManager._instance != null && WaveManager._instance.UsesStageSequence)
+            {
+                WaveManager._instance.TransitionToStage(WaveManager._instance.WaveIndex);
+            }
+
             if (_respawn != null)
             {
                 _respawn.Respawn();
             }
-            //if (_scoreUIManager == null) {
-            //    _scoreUIManager = FindAnyObjectByType<ScoreUIManager>(); 
-            //}
-            //if (_scoreUIManager != null) { 
-                _scoreUIManager.HiddenText(); 
-            //}
-            //_scoreUIManager.HiddenText();
+
+            if (_scoreUIManager != null)
+            {
+                _scoreUIManager.HiddenText();
+            }
             _respawnCheck = true;
         }
 
@@ -318,7 +321,7 @@ public class WaveTransition : NetworkBehaviour
     /// <returns>ウェーブ遷移が完了しているならtrue、そうでないならfalse。</returns>
     public bool EndTransition()
     {
-        if(_nowState != State.Wait)
+        if (_nowState != State.Wait)
         {
             return false;
         }

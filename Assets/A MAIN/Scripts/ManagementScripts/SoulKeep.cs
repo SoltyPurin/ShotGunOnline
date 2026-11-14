@@ -18,7 +18,6 @@ public class SoulKeep : NetworkBehaviour
 
     private NetworkVariable<int> _useFullSoul = new NetworkVariable<int>(
         0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
     public int UseFullSoul => _useFullSoul.Value;
 
     private const int USEULTIMATE_NEEDSOUL = 10;
@@ -44,8 +43,12 @@ public class SoulKeep : NetworkBehaviour
         // 操作するプレイヤー（IsOwner）の画面のUIを設定
         if (IsOwner)
         {
+            //ResolveSoulMeter();
+            //_showSoul = _useFullSoul.Value;
+            //UpdateSoulUI(_showSoul);
+            //UpdateVStockUI(_vStock.Value);
             ResolveSoulMeter();
-            UpdateSoulUI(_useFullSoul.Value);
+            UpdateSoulUI(GetDisplaySoul());
             UpdateVStockUI(_vStock.Value);
         }
     }
@@ -74,12 +77,18 @@ public class SoulKeep : NetworkBehaviour
     {
         if (!IsOwner) return;
         UpdateVStockUI(newValue);
+        UpdateSoulUI(GetDisplaySoul());
     }
 
     private void OnSoulChanged(int prevValue, int newValue)
     {
+        //if (!IsOwner) return;
+        //_showSoul = newValue;
+        //UpdateSoulUI(_showSoul);
         if (!IsOwner) return;
-        UpdateSoulUI(newValue);
+
+        UpdateSoulUI(GetDisplaySoul());
+
     }
 
     // UI更新はすべて NetworkVariable の変更通知（OnValueChanged）経由で実行
@@ -87,8 +96,12 @@ public class SoulKeep : NetworkBehaviour
     {
         var meter = ResolveSoulMeter();
         if (meter == null) return;
+        //meter.SetCount(soulValue);
+        //meter.AddMeter(soulValue);
         meter.SetCount(soulValue);
-        meter.AddMeter(soulValue);
+
+        // 表示数は10でも、ゲージの高さは最大9段階まで
+        meter.AddMeter(Mathf.Min(soulValue, 9));
     }
 
     private void UpdateVStockUI(int vStockValue)
@@ -207,4 +220,16 @@ public class SoulKeep : NetworkBehaviour
 
         _vStock.Value--;
     }
+
+    private int GetDisplaySoul()
+    {
+        // Vストックが最大なら、表示上はソウルMAX
+        if (_vStock.Value >= 3)
+        {
+            return 10;
+        }
+
+        return _useFullSoul.Value;
+    }
+
 }

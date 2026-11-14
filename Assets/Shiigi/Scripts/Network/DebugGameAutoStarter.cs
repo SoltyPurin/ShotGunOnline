@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -12,6 +11,7 @@ public class DebugGameAutoStarter : MonoBehaviour
     [Tooltip("エディタ再生時に自動でローカルホスト起動するか")]
     [SerializeField] private bool _autoStartInEditor = true;
 
+#if UNITY_EDITOR
     private void Start()
     {
         if (!_autoStartInEditor) return;
@@ -40,8 +40,12 @@ public class DebugGameAutoStarter : MonoBehaviour
         // ローカルHostとしてサーバー兼クライアントを起動
         NetworkManager.Singleton.StartHost();
 
-        // MP_GameManager にゲーム開始シーケンスを実行させる
-        if (MP_GameManager.Instance != null)
+        // MP_GameSyncManager が存在する場合はフェーズ変数経由で整合性を保ったまま開始する
+        if (MP_GameSyncManager.Instance != null && MP_GameSyncManager.Instance.IsServer)
+        {
+            MP_GameSyncManager.Instance.CurrentPhase.Value = MP_GameSyncManager.GamePhase.Playing;
+        }
+        else if (MP_GameManager.Instance != null)
         {
             MP_GameManager.Instance.OnGameStart();
         }
@@ -50,5 +54,5 @@ public class DebugGameAutoStarter : MonoBehaviour
             Debug.LogWarning("[DebugGameAutoStarter] MP_GameManager が見つかりませんでした。");
         }
     }
-}
 #endif
+}

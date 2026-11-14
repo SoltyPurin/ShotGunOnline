@@ -1,11 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ZanzouFeedOut : MonoBehaviour
 {
     [SerializeField]
     private SpriteRenderer _mySpriteRenderer = default;
+
+    [SerializeField, Header("ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã«ã‹ã‘ã‚‹æ™‚é–“ï¼ˆç§’ï¼‰")]
+    private float _fadeDuration = 0.5f;
+
     private void Start()
     {
         StartCoroutine(FadeOutSprite(_mySpriteRenderer));
@@ -13,14 +16,26 @@ public class ZanzouFeedOut : MonoBehaviour
 
     public IEnumerator FadeOutSprite(SpriteRenderer renderer)
     {
-        float frames = 30f;
-        for (int i = 0; i < frames; i++)
-        {
-            Color c = renderer.color;
-            c.a = Mathf.Lerp(0.8f, 0f, i / frames); // 1 ¨ 0 ‚É•âŠÔ
-            renderer.color = c;
-            yield return null; // 1ƒtƒŒ[ƒ€‘Ò‚Â
-        }
-    }
+        if (renderer == null) yield break;
 
+        float elapsed = 0f;
+        Color initialColor = renderer.color;
+        float startAlpha = 0.8f;
+
+        while (elapsed < _fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / _fadeDuration);
+
+            Color c = renderer.color;
+            c.a = Mathf.Lerp(startAlpha, 0f, t);
+            renderer.color = c;
+
+            yield return null;
+        }
+
+        Color finalColor = renderer.color;
+        finalColor.a = 0f;
+        renderer.color = finalColor;
+    }
 }

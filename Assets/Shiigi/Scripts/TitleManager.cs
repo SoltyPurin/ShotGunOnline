@@ -10,9 +10,29 @@ public class TitleManager : MonoBehaviour
     {
         // ポーズ画面などから遷移した際に時間停止状態が残らないよう復帰
         Time.timeScale = 1.0f;
+        FrameRateManager.RefreshCurrentSettings();
+        EnsureOptionUISetup();
 
         CleanupNetworkSession();
-        // InitializeScreen();
+    }
+
+    /// <summary>
+    /// OptionButtonsにFrameRateOptionUIが未設定の場合に自動でアタッチする
+    /// </summary>
+    private void EnsureOptionUISetup()
+    {
+        var rects = FindObjectsByType<RectTransform>(FindObjectsInactive.Include);
+        foreach (var rt in rects)
+        {
+            if (rt != null && rt.name == "OptionButtons")
+            {
+                if (rt.GetComponent<FrameRateOptionUI>() == null)
+                {
+                    rt.gameObject.AddComponent<FrameRateOptionUI>();
+                }
+                break;
+            }
+        }
     }
 
     /// <summary>
@@ -32,13 +52,5 @@ public class TitleManager : MonoBehaviour
             }
             Destroy(NetworkManager.Singleton.gameObject);
         }
-    }
-
-    /// <summary>
-    /// 解像度を設定
-    /// </summary>
-    private void InitializeScreen()
-    {
-        Screen.SetResolution(1920, 1080, false);
     }
 }

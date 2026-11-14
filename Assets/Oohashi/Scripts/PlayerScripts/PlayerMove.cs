@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -230,7 +230,10 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             _moveDirection = new Vector3(input.x, input.y);
 
             float currentInputSpeed = Mathf.Max(Mathf.Abs(_input.x), Mathf.Abs(_input.y));
-            _netAnimSpeed.Value = currentInputSpeed;
+            if (Mathf.Abs(_netAnimSpeed.Value - currentInputSpeed) > 0.02f || (currentInputSpeed == 0f && _netAnimSpeed.Value != 0f))
+            {
+                _netAnimSpeed.Value = currentInputSpeed;
+            }
             Move();
         }
         else
@@ -257,7 +260,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
         if (_isFloating)
         {
-            float t = Time.fixedDeltaTime * _inertiaStrangth;
+            float t = 1f - Mathf.Exp(-_inertiaStrangth * Time.deltaTime);
             _rigidbody.linearVelocity = Vector2.Lerp(_rigidbody.linearVelocity, targetVelocity, t);
             if (_moveDirection == Vector2.zero)
             {

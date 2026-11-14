@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnedMovieScript : MonoBehaviour
 {
-    #region[•Ï”–¼]
-    //---GameObject,Script,Animator“™---------------------------------
-    [SerializeField, Header("ƒ{ƒX")]
+    #region[å¤‰æ•°å]
+    //---GameObject,Script,Animatorç­‰---------------------------------
+    [SerializeField, Header("ãƒœã‚¹")]
     private GameObject _boss = default;
     private GameObject _player = default;
     private GameObject _camera = default;
@@ -16,9 +16,9 @@ public class EnedMovieScript : MonoBehaviour
     private GameObject[] _enemyObjects = default;
     private GameObject[] _bombObjects = default;
 
-    [SerializeField, Header("ƒ{ƒX‚ÌStateŠÇ—")]
+    [SerializeField, Header("ãƒœã‚¹ã®Stateç®¡ç†")]
     private BossStateManagement _stateManagement = default;
-    [SerializeField, Header("ƒ{ƒX‚ÌHPŠÇ—")]
+    [SerializeField, Header("ãƒœã‚¹ã®HPç®¡ç†")]
     private BossHP _bossHP = default;
     private BossJumpAtackShake _shake = default;
     private FollowingCameraToBurrel _cameraMove = default;
@@ -43,7 +43,7 @@ public class EnedMovieScript : MonoBehaviour
 
         if (isOnline)
         {
-            // --- yƒIƒ“ƒ‰ƒCƒ“z©•ª‚Ìƒ[ƒJƒ‹ƒvƒŒƒCƒ„[‚ğŠmÀ‚Éæ“¾ ---
+            // --- ã€ã‚ªãƒ³ãƒ©ã‚¤ãƒ³æ™‚ã€‘è‡ªåˆ†ã®ãƒ­ãƒ¼ã‚«ãƒ«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ç¢ºå®Ÿã«å–å¾— ---
             GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYERTAGNAME);
             foreach (GameObject p in players)
             {
@@ -57,7 +57,7 @@ public class EnedMovieScript : MonoBehaviour
         }
         else
         {
-            // --- yƒIƒtƒ‰ƒCƒ“z]—ˆ‚Ì•û®‚Åæ“¾ ---
+            // --- ã€ã‚ªãƒ•ãƒ©ã‚¤ãƒ³æ™‚ã€‘å¾“æ¥ã®æ–¹å¼ã§å–å¾— ---
             _player = GameObject.FindWithTag(PLAYERTAGNAME);
             _coinKeep = _player.GetComponent<SoulKeep>();
             _playerMove = _player.GetComponent<PlayerMove>();
@@ -78,7 +78,7 @@ public class EnedMovieScript : MonoBehaviour
         //    _stateManagement.enabled = false;
         //}
 
-        // y’Ç‰Áz“¯Šú‚Æ•¨—‚ğˆêƒIƒt‚É‚·‚é
+        // ã€è¿½åŠ ã€‘åŒæœŸã¨ç‰©ç†ã‚’ä¸€æ™‚ã‚ªãƒ•ã«ã™ã‚‹
         //DisableBossNetworkAndPhysics();
         _cameraMove.IsMovie = true;
         _cameraMove.IsBossWave = false;
@@ -98,11 +98,11 @@ public class EnedMovieScript : MonoBehaviour
     //{
     //    if (_boss != null)
     //    {
-    //        // NetworkTransform‚ğƒIƒt‚É‚µ‚ÄATimeline‚ÌˆÚ“®‚ğ×–‚‚³‚¹‚È‚¢
+    //        // NetworkTransformã‚’ã‚ªãƒ•ã«ã—ã¦ã€Timelineã®ç§»å‹•ã‚’é‚ªé­”ã•ã›ãªã„
     //        var netTrans = _boss.GetComponent<NetworkTransform>();
     //        if (netTrans != null) netTrans.enabled = false;
 
-    //        // •¨—‰‰Z‚ğˆê“I‚ÉKinematiciƒLƒlƒ}ƒeƒBƒbƒNj‚É‚µ‚ÄAŸè‚É—‰ºEˆÚ“®‚·‚é‚Ì‚ğ–h‚®
+    //        // ç‰©ç†æ¼”ç®—ã‚’ä¸€æ™‚çš„ã«Kinematicï¼ˆã‚­ãƒãƒãƒ†ã‚£ãƒƒã‚¯ï¼‰ã«ã—ã¦ã€å‹æ‰‹ã«è½ä¸‹ãƒ»ç§»å‹•ã™ã‚‹ã®ã‚’é˜²ã
     //        var rb = _boss.GetComponent<Rigidbody2D>();
     //        if (rb != null)
     //        {
@@ -112,16 +112,16 @@ public class EnedMovieScript : MonoBehaviour
     //    }
     //}
 
-    // y’Ç‰Ázƒ€[ƒr[I—¹‚Ì“¯ŠúE•¨—‚Ì•œ‹Œˆ—
+    // ã€è¿½åŠ ã€‘ãƒ ãƒ¼ãƒ“ãƒ¼çµ‚äº†æ™‚ã®åŒæœŸãƒ»ç‰©ç†ã®å¾©æ—§å‡¦ç†
     //private void EnableBossNetworkAndPhysics()
     //{
     //    if (_boss != null)
     //    {
-    //        // “¯Šú‚ğÄŠJ‚·‚é
+    //        // åŒæœŸã‚’å†é–‹ã™ã‚‹
     //        var netTrans = _boss.GetComponent<NetworkTransform>();
     //        if (netTrans != null) netTrans.enabled = true;
 
-    //        // •¨—‰‰Z‚ğDynamic‚É–ß‚µ‚ÄA’Êí‚Ìí“¬‚ª‚Å‚«‚é‚æ‚¤‚É‚·‚é
+    //        // ç‰©ç†æ¼”ç®—ã‚’Dynamicã«æˆ»ã—ã¦ã€é€šå¸¸ã®æˆ¦é—˜ãŒã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
     //        var rb = _boss.GetComponent<Rigidbody2D>();
     //        if (rb != null)
     //        {
@@ -129,6 +129,22 @@ public class EnedMovieScript : MonoBehaviour
     //        }
     //    }
     //}
+
+    private void SafeDespawnOrDestroy(GameObject target)
+    {
+        if (target == null) return;
+        if (target.TryGetComponent<NetworkObject>(out var netObj) && netObj.IsSpawned)
+        {
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+            {
+                netObj.Despawn(true);
+            }
+        }
+        else
+        {
+            Destroy(target);
+        }
+    }
 
     public void EnemyDelete()
     {
@@ -141,18 +157,18 @@ public class EnedMovieScript : MonoBehaviour
         _enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in _enemyObjects)
         {
-            GameObject.Destroy(enemy);
+            SafeDespawnOrDestroy(enemy);
         }
 
         _bombObjects = GameObject.FindGameObjectsWithTag("Bomb");
         foreach (GameObject enemy in _bombObjects)
         {
-            GameObject.Destroy(enemy);
+            SafeDespawnOrDestroy(enemy);
         }
     }
     public void MovieEnd()
     {
-        Destroy(_boss);
+        SafeDespawnOrDestroy(_boss);
     }
 
     public void BeShake()

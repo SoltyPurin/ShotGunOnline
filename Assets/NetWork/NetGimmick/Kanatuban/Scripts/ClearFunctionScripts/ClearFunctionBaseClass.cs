@@ -1,0 +1,250 @@
+using Unity.Netcode;
+using UnityEngine;
+using System.Collections;
+
+public class ClearFunctionBaseClass : NetworkBehaviour
+{
+    [Header("このオブジェクトは絶対にPlateParentオブジェクトの子オブジェクトにしてください")]
+    [Header("絶対にこのオブジェクトにNetworkObjectクラスをアタッチしないでください")]
+    [Header("もしNetworkObjectをアタッチしてしまったら絶対に削除してください")]
+    [Space(10)]
+    [SerializeField] private bool _dummy;
+
+    [SerializeField, Header("踏まれた後何秒で消えるか")]
+    private float _deactiveTime = 3;
+
+    private float _saveTheDeactiveTime = 0;
+
+    private Coroutine _deactiveCoroutine;
+
+    private NetworkVariable<bool> _isStepOn = new NetworkVariable<bool>();
+
+
+    [SerializeField, Header("クリアしたら消えるオブジェクト？")]
+    private bool _isClearedVanishObj = false;
+
+    [SerializeField,Header("出てきたら床になるオブジェクト？")]
+    private bool _isFloorObject = false;
+
+    [SerializeField, Header("(感圧板と同期させて動かしたい場合)同期する感圧板")]
+    private DetectOnPlayer _pressurePlate = default;
+
+    [SerializeField, Header("(キャンドルと同期させて動かしたい場合)同期するキャンドル")]
+    private CandleTakeFire _candle = default;
+
+    private SpriteRenderer _sprite = default;
+    private BoxCollider2D _collider = default;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        //感圧板と同期させるオブジェクトの場合は公開してあるboolを購読する
+        if (_pressurePlate != null)
+        {
+            _pressurePlate.OnPlayerOnPlate += SyncGimmickFunction;
+        }
+
+        //キャンドルと同期させるオブジェクトの場合も同じく
+        if(_candle != null)
+        {
+            _candle.IsCandleTakeFire += SyncGimmickFunction;
+        }
+
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if (_pressurePlate != null)
+        {
+            _pressurePlate.OnPlayerOnPlate -= SyncGimmickFunction;
+        }
+
+        if(_candle != null)
+        {
+            _candle.IsCandleTakeFire -= SyncGimmickFunction;
+        }
+
+    }
+
+    private void Awake()
+    {
+        _sprite = GetComponent<SpriteRenderer>();
+        _collider = GetComponent<BoxCollider2D>();
+
+        if (!_isClearedVanishObj)
+        {
+            _sprite.enabled = false;
+            _collider.enabled = false;
+        }
+
+        _saveTheDeactiveTime = _deactiveTime;
+
+    }
+    /// <summary>
+    /// 感圧板が全部押された時に作動するメソッド
+    /// </summary>
+    public virtual void Function()
+    {
+        // サーバーから全クライアント端末へ実行を呼びかける
+        if (IsServer)
+        {
+            FunctionClientRpc();
+        }
+    }
+
+    /// <summary>
+    /// 全端末（ホスト・クライアント）で一斉に消去/出現処理を実行する ClientRpc
+    /// </summary>
+    [ClientRpc]
+    private void FunctionClientRpc()
+    {
+        ExecuteFunction();
+    }
+
+    private void ExecuteFunction()
+    {
+        // クリアした時に消えるオブジェクトだったらスプライトとコライダーを無効化
+        if (_isClearedVanishObj)
+        {
+            _sprite.enabled = false;
+            _collider.enabled = false;
+        }
+        // そうでなければ出現
+        else
+        {
+            if (_isFloorObject)
+            {
+                _collider.isTrigger = true;
+            }
+
+            _sprite.enabled = true;
+            _collider.enabled = true;
+        }
+    }
+    /// <summary>
+    /// 特定の感圧板が押された時等に作動するメソッド
+    /// </summary>
+    /// <param name="isPress"></param>
+    public virtual void SyncGimmickFunction(bool isPress)
+    {
+        if (isPress)
+        {
+            _saveTheDeactiveTime = _deactiveTime;
+            // 踏まれたら点滅処理を停止
+            if (_deactiveCoroutine != null)
+            {
+                StopCoroutine(_deactiveCoroutine);
+                _deactiveCoroutine = null;
+            }
+
+            // オブジェクトを表示
+            if (!_isClearedVanishObj)
+            {
+                _sprite.enabled = true;
+                _collider.enabled = true;
+            }
+            else
+            {
+                _sprite.enabled = false;
+                _collider.enabled = false;
+            }
+        }
+        else
+        {
+            // 離れたら点滅・消滅処理を開始
+            if (_deactiveCoroutine != null)
+            {
+                StopCoroutine(_deactiveCoroutine);
+            }
+
+            _deactiveCoroutine = StartCoroutine(DeactiveProtocol());
+        }
+    }
+    private IEnumerator DeactiveProtocol()
+    {
+        //経過時間
+        float elapsed = 0f;
+        float startInterval = 0.2f;
+        float minInterval = 0.03f;
+        //float intervalMinusTime = blinkInterval / _saveTheDeactiveTime;
+
+        while (elapsed < _saveTheDeactiveTime)
+        {
+            _sprite.enabled = !_sprite.enabled;
+
+            // 残り時間に応じて点滅間隔を短くする
+            float progress = elapsed / _saveTheDeactiveTime;
+
+            float blinkInterval = Mathf.Lerp(
+                startInterval,
+                minInterval,
+                progress
+            );
+
+            // 最後の待機で設定時間を超えないようにする
+            float waitTime = Mathf.Min(
+                blinkInterval,
+                _saveTheDeactiveTime - elapsed
+            );
+
+            yield return new WaitForSeconds(waitTime);
+
+            elapsed += waitTime;
+            //_sprite.enabled = !_sprite.enabled;
+
+            //yield return new WaitForSeconds(blinkInterval);
+
+            //elapsed += 0.2f;
+            //blinkInterval -= intervalMinusTime;
+        }
+
+        // 最後に完全に非表示にする
+        _sprite.enabled = false;
+        _collider.enabled = false;
+
+        _deactiveCoroutine = null;
+    }
+    [ClientRpc]
+    private void SyncGimmickFunctionClientRpc(bool isPress)
+    {
+        //押された時
+        if (isPress)
+        {
+            if (_isClearedVanishObj)
+            {
+                _sprite.enabled = false;
+                _collider.enabled = false;
+            }
+            else
+            {
+                if (_isFloorObject)
+                {
+                    _collider.isTrigger = true;
+                }
+                _sprite.enabled = true;
+                _collider.enabled = true;
+            }
+        }
+        //離したとき
+        else
+        {
+            if (_isClearedVanishObj)
+            {
+                if (_isFloorObject)
+                {
+                    _collider.isTrigger = true;
+                }
+
+                _sprite.enabled = true;
+                _collider.enabled = true;
+            }
+            else
+            {
+                _sprite.enabled = false;
+                _collider.enabled = false;
+            }
+
+        }
+    }
+}

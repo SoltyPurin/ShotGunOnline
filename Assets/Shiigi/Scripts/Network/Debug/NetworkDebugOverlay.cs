@@ -233,10 +233,19 @@ public class NetworkDebugOverlay : MonoBehaviour
     #region Ping & パケットロス計測ロジック
 
     private bool _handlersRegistered = false;
+    private NetworkManager _registeredNetworkManager;
 
     private void EnsureHandlersRegistered()
     {
-        if (!_handlersRegistered && NetworkManager.Singleton != null && NetworkManager.Singleton.CustomMessagingManager != null)
+        var netManager = NetworkManager.Singleton;
+        if (netManager == null || netManager.CustomMessagingManager == null) return;
+
+        if (_registeredNetworkManager != netManager)
+        {
+            _handlersRegistered = false;
+        }
+
+        if (!_handlersRegistered)
         {
             RegisterMessageHandlers();
         }
@@ -245,12 +254,16 @@ public class NetworkDebugOverlay : MonoBehaviour
     private void RegisterMessageHandlers()
     {
         var netManager = NetworkManager.Singleton;
-        if (netManager == null || netManager.CustomMessagingManager == null || _handlersRegistered) return;
+        if (netManager == null || netManager.CustomMessagingManager == null) return;
+        if (_handlersRegistered && _registeredNetworkManager == netManager) return;
 
         try
         {
+            netManager.CustomMessagingManager.UnregisterNamedMessageHandler(MsgPing);
+            netManager.CustomMessagingManager.UnregisterNamedMessageHandler(MsgPong);
             netManager.CustomMessagingManager.RegisterNamedMessageHandler(MsgPing, OnReceivePingOnServer);
             netManager.CustomMessagingManager.RegisterNamedMessageHandler(MsgPong, OnReceivePongOnClient);
+            _registeredNetworkManager = netManager;
             _handlersRegistered = true;
         }
         catch (Exception ex)
@@ -261,8 +274,13 @@ public class NetworkDebugOverlay : MonoBehaviour
 
     private void UnregisterMessageHandlers()
     {
-        var netManager = NetworkManager.Singleton;
-        if (netManager == null || netManager.CustomMessagingManager == null || !_handlersRegistered) return;
+        var netManager = _registeredNetworkManager != null ? _registeredNetworkManager : NetworkManager.Singleton;
+        if (netManager == null || netManager.CustomMessagingManager == null || !_handlersRegistered)
+        {
+            _handlersRegistered = false;
+            _registeredNetworkManager = null;
+            return;
+        }
 
         try
         {
@@ -276,6 +294,7 @@ public class NetworkDebugOverlay : MonoBehaviour
         finally
         {
             _handlersRegistered = false;
+            _registeredNetworkManager = null;
         }
     }
 
@@ -725,11 +744,21 @@ public class NetworkDebugOverlay : MonoBehaviour
 }
 #else
 // リリースビルド用の空実装。
-// コードサイズやパフォーマンスへの影響をなくす
+// コードサイズやパフォーマンスへの影響をなくしつつシリアライズレイアウトを一致させる
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class NetworkDebugOverlay : MonoBehaviour
 {
+    public enum DisplayMode { Full, Mini, Hidden }
+    public enum ScreenPosition { TopRight, TopLeft, BottomRight, BottomLeft }
+
+    [SerializeField] private bool _onlyInDevelopmentBuild = true;
+    [SerializeField] private DisplayMode _displayMode = DisplayMode.Full;
+    [SerializeField] private ScreenPosition _position = ScreenPosition.TopRight;
+    [SerializeField] private KeyCode _toggleKey = KeyCode.F3;
+    [SerializeField] private bool _dontDestroyOnLoad = true;
+
     private void Awake()
     {
         Destroy(gameObject);

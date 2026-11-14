@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -42,10 +42,13 @@ public class CoinControl : NetworkBehaviour
 
     // サーバー上での二重回収防止フラグ
     private bool _serverAbsorbed = false;
+    private float _noPlayerTimer = 0f;
 
-    public void SetTargetPlayer(GameObject target)
+    private bool _isPlayerSoulGot = false;
+    public void SetTargetPlayer(GameObject target, bool isPlayerSoulgot)
     {
         _playerObj = target;
+        _isPlayerSoulGot = isPlayerSoulgot;
         if (IsServer && target != null)
         {
             var netObj = target.GetComponent<NetworkObject>() ?? target.GetComponentInParent<NetworkObject>();
@@ -70,11 +73,11 @@ public class CoinControl : NetworkBehaviour
         base.OnNetworkSpawn();
 
         // 追従移動はクライアント側で完全ローカル計算するため、NetworkTransformの強制位置上書きを無効化
-        var netTransform = GetComponent<NetworkTransform>();
-        if (netTransform != null)
-        {
-            netTransform.enabled = false;
-        }
+        //var netTransform = GetComponent<NetworkTransform>();
+        //if (netTransform != null)
+        //{
+        //    netTransform.enabled = false;
+        //}
 
         if (_playerObj == null)
         {
@@ -103,13 +106,27 @@ public class CoinControl : NetworkBehaviour
 
     private void UpMethod()
     {
-        if (_initIncreasedValue <= _maxUpValue)
+        if (_initIncreasedValue < _maxUpValue)
         {
+            // 60FPS基準の値をdeltaTimeに正しくスケールさせ、FPS非依存に上昇させる
+            float deltaMove = _increasedValue * (Time.deltaTime * 60f);
+            float remaining = _maxUpValue - _initIncreasedValue;
+            if (deltaMove > remaining)
+            {
+                deltaMove = remaining;
+            }
+
             Vector3 initPos = transform.position;
-            initPos.y += _increasedValue * (Time.deltaTime * 60f);
+            initPos.y += deltaMove;
             transform.position = initPos;
+
             _increasedValue *= Mathf.Pow(_risePowerDecay, Time.deltaTime * 60f);
-            _initIncreasedValue += _increasedValue;
+            _initIncreasedValue += deltaMove;
+
+            if (_initIncreasedValue >= _maxUpValue)
+            {
+                _coinState = CoinState.Wait;
+            }
         }
         else
         {
@@ -134,7 +151,19 @@ public class CoinControl : NetworkBehaviour
         if (_playerObj == null || !_playerObj.activeInHierarchy)
         {
             FindTargetPlayer();
-            if (_playerObj == null) return;
+            if (_playerObj == null)
+            {
+                if (IsServer)
+                {
+                    _noPlayerTimer += Time.deltaTime;
+                    if (_noPlayerTimer > 2.0f && NetworkObject != null && NetworkObject.IsSpawned)
+                    {
+                        NetworkObject.Despawn(true);
+                    }
+                }
+                return;
+            }
+        _noPlayerTimer = 0f;
         }
 
         // プレイヤーに向かって加速度的に吸い込む
@@ -164,7 +193,7 @@ public class CoinControl : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void RequestAbsorbServerRpc(NetworkObjectReference playerRef)
     {
         if (playerRef.TryGet(out NetworkObject playerNetObj))
@@ -173,12 +202,17 @@ public class CoinControl : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// ソウルの吸収処理
+    /// </summary>
+    /// <param name="playerNetObj"></param>
+    /// <param name="isPlayerSoulgot">プレイヤーが既にそのソウルを吸収済みか否か</param>
     private void ApplyAbsorb(NetworkObject playerNetObj)
     {
         if (!IsServer || _serverAbsorbed) return;
         _serverAbsorbed = true;
 
-        if (playerNetObj != null)
+        if (playerNetObj != null && !_isPlayerSoulGot)
         {
             SoulKeep soul = playerNetObj.GetComponent<SoulKeep>() ?? playerNetObj.GetComponentInChildren<SoulKeep>();
             if (soul != null)
