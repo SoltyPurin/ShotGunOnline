@@ -2882,7 +2882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2696671271173649261, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Name
-      value: "Preset_\u30D5\u30EC\u30F3\u30C9\u52DF\u96C6"
+      value: "Preset_\u5800\u5927\u8F14"
       objectReference: {fileID: 0}
     - target: {fileID: 6539515121047483662, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Color.b
@@ -2898,7 +2898,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7429659142358826781, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Text
-      value: "\u30D5\u30EC\u30F3\u30C9\u52DF\u96C6"
+      value: "\u5800\u5927\u8F14"
       objectReference: {fileID: 0}
     - target: {fileID: 7429659142358826781, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_FontData.m_MaxSize
@@ -3264,7 +3264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2696671271173649261, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Name
-      value: "Preset_\u30A8\u30F3\u30B8\u30E7\u30A4"
+      value: "Preset_\u90E8\u5C4B"
       objectReference: {fileID: 0}
     - target: {fileID: 6539515121047483662, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Color.b
@@ -3280,7 +3280,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7429659142358826781, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Text
-      value: "\u30A8\u30F3\u30B8\u30E7\u30A4"
+      value: "\u90E8\u5C4B"
       objectReference: {fileID: 0}
     - target: {fileID: 7429659142358826781, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_FontData.m_MaxSize
@@ -3756,7 +3756,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2696671271173649261, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Name
-      value: "Preset_\u521D\u5FC3\u8005OK"
+      value: Preset_Test
       objectReference: {fileID: 0}
     - target: {fileID: 6539515121047483662, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Color.b
@@ -3772,7 +3772,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7429659142358826781, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_Text
-      value: "\u521D\u5FC3\u8005OK"
+      value: Test
       objectReference: {fileID: 0}
     - target: {fileID: 7429659142358826781, guid: 06bd0054e07489848ac62bf1a588a8ee, type: 3}
       propertyPath: m_FontData.m_MaxSize
