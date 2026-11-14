@@ -4,50 +4,50 @@ using UnityEngine.InputSystem;
 
 public class InputChangeState : NetworkBehaviour
 {
-    #region Serialize‚Ì•Ï”
-    [SerializeField, Header("ƒ‚[ƒhƒ`ƒFƒ“ƒWƒGƒtƒFƒNƒg‚ÌƒIƒuƒWƒFƒNƒg")]
+    #region Serializeã®å¤‰æ•°
+    [SerializeField, Header("ãƒ¢ãƒ¼ãƒ‰ãƒã‚§ãƒ³ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _toNormal = default;
     [SerializeField]
     private GameObject _toUlt = default;
 
-    [SerializeField, Header("ƒGƒtƒFƒNƒg‚ÌƒAƒjƒ[ƒ^")]
+    [SerializeField, Header("ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿")]
     private Animator _toNormalAnim = default;
     [SerializeField]
     private Animator _toUltAnim = default;
 
-    [SerializeField, Header("ƒEƒ‹ƒg’†‚ÌƒI[ƒ‰")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆä¸­ã®ã‚ªãƒ¼ãƒ©")]
     private GameObject _ultAura = default;
 
-    [SerializeField, Header("ƒEƒ‹ƒg‰Â”\‚©‚Ç‚¤‚©‚ÌƒI[ƒ‰")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆå¯èƒ½ã‹ã©ã†ã‹ã®ã‚ªãƒ¼ãƒ©")]
     private GameObject _canUltAura = default;
 
-    [SerializeField, Header("ƒEƒ‹ƒgƒtƒ‰ƒbƒVƒ…")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆãƒ•ãƒ©ãƒƒã‚·ãƒ¥")]
     private Animator _flashAnimator = default;
 
-    [Header("ƒEƒ‹ƒgƒ`ƒƒ[ƒW")]
-    [SerializeField, Tooltip("ƒ`ƒƒ[ƒW‚ÌƒGƒtƒFƒNƒg")]
+    [Header("ã‚¦ãƒ«ãƒˆãƒãƒ£ãƒ¼ã‚¸")]
+    [SerializeField, Tooltip("ãƒãƒ£ãƒ¼ã‚¸ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private GameObject _ultCharge = default;
-    [SerializeField, Tooltip("ƒ`ƒƒ[ƒWƒGƒtƒFƒNƒgoŒ»‚ÌƒGƒtƒFƒNƒg")]
+    [SerializeField, Tooltip("ãƒãƒ£ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå‡ºç¾ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     private Animator _showUltChargeEffect = default;
 
-    [SerializeField, Header("Œø‰Ê‰¹")]
+    [SerializeField, Header("åŠ¹æœéŸ³")]
     private PlayerSEControlScript _seScript = default;
 
-    [SerializeField, Header("ƒRƒCƒ“ŠÇ—‚ÌƒXƒNƒŠƒvƒgæ“¾")] 
+    [SerializeField, Header("ã‚³ã‚¤ãƒ³ç®¡ç†ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆå–å¾—")] 
     private SoulKeep _soulKeep = default;
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒgæ“¾")] 
+    [SerializeField,Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆå–å¾—")] 
     private PlayerStateManager _stateManager = default;
 
     #endregion
 
-    #region “à•”•Ï”
-    //ƒEƒ‹ƒg‚ğg—p‰Â”\‚©
+    #region å†…éƒ¨å¤‰æ•°
+    //ã‚¦ãƒ«ãƒˆã‚’ä½¿ç”¨å¯èƒ½ã‹
     private bool _canUseUltimate = false; 
-    //ƒEƒ‹ƒg‚Ìƒ{ƒ^ƒ“
+    //ã‚¦ãƒ«ãƒˆã®ãƒœã‚¿ãƒ³
     private readonly string USE_ULTIMATE_BUTTON = "Ultimate";
-    //ƒEƒ‹ƒg‚ªŒ»İƒAƒNƒeƒBƒu‚©‚Ç‚¤‚©
+    //ã‚¦ãƒ«ãƒˆãŒç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‹ã©ã†ã‹
     private bool _ultimateActive = false;
-    //¶ƒgƒŠƒK[‚ğ‰Ÿ‚µ‚½‚©‚Ç‚¤‚©
+    //å·¦ãƒˆãƒªã‚¬ãƒ¼ã‚’æŠ¼ã—ãŸã‹ã©ã†ã‹
     private bool _isLeftTriggerPressed = false;
     public bool UltimateActive
     {
@@ -61,7 +61,7 @@ public class InputChangeState : NetworkBehaviour
 
     private void Start()
     {
-        //ƒEƒ‹ƒg‚ÌƒI[ƒ‰‚ğ•\¦‚·‚é
+        //ã‚¦ãƒ«ãƒˆã®ã‚ªãƒ¼ãƒ©ã‚’è¡¨ç¤ºã™ã‚‹
         if (_ultAura != null)
         {
             _ultAura.SetActive(false);
@@ -72,32 +72,33 @@ public class InputChangeState : NetworkBehaviour
             _canUltAura.SetActive(false);
         }
 
-        _pause = GameObject.Find("PauseVision").GetComponent<InputPause>();
-        //ƒlƒbƒgƒ[ƒN”Å‚¾‚ÆƒCƒ“ƒXƒyƒNƒ^[‚©‚çİ’è‚Å‚«‚È‚¢‚½‚ß‚±‚±‚Åæ“¾
+        var pauseObj = GameObject.Find("PauseVision");
+        if (pauseObj != null) _pause = pauseObj.GetComponent<InputPause>();
+        //ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ç‰ˆã ã¨ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼ã‹ã‚‰è¨­å®šã§ããªã„ãŸã‚ã“ã“ã§å–å¾—
         if (_toNormal == null && _toUlt == null)
         {
             _toNormal = GameObject.Find("ToNormal");
             _toUlt = GameObject.Find("ToUlt");
-            _toNormalAnim = _toNormal.GetComponentInChildren<Animator>();
-            _toUltAnim = _toUlt.GetComponentInChildren<Animator>();
+            if (_toNormal != null) _toNormalAnim = _toNormal.GetComponentInChildren<Animator>();
+            if (_toUlt != null) _toUltAnim = _toUlt.GetComponentInChildren<Animator>();
         }
     }
 
     private void Update()
     {
-        if (!IsOwner)
+        if (!IsOwner && IsSpawned)
         {
             return;
         }
-        if (_pause.IsPauseing || _stateManager.PlayerState == PlayerState.Movie)
+        if ((_pause != null && _pause.IsPauseing) || _stateManager.PlayerState == PlayerState.Movie)
         {
             return;
         }
 
-        //VƒXƒgƒbƒN‚ª1ŒÂˆÈã‚Ì‚ÉƒEƒ‹ƒgg—p‰Â”\
+        //Vã‚¹ãƒˆãƒƒã‚¯ãŒ1å€‹ä»¥ä¸Šã®æ™‚ã«ã‚¦ãƒ«ãƒˆä½¿ç”¨å¯èƒ½
         if (_soulKeep.VStock >= 1)
         {
-            //ƒEƒ‹ƒg‚ğg—p‚µ‚Ä‚È‚¢‚Æ‚«
+            //ã‚¦ãƒ«ãƒˆã‚’ä½¿ç”¨ã—ã¦ãªã„ã¨ã
             if (!_canUseUltimate)
             {
                 _flashAnimator.SetTrigger("Flash");
@@ -110,7 +111,7 @@ public class InputChangeState : NetworkBehaviour
             {
                 _canUltAura.SetActive(true);
             }
-        }// ƒEƒ‹ƒgg—p‰Â”\ó‘Ô‚ª‰ğœ‚³‚ê‚½uŠÔ‚Ìˆ—(ƒEƒ‹ƒgŒ‚‚Á‚½Œã‚ÉƒRƒCƒ“‚ª‚È‚­‚È‚Á‚½‚Æ‚«)
+        }// ã‚¦ãƒ«ãƒˆä½¿ç”¨å¯èƒ½çŠ¶æ…‹ãŒè§£é™¤ã•ã‚ŒãŸç¬é–“ã®å‡¦ç†(ã‚¦ãƒ«ãƒˆæ’ƒã£ãŸå¾Œã«ã‚³ã‚¤ãƒ³ãŒãªããªã£ãŸã¨ã)
         else if (_canUseUltimate)
         {
             _canUseUltimate = false;
@@ -131,14 +132,14 @@ public class InputChangeState : NetworkBehaviour
             _leftTriggerValue = 0f;
         }
 
-        // ƒL[ƒ{[ƒh‚Å‚ÌƒAƒ‹ƒeƒBƒƒbƒgØ‚è‘Ö‚¦ƒL[iEƒL[j
+        // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã§ã®ã‚¢ãƒ«ãƒ†ã‚£ãƒ¡ãƒƒãƒˆåˆ‡ã‚Šæ›¿ãˆã‚­ãƒ¼ï¼ˆEã‚­ãƒ¼ï¼‰
         bool isKeyboardUltInput = false;
         if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
             isKeyboardUltInput = true;
         }
 
-        //ƒEƒ‹ƒgƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚©‚Â¶ƒgƒŠƒK[‚ª“ü—Í‚µ‚½“_‚Å‚Ü‚¾‰Ÿ‚³‚ê‚Ä‚È‚¢‚ÉÀs
+        //ã‚¦ãƒ«ãƒˆãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã‹ã¤å·¦ãƒˆãƒªã‚¬ãƒ¼ãŒå…¥åŠ›ã—ãŸæ™‚ç‚¹ã§ã¾ã æŠ¼ã•ã‚Œã¦ãªã„æ™‚ã«å®Ÿè¡Œ
         if (((Input.GetButtonDown(USE_ULTIMATE_BUTTON)) || isLeftTriggerInput || isKeyboardUltInput) && !_isLeftTriggerPressed)
         {
             if (_stateManager.PlayerState == PlayerState.Movie)
@@ -147,13 +148,13 @@ public class InputChangeState : NetworkBehaviour
             }
 
             _isLeftTriggerPressed = true;
-            //ƒEƒ‹ƒg‚ª‚Ü‚¾ƒAƒNƒeƒBƒu‚Å‚Í‚È‚­‚©‚ÂƒEƒ‹ƒg‚ğ‚Ü‚¾g‚Á‚Ä‚È‚¢‚Æ‚«
+            //ã‚¦ãƒ«ãƒˆãŒã¾ã ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã§ã¯ãªãã‹ã¤ã‚¦ãƒ«ãƒˆã‚’ã¾ã ä½¿ã£ã¦ãªã„ã¨ã
             if (!_ultimateActive && _canUseUltimate)
             {
                 _stateManager.UltimateState();
                 _ultimateActive = true;
                 ToUltAnimation();
-            }//ƒEƒ‹ƒg‚Ì”»’è‚Ì‚ÉØ‚è‘Ö‚¦ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‚Ìˆ—
+            }//ã‚¦ãƒ«ãƒˆã®åˆ¤å®šã®æ™‚ã«åˆ‡ã‚Šæ›¿ãˆãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã¨ãã®å‡¦ç†
             else if (_ultimateActive)
             {
                 _stateManager.NormalState();
@@ -162,7 +163,7 @@ public class InputChangeState : NetworkBehaviour
             }
 
         }
-        //¶ƒgƒŠƒK[‚Ìƒtƒ‰ƒO‚ğØ‚è‘Ö‚¦
+        //å·¦ãƒˆãƒªã‚¬ãƒ¼ã®ãƒ•ãƒ©ã‚°ã‚’åˆ‡ã‚Šæ›¿ãˆ
         if (!isLeftTriggerInput && !isKeyboardUltInput)
         {
             _isLeftTriggerPressed = false;
@@ -171,7 +172,7 @@ public class InputChangeState : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒm[ƒ}ƒ‹‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ÉØ‚è‘Ö‚¦AƒEƒ‹ƒg‚ÌƒI[ƒ‰‚ğ”ñƒAƒNƒeƒBƒu‚É‚·‚é‚È‚Ç
+    /// ãƒãƒ¼ãƒãƒ«ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã«åˆ‡ã‚Šæ›¿ãˆã€ã‚¦ãƒ«ãƒˆã®ã‚ªãƒ¼ãƒ©ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ãªã©
     /// </summary>
     public void ToNormalAnimation()
     {
@@ -195,7 +196,7 @@ public class InputChangeState : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒEƒ‹ƒg‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ÉØ‚è‘Ö‚¦AƒI[ƒ‰ƒoƒgƒ‰[‚É‚·‚é
+    /// ã‚¦ãƒ«ãƒˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã«åˆ‡ã‚Šæ›¿ãˆã€ã‚ªãƒ¼ãƒ©ãƒãƒˆãƒ©ãƒ¼ã«ã™ã‚‹
     /// </summary>
     public void ToUltAnimation()
     {

@@ -48,6 +48,8 @@ public class PlayerKnockBack : NetworkBehaviour
         set { _isInputLeftStick = value; }
     }
 
+    private bool IsLocalControl => IsOwner || !IsSpawned;
+
     private void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -55,7 +57,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void SetDirection(Vector3 direction,float chargeTime)
     {
-        if (!IsOwner || !IsSpawned)
+        if (!IsLocalControl)
         {
             return;
         }
@@ -73,7 +75,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void Fall()
     {
-        if (!IsOwner || !IsSpawned)
+        if (!IsLocalControl)
         {
             return;
         }
@@ -83,7 +85,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     public void TakeDamage()
     {
-        if (!IsOwner || !IsSpawned)
+        if (!IsLocalControl)
         {
             return;
         }
@@ -94,7 +96,7 @@ public class PlayerKnockBack : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsOwner || !IsSpawned)
+        if (!IsLocalControl)
         {
             return;
         }

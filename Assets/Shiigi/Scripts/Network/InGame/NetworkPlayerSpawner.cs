@@ -28,8 +28,10 @@ public class NetworkPlayerSpawner
 
         foreach (var netObj in spawnManager.SpawnedObjectsList)
         {
-            // 本編用プレイヤー（PlayerStateManager所持）のみを対象とする（ロビー用プレイヤー等の残骸を除外）
-            if (netObj != null && netObj.IsPlayerObject && netObj.GetComponent<PlayerStateManager>() != null)
+            // 本編用プレイヤー（PlayerStateManager所持・ロビー用を除外）のみを対象とする
+            if (netObj != null && netObj.IsPlayerObject &&
+                netObj.GetComponent<PlayerStateManager>() != null &&
+                !netObj.gameObject.name.Contains("(Lobby)"))
             {
                 result.Add(netObj);
             }
@@ -72,9 +74,10 @@ public class NetworkPlayerSpawner
         {
             int spawnIndex = index++;
 
-            // 本編用プレイヤー（PlayerStateManager所持）が既に存在するか確認
+            // 本編用プレイヤー（PlayerStateManager所持・ロビー用を除外）が既に存在するか確認
             bool hasValidInGamePlayer = client.PlayerObject != null &&
-                                        client.PlayerObject.GetComponent<PlayerStateManager>() != null;
+                                        client.PlayerObject.GetComponent<PlayerStateManager>() != null &&
+                                        !client.PlayerObject.gameObject.name.Contains("(Lobby)");
 
             if (hasValidInGamePlayer)
             {

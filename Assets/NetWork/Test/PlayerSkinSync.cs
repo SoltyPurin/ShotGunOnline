@@ -22,6 +22,14 @@ public class PlayerSkinSync : NetworkBehaviour
 
     private PlayerNumberSave _numberSave = default;
 
+    private void Start()
+    {
+        if (!IsSpawned)
+        {
+            ApplySkin(0);
+        }
+    }
+
     public override void OnNetworkSpawn()
     {
         // 1. 値が変更・同期されたときに全端末で見た目を更新するイベント登録

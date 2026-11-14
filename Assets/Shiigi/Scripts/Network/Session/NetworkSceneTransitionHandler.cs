@@ -114,7 +114,8 @@ public class NetworkSceneTransitionHandler
                 var spawnedList = new System.Collections.Generic.List<NetworkObject>(networkManager.SpawnManager.SpawnedObjectsList);
                 foreach (var netObj in spawnedList)
                 {
-                    if (netObj != null && netObj.IsSpawned && netObj.GetComponent<LobbyNetworkPlayer>() != null)
+                    if (netObj != null && netObj.IsSpawned &&
+                        (netObj.GetComponent<LobbyNetworkPlayer>() != null || netObj.gameObject.name.Contains("(Lobby)")))
                     {
                         netObj.Despawn(true);
                     }

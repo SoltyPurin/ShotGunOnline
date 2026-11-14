@@ -3942,7 +3942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce173002b1770214891372f63e8ca105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyAvatarSwitcher
-  _localAvatarPrefab: {fileID: 954377536031478314, guid: 293bf7fff10eb224486b8c5710b50d8e, type: 3}
+  _playerPrefab: {fileID: 7250050344265823419, guid: a28ee38da8dc9284e90355fef742a793, type: 3}
+  _bulletPoolPrefab: {fileID: 3073210418566834388, guid: 200ed371ee316674db7e658cccc8646a, type: 3}
   _spawnPoints: {fileID: 1168504356}
   _cameraFollow: {fileID: 546603711}
 --- !u!114 &458635163
@@ -3957,7 +3958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac8cd0d0b2fec74e8241906e2cb87e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyNetworkSpawner
-  _lobbyPlayerPrefab: {fileID: 7764345833524772851, guid: 98fd0cb899c17d8469ff750a5101c9a3, type: 3}
+  _lobbyPlayerPrefab: {fileID: 8682099845083446549, guid: a28ee38da8dc9284e90355fef742a793, type: 3}
   _spawnPoints: {fileID: 1168504356}
 --- !u!4 &458635164
 Transform:

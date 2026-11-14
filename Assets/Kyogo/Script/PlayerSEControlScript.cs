@@ -106,10 +106,12 @@ public class PlayerSEControlScript : NetworkBehaviour
         _PlayerRigidbody = playerObj.GetComponent<Rigidbody2D>();
     }
 
+    private bool IsLocalControl => IsOwner || !IsSpawned;
+
     void Update()
     {
         //ボタン管理--------------------------------------------------------------------------------
-        if (!IsOwner)
+        if (!IsLocalControl)
         {
             return;
         }
@@ -131,7 +133,7 @@ public class PlayerSEControlScript : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsOwner || _inputPlayerShot == null || _PlayerStateManager == null) return;
+        if (!IsLocalControl || _inputPlayerShot == null || _PlayerStateManager == null) return;
 
         float currentCharge = _inputPlayerShot.ChargeValue;
 
