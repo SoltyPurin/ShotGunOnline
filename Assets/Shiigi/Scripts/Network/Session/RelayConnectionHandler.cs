@@ -31,8 +31,16 @@ public class RelayConnectionHandler
     /// </summary>
     public void ConfigureTransport(RelayProtocol protocol)
     {
-        if (NetworkManager.Singleton != null &&
-            NetworkManager.Singleton.NetworkConfig?.NetworkTransport is UnityTransport transport)
+        var networkManager = NetworkManager.Singleton;
+        if (networkManager == null || networkManager.NetworkConfig == null) return;
+
+        // 位置補間やNetworkVariableのティック遅延を半減させるため 60Hz を設定（起動前のみ変更可）
+        if (!networkManager.IsListening && networkManager.NetworkConfig.TickRate < 60)
+        {
+            networkManager.NetworkConfig.TickRate = 60;
+        }
+
+        if (networkManager.NetworkConfig.NetworkTransport is UnityTransport transport)
         {
             transport.UseWebSockets = protocol == RelayProtocol.WSS;
             transport.ConnectTimeoutMS = ConnectTimeoutMs;

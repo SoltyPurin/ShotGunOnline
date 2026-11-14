@@ -137,6 +137,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     private bool _isKeyboardShootDown = false;
     private float _lastShotRpcTime = 0f;
     private const float MIN_SHOT_RPC_INTERVAL = 0.05f;
+    private bool _localPushShootButton = false;
 
     private void Start()
     {
@@ -235,8 +236,13 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                     break;
             }
 
-            // ネットワーク変数に設定（自動的にホスト・クライアント全員へ同期される）
-            _netIsPushShootButton.Value = currentPushState;
+            _localPushShootButton = currentPushState;
+
+            // 変化時のみネットワーク変数へ書き込み（毎フレーム送信を防止）
+            if (_netIsPushShootButton.Value != currentPushState)
+            {
+                _netIsPushShootButton.Value = currentPushState;
+            }
         }
     }
 
@@ -300,7 +306,9 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _showUltCharge = false;
         }
 
-        if (this.IsOwner && IsSpawned)
+        _localPushShootButton = false;
+
+        if (this.IsOwner && IsSpawned && _netIsPushShootButton.Value)
         {
             _netIsPushShootButton.Value = false;
         }
@@ -378,12 +386,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _isDecChargeTime = false;//チャージ減算終了
         }
 
+        bool isPushing = IsOwner ? _localPushShootButton : _netIsPushShootButton.Value;
+
         switch (_stateManager.PlayerState)
         {
             case PlayerState.Normal:
                 //入力はUpdateで管理する
                 //撃つボタンを押しており、チャージ減算中でなく、ステートが射撃可能な時に撃つ
-                if (_netIsPushShootButton.Value && !_canDecChargeValue)
+                if (isPushing && !_canDecChargeValue)
                 {
                     if (_shootState == ShootState.OverHeat)
                     {
@@ -398,20 +408,36 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                     Charge();
                     //_shootRange.StartCharge();
                 }
-                //撃つボタンを離して、なおかつ現在チャージ中でなく落下中でなかったら解放可能
-                else if (!_netIsPushShootButton.Value && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
+                //撃つボタンを離して、なおかつ現在チャージ中で落下中でなかったら解放可能
+                else if (!isPushing && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
                 {
-                    float shotCharge = _chargeTime;
-                    bool isCrit = _canCriticalShoot;
-                    // 最大チャージ（2秒）の少し手前（1.9秒以上）で離しても最大チャージと判定する遊びを持たせる
-                    bool isMaxCharge = shotCharge >= (MAXCHARGEVALUE - 0.1f);
-                    if (isMaxCharge && shotCharge < MAXCHARGEVALUE)
+                    if (IsOwner)
                     {
-                        shotCharge = MAXCHARGEVALUE;
-                    }
+                        float shotCharge = _chargeTime;
+                        bool isCrit = _canCriticalShoot;
+                        // 最大チャージ（2秒）の少し手前（1.9秒以上）で離しても最大チャージと判定する遊びを持たせる
+                        bool isMaxCharge = shotCharge >= (MAXCHARGEVALUE - 0.1f);
+                        if (isMaxCharge && shotCharge < MAXCHARGEVALUE)
+                        {
+                            shotCharge = MAXCHARGEVALUE;
+                        }
 
-                    // 通常発射を実行
-                    ExecuteShot(shotCharge, isCrit, isMaxCharge);
+                        // 通常発射を実行し、非OwnerへワンショットRPCで通知
+                        ExecuteShot(shotCharge, isCrit, isMaxCharge);
+                        if (IsSpawned)
+                        {
+                            Vector3 aimDir = _playerAiming != null ? _playerAiming.Direction : Vector3.right;
+                            PlayShotEffectsRpc(shotCharge, isCrit, isMaxCharge, aimDir);
+                        }
+                    }
+                    else
+                    {
+                        // 非Owner側はPlayShotEffectsRpcで正確なタイミング・チャージ量・向きで再生するため、チャージ状態のみリセット
+                        _initChargeTime = 0;
+                        _canDecChargeValue = false;
+                        _canCriticalShoot = false;
+                        _isCharge = false;
+                    }
                 }
                 break;
 
@@ -428,7 +454,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 _shootShape.UltShape(_playerAiming.Direction);
                 //撃つ判定を検知
                 //射撃ボタンを押してなおかつウルトを撃ってない時にウルト発射可能
-                if (_netIsPushShootButton.Value && !_hasShotUltimate)
+                if (isPushing && !_hasShotUltimate)
                 {
                     //ウルト発射状態に切り替え
                     _hasShotUltimate = true;
@@ -584,22 +610,26 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             if (Time.unscaledTime - _lastShotRpcTime >= MIN_SHOT_RPC_INTERVAL)
             {
                 _lastShotRpcTime = Time.unscaledTime;
-                PlayShotEffectsRpc(chargeTime, isCrit, isMaxCharge);
+                Vector3 aimDir = _playerAiming != null ? _playerAiming.Direction : Vector3.right;
+                PlayShotEffectsRpc(chargeTime, isCrit, isMaxCharge, aimDir);
             }
         }
     }
 
-    [Rpc(SendTo.NotOwner)]
-    private void PlayShotEffectsRpc(float chargeTime, bool isCrit, bool isMaxCharge)
+    [Rpc(SendTo.NotOwner, Delivery = RpcDelivery.Unreliable)]
+    private void PlayShotEffectsRpc(float chargeTime, bool isCrit, bool isMaxCharge, Vector3 aimDirection)
     {
         if (_muzzleFlashAnimation != null)
         {
             _muzzleFlashAnimation.PlayTheMuzzleFlash();
         }
 
-        if (_bulletPool != null && _playerAiming != null)
+        if (_bulletPool != null)
         {
-            _bulletPool.ActiveBullet(_playerAiming.Direction, this.transform.position, chargeTime);
+            Vector3 dir = aimDirection.sqrMagnitude > 0.001f
+                ? aimDirection
+                : (_playerAiming != null ? _playerAiming.Direction : Vector3.right);
+            _bulletPool.ActiveBullet(dir, this.transform.position, chargeTime);
         }
 
         if (_seScript != null)
