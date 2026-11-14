@@ -81,7 +81,6 @@ public class CreateRoomDialogUI : LobbyViewBase
             // フォーカスしただけでは入力開始せず、クリックや決定(Enter/Space/A)で仮想キーボードを開く
             _roomNameInputField.shouldActivateOnSelect = false;
             _roomNameInputField.readOnly = true;
-            AttachVirtualKeyboardButton(_roomNameInputField);
         }
 
         RebuildNavigation();
@@ -394,50 +393,6 @@ public class CreateRoomDialogUI : LobbyViewBase
                 EventSystem.current.SetSelectedGameObject(_roomNameInputField.gameObject);
             }
         }
-    }
-
-    private void AttachVirtualKeyboardButton(InputField inputField)
-    {
-        if (inputField == null || inputField.transform.Find("VirtualKeyboardButton") != null) return;
-
-        GameObject btnObj = new GameObject("VirtualKeyboardButton", typeof(RectTransform));
-        btnObj.transform.SetParent(inputField.transform, false);
-
-        RectTransform rt = btnObj.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(1f, 0.5f);
-        rt.anchorMax = new Vector2(1f, 0.5f);
-        rt.pivot = new Vector2(1f, 0.5f);
-        rt.sizeDelta = new Vector2(56f, 34f);
-        rt.anchoredPosition = new Vector2(-6f, 0f);
-
-        Image bg = btnObj.AddComponent<Image>();
-        bg.color = new Color(0.16f, 0.19f, 0.25f, 0.95f);
-
-        Button btn = btnObj.AddComponent<Button>();
-        btn.targetGraphic = bg;
-        btn.navigation = new Navigation { mode = Navigation.Mode.None };
-        btn.onClick.AddListener(() => OpenVirtualKeyboardAsync().Forget());
-
-        GameObject textObj = new GameObject("Label", typeof(RectTransform));
-        textObj.transform.SetParent(btnObj.transform, false);
-        RectTransform textRt = textObj.GetComponent<RectTransform>();
-        textRt.anchorMin = Vector2.zero;
-        textRt.anchorMax = Vector2.one;
-        textRt.offsetMin = Vector2.zero;
-        textRt.offsetMax = Vector2.zero;
-
-        Text label = textObj.AddComponent<Text>();
-        label.font = inputField.textComponent != null
-            ? inputField.textComponent.font
-            : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        label.text = "KB";
-        label.fontSize = 16;
-        label.fontStyle = FontStyle.Bold;
-        label.alignment = TextAnchor.MiddleCenter;
-        label.color = Color.white;
-
-        UIButtonMetallicVisual.Attach(btn);
-        EnsureButtonSound(btn, UIButtonType.SubAction);
     }
 
     private void EnsureBlocker()

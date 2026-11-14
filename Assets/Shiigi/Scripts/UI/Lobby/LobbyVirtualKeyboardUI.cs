@@ -28,12 +28,16 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     private Text _shiftButtonLabel;
     private Button _initialFocusButton;
 
+    private const float CaretBlinkInterval = 0.5f;
+
     private Color _previewBaseColor = Color.white;
     private Color _shiftBaseColor = Color.white;
     private string _currentText = string.Empty;
     private int _maxLength = DEFAULT_MAX_LENGTH;
     private bool _isShiftActive = true;
     private bool _isInitialized = false;
+    private float _caretTimer;
+    private bool _caretVisible = true;
 
     /// <summary>
     /// 指定されたCanvas配下に仮想キーボードプレハブを表示し、入力結果（確定有無と文字列）を返す汎用メソッド
@@ -94,6 +98,8 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
         transform.SetAsLastSibling();
         EnsureBlocker();
+        _caretTimer = 0f;
+        _caretVisible = true;
         RefreshPreview();
         RefreshShiftLabels();
 
@@ -124,6 +130,9 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     {
         base.Update();
         if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+
+        UpdateCaretBlink();
+
         if (_canvasGroup != null && !_canvasGroup.interactable) return;
 
         bool cancelPressed =
@@ -319,6 +328,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             _previewText = previewBox.Find("PreviewText")?.GetComponent<Text>();
             if (_previewText != null)
             {
+                _previewText.supportRichText = true;
                 _previewBaseColor = _previewText.color;
             }
         }
@@ -535,6 +545,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         if (string.IsNullOrEmpty(ch) || _currentText.Length >= _maxLength) return;
 
         _currentText += ch;
+        ResetCaretBlink();
         RefreshPreview();
     }
 
@@ -543,18 +554,21 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         if (_currentText.Length == 0) return;
 
         _currentText = _currentText.Substring(0, _currentText.Length - 1);
+        ResetCaretBlink();
         RefreshPreview();
     }
 
     private void ClearAll()
     {
         _currentText = string.Empty;
+        ResetCaretBlink();
         RefreshPreview();
     }
 
     private void SetPresetText(string preset)
     {
         _currentText = TrimToMaxLength(preset);
+        ResetCaretBlink();
         RefreshPreview();
     }
 
@@ -562,6 +576,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     {
         int num = UnityEngine.Random.Range(1000, 9999);
         _currentText = TrimToMaxLength($"Room-{num}");
+        ResetCaretBlink();
         RefreshPreview();
     }
 
@@ -588,14 +603,43 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         }
     }
 
+    private void UpdateCaretBlink()
+    {
+        _caretTimer += Time.unscaledDeltaTime;
+        if (_caretTimer < CaretBlinkInterval) return;
+
+        _caretTimer -= CaretBlinkInterval;
+        _caretVisible = !_caretVisible;
+        RefreshPreview();
+    }
+
+    private void ResetCaretBlink()
+    {
+        _caretTimer = 0f;
+        _caretVisible = true;
+    }
+
     private void RefreshPreview()
     {
         if (_previewText != null)
         {
-            _previewText.text = string.IsNullOrEmpty(_currentText) ? "（未入力）" : _currentText;
-            _previewText.color = string.IsNullOrEmpty(_currentText)
-                ? new Color(_previewBaseColor.r, _previewBaseColor.g, _previewBaseColor.b, 0.55f)
-                : _previewBaseColor;
+            string caretHex = ColorUtility.ToHtmlStringRGBA(_previewBaseColor);
+            string caretMarkup = _caretVisible
+                ? $"<color=#{caretHex}>|</color>"
+                : "<color=#00000000>|</color>";
+
+            if (string.IsNullOrEmpty(_currentText))
+            {
+                Color placeholderColor = new Color(_previewBaseColor.r, _previewBaseColor.g, _previewBaseColor.b, 0.55f);
+                string placeholderHex = ColorUtility.ToHtmlStringRGBA(placeholderColor);
+                _previewText.color = _previewBaseColor;
+                _previewText.text = $"{caretMarkup}<color=#{placeholderHex}>（未入力）</color>";
+            }
+            else
+            {
+                _previewText.color = _previewBaseColor;
+                _previewText.text = $"{_currentText}{caretMarkup}";
+            }
         }
 
         if (_counterText != null)
