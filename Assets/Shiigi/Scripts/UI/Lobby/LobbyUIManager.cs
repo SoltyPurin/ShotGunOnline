@@ -440,6 +440,31 @@ public class LobbyUIManager : MonoBehaviour
     {
         await UniTask.Yield(PlayerLoopTiming.Update);
         if (this == null || !_isMenuOpen) return;
+
+        // 表示アニメーションやローディング解除が完了して操作可能になるまで待機
+        float elapsed = 0f;
+        while (elapsed < 0.5f)
+        {
+            if (this == null || !_isMenuOpen || !CanToggleMenu()) return;
+
+            LobbyViewBase activeView = _currentState == LobbyUIState.Discover
+                ? (LobbyViewBase)_discoverUI
+                : (_currentState == LobbyUIState.InRoom ? _roomUI : null);
+
+            if (activeView != null && activeView.IsTopActiveView)
+            {
+                var cg = activeView.GetComponent<CanvasGroup>();
+                if (cg == null || cg.interactable)
+                {
+                    break;
+                }
+            }
+
+            elapsed += Time.unscaledDeltaTime;
+            await UniTask.Yield(PlayerLoopTiming.Update);
+        }
+
+        if (this == null || !_isMenuOpen) return;
         FocusCurrentViewDefaultElement();
     }
 

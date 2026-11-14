@@ -92,15 +92,35 @@ public class ConfirmDialogUI : LobbyViewBase
             }
 
             // 背後UIや他ボタンへのキーボード/ゲームパッドのフォーカス移動を防止
-            var nav = _yesButton.navigation;
-            nav.mode = showNoButton ? Navigation.Mode.Automatic : Navigation.Mode.None;
-            _yesButton.navigation = nav;
+            if (showNoButton && _noButton != null)
+            {
+                var yesNav = new Navigation
+                {
+                    mode = Navigation.Mode.Explicit,
+                    selectOnLeft = _noButton,
+                    selectOnRight = _noButton
+                };
+                _yesButton.navigation = yesNav;
+            }
+            else
+            {
+                _yesButton.navigation = new Navigation { mode = Navigation.Mode.None };
+            }
         }
 
         if (_noButton != null)
         {
             _noButton.onClick.RemoveAllListeners();
             _noButton.gameObject.SetActive(showNoButton);
+            if (showNoButton && _yesButton != null)
+            {
+                _noButton.navigation = new Navigation
+                {
+                    mode = Navigation.Mode.Explicit,
+                    selectOnLeft = _yesButton,
+                    selectOnRight = _yesButton
+                };
+            }
         }
 
         if (EventSystem.current != null && _yesButton != null)
