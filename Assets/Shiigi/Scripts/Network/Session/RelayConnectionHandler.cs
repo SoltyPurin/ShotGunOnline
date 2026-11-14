@@ -62,6 +62,7 @@ public class RelayConnectionHandler
             return false;
         }
 
+        // MultiplayerService (WithRelayNetwork) 側で既に StartHost されている場合はそのまま接続検証へ進む
         if (!networkManager.IsListening && !networkManager.StartHost())
         {
             Debug.LogError("[MSM]: NetworkManager.StartHost() の実行に失敗しました。");
@@ -89,6 +90,7 @@ public class RelayConnectionHandler
             return false;
         }
 
+        // MultiplayerService (WithRelayNetwork) 側で既に StartClient されている場合はそのまま接続検証へ進む
         if (!networkManager.IsListening && !networkManager.StartClient())
         {
             Debug.LogError("[MSM]: NetworkManager.StartClient() の実行に失敗しました。");

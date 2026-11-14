@@ -118,7 +118,7 @@ public class LobbyNetworkPlayer : NetworkBehaviour
 
             _input = LobbyMovement.ReadMoveInput();
             float animSpeed = LobbyMovement.ToAnimSpeed(_input);
-            if (!Mathf.Approximately(_netAnimSpeed.Value, animSpeed))
+            if (Mathf.Abs(_netAnimSpeed.Value - animSpeed) > 0.01f || (animSpeed == 0f && _netAnimSpeed.Value != 0f))
             {
                 _netAnimSpeed.Value = animSpeed;
             }

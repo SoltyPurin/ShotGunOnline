@@ -81,6 +81,20 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         EnsureSubsystemsInitialized();
     }
 
+    private void OnDestroy()
+    {
+        if (_cutsceneCoroutine != null)
+        {
+            StopCoroutine(_cutsceneCoroutine);
+            _cutsceneCoroutine = null;
+        }
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
     private void EnsureSubsystemsInitialized()
     {
         if (_playerSpawner != null) return;

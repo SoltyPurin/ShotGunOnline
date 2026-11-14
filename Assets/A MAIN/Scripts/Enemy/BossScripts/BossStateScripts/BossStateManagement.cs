@@ -154,8 +154,6 @@ public class BossStateManagement : EnemyMove
         {
             _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         }
-
-        Debug.Log("現在のステートは" + _currentState);
     }
 
     protected void BossStateChange()

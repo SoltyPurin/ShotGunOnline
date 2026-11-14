@@ -70,6 +70,8 @@ public class NetworkPlayerSpawner
 
         foreach (var client in clients)
         {
+            int spawnIndex = index++;
+
             // 本編用プレイヤー（PlayerStateManager所持）が既に存在するか確認
             bool hasValidInGamePlayer = client.PlayerObject != null &&
                                         client.PlayerObject.GetComponent<PlayerStateManager>() != null;
@@ -88,7 +90,7 @@ public class NetworkPlayerSpawner
                 client.PlayerObject.Despawn(true);
             }
 
-            Transform spawnPoint = spawnPoints != null ? spawnPoints.GetSpawnPoint(index) : null;
+            Transform spawnPoint = spawnPoints != null ? spawnPoints.GetSpawnPoint(spawnIndex) : null;
             Vector3 pos = spawnPoint != null ? spawnPoint.position : Vector3.zero;
             Quaternion rot = spawnPoint != null ? spawnPoint.rotation : Quaternion.identity;
 
@@ -100,7 +102,6 @@ public class NetworkPlayerSpawner
             RegisterPlayer(netObj);
 
             Debug.Log($"[MP_GameManager] ClientId {client.ClientId} の本編プレイヤーをスポーンしました (位置: {pos})");
-            index++;
         }
     }
 }

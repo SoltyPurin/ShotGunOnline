@@ -114,8 +114,8 @@ public class LobbyAvatarSwitcher : MonoBehaviour
 
     private void HandleClientStopped(bool wasHost)
     {
-        // シーン破棄中に呼ばれた場合は何もしない
-        if (this == null || !isActiveAndEnabled) return;
+        // シーン破棄中や非ロード時は何もしない
+        if (this == null || !isActiveAndEnabled || !gameObject.scene.isLoaded) return;
 
         _localNetworkPlayer = null;
         if (_avatar == null)
