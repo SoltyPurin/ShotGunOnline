@@ -1,31 +1,63 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// ボタンにクールダウンを追加するスクリプト(通信が発生するボタンなどに)
+/// 繝懊ち繝ｳ縺ｫ繧ｯ繝ｼ繝ｫ繝繧ｦ繝ｳ繧定ｿｽ蜉縺吶ｋ繧ｹ繧ｯ繝ｪ繝励ヨ(騾壻ｿ｡縺檎匱逕溘☆繧九�懊ち繝ｳ縺ｪ縺ｩ縺ｫ)
 /// </summary>
 public class ButtonCooldown : MonoBehaviour
 {
     [SerializeField] private float _cooldownTime = 1f;
 
     private Button _button;
+    private Coroutine _cooldownCoroutine;
 
-    private void Start()
+    private void Awake()
     {
         _button = GetComponent<Button>();
-        _button.onClick.AddListener(StartCooldown);
+        if (_button != null)
+        {
+            _button.onClick.AddListener(StartCooldown);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (_cooldownCoroutine != null)
+        {
+            StopCoroutine(_cooldownCoroutine);
+            _cooldownCoroutine = null;
+            if (_button != null)
+            {
+                _button.interactable = true;
+            }
+        }
     }
 
     public void StartCooldown()
     {
-        StartCoroutine(Cooldown());
+        if (!gameObject.activeInHierarchy || _button == null) return;
+        if (_cooldownCoroutine != null)
+        {
+            StopCoroutine(_cooldownCoroutine);
+        }
+        _cooldownCoroutine = StartCoroutine(Cooldown());
     }
 
     private IEnumerator Cooldown()
     {
+        bool wasSelected = EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject;
         _button.interactable = false;
-        yield return new WaitForSeconds(_cooldownTime);
+        yield return new WaitForSecondsRealtime(_cooldownTime);
         _button.interactable = true;
+        _cooldownCoroutine = null;
+
+        if (wasSelected && EventSystem.current != null &&
+            EventSystem.current.currentSelectedGameObject == null &&
+            gameObject.activeInHierarchy && _button.IsInteractable())
+        {
+            EventSystem.current.SetSelectedGameObject(gameObject);
+        }
     }
 }

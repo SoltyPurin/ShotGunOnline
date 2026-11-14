@@ -25,6 +25,8 @@ public class LobbyRoomUI : LobbyViewBase
 
     private readonly List<LobbyPlayerEntryUI> _spawnedEntries = new List<LobbyPlayerEntryUI>();
     private bool _localIsReady;
+    private bool _isLocalHost;
+    private bool _canHostStartGame;
 
     protected override void Awake()
     {
@@ -82,23 +84,41 @@ public class LobbyRoomUI : LobbyViewBase
         }
 
         // ローカルプレイヤーがホストかどうかでボタンの出し分け
-        var isLocalHost = session.IsHost;
-        _startButton.gameObject.SetActive(isLocalHost);
-        _readyButton.gameObject.SetActive(!isLocalHost);
+        _isLocalHost = session.IsHost;
+        _startButton.gameObject.SetActive(_isLocalHost);
+        _readyButton.gameObject.SetActive(!_isLocalHost);
 
-        if (isLocalHost)
+        if (_isLocalHost)
         {
             // ゲーム開始可能判定はドメインヘルパーへ委譲
-            _startButton.interactable = SessionPlayerPropertyHelper.CanHostStartGame(session);
+            _canHostStartGame = SessionPlayerPropertyHelper.CanHostStartGame(session);
+            _startButton.interactable = _canHostStartGame && (_canvasGroup == null || _canvasGroup.interactable);
         }
         else
         {
+            _canHostStartGame = false;
             // ゲストの場合は自身の準備状況を取得してテキスト更新
             _localIsReady = SessionPlayerPropertyHelper.IsPlayerReady(session.CurrentPlayer);
             _readyButtonText.text = _localIsReady ? "取り消し" : "準備完了";
         }
 
-        RebuildControllerNavigation(isLocalHost);
+        RebuildControllerNavigation(_isLocalHost);
+    }
+
+    protected override void OnShowCompleted()
+    {
+        RebuildControllerNavigation(_isLocalHost);
+    }
+
+    protected override void OnActiveInteractableChanged(bool interactable)
+    {
+        if (_leaveButton != null) _leaveButton.interactable = interactable;
+        if (_readyButton != null) _readyButton.interactable = interactable;
+        if (_startButton != null) _startButton.interactable = interactable && _canHostStartGame;
+        if (interactable)
+        {
+            RebuildControllerNavigation(_isLocalHost);
+        }
     }
 
     /// <summary>
@@ -145,10 +165,10 @@ public class LobbyRoomUI : LobbyViewBase
             primary.navigation = primaryNav;
 
             var leaveNav = new Navigation { mode = Navigation.Mode.Explicit };
-            leaveNav.selectOnUp = primary.IsInteractable() ? primary : null;
-            leaveNav.selectOnDown = primary.IsInteractable() ? primary : null;
-            leaveNav.selectOnLeft = primary.IsInteractable() ? primary : null;
-            leaveNav.selectOnRight = primary.IsInteractable() ? primary : null;
+            leaveNav.selectOnUp = primary;
+            leaveNav.selectOnDown = primary;
+            leaveNav.selectOnLeft = primary;
+            leaveNav.selectOnRight = primary;
             _leaveButton.navigation = leaveNav;
         }
     }

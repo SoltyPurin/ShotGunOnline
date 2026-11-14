@@ -121,6 +121,27 @@ public class CreateRoomDialogUI : LobbyViewBase
             return;
         }
 
+        Dropdown openDropdown = GetOpenDropdown();
+        if (openDropdown != null)
+        {
+            EnsureDropdownListAutoFollower(openDropdown);
+
+            bool closeDropdown =
+                (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
+                (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
+
+            if (closeDropdown)
+            {
+                UISound.Play(UISoundType.Cancel);
+                openDropdown.Hide();
+                if (EventSystem.current != null)
+                {
+                    EventSystem.current.SetSelectedGameObject(openDropdown.gameObject);
+                }
+            }
+            return;
+        }
+
         bool cancelPressed =
             (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
             (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
@@ -129,6 +150,32 @@ public class CreateRoomDialogUI : LobbyViewBase
         {
             UISound.Play(UISoundType.Cancel);
             CloseAndSetResult(new CreateRoomResult { IsCanceled = true }).Forget();
+        }
+    }
+
+    private Dropdown GetOpenDropdown()
+    {
+        if (_maxPlayersDropDown != null && _maxPlayersDropDown.transform.Find("Dropdown List") != null)
+        {
+            return _maxPlayersDropDown;
+        }
+        if (_protocolDropdown != null && _protocolDropdown.transform.Find("Dropdown List") != null)
+        {
+            return _protocolDropdown;
+        }
+        return null;
+    }
+
+    private static void EnsureDropdownListAutoFollower(Dropdown dropdown)
+    {
+        if (dropdown == null) return;
+        Transform listTransform = dropdown.transform.Find("Dropdown List");
+        if (listTransform == null) return;
+
+        var scrollRect = listTransform.GetComponentInChildren<ScrollRect>(true);
+        if (scrollRect != null && scrollRect.GetComponent<ScrollRectAutoFollower>() == null)
+        {
+            scrollRect.gameObject.AddComponent<ScrollRectAutoFollower>();
         }
     }
 

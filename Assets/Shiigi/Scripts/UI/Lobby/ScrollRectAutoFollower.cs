@@ -35,7 +35,8 @@ public class ScrollRectAutoFollower : MonoBehaviour
             _lastSelected = current;
             if (current != null && current.transform.IsChildOf(_scrollRect.content))
             {
-                if (TryComputeTargetNormalizedY(current.GetComponent<RectTransform>(), out float nextY))
+                RectTransform itemRoot = ResolveContentItemRect(current.transform);
+                if (TryComputeTargetNormalizedY(itemRoot, out float nextY))
                 {
                     _targetNormalizedY = nextY;
                     _isAutoScrolling = true;
@@ -57,6 +58,18 @@ public class ScrollRectAutoFollower : MonoBehaviour
                 _isAutoScrolling = false;
             }
         }
+    }
+
+    private RectTransform ResolveContentItemRect(Transform selected)
+    {
+        if (selected == null || _scrollRect == null || _scrollRect.content == null) return null;
+
+        Transform current = selected;
+        while (current.parent != null && current.parent != _scrollRect.content)
+        {
+            current = current.parent;
+        }
+        return current.GetComponent<RectTransform>();
     }
 
     private bool TryComputeTargetNormalizedY(RectTransform target, out float normalizedY)

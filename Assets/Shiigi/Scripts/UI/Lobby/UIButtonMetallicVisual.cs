@@ -22,6 +22,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private static readonly int FocusAddId = Shader.PropertyToID("_FocusAdd");
 
     [Header("選択時の外枠・発色設定")]
+    [SerializeField] private bool _useOutline = false;
     [SerializeField] private Color _outlineColor = Color.black;
     [SerializeField, Range(0.005f, 0.12f)] private float _outlineThickness = 0.015f;
     [SerializeField, Range(0f, 1f)] private float _focusSelfAdd = 0f;
@@ -82,9 +83,38 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     public void ConfigureColors(Color normalColor, Color focusedColor, Color accentColor)
     {
         _outlineColor = accentColor;
+        SetMaterialColor(RimColorId, _outlineColor);
+    }
+
+    private void SetMaterialFloat(int propertyId, float value)
+    {
         if (_runtimeMaterial != null)
         {
-            _runtimeMaterial.SetColor(RimColorId, _outlineColor);
+            _runtimeMaterial.SetFloat(propertyId, value);
+        }
+        if (_targetImage != null)
+        {
+            var renderingMat = _targetImage.materialForRendering;
+            if (renderingMat != null && renderingMat != _runtimeMaterial)
+            {
+                renderingMat.SetFloat(propertyId, value);
+            }
+        }
+    }
+
+    private void SetMaterialColor(int propertyId, Color value)
+    {
+        if (_runtimeMaterial != null)
+        {
+            _runtimeMaterial.SetColor(propertyId, value);
+        }
+        if (_targetImage != null)
+        {
+            var renderingMat = _targetImage.materialForRendering;
+            if (renderingMat != null && renderingMat != _runtimeMaterial)
+            {
+                renderingMat.SetColor(propertyId, value);
+            }
         }
     }
 
@@ -133,10 +163,10 @@ public class UIButtonMetallicVisual : MonoBehaviour,
 
         if (_runtimeMaterial != null)
         {
-            _runtimeMaterial.SetFloat(ShineIntensityId, 0f);
-            _runtimeMaterial.SetFloat(ShineProgressId, -0.5f);
-            _runtimeMaterial.SetFloat(RimIntensityId, 0f);
-            _runtimeMaterial.SetFloat(FocusAddId, 0f);
+            SetMaterialFloat(ShineIntensityId, 0f);
+            SetMaterialFloat(ShineProgressId, -0.5f);
+            SetMaterialFloat(RimIntensityId, 0f);
+            SetMaterialFloat(FocusAddId, 0f);
         }
     }
 
@@ -170,7 +200,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         if (_runtimeMaterial != null)
         {
             float lerpFactor = 1f - Mathf.Exp(-_transitionSpeed * dt);
-            _currentRimIntensity = Mathf.Lerp(_currentRimIntensity, focused ? 1f : 0f, lerpFactor);
+            _currentRimIntensity = Mathf.Lerp(_currentRimIntensity, (_useOutline && focused) ? 1f : 0f, lerpFactor);
             _currentFocusAdd = Mathf.Lerp(_currentFocusAdd, focused ? _focusSelfAdd : 0f, lerpFactor);
 
             if (focused)
@@ -202,12 +232,12 @@ public class UIButtonMetallicVisual : MonoBehaviour,
                 }
             }
 
-            _runtimeMaterial.SetColor(RimColorId, _outlineColor);
-            _runtimeMaterial.SetFloat(RimThicknessId, _outlineThickness);
-            _runtimeMaterial.SetFloat(RimIntensityId, _currentRimIntensity);
-            _runtimeMaterial.SetFloat(FocusAddId, _currentFocusAdd);
-            _runtimeMaterial.SetFloat(ShineProgressId, shineProgress);
-            _runtimeMaterial.SetFloat(ShineIntensityId, shineIntensity);
+            SetMaterialColor(RimColorId, _outlineColor);
+            SetMaterialFloat(RimThicknessId, _outlineThickness);
+            SetMaterialFloat(RimIntensityId, _currentRimIntensity);
+            SetMaterialFloat(FocusAddId, _currentFocusAdd);
+            SetMaterialFloat(ShineProgressId, shineProgress);
+            SetMaterialFloat(ShineIntensityId, shineIntensity);
         }
     }
 
