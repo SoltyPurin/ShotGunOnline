@@ -18,7 +18,7 @@ public class RoomCardUI : MonoBehaviour
 
     private void Awake()
     {
-        LobbyModernTheme.AttachMetallicVisual(_joinButton);
+        UIButtonMetallicVisual.Attach(_joinButton);
 
         _joinButton.onClick.AddListener(() => OnJoinRequested?.Invoke(_sessionInfo));
         if (_joinButton != null && _joinButton.GetComponent<UIButtonSound>() == null)

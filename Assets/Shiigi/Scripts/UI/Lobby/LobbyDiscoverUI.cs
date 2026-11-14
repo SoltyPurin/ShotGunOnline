@@ -39,13 +39,13 @@ public class LobbyDiscoverUI : LobbyViewBase
         {
             _refreshButton.onClick.AddListener(() => OnRefreshRequested?.Invoke());
             EnsureButtonSound(_refreshButton, UIButtonType.SubAction);
-            LobbyModernTheme.AttachMetallicVisual(_refreshButton);
+            UIButtonMetallicVisual.Attach(_refreshButton);
         }
         if (_createRoomButton != null)
         {
             _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
             EnsureButtonSound(_createRoomButton, UIButtonType.Default);
-            LobbyModernTheme.AttachMetallicVisual(_createRoomButton);
+            UIButtonMetallicVisual.Attach(_createRoomButton);
         }
 
         RebuildControllerNavigation();

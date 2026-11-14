@@ -49,6 +49,9 @@ public class CreateRoomDialogUI : LobbyViewBase
     [SerializeField] private GameObject _advancedSettingsPanel;
     [SerializeField] private Dropdown _protocolDropdown;
 
+    [Header("仮想キーボード")]
+    [SerializeField] private LobbyVirtualKeyboardUI _virtualKeyboardPrefab;
+
     private static readonly (string Label, RelayProtocol Protocol)[] _protocolOptions =
     {
         ("DTLS", RelayProtocol.DTLS),
@@ -58,6 +61,7 @@ public class CreateRoomDialogUI : LobbyViewBase
 
     private UniTaskCompletionSource<CreateRoomResult> _utcs;
     private GameObject _blocker;
+    private bool _isOpeningVirtualKeyboard;
 
     protected override void Awake()
     {
@@ -68,57 +72,47 @@ public class CreateRoomDialogUI : LobbyViewBase
         EnsureButtonSound(_cancelDialogButton, UIButtonType.Cancel);
         EnsureButtonSound(_advancedSettingsButton, UIButtonType.SubAction);
 
-        LobbyModernTheme.AttachMetallicVisual(_confirmCreateButton);
-        LobbyModernTheme.AttachMetallicVisual(_cancelDialogButton);
-        LobbyModernTheme.AttachMetallicVisual(_advancedSettingsButton);
+        UIButtonMetallicVisual.Attach(_confirmCreateButton);
+        UIButtonMetallicVisual.Attach(_cancelDialogButton);
+        UIButtonMetallicVisual.Attach(_advancedSettingsButton);
 
         if (_roomNameInputField != null)
         {
-            // フォーカスしただけでは入力開始せず、決定(Enter/A/クリック)で入力開始にする
+            // フォーカスしただけでは入力開始せず、クリックや決定(Enter/Space/A)で仮想キーボードを開く
             _roomNameInputField.shouldActivateOnSelect = false;
+            _roomNameInputField.readOnly = true;
+            AttachVirtualKeyboardButton(_roomNameInputField);
         }
 
         RebuildNavigation();
     }
 
-    private void Update()
+    protected override void Update()
     {
-        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+        base.Update();
+        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView || _isOpeningVirtualKeyboard) return;
 
-        // ルーム名「編集中」のときだけ、Esc/Bで編集終了、Tabで次項目へ移動
-        // ※日本語IME変換中の Enter / Esc で入力欄が閉じないよう、Enterでは終了せず IME確定文字列も確認する
-        if (_roomNameInputField != null && _roomNameInputField.isFocused)
+        // ルーム名欄をクリック/Submit/決定(Enter/Space/A)した場合は常に仮想キーボードを開く
+        if (_roomNameInputField != null)
         {
-            if (!string.IsNullOrEmpty(Input.compositionString))
-            {
-                return;
-            }
+            bool isRoomNameSelected =
+                EventSystem.current != null &&
+                EventSystem.current.currentSelectedGameObject == _roomNameInputField.gameObject;
 
-            if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame)
-            {
-                _roomNameInputField.DeactivateInputField();
-                GameObject nextTarget = _maxPlayersDropDown != null && _maxPlayersDropDown.gameObject.activeInHierarchy
-                    ? _maxPlayersDropDown.gameObject
-                    : (_confirmCreateButton != null ? _confirmCreateButton.gameObject : null);
-                if (nextTarget != null && EventSystem.current != null)
-                {
-                    EventSystem.current.SetSelectedGameObject(nextTarget);
-                }
-                return;
-            }
+            bool openRequestedBySubmit =
+                isRoomNameSelected &&
+                ((Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame) ||
+                 (Keyboard.current != null &&
+                  (Keyboard.current.enterKey.wasPressedThisFrame ||
+                   Keyboard.current.numpadEnterKey.wasPressedThisFrame ||
+                   Keyboard.current.spaceKey.wasPressedThisFrame)));
 
-            bool finishEdit =
-                (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) ||
-                (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame);
-
-            if (finishEdit)
+            if (_roomNameInputField.isFocused || openRequestedBySubmit)
             {
                 _roomNameInputField.DeactivateInputField();
+                OpenVirtualKeyboardAsync().Forget();
                 return;
             }
-
-            // 編集中はダイアログのキャンセル判定へ進まない
-            return;
         }
 
         Dropdown openDropdown = GetOpenDropdown();
@@ -365,6 +359,85 @@ public class CreateRoomDialogUI : LobbyViewBase
             nav.selectOnRight = _confirmCreateButton;
             _cancelDialogButton.navigation = nav;
         }
+    }
+
+    private async UniTaskVoid OpenVirtualKeyboardAsync()
+    {
+        if (_isOpeningVirtualKeyboard || _roomNameInputField == null) return;
+
+        _isOpeningVirtualKeyboard = true;
+        try
+        {
+            _roomNameInputField.DeactivateInputField();
+            Canvas parentCanvas = GetComponentInParent<Canvas>();
+            Font font = _roomNameInputField.textComponent != null ? _roomNameInputField.textComponent.font : null;
+            int maxLength = _roomNameInputField.characterLimit > 0 ? _roomNameInputField.characterLimit : 20;
+
+            var (confirmed, text) = await LobbyVirtualKeyboardUI.OpenAsync(
+                parentCanvas,
+                initialText: _roomNameInputField.text,
+                title: "ルーム名を入力",
+                maxLength: maxLength,
+                prefab: _virtualKeyboardPrefab,
+                showPresets: true);
+
+            if (confirmed && _roomNameInputField != null)
+            {
+                _roomNameInputField.text = text;
+            }
+        }
+        finally
+        {
+            _isOpeningVirtualKeyboard = false;
+            if (_roomNameInputField != null && EventSystem.current != null && gameObject.activeInHierarchy)
+            {
+                EventSystem.current.SetSelectedGameObject(_roomNameInputField.gameObject);
+            }
+        }
+    }
+
+    private void AttachVirtualKeyboardButton(InputField inputField)
+    {
+        if (inputField == null || inputField.transform.Find("VirtualKeyboardButton") != null) return;
+
+        GameObject btnObj = new GameObject("VirtualKeyboardButton", typeof(RectTransform));
+        btnObj.transform.SetParent(inputField.transform, false);
+
+        RectTransform rt = btnObj.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(1f, 0.5f);
+        rt.anchorMax = new Vector2(1f, 0.5f);
+        rt.pivot = new Vector2(1f, 0.5f);
+        rt.sizeDelta = new Vector2(56f, 34f);
+        rt.anchoredPosition = new Vector2(-6f, 0f);
+
+        Image bg = btnObj.AddComponent<Image>();
+        bg.color = new Color(0.16f, 0.19f, 0.25f, 0.95f);
+
+        Button btn = btnObj.AddComponent<Button>();
+        btn.targetGraphic = bg;
+        btn.navigation = new Navigation { mode = Navigation.Mode.None };
+        btn.onClick.AddListener(() => OpenVirtualKeyboardAsync().Forget());
+
+        GameObject textObj = new GameObject("Label", typeof(RectTransform));
+        textObj.transform.SetParent(btnObj.transform, false);
+        RectTransform textRt = textObj.GetComponent<RectTransform>();
+        textRt.anchorMin = Vector2.zero;
+        textRt.anchorMax = Vector2.one;
+        textRt.offsetMin = Vector2.zero;
+        textRt.offsetMax = Vector2.zero;
+
+        Text label = textObj.AddComponent<Text>();
+        label.font = inputField.textComponent != null
+            ? inputField.textComponent.font
+            : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        label.text = "KB";
+        label.fontSize = 16;
+        label.fontStyle = FontStyle.Bold;
+        label.alignment = TextAnchor.MiddleCenter;
+        label.color = Color.white;
+
+        UIButtonMetallicVisual.Attach(btn);
+        EnsureButtonSound(btn, UIButtonType.SubAction);
     }
 
     private void EnsureBlocker()

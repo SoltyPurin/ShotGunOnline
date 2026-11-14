@@ -48,9 +48,9 @@ public class LobbyRoomUI : LobbyViewBase
         EnsureButtonSound(_readyButton, UIButtonType.Default);
         EnsureButtonSound(_startButton, UIButtonType.Default);
 
-        LobbyModernTheme.AttachMetallicVisual(_leaveButton);
-        LobbyModernTheme.AttachMetallicVisual(_readyButton);
-        LobbyModernTheme.AttachMetallicVisual(_startButton);
+        UIButtonMetallicVisual.Attach(_leaveButton);
+        UIButtonMetallicVisual.Attach(_readyButton);
+        UIButtonMetallicVisual.Attach(_startButton);
     }
 
     private static void EnsureButtonSound(Button button, UIButtonType buttonType)

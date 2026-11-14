@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 /// <summary>
@@ -47,6 +49,17 @@ public abstract class LobbyViewBase : MonoBehaviour
     protected RectTransform _rectTransform;
 
     private static readonly List<LobbyViewBase> _activeViews = new();
+    private static int _liveViewCount;
+    private static InputSystemUIInputModule _configuredUiModule;
+    private static InputActionReference _originalMoveActionRef;
+    private static InputActionAsset _dpadFilteredAsset;
+    private static InputAction _dpadFilteredMoveAction;
+    private static InputActionReference _dpadFilteredMoveActionRef;
+
+    private const float DpadRepeatDelay = 0.22f;
+    private const float DpadRepeatRate = 0.06f;
+    private MoveDirection _dpadLastDirection = MoveDirection.None;
+    private float _dpadNextRepeatTime;
 
     public static LobbyViewBase TopActiveView
     {
@@ -70,6 +83,7 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     private CancellationTokenSource _animCts;
     private bool _isVisible;
+    private bool _hasAwakened;
 
     public bool IsVisible => _isVisible;
     public bool IsTopActiveView => TopActiveView == this;
@@ -108,12 +122,99 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     protected virtual void Awake()
     {
+        if (!_hasAwakened)
+        {
+            _hasAwakened = true;
+            _liveViewCount++;
+        }
+
         EnsureComponents();
+        ConfigureUIInputRepeat();
 
         if (_autoAttachButtonSounds)
         {
             AutoAttachButtonSounds();
         }
+    }
+
+    private static void ConfigureUIInputRepeat()
+    {
+        if (EventSystem.current == null) return;
+
+        var uiModule = EventSystem.current.currentInputModule as InputSystemUIInputModule;
+        if (uiModule == null)
+        {
+            uiModule = EventSystem.current.GetComponent<InputSystemUIInputModule>();
+        }
+        if (uiModule != null)
+        {
+            uiModule.moveRepeatDelay = DpadRepeatDelay;
+            uiModule.moveRepeatRate = DpadRepeatRate;
+            EnsureDpadFilteredFromUIModule(uiModule);
+        }
+    }
+
+    private static void EnsureDpadFilteredFromUIModule(InputSystemUIInputModule uiModule)
+    {
+        if (uiModule == null || _configuredUiModule == uiModule) return;
+        if (uiModule.move == null || uiModule.move.action == null) return;
+
+        // ロビーUI表示中はUpdate()でD-Padを直接処理するため、UIInputModule側のMoveからD-Padのみ除外して二重移動を防ぐ
+        _originalMoveActionRef = uiModule.move;
+        InputAction originalAction = uiModule.move.action;
+
+        _dpadFilteredAsset = ScriptableObject.CreateInstance<InputActionAsset>();
+        _dpadFilteredAsset.name = "LobbyDpadFilteredUIInput";
+        string mapName = originalAction.actionMap != null ? originalAction.actionMap.name : "UI";
+        var map = new InputActionMap(mapName);
+        _dpadFilteredMoveAction = map.AddAction(originalAction.name, originalAction.type);
+
+        var bindings = originalAction.bindings;
+        for (int i = 0; i < bindings.Count; i++)
+        {
+            InputBinding b = bindings[i];
+            if (!string.IsNullOrEmpty(b.path) &&
+                b.path.IndexOf("dpad", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                continue;
+            }
+            _dpadFilteredMoveAction.AddBinding(b);
+        }
+
+        _dpadFilteredAsset.AddActionMap(map);
+        _dpadFilteredMoveAction.Enable();
+        _dpadFilteredMoveActionRef = InputActionReference.Create(_dpadFilteredMoveAction);
+        uiModule.move = _dpadFilteredMoveActionRef;
+        _configuredUiModule = uiModule;
+    }
+
+    private static void RestoreOriginalUIModuleMove()
+    {
+        if (_configuredUiModule != null && _originalMoveActionRef != null)
+        {
+            _configuredUiModule.move = _originalMoveActionRef;
+        }
+
+        if (_dpadFilteredMoveAction != null)
+        {
+            _dpadFilteredMoveAction.Disable();
+            _dpadFilteredMoveAction = null;
+        }
+
+        if (_dpadFilteredMoveActionRef != null)
+        {
+            Destroy(_dpadFilteredMoveActionRef);
+            _dpadFilteredMoveActionRef = null;
+        }
+
+        if (_dpadFilteredAsset != null)
+        {
+            Destroy(_dpadFilteredAsset);
+            _dpadFilteredAsset = null;
+        }
+
+        _configuredUiModule = null;
+        _originalMoveActionRef = null;
     }
 
     private void EnsureComponents()
@@ -132,6 +233,109 @@ public abstract class LobbyViewBase : MonoBehaviour
     {
         CancelCurrentAnimation();
         RemoveActiveView(this);
+
+        if (_hasAwakened)
+        {
+            _hasAwakened = false;
+            _liveViewCount = Mathf.Max(0, _liveViewCount - 1);
+            if (_liveViewCount == 0)
+            {
+                RestoreOriginalUIModuleMove();
+            }
+        }
+    }
+
+    protected virtual void Update()
+    {
+        ProcessDPadNavigation();
+    }
+
+    protected void ProcessDPadNavigation()
+    {
+        if (!_isVisible || !IsTopActiveView || _canvasGroup == null || !_canvasGroup.interactable)
+        {
+            _dpadLastDirection = MoveDirection.None;
+            return;
+        }
+
+        if (EventSystem.current == null || Gamepad.current == null)
+        {
+            _dpadLastDirection = MoveDirection.None;
+            return;
+        }
+
+        var dpad = Gamepad.current.dpad;
+        bool upPressed = dpad.up.wasPressedThisFrame;
+        bool downPressed = dpad.down.wasPressedThisFrame;
+        bool leftPressed = dpad.left.wasPressedThisFrame;
+        bool rightPressed = dpad.right.wasPressedThisFrame;
+
+        MoveDirection pressedThisFrameDir = ResolvePressedDirection(upPressed, downPressed, leftPressed, rightPressed);
+        MoveDirection heldDir = ResolvePressedDirection(dpad.up.isPressed, dpad.down.isPressed, dpad.left.isPressed, dpad.right.isPressed);
+
+        if (pressedThisFrameDir != MoveDirection.None)
+        {
+            _dpadLastDirection = pressedThisFrameDir;
+            _dpadNextRepeatTime = Time.unscaledTime + DpadRepeatDelay;
+            ExecuteDPadMove(pressedThisFrameDir);
+            return;
+        }
+
+        if (heldDir != MoveDirection.None)
+        {
+            if (heldDir != _dpadLastDirection)
+            {
+                _dpadLastDirection = heldDir;
+                _dpadNextRepeatTime = Time.unscaledTime + DpadRepeatDelay;
+                ExecuteDPadMove(heldDir);
+            }
+            else if (Time.unscaledTime >= _dpadNextRepeatTime)
+            {
+                _dpadNextRepeatTime = Time.unscaledTime + DpadRepeatRate;
+                ExecuteDPadMove(heldDir);
+            }
+            return;
+        }
+
+        _dpadLastDirection = MoveDirection.None;
+    }
+
+    private static MoveDirection ResolvePressedDirection(bool up, bool down, bool left, bool right)
+    {
+        if (up && !down) return MoveDirection.Up;
+        if (down && !up) return MoveDirection.Down;
+        if (left && !right) return MoveDirection.Left;
+        if (right && !left) return MoveDirection.Right;
+        return MoveDirection.None;
+    }
+
+    private void ExecuteDPadMove(MoveDirection dir)
+    {
+        GameObject selected = EventSystem.current.currentSelectedGameObject;
+        if (selected == null || !selected.activeInHierarchy || !IsOwnedByThisView(selected.transform))
+        {
+            GameObject fallback = GetDefaultFocusTarget();
+            if (fallback != null)
+            {
+                EventSystem.current.SetSelectedGameObject(fallback);
+            }
+            return;
+        }
+
+        var axisData = new AxisEventData(EventSystem.current)
+        {
+            moveDir = dir,
+            moveVector = dir switch
+            {
+                MoveDirection.Up => Vector2.up,
+                MoveDirection.Down => Vector2.down,
+                MoveDirection.Left => Vector2.left,
+                MoveDirection.Right => Vector2.right,
+                _ => Vector2.zero
+            }
+        };
+
+        ExecuteEvents.ExecuteHierarchy(selected, axisData, ExecuteEvents.moveHandler);
     }
 
     protected virtual void LateUpdate()

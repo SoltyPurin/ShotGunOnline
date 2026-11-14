@@ -433,7 +433,7 @@ public class LobbyUIManager : MonoBehaviour
 
         _menuToggleButton.onClick.RemoveListener(ToggleMenuVisibility);
         _menuToggleButton.onClick.AddListener(ToggleMenuVisibility);
-        LobbyModernTheme.AttachMetallicVisual(_menuToggleButton);
+        UIButtonMetallicVisual.Attach(_menuToggleButton);
     }
 
     private async UniTaskVoid FocusCurrentViewDefaultElementDelayed()

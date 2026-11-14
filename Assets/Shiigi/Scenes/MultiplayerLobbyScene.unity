@@ -5036,6 +5036,7 @@ MonoBehaviour:
   _advancedSettingsButton: {fileID: 1900000010}
   _advancedSettingsPanel: {fileID: 1900000015}
   _protocolDropdown: {fileID: 1900000023}
+  _virtualKeyboardPrefab: {fileID: 4261535779789801351, guid: e9ed20871006a974483b389ba837e20c, type: 3}
 --- !u!1 &629336563
 GameObject:
   m_ObjectHideFlags: 0
@@ -10808,8 +10809,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SendPointerHoverToParent: 1
-  m_MoveRepeatDelay: 0.5
-  m_MoveRepeatRate: 0.1
+  m_MoveRepeatDelay: 0.25
+  m_MoveRepeatRate: 0.06
   m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
