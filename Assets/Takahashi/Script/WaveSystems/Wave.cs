@@ -54,7 +54,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// ウェーブの状態遷移
     /// </summary>
-    private enum Transition
+    protected enum Transition
     {
         Wait,
         Gimmick,
@@ -62,7 +62,24 @@ public class Wave : MonoBehaviour
         End,
     }
     #endregion
+    #region protected変数
+    [SerializeField, Header("敵の格納場所")]
+    protected List<ObjData> _objList = new List<ObjData>();
+    public List<ObjData> ObjList
+    {
+        get { return _objList; }
+    }
 
+    protected int _nowObj = 0;
+
+    //現在のウェーブの状態
+    protected Transition _nowState = Transition.Wait;
+
+    //スタートしてから現在のフレーム数
+    protected int _objFrame = 0;
+
+    protected bool _isWaveEnd = false;
+    #endregion
     #region 【各種変数】
 
     [Header("ウェーブの属性")]
@@ -71,12 +88,6 @@ public class Wave : MonoBehaviour
     [SerializeField, Header("ギミックの格納場所")]
     private List<GimmickData> _gimmickList = new List<GimmickData>();
 
-    [SerializeField, Header("敵の格納場所")]
-    private List<ObjData> _objList = new List<ObjData>();
-    public List<ObjData> ObjList
-    {
-        get { return _objList; }
-    }
 
     [SerializeField, Header("ウェーブの難易度")]
     private Difficulty _difficulty = Difficulty.Easy;
@@ -99,15 +110,10 @@ public class Wave : MonoBehaviour
     //各ウェーブのスコアを計算するスクリプトを取得
     private EnemyCountAndCreateTime _counter = default;
 
-    //現在のウェーブの状態
-    private Transition _nowState = Transition.Wait;
 
     //その他変数
     private int _nowGimmick = 0;
-    private int _nowObj = 0;
     private int _gimmickFrame = 0;
-    private int _objFrame = 0;
-    private bool _waveEnd = false;
     private int _prevEnemyCount = 0;
     private int _initEnemyCount = 0;
     private WaveManager _waveManager = default;
@@ -207,7 +213,7 @@ public class Wave : MonoBehaviour
         _initEnemyCount = EnemyCount();
     }
 
-    private void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         if (!IsServerAuthority)
         {
@@ -374,12 +380,12 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 敵の有効化用メソッド、同じ座標にネットワーク対応の敵を出現させて元の敵を削除
     /// </summary>
-    private void ObjSetTrue()
+    public virtual void ObjSetTrue()
     {
         // 敵が存在しないならウェーブ終了可能、ステートを変更し早期リターン
         if (_objList == null || _objList.Count <= 0)
         {
-            _waveEnd = true;
+            _isWaveEnd = true;
             _nowState = Transition.End;
             return;
         }
@@ -416,7 +422,7 @@ public class Wave : MonoBehaviour
                     }
                 }
 
-                // 3. 本物のプレハブが見つかったら、ダミーと同じ位置に生成してSpawn！
+                // 3. 本物のプレハブが見つかったら、ダミーと同じ位置に生成してSpawn
                 if (prefabToSpawn != null)
                 {
                     GameObject spawnedEnemy = Instantiate(
@@ -487,7 +493,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 次に有効化する敵の位置に遷移するメソッド
     /// </summary>
-    private void NextObj()
+    public virtual void NextObj()
     {
         //次のリストの位置に移動しframeの値を初期化
         if (_nowObj < (_objList.Count - 1))
@@ -498,7 +504,7 @@ public class Wave : MonoBehaviour
         else
         {
             //敵配置完了を通達
-            _waveEnd = true;
+            _isWaveEnd = true;
             _nowState = Transition.End;
         }
     }
@@ -529,7 +535,7 @@ public class Wave : MonoBehaviour
             _counter.Calculator();
         }
 
-        return _waveEnd;
+        return _isWaveEnd;
     }
 
     /// <summary>
