@@ -33,6 +33,11 @@ public class LobbyRoomUI : LobbyViewBase
         _viewType = UIViewType.DefaultWindow;
         base.Awake();
 
+        if (_roomNameText != null)
+        {
+            _roomNameText.supportRichText = false;
+        }
+
         _leaveButton.onClick.AddListener(() => OnLeaveRequested?.Invoke());
         _readyButton.onClick.AddListener(() => OnReadyToggleRequested?.Invoke());
         _startButton.onClick.AddListener(() =>

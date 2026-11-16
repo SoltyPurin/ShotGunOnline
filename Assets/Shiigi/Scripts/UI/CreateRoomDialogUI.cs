@@ -50,6 +50,7 @@ public class CreateRoomDialogUI : LobbyViewBase
     [SerializeField] private Dropdown _protocolDropdown;
 
     [Header("仮想キーボード")]
+    [SerializeField] private bool _enableVirtualKeyboard;
     [SerializeField] private LobbyVirtualKeyboardUI _virtualKeyboardPrefab;
 
     private static readonly (string Label, RelayProtocol Protocol)[] _protocolOptions =
@@ -76,12 +77,12 @@ public class CreateRoomDialogUI : LobbyViewBase
         UIButtonMetallicVisual.Attach(_cancelDialogButton);
         UIButtonMetallicVisual.Attach(_advancedSettingsButton);
 
-        if (_roomNameInputField != null)
+        if (_roomNameInputField != null && _roomNameInputField.textComponent != null)
         {
-            // フォーカスしただけでは入力開始せず、クリックや決定(Enter/Space/A)で仮想キーボードを開く
-            _roomNameInputField.shouldActivateOnSelect = false;
-            _roomNameInputField.readOnly = true;
+            _roomNameInputField.textComponent.supportRichText = false;
         }
+
+        ApplyRoomNameInputMode();
 
         RebuildNavigation();
     }
@@ -91,8 +92,8 @@ public class CreateRoomDialogUI : LobbyViewBase
         base.Update();
         if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView || _isOpeningVirtualKeyboard) return;
 
-        // ルーム名欄をクリック/Submit/決定(Enter/Space/A)した場合は常に仮想キーボードを開く
-        if (_roomNameInputField != null)
+        // 仮想キーボードが有効な場合、ルーム名欄をクリック/Submit/決定(Enter/Space/A)で仮想キーボードを開く
+        if (_enableVirtualKeyboard && _roomNameInputField != null)
         {
             bool isRoomNameSelected =
                 EventSystem.current != null &&
@@ -360,9 +361,26 @@ public class CreateRoomDialogUI : LobbyViewBase
         }
     }
 
+    private void ApplyRoomNameInputMode()
+    {
+        if (_roomNameInputField == null) return;
+
+        // 仮想キーボード有効時はフォーカスしただけでは入力開始せず、クリックや決定で仮想キーボードを開く
+        _roomNameInputField.shouldActivateOnSelect = !_enableVirtualKeyboard;
+        _roomNameInputField.readOnly = _enableVirtualKeyboard;
+    }
+
+    private void OnValidate()
+    {
+        if (Application.isPlaying)
+        {
+            ApplyRoomNameInputMode();
+        }
+    }
+
     private async UniTaskVoid OpenVirtualKeyboardAsync()
     {
-        if (_isOpeningVirtualKeyboard || _roomNameInputField == null) return;
+        if (!_enableVirtualKeyboard || _isOpeningVirtualKeyboard || _roomNameInputField == null) return;
 
         _isOpeningVirtualKeyboard = true;
         try

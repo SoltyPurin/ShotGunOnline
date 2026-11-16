@@ -18,6 +18,11 @@ public class RoomCardUI : MonoBehaviour
 
     private void Awake()
     {
+        if (_roomNameText != null)
+        {
+            _roomNameText.supportRichText = false;
+        }
+
         UIButtonMetallicVisual.Attach(_joinButton);
 
         _joinButton.onClick.AddListener(() => OnJoinRequested?.Invoke(_sessionInfo));

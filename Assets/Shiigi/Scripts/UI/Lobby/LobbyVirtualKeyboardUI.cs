@@ -623,22 +623,24 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     {
         if (_previewText != null)
         {
-            string caretHex = ColorUtility.ToHtmlStringRGBA(_previewBaseColor);
-            string caretMarkup = _caretVisible
-                ? $"<color=#{caretHex}>|</color>"
-                : "<color=#00000000>|</color>";
-
             if (string.IsNullOrEmpty(_currentText))
             {
+                string caretHex = ColorUtility.ToHtmlStringRGBA(_previewBaseColor);
+                string caretMarkup = _caretVisible
+                    ? $"<color=#{caretHex}>|</color>"
+                    : "<color=#00000000>|</color>";
                 Color placeholderColor = new Color(_previewBaseColor.r, _previewBaseColor.g, _previewBaseColor.b, 0.55f);
                 string placeholderHex = ColorUtility.ToHtmlStringRGBA(placeholderColor);
+                _previewText.supportRichText = true;
                 _previewText.color = _previewBaseColor;
                 _previewText.text = $"{caretMarkup}<color=#{placeholderHex}>（未入力）</color>";
             }
             else
             {
+                // ユーザー入力文字列内のタグ(<color>等)が解釈されないようRichTextを無効化
+                _previewText.supportRichText = false;
                 _previewText.color = _previewBaseColor;
-                _previewText.text = $"{_currentText}{caretMarkup}";
+                _previewText.text = _caretVisible ? $"{_currentText}|" : _currentText;
             }
         }
 
