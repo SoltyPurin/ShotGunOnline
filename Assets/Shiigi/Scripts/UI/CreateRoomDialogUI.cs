@@ -49,6 +49,10 @@ public class CreateRoomDialogUI : LobbyViewBase
     [SerializeField] private GameObject _advancedSettingsPanel;
     [SerializeField] private Dropdown _protocolDropdown;
 
+    [Header("仮想キーボード")]
+    [SerializeField] private bool _enableVirtualKeyboard;
+    [SerializeField] private LobbyVirtualKeyboardUI _virtualKeyboardPrefab;
+
     private static readonly (string Label, RelayProtocol Protocol)[] _protocolOptions =
     {
         ("DTLS", RelayProtocol.DTLS),
@@ -58,6 +62,7 @@ public class CreateRoomDialogUI : LobbyViewBase
 
     private UniTaskCompletionSource<CreateRoomResult> _utcs;
     private GameObject _blocker;
+    private bool _isOpeningVirtualKeyboard;
 
     protected override void Awake()
     {
@@ -68,57 +73,46 @@ public class CreateRoomDialogUI : LobbyViewBase
         EnsureButtonSound(_cancelDialogButton, UIButtonType.Cancel);
         EnsureButtonSound(_advancedSettingsButton, UIButtonType.SubAction);
 
-        LobbyModernTheme.AttachMetallicVisual(_confirmCreateButton);
-        LobbyModernTheme.AttachMetallicVisual(_cancelDialogButton);
-        LobbyModernTheme.AttachMetallicVisual(_advancedSettingsButton);
+        UIButtonMetallicVisual.Attach(_confirmCreateButton);
+        UIButtonMetallicVisual.Attach(_cancelDialogButton);
+        UIButtonMetallicVisual.Attach(_advancedSettingsButton);
 
-        if (_roomNameInputField != null)
+        if (_roomNameInputField != null && _roomNameInputField.textComponent != null)
         {
-            // フォーカスしただけでは入力開始せず、決定(Enter/A/クリック)で入力開始にする
-            _roomNameInputField.shouldActivateOnSelect = false;
+            _roomNameInputField.textComponent.supportRichText = false;
         }
+
+        ApplyRoomNameInputMode();
 
         RebuildNavigation();
     }
 
-    private void Update()
+    protected override void Update()
     {
-        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+        base.Update();
+        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView || _isOpeningVirtualKeyboard) return;
 
-        // ルーム名「編集中」のときだけ、Esc/Bで編集終了、Tabで次項目へ移動
-        // ※日本語IME変換中の Enter / Esc で入力欄が閉じないよう、Enterでは終了せず IME確定文字列も確認する
-        if (_roomNameInputField != null && _roomNameInputField.isFocused)
+        // 仮想キーボードが有効な場合、ルーム名欄をクリック/Submit/決定(Enter/Space/A)で仮想キーボードを開く
+        if (_enableVirtualKeyboard && _roomNameInputField != null)
         {
-            if (!string.IsNullOrEmpty(Input.compositionString))
-            {
-                return;
-            }
+            bool isRoomNameSelected =
+                EventSystem.current != null &&
+                EventSystem.current.currentSelectedGameObject == _roomNameInputField.gameObject;
 
-            if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame)
-            {
-                _roomNameInputField.DeactivateInputField();
-                GameObject nextTarget = _maxPlayersDropDown != null && _maxPlayersDropDown.gameObject.activeInHierarchy
-                    ? _maxPlayersDropDown.gameObject
-                    : (_confirmCreateButton != null ? _confirmCreateButton.gameObject : null);
-                if (nextTarget != null && EventSystem.current != null)
-                {
-                    EventSystem.current.SetSelectedGameObject(nextTarget);
-                }
-                return;
-            }
+            bool openRequestedBySubmit =
+                isRoomNameSelected &&
+                ((Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame) ||
+                 (Keyboard.current != null &&
+                  (Keyboard.current.enterKey.wasPressedThisFrame ||
+                   Keyboard.current.numpadEnterKey.wasPressedThisFrame ||
+                   Keyboard.current.spaceKey.wasPressedThisFrame)));
 
-            bool finishEdit =
-                (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) ||
-                (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame);
-
-            if (finishEdit)
+            if (_roomNameInputField.isFocused || openRequestedBySubmit)
             {
                 _roomNameInputField.DeactivateInputField();
+                OpenVirtualKeyboardAsync().Forget();
                 return;
             }
-
-            // 編集中はダイアログのキャンセル判定へ進まない
-            return;
         }
 
         Dropdown openDropdown = GetOpenDropdown();
@@ -364,6 +358,58 @@ public class CreateRoomDialogUI : LobbyViewBase
             nav.selectOnLeft = _confirmCreateButton;
             nav.selectOnRight = _confirmCreateButton;
             _cancelDialogButton.navigation = nav;
+        }
+    }
+
+    private void ApplyRoomNameInputMode()
+    {
+        if (_roomNameInputField == null) return;
+
+        // 仮想キーボード有効時はフォーカスしただけでは入力開始せず、クリックや決定で仮想キーボードを開く
+        _roomNameInputField.shouldActivateOnSelect = !_enableVirtualKeyboard;
+        _roomNameInputField.readOnly = _enableVirtualKeyboard;
+    }
+
+    private void OnValidate()
+    {
+        if (Application.isPlaying)
+        {
+            ApplyRoomNameInputMode();
+        }
+    }
+
+    private async UniTaskVoid OpenVirtualKeyboardAsync()
+    {
+        if (!_enableVirtualKeyboard || _isOpeningVirtualKeyboard || _roomNameInputField == null) return;
+
+        _isOpeningVirtualKeyboard = true;
+        try
+        {
+            _roomNameInputField.DeactivateInputField();
+            Canvas parentCanvas = GetComponentInParent<Canvas>();
+            Font font = _roomNameInputField.textComponent != null ? _roomNameInputField.textComponent.font : null;
+            int maxLength = _roomNameInputField.characterLimit > 0 ? _roomNameInputField.characterLimit : 20;
+
+            var (confirmed, text) = await LobbyVirtualKeyboardUI.OpenAsync(
+                parentCanvas,
+                initialText: _roomNameInputField.text,
+                title: "ルーム名を入力",
+                maxLength: maxLength,
+                prefab: _virtualKeyboardPrefab,
+                showPresets: true);
+
+            if (confirmed && _roomNameInputField != null)
+            {
+                _roomNameInputField.text = text;
+            }
+        }
+        finally
+        {
+            _isOpeningVirtualKeyboard = false;
+            if (_roomNameInputField != null && EventSystem.current != null && gameObject.activeInHierarchy)
+            {
+                EventSystem.current.SetSelectedGameObject(_roomNameInputField.gameObject);
+            }
         }
     }
 

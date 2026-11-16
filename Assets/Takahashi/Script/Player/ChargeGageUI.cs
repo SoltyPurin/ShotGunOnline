@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ƒ`ƒƒ[ƒWƒQ[ƒW‚ÌUI‚ğ•Ï‰»‚³‚¹‚éƒXƒNƒŠƒvƒg
-/// yì¬ÒFûü‹´‰pmz
+/// ãƒãƒ£ãƒ¼ã‚¸ã‚²ãƒ¼ã‚¸ã®UIã‚’å¤‰åŒ–ã•ã›ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+/// ã€ä½œæˆè€…ï¼šé«™æ©‹è‹±å£«ã€‘
 /// </summary>
 public class ChargeGageUI : MonoBehaviour
 {
@@ -14,23 +14,23 @@ public class ChargeGageUI : MonoBehaviour
     }
     private Direction _state = Direction.Right;
 
-    [SerializeField, Header("•Ï‰»‚·‚éƒQ[ƒW‚Ì‰æ‘œ")]
+    [SerializeField, Header("å¤‰åŒ–ã™ã‚‹ã‚²ãƒ¼ã‚¸ã®ç”»åƒ")]
     private Image _image = default;
 
-    [SerializeField, Header("ƒvƒŒƒCƒ„[ƒXƒNƒŠƒvƒg")]
+    [SerializeField, Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     private InputPlayerShot _inputPlayerShot = default;
     [SerializeField]
     private PlayerAiming _playerAiming = default;
     [SerializeField]
     private PlayerStateManager _playerStateManager = default;
 
-    [SerializeField, Header("ƒAƒjƒ[ƒVƒ‡ƒ“")]
+    [SerializeField, Header("ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³")]
     private Animator _animator = default;
 
-    [SerializeField, Header("”½“]‚³‚¹‚½‚¢ƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("åè»¢ã•ã›ãŸã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _gageObj = default;
 
-    [SerializeField, Header("ƒEƒ‹ƒg‚ÌƒQ[ƒWƒIƒuƒWƒFƒNƒg")]
+    [SerializeField, Header("ã‚¦ãƒ«ãƒˆæ™‚ã®ã‚²ãƒ¼ã‚¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _ultGage = default;
 
     private Vector3 _pos;
@@ -38,12 +38,12 @@ public class ChargeGageUI : MonoBehaviour
 
     private void Start()
     {
-        //UI‚Ìƒ|ƒWƒVƒ‡ƒ“‚Æ”½‘Î‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğİ’è
+        //UIã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã¨åå¯¾ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’è¨­å®š
         _pos = _gageObj.transform.localPosition;
         float _posX = -_pos.x;
         _minusPos = new Vector3(_posX, _pos.y, _pos.z);
 
-        //ƒEƒ‹ƒgó‘Ô‚Å‚È‚¢ê‡‚ÍƒEƒ‹ƒgƒQ[ƒWUI‚ğ‰B‚·
+        //ã‚¦ãƒ«ãƒˆçŠ¶æ…‹ã§ãªã„å ´åˆã¯ã‚¦ãƒ«ãƒˆã‚²ãƒ¼ã‚¸UIã‚’éš ã™
         if(_playerStateManager.PlayerState != PlayerState.Ultimate)
         {
             _ultGage.SetActive(false);
@@ -52,13 +52,24 @@ public class ChargeGageUI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //ƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚ğæ“¾
+        if (_inputPlayerShot != null && _inputPlayerShot.IsSpawned && !_inputPlayerShot.IsOwner)
+        {
+            if (_gageObj != null && _gageObj.activeSelf) _gageObj.SetActive(false);
+            if (_ultGage != null && _ultGage.activeSelf) _ultGage.SetActive(false);
+            return;
+        }
+        if (_gageObj != null && !_gageObj.activeSelf)
+        {
+            _gageObj.SetActive(true);
+        }
+
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ã„ã¦ã„ã‚‹æ–¹å‘ã‚’å–å¾—
         float direction = Mathf.Sign(_playerAiming.Direction.x);
 
-        //‰~Œ`‚ÌƒQ[ƒW‚È‚Ì‚ÅAFillAmount‚ğg—pBFillAmount‚Í0`‚P‚È‚Ì‚ÅAƒ`ƒƒ[ƒWƒoƒŠƒ…[‚ğ’²®‚µ‰æ‘œ‚ğ•ÏX
+        //å††å½¢ã®ã‚²ãƒ¼ã‚¸ãªã®ã§ã€FillAmountã‚’ä½¿ç”¨ã€‚FillAmountã¯0ï½ï¼‘ãªã®ã§ã€ãƒãƒ£ãƒ¼ã‚¸ãƒãƒªãƒ¥ãƒ¼ã‚’èª¿æ•´ã—ç”»åƒã‚’å¤‰æ›´
         _image.fillAmount = Mathf.Clamp01(_inputPlayerShot.ChargeValue / 2f);
 
-        //ƒ`ƒƒ[ƒWƒoƒŠƒ…[‚ªÅ‘å‚Ìê‡‚ÍMAXó‘Ô‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶
+        //ãƒãƒ£ãƒ¼ã‚¸ãƒãƒªãƒ¥ãƒ¼ãŒæœ€å¤§ã®å ´åˆã¯MAXçŠ¶æ…‹ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿ
         if(_inputPlayerShot.ChargeValue >= 2)
         {
             _animator.SetBool("Max", true);
@@ -70,7 +81,7 @@ public class ChargeGageUI : MonoBehaviour
 
         UltGage();
 
-        //switch‚ÅƒQ[ƒW‚ÌˆÊ’u‚ğ•ÏX‚·‚éB
+        //switchã§ã‚²ãƒ¼ã‚¸ã®ä½ç½®ã‚’å¤‰æ›´ã™ã‚‹ã€‚
         switch (_state)
         {
             case Direction.Right:
@@ -89,7 +100,7 @@ public class ChargeGageUI : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒEƒ‹ƒgó‘Ô‚ÌƒQ[ƒW‚ğo‚·‚©‚Ç‚¤‚©‚Ì”»’è‚ğ‚·‚éƒƒ\ƒbƒh
+    /// ã‚¦ãƒ«ãƒˆçŠ¶æ…‹ã®ã‚²ãƒ¼ã‚¸ã‚’å‡ºã™ã‹ã©ã†ã‹ã®åˆ¤å®šã‚’ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void UltGage()
     {
@@ -112,7 +123,7 @@ public class ChargeGageUI : MonoBehaviour
     }
 
     /// <summary>
-    /// ¶Œü‚¢‚½‚çUI‚ğ”½‘Î‚ÉŒü‚©‚¹‚éƒƒ\ƒbƒh
+    /// å·¦å‘ã„ãŸã‚‰UIã‚’åå¯¾ã«å‘ã‹ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void Left()
     {
@@ -121,7 +132,7 @@ public class ChargeGageUI : MonoBehaviour
     }
 
     /// <summary>
-    /// ‰EŒü‚¢‚½‚çUI‚ğ”½‘Î‚ÉŒü‚©‚¹‚éƒƒ\ƒbƒh
+    /// å³å‘ã„ãŸã‚‰UIã‚’åå¯¾ã«å‘ã‹ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void Right()
     {

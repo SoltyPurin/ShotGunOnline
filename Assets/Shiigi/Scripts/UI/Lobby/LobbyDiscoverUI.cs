@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,17 +18,30 @@ public class LobbyDiscoverUI : LobbyViewBase
     [SerializeField]
     private RoomCardUI _roomCardPrefab;
 
+    [Header("ルーム詳細パネル")]
+    [SerializeField] private GameObject _roomMenuRoot;
+    [SerializeField] private GameObject _roomDetailPanel;
+    [SerializeField] private TMP_Text _detailRoomNameText;
+    [SerializeField] private TMP_Text _detailPlayerCountText;
+    [SerializeField] private TMP_Text _detailGameStatusText;
+    [SerializeField] private TMP_Text _detailProtocolText;
+    [SerializeField] private Button _detailJoinButton;
+
     // Presenterが購読するためのイベント群
     public event Action OnRefreshRequested;
     public event Action OnCreateRoomRequested;
     public event Action<ISessionInfo> OnJoinRoomRequested;
 
     private readonly List<RoomCardUI> _spawnedCards = new();
+    private ISessionInfo _selectedSession;
+    private RoomCardUI _selectedCard;
 
     protected override void Awake()
     {
         _viewType = UIViewType.DefaultWindow;
         base.Awake();
+
+        ResolveDetailPanelReferences();
 
         var scrollRect = GetComponentInChildren<ScrollRect>(true);
         if (scrollRect != null && scrollRect.GetComponent<ScrollRectAutoFollower>() == null)
@@ -39,15 +53,22 @@ public class LobbyDiscoverUI : LobbyViewBase
         {
             _refreshButton.onClick.AddListener(() => OnRefreshRequested?.Invoke());
             EnsureButtonSound(_refreshButton, UIButtonType.SubAction);
-            LobbyModernTheme.AttachMetallicVisual(_refreshButton);
+            UIButtonMetallicVisual.Attach(_refreshButton);
         }
         if (_createRoomButton != null)
         {
             _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
             EnsureButtonSound(_createRoomButton, UIButtonType.Default);
-            LobbyModernTheme.AttachMetallicVisual(_createRoomButton);
+            UIButtonMetallicVisual.Attach(_createRoomButton);
+        }
+        if (_detailJoinButton != null)
+        {
+            _detailJoinButton.onClick.AddListener(HandleDetailJoinClicked);
+            EnsureButtonSound(_detailJoinButton, UIButtonType.Default);
+            UIButtonMetallicVisual.Attach(_detailJoinButton);
         }
 
+        ClearRoomDetail();
         RebuildControllerNavigation();
     }
 
@@ -75,6 +96,7 @@ public class LobbyDiscoverUI : LobbyViewBase
     protected override void OnHideCompleted()
     {
         SetButtonsActive(false);
+        SetMenuRootActive(false);
     }
 
     private void SetButtonsActive(bool active)
@@ -84,34 +106,77 @@ public class LobbyDiscoverUI : LobbyViewBase
     }
 
     /// <summary>
+    /// 親パネル（RoomMenu）の表示/非表示を切り替える
+    /// </summary>
+    public void SetMenuRootActive(bool active)
+    {
+        EnsureRoomMenuRoot();
+        if (_roomMenuRoot != null && _roomMenuRoot.activeSelf != active)
+        {
+            _roomMenuRoot.SetActive(active);
+        }
+    }
+
+    /// <summary>
     /// ルーム一覧パネルおよび作成・更新ボタンの表示/非表示を一括で切り替える（即時反映）
     /// </summary>
     public void SetVisible(bool visible)
     {
+        if (visible)
+        {
+            SetMenuRootActive(true);
+        }
+
         SetVisibleInstant(visible);
         SetButtonsActive(visible);
+
+        if (!visible)
+        {
+            SetMenuRootActive(false);
+        }
     }
 
     /// <summary>
-    /// ルーム一覧をグリッドに再描画する
+    /// ルーム一覧を再描画する
     /// </summary>
     public void UpdateRoomList(List<ISessionInfo> sessions)
     {
+        string previousSelectedId = _selectedSession?.Id;
         ClearRoomList();
 
-        foreach (var session in sessions)
+        if (sessions != null)
         {
-            var card = Instantiate(_roomCardPrefab, _roomListContainer);
-            card.Setup(session);
+            foreach (var session in sessions)
+            {
+                var card = Instantiate(_roomCardPrefab, _roomListContainer);
+                card.Setup(session);
 
-            // カード個別の参加ボタンイベントを中継して公開
-            card.OnJoinRequested += HandleJoinRequest;
-            _spawnedCards.Add(card);
+                // カード選択・決定・旧参加イベントを購読
+                card.OnCardSelected += HandleCardSelected;
+                card.OnCardSubmitted += HandleCardSubmitted;
+                card.OnJoinRequested += HandleJoinRequest;
+                _spawnedCards.Add(card);
+            }
         }
 
         if (_roomListContainer is RectTransform containerRect)
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(containerRect);
+        }
+
+        if (_spawnedCards.Count > 0)
+        {
+            RoomCardUI initialCard = !string.IsNullOrEmpty(previousSelectedId)
+                ? _spawnedCards.FirstOrDefault(c => c != null && c.SessionInfo != null && c.SessionInfo.Id == previousSelectedId)
+                : null;
+            initialCard ??= _spawnedCards[0];
+
+            _selectedCard = initialCard;
+            ShowRoomDetail(initialCard.SessionInfo);
+        }
+        else
+        {
+            ClearRoomDetail();
         }
 
         RebuildControllerNavigation();
@@ -148,6 +213,7 @@ public class LobbyDiscoverUI : LobbyViewBase
     {
         if (_refreshButton != null) _refreshButton.interactable = interactable;
         if (_createRoomButton != null) _createRoomButton.interactable = interactable;
+        if (_detailJoinButton != null) _detailJoinButton.interactable = interactable && CanJoinSession(_selectedSession);
         if (interactable)
         {
             RebuildControllerNavigation();
@@ -157,8 +223,10 @@ public class LobbyDiscoverUI : LobbyViewBase
     protected override bool IsOwnedByThisView(Transform target)
     {
         if (base.IsOwnedByThisView(target)) return true;
+        if (_roomMenuRoot != null && target.IsChildOf(_roomMenuRoot.transform)) return true;
         if (_refreshButton != null && target.IsChildOf(_refreshButton.transform)) return true;
         if (_createRoomButton != null && target.IsChildOf(_createRoomButton.transform)) return true;
+        if (_detailJoinButton != null && target.IsChildOf(_detailJoinButton.transform)) return true;
         return false;
     }
 
@@ -171,6 +239,9 @@ public class LobbyDiscoverUI : LobbyViewBase
         List<List<Button>> rows = BuildCardButtonGrid(activeCards);
         Button primaryTopLeft = _refreshButton != null ? _refreshButton : _createRoomButton;
         Button primaryTopRight = _createRoomButton != null ? _createRoomButton : _refreshButton;
+        Button activeDetailJoin = (_detailJoinButton != null && _detailJoinButton.gameObject.activeInHierarchy && _detailJoinButton.interactable)
+            ? _detailJoinButton
+            : null;
 
         for (int r = 0; r < rows.Count; r++)
         {
@@ -204,7 +275,9 @@ public class LobbyDiscoverUI : LobbyViewBase
                 }
 
                 nav.selectOnLeft = c > 0 ? row[c - 1] : primaryTopLeft;
-                nav.selectOnRight = c < row.Count - 1 ? row[c + 1] : primaryTopRight;
+                nav.selectOnRight = c < row.Count - 1
+                    ? row[c + 1]
+                    : (activeDetailJoin != null ? activeDetailJoin : primaryTopRight);
                 row[c].navigation = nav;
             }
         }
@@ -225,9 +298,27 @@ public class LobbyDiscoverUI : LobbyViewBase
             nav.selectOnUp = rows.Count > 0 ? rows[rows.Count - 1][Mathf.Min(1, rows[rows.Count - 1].Count - 1)] : _refreshButton;
             nav.selectOnDown = rows.Count > 0 ? rows[0][Mathf.Min(1, rows[0].Count - 1)] : _refreshButton;
             nav.selectOnLeft = _refreshButton;
-            nav.selectOnRight = _refreshButton;
+            nav.selectOnRight = activeDetailJoin != null ? activeDetailJoin : _refreshButton;
             _createRoomButton.navigation = nav;
         }
+
+        UpdateDetailJoinButtonNavigation(rows);
+    }
+
+    private void UpdateDetailJoinButtonNavigation(List<List<Button>> rows = null)
+    {
+        if (_detailJoinButton == null) return;
+
+        Button returnCardButton = _selectedCard != null && _selectedCard.JoinButton != null && _selectedCard.JoinButton.interactable
+            ? _selectedCard.JoinButton
+            : (rows != null && rows.Count > 0 ? rows[0][0] : _spawnedCards.FirstOrDefault(c => c != null && c.JoinButton != null && c.JoinButton.interactable)?.JoinButton);
+
+        var nav = new Navigation { mode = Navigation.Mode.Explicit };
+        nav.selectOnLeft = returnCardButton != null ? returnCardButton : (_refreshButton != null ? _refreshButton : _createRoomButton);
+        nav.selectOnUp = _createRoomButton != null ? _createRoomButton : _refreshButton;
+        nav.selectOnDown = returnCardButton;
+        nav.selectOnRight = _createRoomButton;
+        _detailJoinButton.navigation = nav;
     }
 
     private List<List<Button>> BuildCardButtonGrid(List<RoomCardUI> cards)
@@ -313,15 +404,161 @@ public class LobbyDiscoverUI : LobbyViewBase
         return Mathf.Max(1, Mathf.FloorToInt((available + grid.spacing.x) / step));
     }
 
+    private void HandleCardSelected(ISessionInfo session, RoomCardUI card)
+    {
+        _selectedCard = card;
+        ShowRoomDetail(session);
+        RebuildControllerNavigation();
+    }
+
+    private void HandleCardSubmitted(ISessionInfo session, RoomCardUI card)
+    {
+        HandleCardSelected(session, card);
+
+        if (_detailJoinButton != null &&
+            _detailJoinButton.gameObject.activeInHierarchy &&
+            _detailJoinButton.interactable &&
+            EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(_detailJoinButton.gameObject);
+        }
+    }
+
+    private void HandleDetailJoinClicked()
+    {
+        if (CanJoinSession(_selectedSession))
+        {
+            OnJoinRoomRequested?.Invoke(_selectedSession);
+        }
+    }
+
     private void HandleJoinRequest(ISessionInfo session)
     {
         OnJoinRoomRequested?.Invoke(session);
+    }
+
+    private void ShowRoomDetail(ISessionInfo session)
+    {
+        _selectedSession = session;
+        if (session == null)
+        {
+            ClearRoomDetail();
+            return;
+        }
+
+        if (_detailRoomNameText != null)
+        {
+            _detailRoomNameText.text = session.Name;
+        }
+
+        if (_detailPlayerCountText != null)
+        {
+            var currentPlayerCount = session.MaxPlayers - session.AvailableSlots;
+            _detailPlayerCountText.text = $"{currentPlayerCount} / {session.MaxPlayers}";
+        }
+
+        if (_detailGameStatusText != null)
+        {
+            _detailGameStatusText.text = SessionPlayerPropertyHelper.GetSessionGameStatusDisplayText(session);
+        }
+
+        if (_detailProtocolText != null)
+        {
+            var protocol = SessionPlayerPropertyHelper.GetSessionRelayProtocol(session);
+            _detailProtocolText.text = protocol.ToString();
+        }
+
+        if (_detailJoinButton != null)
+        {
+            bool viewInteractable = _canvasGroup == null || _canvasGroup.interactable;
+            _detailJoinButton.interactable = viewInteractable && CanJoinSession(session);
+        }
+    }
+
+    private void ClearRoomDetail()
+    {
+        _selectedSession = null;
+        _selectedCard = null;
+
+        if (_detailRoomNameText != null) _detailRoomNameText.text = "-";
+        if (_detailPlayerCountText != null) _detailPlayerCountText.text = "- / -";
+        if (_detailGameStatusText != null) _detailGameStatusText.text = "-";
+        if (_detailProtocolText != null) _detailProtocolText.text = "-";
+        if (_detailJoinButton != null) _detailJoinButton.interactable = false;
+    }
+
+    private static bool CanJoinSession(ISessionInfo session)
+    {
+        return session != null &&
+               session.AvailableSlots > 0 &&
+               !SessionPlayerPropertyHelper.IsSessionInGame(session);
+    }
+
+    private void EnsureRoomMenuRoot()
+    {
+        if (_roomMenuRoot != null) return;
+        if (transform.parent != null && transform.parent.name == "RoomMenu")
+        {
+            _roomMenuRoot = transform.parent.gameObject;
+        }
+    }
+
+    private void ResolveDetailPanelReferences()
+    {
+        EnsureRoomMenuRoot();
+
+        if (_roomDetailPanel == null)
+        {
+            _roomDetailPanel = FindDescendantTransform(transform, "RoomDetailPanel")?.gameObject;
+            if (_roomDetailPanel == null && _roomMenuRoot != null)
+            {
+                _roomDetailPanel = FindDescendantTransform(_roomMenuRoot.transform, "RoomDetailPanel")?.gameObject;
+            }
+            if (_roomDetailPanel == null && transform.parent != null)
+            {
+                _roomDetailPanel = FindDescendantTransform(transform.parent, "RoomDetailPanel")?.gameObject;
+            }
+        }
+
+        Transform detailRoot = _roomDetailPanel != null ? _roomDetailPanel.transform : transform;
+        if (_detailRoomNameText == null) _detailRoomNameText = FindDescendantComponent<TMP_Text>(detailRoot, "TMP_RoomName");
+        if (_detailPlayerCountText == null) _detailPlayerCountText = FindDescendantComponent<TMP_Text>(detailRoot, "TMP_NumberOfPlayers");
+        if (_detailGameStatusText == null) _detailGameStatusText = FindDescendantComponent<TMP_Text>(detailRoot, "TMP_InGameStatus");
+        if (_detailProtocolText == null) _detailProtocolText = FindDescendantComponent<TMP_Text>(detailRoot, "TMP_UsedProtocol");
+        if (_detailJoinButton == null) _detailJoinButton = FindDescendantComponent<Button>(detailRoot, "Button_Join");
+
+        if (_detailRoomNameText != null)
+        {
+            _detailRoomNameText.richText = false;
+        }
+    }
+
+    private static T FindDescendantComponent<T>(Transform root, string targetName) where T : Component
+    {
+        var target = FindDescendantTransform(root, targetName);
+        return target != null ? target.GetComponent<T>() : null;
+    }
+
+    private static Transform FindDescendantTransform(Transform root, string targetName)
+    {
+        if (root == null) return null;
+        for (int i = 0; i < root.childCount; i++)
+        {
+            var child = root.GetChild(i);
+            if (child.name == targetName) return child;
+
+            var found = FindDescendantTransform(child, targetName);
+            if (found != null) return found;
+        }
+        return null;
     }
 
     private void ClearRoomList()
     {
         foreach (var card in _spawnedCards.Where(card => card != null))
         {
+            card.OnCardSelected -= HandleCardSelected;
+            card.OnCardSubmitted -= HandleCardSubmitted;
             card.OnJoinRequested -= HandleJoinRequest;
             Destroy(card.gameObject);
         }
@@ -333,5 +570,6 @@ public class LobbyDiscoverUI : LobbyViewBase
         }
 
         _spawnedCards.Clear();
+        _selectedCard = null;
     }
 }

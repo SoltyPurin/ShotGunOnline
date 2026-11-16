@@ -44,6 +44,21 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private bool _isPressed;
     private bool _initialized;
 
+    /// <summary>
+    /// 指定されたボタンに金属光沢ビジュアルを付与（既存なら取得）する
+    /// </summary>
+    public static UIButtonMetallicVisual Attach(Button button)
+    {
+        if (button == null) return null;
+
+        var visual = button.GetComponent<UIButtonMetallicVisual>();
+        if (visual == null)
+        {
+            visual = button.gameObject.AddComponent<UIButtonMetallicVisual>();
+        }
+        return visual;
+    }
+
     private float _shineTimer = -1f;
     private float _periodicTimer;
     private float _currentRimIntensity;

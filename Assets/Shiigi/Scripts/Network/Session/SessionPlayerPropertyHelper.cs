@@ -9,20 +9,56 @@ using Unity.Services.Multiplayer;
 public static class SessionPlayerPropertyHelper
 {
     public const string RelayProtocolPropertyKey = "RelayProtocol";
+    public const string GameStatusPropertyKey = "GameStatus";
+    public const string GameStatusWaitingValue = "Waiting";
+    public const string GameStatusInGameValue = "InGame";
     public const string ReadyPropertyKey = "IsReady";
     public const string RelayConnectedPropertyKey = "IsRelayConnected";
     private const string TrueValue = "true";
     private const string FalseValue = "false";
 
     /// <summary>
-    /// ルーム作成時に公開する通信プロトコルのセッションプロパティ辞書を生成する
+    /// ルーム作成時に公開する通信プロトコル・ゲーム状態のセッションプロパティ辞書を生成する
     /// </summary>
     public static Dictionary<string, SessionProperty> CreateSessionProtocolProperties(RelayProtocol protocol)
     {
+        return CreateSessionProperties(protocol, isInGame: false);
+    }
+
+    /// <summary>
+    /// ルーム作成時に公開するセッションプロパティ辞書を生成する
+    /// </summary>
+    public static Dictionary<string, SessionProperty> CreateSessionProperties(RelayProtocol protocol, bool isInGame = false)
+    {
+        var gameStatusValue = isInGame ? GameStatusInGameValue : GameStatusWaitingValue;
         return new Dictionary<string, SessionProperty>
         {
-            { RelayProtocolPropertyKey, new SessionProperty(protocol.ToString(), VisibilityPropertyOptions.Public) }
+            { RelayProtocolPropertyKey, new SessionProperty(protocol.ToString(), VisibilityPropertyOptions.Public) },
+            { GameStatusPropertyKey, new SessionProperty(gameStatusValue, VisibilityPropertyOptions.Public) }
         };
+    }
+
+    /// <summary>
+    /// ルーム情報（ISessionInfo）が試合中かどうかを返す
+    /// </summary>
+    public static bool IsSessionInGame(ISessionInfo sessionInfo)
+    {
+        if (sessionInfo?.Properties != null &&
+            sessionInfo.Properties.TryGetValue(GameStatusPropertyKey, out var prop) &&
+            !string.IsNullOrEmpty(prop?.Value))
+        {
+            return string.Equals(prop.Value, GameStatusInGameValue, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// ルーム情報（ISessionInfo）から表示用のゲーム状態文字列を取得する
+    /// </summary>
+    public static string GetSessionGameStatusDisplayText(ISessionInfo sessionInfo)
+    {
+        return IsSessionInGame(sessionInfo) ? "試合中" : "待機中";
     }
 
     /// <summary>

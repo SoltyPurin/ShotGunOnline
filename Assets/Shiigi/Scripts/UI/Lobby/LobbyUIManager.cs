@@ -307,6 +307,11 @@ public class LobbyUIManager : MonoBehaviour
 
         if (targetVisible)
         {
+            if (view == _discoverUI)
+            {
+                _discoverUI.SetMenuRootActive(true);
+            }
+
             if (!view.IsVisible || !view.gameObject.activeSelf)
             {
                 view.ShowAsync().Forget();
@@ -372,7 +377,7 @@ public class LobbyUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 画面右上にロビーUI開閉用の常設HUDボタンを自動生成する（インスペクター未設定時）
+    /// 画面左上にロビーUI開閉用の常設HUDボタンを自動生成する（インスペクター未設定時）
     /// </summary>
     private void EnsureToggleHudButtonCreated()
     {
@@ -398,10 +403,10 @@ public class LobbyUIManager : MonoBehaviour
             }
 
             RectTransform rt = btnGo.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(1f, 1f);
-            rt.anchorMax = new Vector2(1f, 1f);
-            rt.pivot = new Vector2(1f, 1f);
-            rt.anchoredPosition = new Vector2(-32f, -24f);
+            rt.anchorMin = new Vector2(0f, 1f);
+            rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0f, 1f);
+            rt.anchoredPosition = new Vector2(32f, -24f);
             rt.sizeDelta = new Vector2(460f, 64f);
 
             Image img = btnGo.GetComponent<Image>();
@@ -433,7 +438,7 @@ public class LobbyUIManager : MonoBehaviour
 
         _menuToggleButton.onClick.RemoveListener(ToggleMenuVisibility);
         _menuToggleButton.onClick.AddListener(ToggleMenuVisibility);
-        LobbyModernTheme.AttachMetallicVisual(_menuToggleButton);
+        UIButtonMetallicVisual.Attach(_menuToggleButton);
     }
 
     private async UniTaskVoid FocusCurrentViewDefaultElementDelayed()
@@ -581,6 +586,17 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void JoinRoom(ISessionInfo sessionInfo)
     {
+        if (sessionInfo == null) return;
+
+        if (_confirmDialogUI != null)
+        {
+            if (!await _confirmDialogUI.ShowAsync($"{sessionInfo.Name}に参加しますか？"))
+            {
+                FocusCurrentViewDefaultElementDelayed().Forget();
+                return;
+            }
+        }
+
         TransitionTo(LobbyUIState.Connecting);
         try
         {

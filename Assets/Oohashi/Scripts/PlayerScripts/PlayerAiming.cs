@@ -12,9 +12,22 @@ public class PlayerAiming : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
     );
+    public bool IsLocalControl => IsOwner || !IsSpawned;
+
     public Vector3 Direction
     {
-        get { return IsOwner ? _prevDirection : _netAimDirection.Value; } // Ownerはローカル値を即時参照し遅延を防ぐ
+        get { return IsLocalControl ? _prevDirection : _netAimDirection.Value; } // Ownerはローカル値を即時参照し遅延を防ぐ
+    }
+
+    public void SetDirection(Vector3 aimDir)
+    {
+        if (aimDir.sqrMagnitude <= 0.001f) return;
+        _prevDirection = new Vector3(aimDir.x, aimDir.y, 0f).normalized;
+        ApplyAimVisuals(_prevDirection, immediate: true);
+        if (IsSpawned && IsOwner)
+        {
+            _netAimDirection.Value = _prevDirection;
+        }
     }
 
 
@@ -95,7 +108,7 @@ public class PlayerAiming : NetworkBehaviour
 
     private void Update()
     {
-        if (!this.IsOwner) return;
+        if (!IsLocalControl) return;
 
         if (!CanAim())
         {
@@ -108,6 +121,11 @@ public class PlayerAiming : NetworkBehaviour
             {
                 _shape.NotShootTimeDirection = Vector3.right;
             }
+            return;
+        }
+
+        if (LobbyMovement.IsInputBlocked || LobbyViewBase.TopActiveView != null)
+        {
             return;
         }
 
@@ -149,6 +167,10 @@ public class PlayerAiming : NetworkBehaviour
 
     private void InputAiming()
     {
+        if (_gamePad == null && Gamepad.current != null)
+        {
+            _gamePad = Gamepad.current;
+        }
         Vector2 stickInput = Vector2.zero;
         if (_gamePad != null)
         {
@@ -170,8 +192,8 @@ public class PlayerAiming : NetworkBehaviour
     {
         if (_playerObject == null) return;
 
-        // Owner は Update() 側で入力・描画を即時反映済みのため、ここでは非 Owner のみ補間適用する
-        if (this.IsOwner) return;
+        // Owner（またはオフライン操作時）は Update() 側で入力・描画を即時反映済みのため、ここでは非 Owner のみ補間適用する
+        if (IsLocalControl) return;
 
         // ムービー・カットシーン再生中は向きをデフォルト（右向き水平）に維持し、視点移動させない
         if (!CanAim())

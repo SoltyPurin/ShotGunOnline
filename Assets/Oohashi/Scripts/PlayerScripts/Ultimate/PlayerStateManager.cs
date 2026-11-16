@@ -25,6 +25,9 @@ public class PlayerStateManager : NetworkBehaviour
     {
         get { return _playerState.Value; }
     }
+
+    private bool IsLocalControl => IsOwner || !IsSpawned;
+
     //private void Update()
     //{
     //    Debug.Log(_playerState);
@@ -35,7 +38,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void UltimateState()
     {
-        if (!IsOwner) return;
+        if (!IsLocalControl) return;
         _playerState.Value = PlayerState.Ultimate;
     }
 
@@ -44,7 +47,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void NormalState()
     {
-        if (!IsOwner) return;
+        if (!IsLocalControl) return;
         _playerState.Value = PlayerState.Normal;
     }
 
@@ -53,7 +56,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void FallState()
     {
-        if (!IsOwner) return;
+        if (!IsLocalControl) return;
         _playerState.Value = PlayerState.Fall;
     }
 
@@ -62,7 +65,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void KnockBackingState()
     {
-        if (!IsOwner) return;
+        if (!IsLocalControl) return;
         _playerState.Value = PlayerState.KnockBack;
     }
 
@@ -71,7 +74,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void DamageKnockBackState()
     {
-        if (!IsOwner) return;
+        if (!IsLocalControl) return;
         _playerState.Value = PlayerState.DamageKnockBack;
     }
 
@@ -80,7 +83,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void MovieState()
     {
-        if (!IsOwner) return;
+        if (!IsLocalControl) return;
         _playerState.Value = PlayerState.Movie;
     }
 }

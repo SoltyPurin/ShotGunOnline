@@ -82,6 +82,7 @@ public class LobbyNetworkSpawner : MonoBehaviour
         Vector3 pos = spawnPoint != null ? spawnPoint.position : Vector3.zero;
 
         var playerObj = Instantiate(_lobbyPlayerPrefab, pos, Quaternion.identity);
+        playerObj.gameObject.name = "NetWork Player Variant (Lobby)";
 
         // destroyWithScene: true → MP_GameScene への遷移時に自動で破棄され、本編のスポーン処理と競合しない
         playerObj.SpawnAsPlayerObject(clientId, destroyWithScene: true);

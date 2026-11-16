@@ -42,8 +42,10 @@ public class UltimateShot : MonoBehaviour
     {
         if(_shake == null && _ultBloom == null)
         {
-            _shake = GameObject.FindWithTag("MainCamera").GetComponent<ScreenVibration>();
-            _ultBloom = GameObject.Find("PostManager").GetComponent<BloomScript>();
+            var mainCam = GameObject.FindWithTag("MainCamera");
+            if (mainCam != null) _shake = mainCam.GetComponent<ScreenVibration>();
+            var postMgr = GameObject.Find("PostManager");
+            if (postMgr != null) _ultBloom = postMgr.GetComponent<BloomScript>();
         }
     }
 
@@ -52,7 +54,7 @@ public class UltimateShot : MonoBehaviour
     /// </summary>
     public void UltimateShotProtocol()
     {
-        _ultBloom.UseUltimate();
+        if (_ultBloom != null) _ultBloom.UseUltimate();
 
         //判定内にいたオブジェクト全てを一旦収容
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _radius);

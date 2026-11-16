@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -77,6 +78,7 @@ public class ShootRange : MonoBehaviour
     private float _swingStartTime = 0f;
 
     private SceneTransitionManager _sceneTransitionManager = default;
+    private readonly HashSet<PlayerDamageKnockBack> _hitPlayers = new HashSet<PlayerDamageKnockBack>();
 
 
     #endregion
@@ -171,12 +173,34 @@ public class ShootRange : MonoBehaviour
         float angle = Mathf.Atan2(_playerAiming.Direction.y, _playerAiming.Direction.x) * Mathf.Rad2Deg - 90;
         //当たり判定のボックスの中に入っているオブジェクトを配列に登録
         Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, angle);
+        _hitPlayers.Clear();
         //コライダー配列の中に入っているオブジェクトを探索
         foreach (Collider2D hit in hits)
         {
+            if (hit == null || hit.gameObject == this.gameObject || hit.transform.IsChildOf(this.transform))
+            {
+                continue;
+            }
+
             bool isHit = false;
             //ヒットしたオブジェクトを登録
             GameObject hitObject = hit.gameObject;
+
+            // ロビー（MP_GameManager不在時）では他プレイヤーに対してダメージなしのノックバックのみ与える
+            if (MP_GameManager.Instance == null)
+            {
+                var targetPlayerKb = hit.GetComponentInParent<PlayerDamageKnockBack>();
+                if (targetPlayerKb != null && targetPlayerKb.gameObject != this.gameObject)
+                {
+                    if (_hitPlayers.Add(targetPlayerKb))
+                    {
+                        PlayerHitObject(targetPlayerKb, chargeTime, isCritical);
+                    }
+                    _isHit = true;
+                    continue;
+                }
+            }
+
             if (hitObject.CompareTag(STONETAGNAME))
             {
                 StoneBlowAway(hitObject, chargeTime);
@@ -336,6 +360,16 @@ public class ShootRange : MonoBehaviour
         }
 
         PlayLocalHitFeedback(hitObject, chargeTime, isCritical);
+    }
+
+    /// <summary>
+    /// ロビー等で他プレイヤーに当たったときのメソッド（ダメージ・被弾アニメなし・軽いノックバックのみ）
+    /// </summary>
+    private void PlayerHitObject(PlayerDamageKnockBack targetPlayerKb, float chargeTime, bool isCritical)
+    {
+        if (targetPlayerKb == null || !targetPlayerKb.IsSpawned) return;
+
+        targetPlayerKb.RequestShotgunKnockBackOwnerRpc((Vector2)transform.position, chargeTime, isCritical);
     }
 
     /// <summary>

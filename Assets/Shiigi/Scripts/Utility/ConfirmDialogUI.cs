@@ -24,15 +24,21 @@ public class ConfirmDialogUI : LobbyViewBase
         _viewType = UIViewType.ModalDialog;
         base.Awake();
 
+        if (_messageText != null)
+        {
+            _messageText.supportRichText = false;
+        }
+
         EnsureButtonSound(_yesButton, UIButtonType.Default);
         EnsureButtonSound(_noButton, UIButtonType.Cancel);
 
-        LobbyModernTheme.AttachMetallicVisual(_yesButton);
-        LobbyModernTheme.AttachMetallicVisual(_noButton);
+        UIButtonMetallicVisual.Attach(_yesButton);
+        UIButtonMetallicVisual.Attach(_noButton);
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
 
         bool cancelPressed =

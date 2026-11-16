@@ -16,4 +16,5 @@ public interface ILobbySessionService
     UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom);
     UniTask LeaveRoomSessionAsync();
     UniTask SetReadyStatusAsync(bool isReady);
+    UniTask UpdateSessionGameStatusAsync(bool isInGame);
 }
