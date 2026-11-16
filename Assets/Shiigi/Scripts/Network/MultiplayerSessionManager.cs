@@ -252,11 +252,21 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     }
 
     /// <summary>
+    /// セッションのゲーム状態（待機中 / 試合中）を更新する
+    /// </summary>
+    public UniTask UpdateSessionGameStatusAsync(bool isInGame)
+    {
+        EnsureSubsystemsInitialized();
+        return _sessionService.UpdateSessionGameStatusAsync(isInGame);
+    }
+
+    /// <summary>
     /// ホストがゲームを開始する
     /// </summary>
     public void StartMultiplayGame()
     {
         EnsureSubsystemsInitialized();
+        _sessionService.UpdateSessionGameStatusAsync(true).Forget();
         _sceneTransitionHandler.StartMultiplayGame(NetworkManager.Singleton);
     }
 }

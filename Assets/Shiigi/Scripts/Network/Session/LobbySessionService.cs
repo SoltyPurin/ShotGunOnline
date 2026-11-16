@@ -62,7 +62,7 @@ public class LobbySessionService : ILobbySessionService
                 Name = roomName,
                 MaxPlayers = maxPlayers,
                 IsPrivate = true,
-                SessionProperties = SessionPlayerPropertyHelper.CreateSessionProtocolProperties(protocol)
+                SessionProperties = SessionPlayerPropertyHelper.CreateSessionProperties(protocol, isInGame: false)
             }
             .WithRelayNetwork()
             .WithNetworkOptions(new NetworkOptions { RelayProtocol = protocol });
@@ -262,6 +262,27 @@ public class LobbySessionService : ILobbySessionService
     {
         var relayProps = SessionPlayerPropertyHelper.CreateRelayConnectedProperties(true);
         await SaveCurrentPlayerPropertiesAsync(relayProps);
+    }
+
+    public async UniTask UpdateSessionGameStatusAsync(bool isInGame)
+    {
+        if (_currentSession == null || !_currentSession.IsHost) return;
+
+        try
+        {
+            var hostSession = _currentSession.AsHost();
+            var value = isInGame
+                ? SessionPlayerPropertyHelper.GameStatusInGameValue
+                : SessionPlayerPropertyHelper.GameStatusWaitingValue;
+            hostSession.SetProperty(
+                SessionPlayerPropertyHelper.GameStatusPropertyKey,
+                new SessionProperty(value, VisibilityPropertyOptions.Public));
+            await hostSession.SavePropertiesAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[MSM]: ゲーム状態の更新に失敗しました: {ex.Message}");
+        }
     }
 
     private async UniTask SaveCurrentPlayerPropertiesAsync(Dictionary<string, PlayerProperty> properties)

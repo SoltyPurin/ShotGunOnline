@@ -24,6 +24,11 @@ public class ConfirmDialogUI : LobbyViewBase
         _viewType = UIViewType.ModalDialog;
         base.Awake();
 
+        if (_messageText != null)
+        {
+            _messageText.supportRichText = false;
+        }
+
         EnsureButtonSound(_yesButton, UIButtonType.Default);
         EnsureButtonSound(_noButton, UIButtonType.Cancel);
 
