@@ -62,11 +62,21 @@ public class WaveUIManager : NetworkBehaviour
     {
         // ヒットストップ等で Time.timeScale が 0 のままになっていてもフェードが止まらないようリセット＋UnscaledTime化
         Time.timeScale = 1.0f;
+        SceneTransitionManager.FreezeGameplayBeforeSceneUnload();
         if (_fadeAnimator != null)
         {
             _fadeAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
             _fadeAnimator.SetTrigger("FadeOut");
         }
+    }
+
+    /// <summary>
+    /// シーン遷移直前に全端末の SpriteRenderer・コルーチン・イベント購読・アンロード時破棄を一括停止する
+    /// </summary>
+    [ClientRpc]
+    public void PrepareAllClientsForSceneUnloadClientRpc()
+    {
+        SceneTransitionManager.DisableAllSceneRenderersAndBehaviours();
     }
 
     public void FadeInImage()

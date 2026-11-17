@@ -609,8 +609,20 @@ public class Wave : MonoBehaviour
         }
     }
 
+    public void PrepareForSceneTransition()
+    {
+        _suppressCleanupOnDestroy = true;
+        enabled = false;
+    }
+
+    private bool _suppressCleanupOnDestroy = false;
+
     private void OnDestroy()
     {
+        if (_suppressCleanupOnDestroy || !gameObject.scene.isLoaded)
+        {
+            return;
+        }
         CleanupSpawnedObjects();
     }
 }
