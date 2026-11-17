@@ -230,27 +230,37 @@ public class FreezeWatchdogLogger : MonoBehaviour
         }
     }
 
+    private static void CloseLogWriter()
+    {
+        lock (_fileLock)
+        {
+            if (_logWriter != null)
+            {
+                try
+                {
+                    _logWriter.Flush();
+                    _logWriter.Close();
+                }
+                catch { }
+                finally
+                {
+                    _logWriter = null;
+                }
+            }
+        }
+    }
+
     private void OnDestroy()
     {
         _isRunning = false;
         Application.logMessageReceivedThreaded -= OnLogReceived;
-        if (_logWriter != null)
-        {
-            _logWriter.Flush();
-            _logWriter.Close();
-            _logWriter = null;
-        }
+        CloseLogWriter();
     }
 
     private void OnApplicationQuit()
     {
         _isRunning = false;
         Application.logMessageReceivedThreaded -= OnLogReceived;
-        if (_logWriter != null)
-        {
-            _logWriter.Flush();
-            _logWriter.Close();
-            _logWriter = null;
-        }
+        CloseLogWriter();
     }
 }

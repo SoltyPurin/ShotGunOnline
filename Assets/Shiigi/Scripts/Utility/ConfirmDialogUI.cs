@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -135,6 +136,7 @@ public class ConfirmDialogUI : LobbyViewBase
         }
 
         _utcs = new UniTaskCompletionSource<bool>();
+        var utcs = _utcs;
 
         if (_yesButton != null)
         {
@@ -152,20 +154,51 @@ public class ConfirmDialogUI : LobbyViewBase
             });
         }
 
-        // ポップ演出＆フェードイン
-        await base.ShowAsync();
+        // ポップ演出＆フェードイン（演出がキャンセルされても結果待ちは継続する）
+        try
+        {
+            await base.ShowAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            // 表示演出のキャンセルは無視し、結果の確定を待つ
+        }
 
-        return await _utcs.Task;
+        return await utcs.Task;
     }
 
     private async UniTaskVoid CloseAndSetResult(bool result)
     {
+        if (_utcs == null) return;
+        var utcs = _utcs;
+        _utcs = null;
+
         if (_blocker != null)
         {
             _blocker.SetActive(false);
         }
-        await HideAsync();
-        _utcs?.TrySetResult(result);
+
+        try
+        {
+            await HideAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            // 非表示演出がキャンセル・破棄された場合でも結果は必ず確定させる
+        }
+        finally
+        {
+            // 結果を確定しないと ShowAsync の呼び出し元が永久に待機（デッドロック）するため必ず通知する
+            utcs?.TrySetResult(result);
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        // 結果待ちのままダイアログが破棄された場合、呼び出し元が永久に待機しないようキャンセルを通知する
+        _utcs?.TrySetCanceled();
+        _utcs = null;
+        base.OnDestroy();
     }
 
     private void EnsureBlocker()

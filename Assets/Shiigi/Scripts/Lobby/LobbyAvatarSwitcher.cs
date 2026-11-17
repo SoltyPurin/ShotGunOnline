@@ -46,13 +46,7 @@ public class LobbyAvatarSwitcher : MonoBehaviour
     private void Start()
     {
         EnsureBulletPool();
-
-        _networkManager = NetworkManager.Singleton;
-        if (_networkManager != null)
-        {
-            _networkManager.OnClientStarted += HandleClientStarted;
-            _networkManager.OnClientStopped += HandleClientStopped;
-        }
+        EnsureNetworkManagerSubscribed();
 
         if (_cameraFollow == null && Camera.main != null)
         {
@@ -78,11 +72,35 @@ public class LobbyAvatarSwitcher : MonoBehaviour
         {
             _networkManager.OnClientStarted -= HandleClientStarted;
             _networkManager.OnClientStopped -= HandleClientStopped;
+            _networkManager = null;
+        }
+    }
+
+    private void EnsureNetworkManagerSubscribed()
+    {
+        var current = NetworkManager.Singleton;
+        if (_networkManager == current) return;
+
+        if (_networkManager != null)
+        {
+            _networkManager.OnClientStarted -= HandleClientStarted;
+            _networkManager.OnClientStopped -= HandleClientStopped;
+        }
+
+        _networkManager = current;
+        if (_networkManager != null)
+        {
+            _networkManager.OnClientStarted -= HandleClientStarted;
+            _networkManager.OnClientStarted += HandleClientStarted;
+            _networkManager.OnClientStopped -= HandleClientStopped;
+            _networkManager.OnClientStopped += HandleClientStopped;
         }
     }
 
     private void Update()
     {
+        EnsureNetworkManagerSubscribed();
+
         // 万が一スポーン通知を取りこぼしていた場合でもローカルプレイヤーを検出してカメラ追従を紐付ける
         if (_localNetworkPlayer == null &&
             _networkManager != null &&

@@ -28,6 +28,8 @@ public class LobbyUIManager : MonoBehaviour
     private LobbyUIState _currentState;
     private bool _isMenuOpen;
     private bool _hasRefreshedOnce;
+    private bool _isBusyOperation;
+    private bool _isUpdatingReady;
 
     public bool IsMenuOpen => _isMenuOpen;
 
@@ -507,18 +509,27 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void RefreshRoomList()
     {
+        if (_isBusyOperation || _currentState == LobbyUIState.Connecting || _isStartingGame) return;
+
+        _isBusyOperation = true;
         _loadingOverlay.SetLoadingState(true, "更新中...");
         try
         {
             var sessions = await _sessionService.SearchRoomSessionsAsync();
+            if (this == null) return;
+
             _discoverUI.UpdateRoomList(sessions);
         }
         finally
         {
-            _loadingOverlay.SetLoadingState(false);
-            if (_isMenuOpen && _currentState == LobbyUIState.Discover)
+            _isBusyOperation = false;
+            if (this != null)
             {
-                FocusCurrentViewDefaultElementDelayed().Forget();
+                _loadingOverlay.SetLoadingState(false);
+                if (_isMenuOpen && _currentState == LobbyUIState.Discover)
+                {
+                    FocusCurrentViewDefaultElementDelayed().Forget();
+                }
             }
         }
     }
@@ -528,56 +539,81 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void OpenCreateRoomDialog()
     {
-        // ダイアログを開いて結果を待機
-        var result = await _createRoomDialogUI.ShowAsync();
+        if (_isBusyOperation || _currentState == LobbyUIState.Connecting || _isStartingGame) return;
 
-        if (result.IsCanceled)
+        _isBusyOperation = true;
+        try
         {
-            FocusCurrentViewDefaultElementDelayed().Forget();
-            return;
-        }
+            // ダイアログを開いて結果を待機
+            var result = await _createRoomDialogUI.ShowAsync();
+            if (this == null) return;
 
-        // バリデーション
-        while (string.IsNullOrWhiteSpace(result.RoomName))
-        {
-            if (await _confirmDialogUI.ShowAsync("ルーム名を正しく入力してください"))
+            if (result.IsCanceled)
             {
-                result = await _createRoomDialogUI.ShowAsync();
-                if (result.IsCanceled)
+                FocusCurrentViewDefaultElementDelayed().Forget();
+                return;
+            }
+
+            // バリデーション
+            while (string.IsNullOrWhiteSpace(result.RoomName))
+            {
+                bool retry = await _confirmDialogUI.ShowAsync("ルーム名を正しく入力してください");
+                if (this == null) return;
+
+                if (retry)
+                {
+                    result = await _createRoomDialogUI.ShowAsync();
+                    if (this == null) return;
+
+                    if (result.IsCanceled)
+                    {
+                        FocusCurrentViewDefaultElementDelayed().Forget();
+                        return;
+                    }
+                }
+                else
                 {
                     FocusCurrentViewDefaultElementDelayed().Forget();
                     return;
                 }
             }
-            else
-            {
-                FocusCurrentViewDefaultElementDelayed().Forget();
-                return;
-            }
-        }
 
-        // 決定されたらセッション作成処理実行（選択された詳細設定のプロトコルを使用）
-        TransitionTo(LobbyUIState.Connecting);
-        try
-        {
-            var success = await _sessionService.CreateRoomSessionAsync(
-                result.RoomName,
-                result.MaxPlayers,
-                result.Protocol);
-            if (success)
+            // 決定されたらセッション作成処理実行（選択された詳細設定のプロトコルを使用）
+            TransitionTo(LobbyUIState.Connecting);
+            try
             {
-                TransitionTo(LobbyUIState.InRoom);
-                UpdateRoomUI();
+                var success = await _sessionService.CreateRoomSessionAsync(
+                    result.RoomName,
+                    result.MaxPlayers,
+                    result.Protocol);
+                if (this == null) return;
+
+                if (success)
+                {
+                    TransitionTo(LobbyUIState.InRoom);
+                    UpdateRoomUI();
+                }
+                else
+                {
+                    TransitionTo(LobbyUIState.Discover);
+                    await _confirmDialogUI.ShowAsync("ルームの作成に失敗しました。");
+                }
             }
-            else
+            catch
             {
-                TransitionTo(LobbyUIState.Discover);
-                await _confirmDialogUI.ShowAsync("ルームの作成に失敗しました。");
+                if (this != null)
+                {
+                    TransitionTo(LobbyUIState.Discover);
+                }
             }
         }
-        catch
+        catch (System.OperationCanceledException)
         {
-            TransitionTo(LobbyUIState.Discover);
+            // ダイアログ破棄等によるキャンセル時は静かに終了
+        }
+        finally
+        {
+            _isBusyOperation = false;
         }
     }
 
@@ -587,34 +623,58 @@ public class LobbyUIManager : MonoBehaviour
     private async void JoinRoom(ISessionInfo sessionInfo)
     {
         if (sessionInfo == null) return;
+        if (_isBusyOperation || _currentState == LobbyUIState.Connecting || _isStartingGame) return;
 
-        if (_confirmDialogUI != null)
-        {
-            if (!await _confirmDialogUI.ShowAsync($"{sessionInfo.Name}に参加しますか？"))
-            {
-                FocusCurrentViewDefaultElementDelayed().Forget();
-                return;
-            }
-        }
-
-        TransitionTo(LobbyUIState.Connecting);
+        _isBusyOperation = true;
         try
         {
-            var success = await _sessionService.JoinRoomSessionAsync(sessionInfo);
-            if (success)
+            if (_confirmDialogUI != null)
             {
-                TransitionTo(LobbyUIState.InRoom);
-                UpdateRoomUI();
+                bool confirmed = await _confirmDialogUI.ShowAsync($"{sessionInfo.Name}に参加しますか？");
+                if (this == null) return;
+
+                if (!confirmed)
+                {
+                    FocusCurrentViewDefaultElementDelayed().Forget();
+                    return;
+                }
             }
-            else
+
+            TransitionTo(LobbyUIState.Connecting);
+            try
             {
-                TransitionTo(LobbyUIState.Discover);
-                await _confirmDialogUI.ShowAsync("ルームへの参加に失敗しました。");
+                var success = await _sessionService.JoinRoomSessionAsync(sessionInfo);
+                if (this == null) return;
+
+                if (success)
+                {
+                    TransitionTo(LobbyUIState.InRoom);
+                    UpdateRoomUI();
+                }
+                else
+                {
+                    TransitionTo(LobbyUIState.Discover);
+                    if (_confirmDialogUI != null)
+                    {
+                        await _confirmDialogUI.ShowAsync("ルームへの参加に失敗しました。");
+                    }
+                }
+            }
+            catch
+            {
+                if (this != null)
+                {
+                    TransitionTo(LobbyUIState.Discover);
+                }
             }
         }
-        catch
+        catch (System.OperationCanceledException)
         {
-            TransitionTo(LobbyUIState.Discover);
+            // ダイアログ破棄等によるキャンセル時は静かに終了
+        }
+        finally
+        {
+            _isBusyOperation = false;
         }
     }
 
@@ -623,23 +683,51 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void LeaveRoom()
     {
-        // 確認ダイアログを表示して、ユーザーがキャンセルした場合は処理を中断
-        if (!await _confirmDialogUI.ShowAsync("退出しますか？"))
-        {
-            FocusCurrentViewDefaultElementDelayed().Forget();
-            return;
-        }
+        if (_isBusyOperation || _currentState == LobbyUIState.Connecting || _isStartingGame) return;
 
-        TransitionTo(LobbyUIState.Connecting);
+        _isBusyOperation = true;
+        bool shouldRefreshList = false;
         try
         {
-            await _sessionService.LeaveRoomSessionAsync();
-            TransitionTo(LobbyUIState.Discover);
-            RefreshRoomList(); // リストを最新にする
+            // 確認ダイアログを表示して、ユーザーがキャンセルした場合は処理を中断
+            bool confirmed = await _confirmDialogUI.ShowAsync("退出しますか？");
+            if (this == null) return;
+
+            if (!confirmed)
+            {
+                FocusCurrentViewDefaultElementDelayed().Forget();
+                return;
+            }
+
+            TransitionTo(LobbyUIState.Connecting);
+            try
+            {
+                await _sessionService.LeaveRoomSessionAsync();
+                if (this == null) return;
+
+                TransitionTo(LobbyUIState.Discover);
+                shouldRefreshList = true;
+            }
+            catch
+            {
+                if (this != null)
+                {
+                    TransitionTo(LobbyUIState.Discover);
+                }
+            }
         }
-        catch
+        catch (System.OperationCanceledException)
         {
-            TransitionTo(LobbyUIState.Discover);
+            // ダイアログ破棄等によるキャンセル時は静かに終了
+        }
+        finally
+        {
+            _isBusyOperation = false;
+        }
+
+        if (shouldRefreshList && this != null)
+        {
+            RefreshRoomList(); // リストを最新にする
         }
     }
 
@@ -660,12 +748,22 @@ public class LobbyUIManager : MonoBehaviour
     /// </summary>
     private async void ToggleReadyState()
     {
+        if (_isUpdatingReady || _isBusyOperation || _isStartingGame) return;
+
         var session = _sessionService?.CurrentSession;
         if (session == null || session.CurrentPlayer == null) return;
 
-        // 現在の準備状況を取得して反転させて送信
-        var isReady = SessionPlayerPropertyHelper.IsPlayerReady(session.CurrentPlayer);
-        await _sessionService.SetReadyStatusAsync(!isReady);
+        _isUpdatingReady = true;
+        try
+        {
+            // 現在の準備状況を取得して反転させて送信
+            var isReady = SessionPlayerPropertyHelper.IsPlayerReady(session.CurrentPlayer);
+            await _sessionService.SetReadyStatusAsync(!isReady);
+        }
+        finally
+        {
+            _isUpdatingReady = false;
+        }
     }
 
     private bool _isStartingGame;

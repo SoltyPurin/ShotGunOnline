@@ -14,12 +14,27 @@ public class UnityServicesInitializer : IUnityServicesInitializer
     public const string DevelopmentEnvironment = "development";
     public const string ProductEnvironment = "production";
 
+    private UniTask<bool>? _initializeTask;
+
     public bool IsInitialized { get; private set; }
 
-    public async UniTask<bool> InitializeAsync()
+    public UniTask<bool> InitializeAsync()
     {
-        if (IsInitialized) return true;
+        if (IsInitialized) return UniTask.FromResult(true);
 
+        // 多重初期化・多重匿名サインインによる競合を防ぐため、進行中タスクを共有する
+        if (_initializeTask.HasValue)
+        {
+            return _initializeTask.Value;
+        }
+
+        var task = InitializeCoreAsync().Preserve();
+        _initializeTask = task;
+        return task;
+    }
+
+    private async UniTask<bool> InitializeCoreAsync()
+    {
         try
         {
             var options = new InitializationOptions();
@@ -45,6 +60,10 @@ public class UnityServicesInitializer : IUnityServicesInitializer
         {
             Debug.LogError($"Unity Servicesの初期化に失敗: {ex.Message}");
             return false;
+        }
+        finally
+        {
+            _initializeTask = null;
         }
     }
 }

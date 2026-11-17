@@ -303,6 +303,12 @@ public class NetworkDebugOverlay : MonoBehaviour
     /// </summary>
     private void OnReceivePingOnServer(ulong senderClientId, FastBufferReader reader)
     {
+        var netManager = NetworkManager.Singleton;
+        if (netManager == null || !netManager.IsServer || netManager.CustomMessagingManager == null || senderClientId == NetworkManager.ServerClientId)
+        {
+            return;
+        }
+
         if (!reader.TryBeginRead(sizeof(int) + sizeof(float))) return;
 
         reader.ReadValueSafe(out int sequenceId);
@@ -313,7 +319,7 @@ public class NetworkDebugOverlay : MonoBehaviour
         writer.WriteValueSafe(sequenceId);
         writer.WriteValueSafe(clientSendTime);
 
-        NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
+        netManager.CustomMessagingManager.SendNamedMessage(
             MsgPong,
             senderClientId,
             writer,
@@ -326,13 +332,14 @@ public class NetworkDebugOverlay : MonoBehaviour
     /// </summary>
     private void OnReceivePongOnClient(ulong senderClientId, FastBufferReader reader)
     {
+        if (senderClientId != NetworkManager.ServerClientId) return;
         if (!reader.TryBeginRead(sizeof(int) + sizeof(float))) return;
 
         reader.ReadValueSafe(out int sequenceId);
         reader.ReadValueSafe(out float clientSendTime);
 
         float now = Time.realtimeSinceStartup;
-        float rtt = (now - clientSendTime) * 1000f; // ms
+        float rtt = Mathf.Max(0f, (now - clientSendTime) * 1000f); // ms
 
         for (int i = 0; i < _packetHistory.Count; i++)
         {

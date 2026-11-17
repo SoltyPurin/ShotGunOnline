@@ -11,6 +11,11 @@ using UnityEngine;
 /// </summary>
 public class LobbySessionService : ILobbySessionService
 {
+    private const int MaxRoomNameLength = 32;
+    private const int MinPlayers = 2;
+    private const int MaxPlayers = 8;
+    private static readonly TimeSpan LeaveTimeout = TimeSpan.FromSeconds(5);
+
     private readonly IUnityServicesInitializer _servicesInitializer;
     private readonly RelayConnectionHandler _relayConnectionHandler;
     private readonly Action _onSessionConnected;
@@ -51,6 +56,25 @@ public class LobbySessionService : ILobbySessionService
             return false;
         }
 
+        // 入力値の検証（不正な名前・人数でのAPI呼び出しや想定外の人数でのゲーム開始を防止）
+        roomName = roomName?.Trim();
+        if (string.IsNullOrEmpty(roomName))
+        {
+            Debug.LogWarning("[MSM]: ルーム名が空のため、ルーム作成をスキップしました。");
+            return false;
+        }
+        if (roomName.Length > MaxRoomNameLength)
+        {
+            roomName = roomName.Substring(0, MaxRoomNameLength);
+        }
+        maxPlayers = Mathf.Clamp(maxPlayers, MinPlayers, MaxPlayers);
+
+        if (_currentSession != null)
+        {
+            Debug.LogWarning("[MSM]: 既にルームに参加中のため、ルーム作成をスキップしました。");
+            return false;
+        }
+
         _isConnecting = true;
         var cancellationToken = BeginConnectionAttempt(protocol);
 
@@ -67,7 +91,16 @@ public class LobbySessionService : ILobbySessionService
             .WithRelayNetwork()
             .WithNetworkOptions(new NetworkOptions { RelayProtocol = protocol });
 
-            _currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
+            var createdSession = await MultiplayerService.Instance.CreateSessionAsync(options);
+
+            // 作成待機中に退出（キャンセル）された場合、作成されたセッションが孤立しないよう即座に退出する
+            if (cancellationToken.IsCancellationRequested)
+            {
+                await LeaveOrphanSessionAsync(createdSession);
+                return false;
+            }
+
+            _currentSession = createdSession;
             SubscribeSessionEvents(_currentSession);
 
             // NGOホスト起動およびRelayサーバーとの疎通確立を待機
@@ -77,9 +110,19 @@ public class LobbySessionService : ILobbySessionService
                 return false;
             }
 
+            if (cancellationToken.IsCancellationRequested || _currentSession == null)
+            {
+                return false;
+            }
+
             CompleteConnectionAttempt($"ホストとして接続完了 ({protocol})");
 
             await SaveRelayConnectedPropertyAsync();
+
+            if (cancellationToken.IsCancellationRequested || _currentSession == null)
+            {
+                return false;
+            }
 
             // Relay接続が確立したのでルームを公開（ルーム一覧に表示されるようにする）
             var hostSession = _currentSession.AsHost();
@@ -124,9 +167,26 @@ public class LobbySessionService : ILobbySessionService
     public async UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom)
     {
         if (!EnsureServicesInitialized()) return false;
+        if (targetRoom == null || string.IsNullOrEmpty(targetRoom.Id))
+        {
+            Debug.LogWarning("[MSM]: 参加対象のルーム情報が不正なため、ルーム参加をスキップしました。");
+            return false;
+        }
         if (_isConnecting || _isLeaving)
         {
             Debug.LogWarning("[MSM]: 既に接続または退出処理が進行中のため、ルーム参加をスキップしました。");
+            return false;
+        }
+        if (_currentSession != null)
+        {
+            Debug.LogWarning("[MSM]: 既にルームに参加中のため、ルーム参加をスキップしました。");
+            return false;
+        }
+
+        // 試合中・ロック中のルームへ途中参加すると、プレイヤーが生成されない／開始同期が崩れるため参加させない
+        if (targetRoom.IsLocked || SessionPlayerPropertyHelper.IsSessionInGame(targetRoom))
+        {
+            Debug.LogWarning("[MSM]: 試合中またはロック中のルームのため、参加をスキップしました。");
             return false;
         }
 
@@ -140,7 +200,16 @@ public class LobbySessionService : ILobbySessionService
             var joinOptions = new JoinSessionOptions()
                 .WithNetworkOptions(new NetworkOptions { RelayProtocol = protocol });
 
-            _currentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id, joinOptions);
+            var joinedSession = await MultiplayerService.Instance.JoinSessionByIdAsync(targetRoom.Id, joinOptions);
+
+            // 参加待機中に退出（キャンセル）された場合、参加したセッションが孤立しないよう即座に退出する
+            if (cancellationToken.IsCancellationRequested)
+            {
+                await LeaveOrphanSessionAsync(joinedSession);
+                return false;
+            }
+
+            _currentSession = joinedSession;
             SubscribeSessionEvents(_currentSession);
 
             // NGOクライアント起動およびRelay経由での接続確立を待機
@@ -150,12 +219,17 @@ public class LobbySessionService : ILobbySessionService
                 return false;
             }
 
+            if (cancellationToken.IsCancellationRequested || _currentSession == null)
+            {
+                return false;
+            }
+
             // 接続直後からネットワークイベントを購読し、UGSプロパティ保存中のゲーム開始・切断を取りこぼさないようにする
             CompleteConnectionAttempt($"クライアントとして接続完了 ({protocol})");
 
             await SaveRelayConnectedPropertyAsync();
 
-            return true;
+            return _currentSession != null;
         }
         catch (Exception ex)
         {
@@ -186,7 +260,8 @@ public class LobbySessionService : ILobbySessionService
                 UnsubscribeSessionEvents(_currentSession);
                 try
                 {
-                    await _currentSession.LeaveAsync();
+                    // 通信断などでAPIが応答しない場合に退出処理（およびエラーダイアログ表示）が無期限に停止しないようタイムアウトを設ける
+                    await _currentSession.LeaveAsync().AsUniTask().Timeout(LeaveTimeout, DelayType.Realtime);
                 }
                 catch (Exception sessionEx)
                 {
@@ -264,6 +339,32 @@ public class LobbySessionService : ILobbySessionService
         await SaveCurrentPlayerPropertiesAsync(relayProps);
     }
 
+    /// <summary>
+    /// 接続処理がキャンセルされた後に作成・参加が完了してしまったセッションから退出し、NGOも停止する
+    /// </summary>
+    private async UniTask LeaveOrphanSessionAsync(ISession orphanSession)
+    {
+        Debug.LogWarning("[MSM]: 接続処理がキャンセルされたため、作成・参加済みのセッションから退出します。");
+        try
+        {
+            if (orphanSession != null)
+            {
+                await orphanSession.LeaveAsync().AsUniTask().Timeout(LeaveTimeout, DelayType.Realtime);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[MSM]: 孤立セッションの退出に失敗しました: {ex.Message}");
+        }
+        finally
+        {
+            if (_currentSession == null)
+            {
+                _relayConnectionHandler.Shutdown();
+            }
+        }
+    }
+
     public async UniTask UpdateSessionGameStatusAsync(bool isInGame)
     {
         if (_currentSession == null || !_currentSession.IsHost) return;
@@ -277,6 +378,8 @@ public class LobbySessionService : ILobbySessionService
             hostSession.SetProperty(
                 SessionPlayerPropertyHelper.GameStatusPropertyKey,
                 new SessionProperty(value, VisibilityPropertyOptions.Public));
+            // 試合中は新規参加をロックし、途中参加によるプレイヤー未生成・開始同期崩れを防止する
+            hostSession.IsLocked = isInGame;
             await hostSession.SavePropertiesAsync();
         }
         catch (Exception ex)

@@ -75,7 +75,7 @@ public class LobbyNetworkSpawner : MonoBehaviour
         if (!_networkManager.ConnectedClients.TryGetValue(clientId, out var client)) return;
 
         // 重複スポーン防止（ホストは OnServerStarted と OnClientConnectedCallback の両方が来るため）
-        if (client.PlayerObject != null) return;
+        if (client.PlayerObject != null && client.PlayerObject.IsSpawned) return;
 
         int index = IndexOfClient(clientId);
         Transform spawnPoint = GetSpawnPointProvider()?.GetSpawnPoint(index);
