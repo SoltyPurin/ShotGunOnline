@@ -78,6 +78,7 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     private GameObject _player;
 
+    private ZombiWave _zombiWave = default;
     #endregion
 
     #region ゲッター変数
@@ -96,29 +97,31 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
     #endregion
 
 
-    public void EnemyCount(int count,int difficulty, Wave.WaveEnemyType type)
+    public void EnemyCount(int count,int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
 
         // ネットワーク接続中かつサーバーなら ClientRpc で全端末に同期
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && IsServer)
         {
-            EnemyCountClientRpc(count, difficulty, type);
+            EnemyCountClientRpc(count, difficulty, type, zombiModeSpawnInterval);
         }
         else
         {
             // オフライン / ソロプレイ時は直接ローカルで実行
-            SetupTimerLocal(count, difficulty, type);
+            SetupTimerLocal(count, difficulty, type, zombiModeSpawnInterval);
         }
     }
 
     [ClientRpc]
-    private void EnemyCountClientRpc(int count, int difficulty, Wave.WaveEnemyType type)
+    private void EnemyCountClientRpc(int count, int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
-        SetupTimerLocal(count, difficulty, type);
+        SetupTimerLocal(count, difficulty, type, zombiModeSpawnInterval);
     }
 
-    private void SetupTimerLocal(int count, int difficulty, Wave.WaveEnemyType type)
+    private void SetupTimerLocal(int count, int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
+        
+        bool isSurvivalMode = type == Wave.WaveEnemyType.Survival;
         _currentWaveTime = 0f;
         _canCountTimer = false;
         _realTimeCircle.StartTimer();
@@ -146,11 +149,24 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
                 _aRankTime = _baseTime * _bossTimeARankRatio;
                 StartCoroutine(TimerFlagStart(false));
                 break;
+
+            case Wave.WaveEnemyType.Survival:
+                _baseTime = zombiModeSpawnInterval;
+                StartCoroutine(TimerFlagStart(false));
+
+                break;
         }
 
-        _damageDecValue = _oneDamageDecExTime * difficulty;
+        if(type == Wave.WaveEnemyType.Survival)
+        {
+            _realTimeCircle.SetTimerOnSurvivalMode(_baseTime);
+        }
+        else
+        {
+            _damageDecValue = _oneDamageDecExTime * difficulty;
 
-        _realTimeCircle.SetValue(_sRankTime, _aRankTime, difficulty, _damageDecValue);
+            _realTimeCircle.SetValue(_sRankTime, _aRankTime, difficulty, _damageDecValue);
+        }
         _realTimeCircle.StartTimer();
     }
     private IEnumerator TimerFlagStart(bool isBossWave)

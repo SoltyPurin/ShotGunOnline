@@ -1,16 +1,22 @@
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using static Wave;
 
 public class ZombiWave : Wave
 {
-    [SerializeField, Header("‰½•b‚Éˆê‰ñ“G‚ðƒXƒ|[ƒ“‚³‚¹‚é‚©")]
-    private float _enemySpawnInterval = 10.0f;
+    private float _saveInitInterval = 0;
 
-    private float _curElapsedTime = 0;
+    public override void Start()
+    {
+        base.Start();
+        _saveInitInterval = _enemySpawnInterval;
+        _enemySpawnInterval = 0;
+    }
     public override void FixedUpdate() 
     {
-        _curElapsedTime += Time.fixedDeltaTime;
-        if( _curElapsedTime > _enemySpawnInterval)
+        _enemySpawnInterval -= Time.fixedDeltaTime;
+        if(_enemySpawnInterval <=0)
         {
             base.FixedUpdate();
         }
@@ -105,7 +111,11 @@ public class ZombiWave : Wave
             //“G‚Ì”z—ñ‚ðˆêŽü‚µ‚½‚çˆê’UI—¹
             if (isLastObj || _nowState != Transition.Enemy)
             {
-                _curElapsedTime = 0;
+                _enemySpawnInterval = _saveInitInterval;
+                if (_counter != null)
+                {
+                    _counter.EnemyCount(_objList.Count, (int)_difficulty, _waveType, _enemySpawnInterval);
+                }
                 break;
             }
         }

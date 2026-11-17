@@ -5289,7 +5289,8 @@ MonoBehaviour:
     _waveObj: {fileID: 3969094387135567395}
   - _generateFrame: 10
     _waveObj: {fileID: 2188602384746765909}
-  _waveType: 0
+  _enemySpawnInterval: 10
+  _waveType: 3
   _gimmickList: []
   _difficulty: 1
   _autoTransition: 1

@@ -39,6 +39,7 @@ public class Wave : MonoBehaviour
         Normal,
         Boss,
         MediumBoss,
+        Survival,
     }
 
     /// <summary>
@@ -79,6 +80,15 @@ public class Wave : MonoBehaviour
     protected int _objFrame = 0;
 
     protected bool _isWaveEnd = false;
+
+    [SerializeField, Header("何秒に一回敵をスポーンさせるか(ゾンビモード限定)")]
+    protected float _enemySpawnInterval = 10.0f;
+    //各ウェーブのスコアを計算するスクリプトを取得
+    protected EnemyCountAndCreateTime _counter = default;
+
+    [SerializeField, Header("ウェーブの難易度")]
+    protected Difficulty _difficulty = Difficulty.Easy;
+
     #endregion
     #region 【各種変数】
 
@@ -89,8 +99,6 @@ public class Wave : MonoBehaviour
     private List<GimmickData> _gimmickList = new List<GimmickData>();
 
 
-    [SerializeField, Header("ウェーブの難易度")]
-    private Difficulty _difficulty = Difficulty.Easy;
 
     [SerializeField, Header("自動遷移させるかどうか")]
     private bool _autoTransition = true;
@@ -107,8 +115,6 @@ public class Wave : MonoBehaviour
         get { return _waveStartText; }
     }
 
-    //各ウェーブのスコアを計算するスクリプトを取得
-    private EnemyCountAndCreateTime _counter = default;
 
 
     //その他変数
@@ -184,7 +190,7 @@ public class Wave : MonoBehaviour
         }
     }
 
-    private void Start()
+    public virtual void Start()
     {
         //各種変数の初期化
         _gimmickFrame = 0;
@@ -202,7 +208,7 @@ public class Wave : MonoBehaviour
         // スコアカウンター内に敵数と難易度を送信（左上ランクUIのタイマー開始）
         if (_counter != null)
         {
-            _counter.EnemyCount(_objList.Count, (int)_difficulty, _waveType);
+            _counter.EnemyCount(_objList.Count, (int)_difficulty, _waveType, _enemySpawnInterval);
         }
 
         //自動スタートが有効ならウェーブの状態を変更しスタート可能に
