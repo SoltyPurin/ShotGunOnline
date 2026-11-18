@@ -1,15 +1,26 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
-using static Wave;
 
+/// <summary>
+/// ゾンビモードのクラス
+/// 毎回同じ展開に同じ展開にしないためにObjListからランダムに敵を抜き出す
+/// </summary>
 public class ZombiWave : Wave
 {
+    [SerializeField, Header("最初に出す敵の数")]
+    private int _initSpawnEnemyCount = 10;
+    [SerializeField, Header("ウェーブが増えるごとに敵を何体増やすか")]
+    private int _oneWavePlusEnemyCount = 2;
     private float _saveInitInterval = 0;
+    private List<ObjData> _saveTheObjList = new List<ObjData>();
+    private int _saveSpawnEnemyCount = 0;
 
     public override void Start()
     {
         base.Start();
+        _saveTheObjList.AddRange(_objList);
+        _saveSpawnEnemyCount = _initSpawnEnemyCount;
         _saveInitInterval = _enemySpawnInterval;
         _enemySpawnInterval = 0;
     }
@@ -32,9 +43,11 @@ public class ZombiWave : Wave
             return;
         }
 
+        
         // タイマーを加算
         _objFrame++;
 
+        _objList = ShuffleSetEnemy();
         // generateFrame以上の時間が経ったらオブジェクトを有効化
         while (_objFrame >= _objList[_nowObj]._generateFrame)
         {
@@ -120,6 +133,35 @@ public class ZombiWave : Wave
             }
         }
 
+    }
+
+    /// <summary>
+    /// 毎回同じ展開にしないために登録されている敵のリストからランダムにエネミーを抜き出す
+    /// これの戻り値をObjListに格納する都合上ObjListは要素数が逐次変更される。
+    /// そのため、forに使う要素数は_saveTheObjListのものを使う
+    /// </summary>
+    /// <returns>抜き出したそのウェーブで使う用の敵のリスト</returns>
+    private List<ObjData> ShuffleSetEnemy()
+    {
+        //実際に返す用の変数
+        List<ObjData> jokerList = new List<ObjData>();
+        //抜き出す用のリスト
+        List<ObjData> enemysBox = new List<ObjData>();
+        enemysBox.AddRange(_saveTheObjList);
+        for(int i= 0; i<= enemysBox.Count; i++)
+        {
+            //湧かせる量分回したら1回のスポーン量を増やしてforを抜ける
+            if (enemysBox.Count == 0)
+            {
+                break;
+            }
+            
+            int random = Random.Range(0, _saveTheObjList.Count-1);
+            jokerList.Add(enemysBox[random]);
+            enemysBox.RemoveAt(random);
+        }
+        _initSpawnEnemyCount = _saveSpawnEnemyCount + _oneWavePlusEnemyCount;
+        return jokerList;
     }
 
     public override void NextObj()

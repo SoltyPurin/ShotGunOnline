@@ -99,31 +99,43 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     public void EnemyCount(int count,int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
-
+        Debug.Log("敵の数カウント");
         // ネットワーク接続中かつサーバーなら ClientRpc で全端末に同期
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && IsServer)
         {
-            EnemyCountClientRpc(count, difficulty, type, zombiModeSpawnInterval);
+            if (IsServer)
+            {
+                EnemyCountClientRpc(count, difficulty, type, zombiModeSpawnInterval);
+            }
+            return;
         }
-        else
-        {
+        //else
+        //{
             // オフライン / ソロプレイ時は直接ローカルで実行
             SetupTimerLocal(count, difficulty, type, zombiModeSpawnInterval);
-        }
+        //}
     }
 
     [ClientRpc]
     private void EnemyCountClientRpc(int count, int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
+        Debug.Log(
+       $"[Timer RPC受信] IsServer:{IsServer} " +
+       $"IsClient:{IsClient} 間隔:{zombiModeSpawnInterval}");
         SetupTimerLocal(count, difficulty, type, zombiModeSpawnInterval);
     }
 
     private void SetupTimerLocal(int count, int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
-        
+        Debug.Log(
+    $"[Timerリセット前] IsServer:{IsServer} " +
+    $"IsClient:{IsClient} CurrentTime:{_currentWaveTime}");
         bool isSurvivalMode = type == Wave.WaveEnemyType.Survival;
         _currentWaveTime = 0f;
         _canCountTimer = false;
+        Debug.Log(
+    $"[Timerリセット後] CurrentTime:{_currentWaveTime}");
+
         _realTimeCircle.StartTimer();
         int curPlayerCount = (NetworkManager.Singleton.ConnectedClientsList.Count);
         float modifyValue = curPlayerCount * _modifyTimeForPlayers;
