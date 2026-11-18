@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.15, g: 0.18, b: 0.25, a: 1}
+  m_Color: {r: 0.22, g: 0.18, b: 0.12, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -100,11 +100,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0.82, b: 0.84, a: 1}
-    m_HighlightedColor: {r: 0, g: 0.65, b: 0.68, a: 1}
-    m_PressedColor: {r: 0, g: 0.55, b: 0.58, a: 1}
-    m_SelectedColor: {r: 0, g: 0.82, b: 0.84, a: 1}
-    m_DisabledColor: {r: 0.3, g: 0.3, b: 0.35, a: 0.5}
+    m_NormalColor: {r: 0.86, g: 0.66, b: 0.22, a: 1}
+    m_HighlightedColor: {r: 0.72, g: 0.53, b: 0.16, a: 1}
+    m_PressedColor: {r: 0.58, g: 0.42, b: 0.12, a: 1}
+    m_SelectedColor: {r: 0.86, g: 0.66, b: 0.22, a: 1}
+    m_DisabledColor: {r: 0.3, g: 0.26, b: 0.2, a: 0.5}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0, g: 0.4, b: 0.42, a: 0.6}
+  m_EffectColor: {r: 0.45, g: 0.32, b: 0.08, a: 0.7}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
 --- !u!114 &8290552706465812729
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9, g: 0.95, b: 1, a: 1}
+  m_Color: {r: 0.98, g: 0.94, b: 0.84, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9, g: 0.95, b: 1, a: 1}
+  m_Color: {r: 0.12, g: 0.08, b: 0.03, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -380,7 +380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.12, g: 0.14, b: 0.2, a: 0.92}
+  m_Color: {r: 0.18, g: 0.14, b: 0.09, a: 0.94}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -425,7 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Shadow
-  m_EffectColor: {r: 0, g: 0.3, b: 0.35, a: 0.25}
+  m_EffectColor: {r: 0.15, g: 0.1, b: 0.02, a: 0.45}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
 --- !u!114 &3262681757053309520
@@ -440,6 +440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0, g: 0.65, b: 0.68, a: 0.5}
+  m_EffectColor: {r: 0.82, g: 0.64, b: 0.22, a: 0.6}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
