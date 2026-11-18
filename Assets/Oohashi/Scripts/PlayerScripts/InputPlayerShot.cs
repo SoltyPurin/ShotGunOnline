@@ -145,6 +145,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     private float _lastNormalShotTime = -999f;
     private const float MIN_NORMAL_SHOT_INTERVAL = 0.22f;
     private bool _localPushShootButton = false;
+    private bool _ultShootRequested = false;
 
     private void Start()
     {
@@ -246,6 +247,10 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
                 case PlayerState.Ultimate:
                     currentPushState = isShootPressed || isShootDown;
+                    if (currentPushState && !_hasShotUltimate)
+                    {
+                        _ultShootRequested = true;
+                    }
                     break;
 
                 case PlayerState.DamageKnockBack:
@@ -350,6 +355,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         }
 
         _localPushShootButton = false;
+        _ultShootRequested = false;
 
         if (this.IsOwner && IsSpawned && _netIsPushShootButton.Value)
         {
@@ -489,30 +495,32 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             case PlayerState.Ultimate:
 
                 //ウルト使用可能かつウルトチャージエフェクトが非表示なら表示させる。
-                if (!_hasShotUltimate && !_showUltCharge)
+                if (IsLocalControl && !_hasShotUltimate && !_showUltCharge)
                 {
-                    _inputChengeState.ShowUltCharge(true);
+                    if (_inputChengeState != null) _inputChengeState.ShowUltCharge(true);
                     _showUltCharge = true;
                 }
 
                 //ウルトの当たり判定を表示
-                _shootShape.UltShape(_playerAiming.Direction);
-                //撃つ判定を検知
-                //射撃ボタンを押してなおかつウルトを撃ってない時にウルト発射可能
-                if (isPushing && !_hasShotUltimate)
+                if (_shootShape != null && _playerAiming != null)
                 {
-                    //ウルト発射状態に切り替え
-                    _hasShotUltimate = true;
-                    //ウルトの処理を行うコルーチンを呼び出す
-                    StartCoroutine(UltProtocolWithDelay());
-                    //マズルフラッシュを再生するメソッドを呼び出す
-                    _muzzleFlashAnimation.PlayTheUltFlash();
-                    //銃弾のプールにアクティブ化する
-                    _bulletPool.ActiveUltBullet(_playerAiming.Direction, this.transform.position);
+                    _shootShape.UltShape(_playerAiming.Direction);
+                }
 
-                    //ウルトチャージエフェクトを非表示
-                    _inputChengeState.ShowUltCharge(false);
-                    _showUltCharge = false;
+                // 操作プレイヤーのみ発射判定を行い、非OwnerへRPCで確実に演出同期（短押し取りこぼし・ステートずれ防止）
+                if (IsLocalControl && (isPushing || _ultShootRequested) && !_hasShotUltimate)
+                {
+                    _ultShootRequested = false;
+                    _hasShotUltimate = true;
+                    Vector3 aimDir = _playerAiming != null ? _playerAiming.Direction : Vector3.right;
+
+                    StartCoroutine(UltProtocolWithDelay());
+                    PlayLocalUltVisuals(aimDir);
+
+                    if (IsSpawned && IsOwner)
+                    {
+                        PlayUltShotEffectsRpc(aimDir);
+                    }
                 }
 
                 break;
@@ -662,7 +670,35 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.NotOwner, Delivery = RpcDelivery.Unreliable)]
+    private void PlayLocalUltVisuals(Vector3 aimDirection)
+    {
+        if (_muzzleFlashAnimation != null)
+        {
+            _muzzleFlashAnimation.PlayTheUltFlash();
+        }
+
+        if (_bulletPool != null)
+        {
+            Vector3 dir = aimDirection.sqrMagnitude > 0.001f
+                ? aimDirection
+                : (_playerAiming != null ? _playerAiming.Direction : Vector3.right);
+            _bulletPool.ActiveUltBullet(dir, this.transform.position);
+        }
+
+        if (_inputChengeState != null)
+        {
+            _inputChengeState.ShowUltCharge(false);
+        }
+        _showUltCharge = false;
+    }
+
+    [Rpc(SendTo.NotOwner, InvokePermission = RpcInvokePermission.Owner)]
+    private void PlayUltShotEffectsRpc(Vector3 aimDirection)
+    {
+        PlayLocalUltVisuals(aimDirection);
+    }
+
+    [Rpc(SendTo.NotOwner, Delivery = RpcDelivery.Unreliable, InvokePermission = RpcInvokePermission.Owner)]
     private void PlayShotEffectsRpc(float chargeTime, bool isCrit, bool isMaxCharge, Vector3 aimDirection)
     {
         if (_muzzleFlashAnimation != null)

@@ -47,7 +47,33 @@ public class ArmorKnockBack : EnemyKnockBack
     /// </summary>
     public override void SetDirectionAndForce(Vector2 playerPos, float chargeTime, bool isCrit, bool isUlt)
     {
-        SetDirectionAndForce(playerPos, chargeTime, PlayerState.Normal, isCrit, isUlt);
+        SetDirectionAndForce(playerPos, chargeTime, isUlt ? PlayerState.Ultimate : PlayerState.Normal, isCrit, isUlt);
+    }
+
+    public override void PredictLocalKnockBack(Vector2 playerPos, float chargeTime, PlayerState state, bool isCrit, bool isUlt)
+    {
+        if (IsServer || _enemyMove == null) return;
+
+        Vector2 blowDir = ((playerPos - (Vector2)transform.position) * -1f).normalized;
+        bool isFromFront = false;
+        if (_rotateChildren != null)
+        {
+            float angle = Vector2.Angle((playerPos - (Vector2)transform.position), _rotateChildren.transform.up.normalized);
+            isFromFront = angle < _flont;
+        }
+
+        float predictedForce = 0f;
+        if (isFromFront && state == PlayerState.Normal && !isUlt)
+        {
+            predictedForce = _guardKnockbackForce;
+        }
+        else if (!isCrit && !isUlt)
+        {
+            float powVal = Mathf.Pow(chargeTime, _powMultiplicationValue);
+            predictedForce = Mathf.Lerp(_minBlowAwayValue, powVal, _t);
+        }
+
+        _enemyMove.OnKnockBackPredicted(blowDir, predictedForce, _decelerationValue);
     }
 
     /// <summary>
@@ -56,7 +82,7 @@ public class ArmorKnockBack : EnemyKnockBack
     /// <param name="playerPos">プレイヤーの座標</param>
     /// <param name="chargeTime">チャージ時間</param>
     /// <param name="state">プレイヤーのステート</param>
-    public void SetDirectionAndForce(Vector2 playerPos, float chargeTime, PlayerState state, bool isCrit, bool isUlt)
+    public override void SetDirectionAndForce(Vector2 playerPos, float chargeTime, PlayerState state, bool isCrit, bool isUlt)
     {
         // 吹き飛ぶ方向計算
         _blowAwayDirection = ((playerPos - (Vector2)this.transform.position) * -1).normalized;
@@ -77,12 +103,11 @@ public class ArmorKnockBack : EnemyKnockBack
             _enemyMove.EnemyState = EnemyState.knockback;
         }
 
-        if (_isFromFlont && state == PlayerState.Normal)
+        if (_isFromFlont && state == PlayerState.Normal && !isUlt)
         {
             // 正面からの攻撃かつ通常ショットの場合はガードの吹き飛び
             _force = _guardKnockbackForce;
             _canKnockBack = true;
-            PlayTakeDamageEffectClientRpc(true);
         }
         else
         {
@@ -113,12 +138,11 @@ public class ArmorKnockBack : EnemyKnockBack
             {
                 _canKnockBack = true;
             }
-
-            PlayTakeDamageEffectClientRpc(false);
         }
 
         if (IsServer)
         {
+            PlayTakeDamageEffectClientRpc(_isFromFlont && state == PlayerState.Normal && !isUlt);
             PlayKnockBackEffectsClientRpc(isCrit, isUlt, chargeTime, _attackerClientId);
         }
     }
@@ -127,7 +151,7 @@ public class ArmorKnockBack : EnemyKnockBack
     /// 被弾エフェクト再生
     /// </summary>
     /// <param name="isGuard">ガード成否</param>
-    [ClientRpc]
+    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
     private void PlayTakeDamageEffectClientRpc(bool isGuard)
     {
         if (isGuard && _seManager != null)

@@ -108,13 +108,18 @@ public class PlayerAiming : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsLocalControl) return;
+        if (!IsLocalControl)
+        {
+            UpdateRemoteAimVisuals();
+            return;
+        }
 
         if (!CanAim())
         {
             _rightStickInput = Vector2.zero;
             if (_playerObject != null)
             {
+                _playerObject.transform.localPosition = Vector3.zero;
                 _playerObject.transform.rotation = Quaternion.identity;
             }
             if (_shape != null)
@@ -188,12 +193,11 @@ public class PlayerAiming : NetworkBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void UpdateRemoteAimVisuals()
     {
         if (_playerObject == null) return;
 
-        // Owner（またはオフライン操作時）は Update() 側で入力・描画を即時反映済みのため、ここでは非 Owner のみ補間適用する
-        if (IsLocalControl) return;
+        _playerObject.transform.localPosition = Vector3.zero;
 
         // ムービー・カットシーン再生中は向きをデフォルト（右向き水平）に維持し、視点移動させない
         if (!CanAim())
@@ -213,11 +217,19 @@ public class PlayerAiming : NetworkBehaviour
     {
         if (_playerObject == null || aimDir.sqrMagnitude <= 0.001f) return;
 
+        _playerObject.transform.localPosition = Vector3.zero;
         float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
         Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-        _playerObject.transform.rotation = immediate
-            ? targetRotation
-            : Quaternion.Lerp(_playerObject.transform.rotation, targetRotation, _correctionValue);
+        if (immediate)
+        {
+            _playerObject.transform.rotation = targetRotation;
+        }
+        else
+        {
+            float smoothRate = Mathf.Max(1f, _correctionValue) * 35f;
+            float t = 1f - Mathf.Exp(-smoothRate * Time.deltaTime);
+            _playerObject.transform.rotation = Quaternion.Slerp(_playerObject.transform.rotation, targetRotation, t);
+        }
 
         if (_shape != null)
         {

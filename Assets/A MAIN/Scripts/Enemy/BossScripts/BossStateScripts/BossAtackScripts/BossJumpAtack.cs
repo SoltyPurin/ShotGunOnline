@@ -74,8 +74,8 @@ public class BossJumpAtack : BossColliderTriggerSW
                 EnemyShotBullet shotBullet = Instantiate(_shockWave, transform.position, Quaternion.identity).GetComponent<EnemyShotBullet>();
                 NetworkObject nBullet = shotBullet.GetComponent<NetworkObject>();
                 shotBullet.transform.localScale = new Vector3(3, 3, 1);
-                shotBullet.DirectionSetting(this.gameObject, rotatedDir);
                 nBullet.Spawn();
+                shotBullet.DirectionSetting(this.gameObject, rotatedDir);
             }
         }
         if (_bossCollider != null)

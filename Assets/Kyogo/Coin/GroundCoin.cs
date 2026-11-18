@@ -37,8 +37,13 @@ public class GroundCoin : NetworkBehaviour
         }
         else if (playerNetObj != null && playerNetObj.IsLocalPlayer)
         {
-            // クライアント自機が接触した場合、サーバーへ回収をリクエスト
+            // クライアント自機が接触した場合、即座に見た目と判定を消してサーバーへ回収をリクエスト（回収体感ラグ0ms）
             _isCollected = true;
+            if (TryGetComponent<Collider2D>(out var col)) col.enabled = false;
+            foreach (var sr in GetComponentsInChildren<SpriteRenderer>())
+            {
+                sr.enabled = false;
+            }
             RequestCollectServerRpc(new NetworkObjectReference(playerNetObj));
         }
     }

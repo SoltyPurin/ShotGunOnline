@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 public class ArmorTakeDamage : EnemyTakeDamage
 {
@@ -27,36 +28,56 @@ public class ArmorTakeDamage : EnemyTakeDamage
     /// <param name="state">プレイヤーステート</param>
     public override void SetTakeDamege(float chargeTime, PlayerState state)
     {
+        if (!IsServer || _isDead) return;
+
         // ウルト時は即死
         if (state == PlayerState.Ultimate)
         {
+            _isDead = true;
             _enemyHP.Value = 0;
-            _hpUI.UpdateHP(0);
+            if (_hpUI != null) _hpUI.UpdateHP(0);
+            PlayArmorDamageVisualClientRpc(false);
             StartCoroutine(DeathProtocol(2));
             return;
         }
+
         // 前方からの攻撃（ガード）判定
-        bool isGuard = _armorKnockbackScript.IsFromFlont;
-        // ガード時
-        if (isGuard) 
+        bool isGuard = _armorKnockbackScript != null && _armorKnockbackScript.IsFromFlont;
+        if (isGuard)
         {
             _damage = chargeTime * _guardMultiplier;
             _damage = Mathf.Max(_damage, _guardMinDamage);
-            _guardEffect.SetTrigger("Damage");
+            PlayArmorDamageVisualClientRpc(true);
         }
         else
         {
             _damage = chargeTime * _damageMultiplier;
             _damage = Mathf.Max(_damage, _minDamage);
-            _damageAnimator.SetTrigger("Damage");
-            _damageMaterial.Damage();
+            PlayArmorDamageVisualClientRpc(false);
+            if (_playTheSEManager != null) _playTheSEManager.PlayEnemyDamageSound();
         }
+
         // HP更新
         _enemyHP.Value = (_enemyHP.Value - (int)_damage);
-        _hpUI.UpdateHP(_enemyHP.Value);
+        if (_hpUI != null) _hpUI.UpdateHP(_enemyHP.Value);
         if (_enemyHP.Value <= 0)
         {
+            _isDead = true;
             StartCoroutine(DeathProtocol(chargeTime));
+        }
+    }
+
+    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
+    protected void PlayArmorDamageVisualClientRpc(bool isGuard)
+    {
+        if (isGuard)
+        {
+            if (_guardEffect != null) _guardEffect.SetTrigger("Damage");
+        }
+        else
+        {
+            if (_damageAnimator != null) _damageAnimator.SetTrigger("Damage");
+            if (_damageMaterial != null) _damageMaterial.Damage();
         }
     }
 }

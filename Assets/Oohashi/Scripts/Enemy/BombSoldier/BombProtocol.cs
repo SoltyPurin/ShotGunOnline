@@ -50,6 +50,7 @@ public class BombProtocol : NetworkBehaviour
     private readonly string BOMBTAGNAME = "Bomb";
 
     private bool _isExplosion = false;
+    private readonly HashSet<GameObject> _explosionHitTargets = new HashSet<GameObject>();
     public bool IsExplosion
     {
         get { return _isExplosion; }
@@ -216,11 +217,16 @@ public class BombProtocol : NetworkBehaviour
         float radius = Mathf.Lerp(10f, 3f, t);
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
+        _explosionHitTargets.Clear();
 
         foreach (Collider2D hit in hits)
         {
-            if (hit == null || hit.gameObject == this.gameObject) continue;
-            GameObject hitObject = hit.gameObject;
+            if (hit == null || hit.gameObject == this.gameObject || hit.transform.IsChildOf(this.transform)) continue;
+
+            NetworkObject parentNetObj = hit.GetComponentInParent<NetworkObject>();
+            GameObject hitObject = parentNetObj != null ? parentNetObj.gameObject : hit.gameObject;
+            if (hitObject == this.gameObject || !_explosionHitTargets.Add(hitObject)) continue;
+
             if (hitObject.CompareTag(BOMBTAGNAME))
             {
                 BombTakeDamage bombTakedamage = hitObject.GetComponent<BombTakeDamage>();
@@ -235,8 +241,8 @@ public class BombProtocol : NetworkBehaviour
                 PlayerDamageKnockBack knockback = hitObject.GetComponent<PlayerDamageKnockBack>();
                 if (knockback != null)
                 {
-                    //吹き飛ばしのメソッド呼び出し
-                    knockback.SetDirection(direction, _bombPower, this.gameObject);
+                    // リモートクライアントにもOwnerRpc経由で爆発ダメージ・吹き飛ばしを確実に届ける
+                    knockback.ApplyServerExplosionHit(direction, _bombPower);
                 }
             }
             else

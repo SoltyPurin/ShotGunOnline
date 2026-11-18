@@ -22,6 +22,13 @@ public class EnemyNetworkTransform : NetworkTransform
 
     private bool _hasInitialPosition = false;
 
+    protected override void Awake()
+    {
+        // パケットロス時のHead-of-Lineブロッキング（敵移動のまとめて遅延）を防ぐためUnreliableデルタ同期を有効化
+        UseUnreliableDeltas = true;
+        base.Awake();
+    }
+
     protected override bool OnIsServerAuthoritative()
     {
         return true;

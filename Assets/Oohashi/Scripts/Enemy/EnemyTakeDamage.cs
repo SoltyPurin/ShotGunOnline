@@ -103,6 +103,13 @@ public class EnemyTakeDamage : NetworkBehaviour
         SetTakeDamege(chargeTime, state);
     }
 
+    public void ApplyDamageFromServerHit(float chargeTime, PlayerState state, ulong senderClientId)
+    {
+        if (!IsServer) return;
+        ResolveAttacker(senderClientId);
+        SetTakeDamege(chargeTime, state);
+    }
+
     [Rpc(SendTo.Server)]
     public void RequestMirrorDamageServerRpc(float chargeTime, RpcParams rpcParams = default)
     {
@@ -110,7 +117,7 @@ public class EnemyTakeDamage : NetworkBehaviour
         SetMirrorDamage(chargeTime);
     }
 
-    private void ResolveAttacker(ulong senderClientId)
+    public void ResolveAttacker(ulong senderClientId)
     {
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.ConnectedClients.TryGetValue(senderClientId, out var client))
         {
@@ -352,16 +359,17 @@ public class EnemyTakeDamage : NetworkBehaviour
 
         _isDead = true;
 
-        SoulKeep soul = _lastAttackerPlayer.GetComponent<SoulKeep>();
-        if(soul != null)
+        GameObject attacker = _lastAttackerPlayer != null ? _lastAttackerPlayer : GetTargetPlayer();
+        SoulKeep soul = attacker != null ? attacker.GetComponent<SoulKeep>() : null;
+        if (soul != null)
         {
             //ソウルが直接触れて入手する形式だとバグった時にソウルが獲得できないため、直接付与する仕組みにする
             soul.CollectCoin();
         }
         if (_shouldDropCoin && _playerCoinDrop != null)
         {
-            bool isPlayerSoulGot = _lastAttackerPlayer;
-            _playerCoinDrop.CoinDrop(1,isPlayerSoulGot, GetTargetPlayer());
+            bool isPlayerSoulGot = soul != null;
+            _playerCoinDrop.CoinDrop(1, isPlayerSoulGot, attacker);
         }
 
         PlayDeathEffectsClientRpc(_shouldDropCoin);

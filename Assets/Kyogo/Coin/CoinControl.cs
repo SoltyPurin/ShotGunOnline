@@ -72,12 +72,12 @@ public class CoinControl : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        // 追従移動はクライアント側で完全ローカル計算するため、NetworkTransformの強制位置上書きを無効化
-        //var netTransform = GetComponent<NetworkTransform>();
-        //if (netTransform != null)
-        //{
-        //    netTransform.enabled = false;
-        //}
+        // 追従移動はクライアント側で完全ローカル計算するため、NetworkTransformの強制位置上書きと帯域消費を無効化
+        var netTransform = GetComponent<NetworkTransform>();
+        if (netTransform != null)
+        {
+            netTransform.enabled = false;
+        }
 
         if (_playerObj == null)
         {
@@ -174,6 +174,12 @@ public class CoinControl : NetworkBehaviour
         if (distance <= _disappearDistance)
         {
             _hasAbsorbed = true;
+
+            // クライアント側でもDespawn到着を待たず到達瞬間に即座に非表示化（回収ラグの解消）
+            foreach (var sr in GetComponentsInChildren<SpriteRenderer>())
+            {
+                sr.enabled = false;
+            }
 
             var playerNetObj = _playerObj.GetComponent<NetworkObject>() ?? _playerObj.GetComponentInParent<NetworkObject>();
 

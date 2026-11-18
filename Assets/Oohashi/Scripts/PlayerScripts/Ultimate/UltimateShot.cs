@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class UltimateShot : MonoBehaviour
@@ -22,10 +23,13 @@ public class UltimateShot : MonoBehaviour
     private GameObject _destroyEffect = default;
 
     private readonly string ARMORTAGNAME = "Armor";
+    private readonly string MEDIUMARMORTAGNAME = "MediumArmor";
     private readonly string STONETAGNAME = "Stone";
     private readonly string BOSSTAGNAME = "Boss";
     private readonly string ENEMYBULLETTAGNAME = "EnemyBullet";
     private readonly string MIRRORBULLETTAGNAME = "MirrorBullet";
+
+    private readonly HashSet<GameObject> _hitTargets = new HashSet<GameObject>();
 
     [SerializeField, Header("反射弾に与える力")]
     private float _giveForceOfMirroBullet = 1.4f;
@@ -55,14 +59,28 @@ public class UltimateShot : MonoBehaviour
     public void UltimateShotProtocol()
     {
         if (_ultBloom != null) _ultBloom.UseUltimate();
+        if (_playerAiming == null) return;
 
         //判定内にいたオブジェクト全てを一旦収容
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _radius);
+        _hitTargets.Clear();
 
         foreach (Collider2D hit in hits)
         {
+            if (hit == null || hit.gameObject == this.gameObject || hit.transform.IsChildOf(this.transform))
+            {
+                continue;
+            }
+
+            NetworkObject parentNetObj = hit.GetComponentInParent<NetworkObject>();
+            GameObject hitObject = parentNetObj != null ? parentNetObj.gameObject : hit.gameObject;
+            if (hitObject == this.gameObject || !_hitTargets.Add(hitObject))
+            {
+                continue;
+            }
+
             //ターゲットのいる方向
-            Vector2 directionToTarget = (hit.transform.position - transform.position).normalized;
+            Vector2 directionToTarget = (hitObject.transform.position - transform.position).normalized;
             //正面をプレイヤーの見ている方向と定める
             Vector2 forward = _playerAiming.Direction;
             //敵のいる角度を求める
@@ -70,16 +88,15 @@ public class UltimateShot : MonoBehaviour
             //ターゲットが射角(maxAngle)の中央方向±(maxAngle/2)以内にいるか判定
             if (angle <= _maxAngle / 2)
             {
-                GameObject hitObject = hit.gameObject;
-                if (hitObject.CompareTag(ARMORTAGNAME))
+                if (hitObject.CompareTag(ARMORTAGNAME) || hitObject.CompareTag(MEDIUMARMORTAGNAME))
                 {
                     ArmorHitObject(hitObject, _ultimateForce);
                 }
-                else if(hitObject.CompareTag(STONETAGNAME))
+                else if (hitObject.CompareTag(STONETAGNAME))
                 {
                     StoneHit(hitObject, _ultimateForce);
                 }
-                else if(hitObject.CompareTag(BOSSTAGNAME))
+                else if (hitObject.CompareTag(BOSSTAGNAME))
                 {
                     BossHit(hitObject, _ultimateForce);
                 }
@@ -89,9 +106,40 @@ public class UltimateShot : MonoBehaviour
                 }
                 else
                 {
-                    NormalHitObject(hitObject, _ultimateForce,true);
+                    NormalHitObject(hitObject, _ultimateForce, true);
                 }
             }
+        }
+    }
+
+    private bool IsTargetValid(GameObject hitObject, EnemyTakeDamage takeDamage = null)
+    {
+        if (hitObject == null) return false;
+        if (hitObject.TryGetComponent<NetworkObject>(out var netObj) && !netObj.IsSpawned)
+        {
+            return false;
+        }
+        if (takeDamage == null)
+        {
+            takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
+        }
+        if (takeDamage != null && takeDamage.IsDead)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private void TriggerUltImpactFeedback()
+    {
+        if (_hitStop != null)
+        {
+            _hitStop.UltHitStopMethod();
+        }
+        if (_shake != null)
+        {
+            _shake.CanShake = true;
+            StartCoroutine(ShakeStop());
         }
     }
 
@@ -130,15 +178,20 @@ public class UltimateShot : MonoBehaviour
     /// <param name="force">与える力</param>
     private void BossHit(GameObject hitObject, float force)
     {
-        EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
+        if (!IsTargetValid(hitObject, takeDamage)) return;
+
+        EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         if (knockback != null)
         {
+            // ボスはノックバック力だけ force - 0.5f、ダメージ計算は force
             knockback.RequestKnockBackServerRpc((Vector2)transform.position, force - 0.5f, false, true);
-            takeDamage.RequestTakeDamageServerRpc(force, PlayerState.Ultimate);
-            _hitStop.UltHitStopMethod();
-            _shake.CanShake = true;
-            StartCoroutine(ShakeStop());
+            if (takeDamage != null)
+            {
+                takeDamage.RequestTakeDamageServerRpc(force, PlayerState.Ultimate);
+            }
+            knockback.PredictLocalKnockBack((Vector2)transform.position, force - 0.5f, PlayerState.Ultimate, false, true);
+            TriggerUltImpactFeedback();
         }
     }
 
@@ -149,13 +202,13 @@ public class UltimateShot : MonoBehaviour
     /// <param name="force">与える力</param>
     private void StoneHit(GameObject hitObject, float force)
     {
+        if (!IsTargetValid(hitObject)) return;
+
         SetKnockBackStone stoneKnockBack = hitObject.GetComponent<SetKnockBackStone>();
-        if(stoneKnockBack != null)
+        if (stoneKnockBack != null)
         {
             stoneKnockBack.RequestKnockBackServerRpc((Vector2)transform.position, force, false, false);
-            _hitStop.UltHitStopMethod();
-            _shake.CanShake = true;
-            StartCoroutine(ShakeStop());
+            TriggerUltImpactFeedback();
         }
     }
 
@@ -164,17 +217,17 @@ public class UltimateShot : MonoBehaviour
     /// </summary>
     /// <param name="hitObject">敵のオブジェクト</param>
     /// <param name="force">与える力</param>
-    private void NormalHitObject(GameObject hitObject, float force,bool isSpecial)
+    private void NormalHitObject(GameObject hitObject, float force, bool isSpecial)
     {
-        EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
+        if (!IsTargetValid(hitObject, takeDamage)) return;
+
+        EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         if (knockback != null)
         {
-            knockback.RequestKnockBackServerRpc((Vector2)transform.position, force, false, true);
-            takeDamage.RequestTakeDamageServerRpc(force, PlayerState.Ultimate);
-            _hitStop.UltHitStopMethod();
-            _shake.CanShake = true;
-            StartCoroutine(ShakeStop());
+            knockback.RequestHitServerRpc((Vector2)transform.position, force, PlayerState.Ultimate, false, true);
+            knockback.PredictLocalKnockBack((Vector2)transform.position, force, PlayerState.Ultimate, false, true);
+            TriggerUltImpactFeedback();
         }
     }
 
@@ -185,15 +238,15 @@ public class UltimateShot : MonoBehaviour
     /// <param name="force">与える力</param>
     private void ArmorHitObject(GameObject hitObject, float force)
     {
-        ArmorKnockBack armorKnockback = hitObject.GetComponent<ArmorKnockBack>();
         ArmorTakeDamage armorTakeDamage = hitObject.GetComponent<ArmorTakeDamage>();
+        if (!IsTargetValid(hitObject, armorTakeDamage)) return;
+
+        ArmorKnockBack armorKnockback = hitObject.GetComponent<ArmorKnockBack>();
         if (armorKnockback != null)
         {
-            armorKnockback.RequestKnockBackServerRpc((Vector2)transform.position, force, false, true);
-            armorTakeDamage.RequestTakeDamageServerRpc(force, _stateManager.PlayerState);
-            _hitStop.UltHitStopMethod();
-            _shake.CanShake = true;
-            StartCoroutine(ShakeStop());
+            armorKnockback.RequestHitServerRpc((Vector2)transform.position, force, PlayerState.Ultimate, false, true);
+            armorKnockback.PredictLocalKnockBack((Vector2)transform.position, force, PlayerState.Ultimate, false, true);
+            TriggerUltImpactFeedback();
         }
     }
 
@@ -204,7 +257,7 @@ public class UltimateShot : MonoBehaviour
     private IEnumerator ShakeStop()
     {
         yield return new WaitForSecondsRealtime(1f);
-        _shake.CanShake = false;
+        if (_shake != null) _shake.CanShake = false;
     }
 
     /// <summary>
