@@ -9,6 +9,7 @@ using UnityEngine.UI;
 /// </summary>
 [DisallowMultipleComponent]
 public class UIButtonMetallicVisual : MonoBehaviour,
+    IMeshModifier,
     ISelectHandler, IDeselectHandler,
     IPointerEnterHandler, IPointerExitHandler,
     IPointerDownHandler, IPointerUpHandler,
@@ -20,6 +21,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private static readonly int RimIntensityId = Shader.PropertyToID("_RimIntensity");
     private static readonly int RimThicknessId = Shader.PropertyToID("_RimThickness");
     private static readonly int FocusAddId = Shader.PropertyToID("_FocusAdd");
+    private static readonly int UseLocalUVId = Shader.PropertyToID("_UseLocalUV");
 
     [Header("選択時の外枠・発色設定")]
     [SerializeField] private bool _useOutline = false;
@@ -43,6 +45,8 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private bool _isHovered;
     private bool _isPressed;
     private bool _initialized;
+    private bool _useLocalUV;
+    private bool _canvasChannelReady;
 
     /// <summary>
     /// 指定されたボタンに金属光沢ビジュアルを付与（既存なら取得）する
@@ -74,7 +78,14 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private void OnEnable()
     {
         EnsureInitialized();
+        EnsureCanvasTexCoord1();
         ResetVisualImmediate();
+    }
+
+    private void OnTransformParentChanged()
+    {
+        _canvasChannelReady = false;
+        EnsureCanvasTexCoord1();
     }
 
     private void OnDisable()
@@ -152,6 +163,8 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         // 金属光沢＆外枠シェーダーのインスタンスマテリアルを設定
         if (_targetImage != null)
         {
+            _useLocalUV = (_targetImage.gameObject == gameObject);
+
             Shader metallicShader = Shader.Find("UI/ModernMetallicButton");
             if (metallicShader != null)
             {
@@ -165,8 +178,58 @@ public class UIButtonMetallicVisual : MonoBehaviour,
                 _runtimeMaterial.SetFloat(ShineIntensityId, 0f);
                 _runtimeMaterial.SetFloat(RimIntensityId, 0f);
                 _runtimeMaterial.SetFloat(FocusAddId, 0f);
+                _runtimeMaterial.SetFloat(UseLocalUVId, _useLocalUV ? 1f : 0f);
                 _targetImage.material = _runtimeMaterial;
             }
+
+            EnsureCanvasTexCoord1();
+        }
+    }
+
+    private void EnsureCanvasTexCoord1()
+    {
+        if (!_useLocalUV || _targetImage == null) return;
+
+        Canvas canvas = _targetImage.canvas;
+        if (canvas != null)
+        {
+            canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
+            if (canvas.rootCanvas != null)
+            {
+                canvas.rootCanvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
+            }
+            _canvasChannelReady = true;
+        }
+
+        _targetImage.SetVerticesDirty();
+    }
+
+    public void ModifyMesh(Mesh mesh)
+    {
+    }
+
+    public void ModifyMesh(VertexHelper vh)
+    {
+        if (!isActiveAndEnabled) return;
+
+        RectTransform rt = _targetImage != null ? _targetImage.rectTransform : transform as RectTransform;
+        if (rt == null) return;
+
+        Rect rect = rt.rect;
+        if (rect.width <= 0.0001f || rect.height <= 0.0001f) return;
+
+        float invWidth = 1f / rect.width;
+        float invHeight = 1f / rect.height;
+
+        UIVertex vertex = default;
+        int count = vh.currentVertCount;
+        for (int i = 0; i < count; i++)
+        {
+            vh.PopulateUIVertex(ref vertex, i);
+            float u = (vertex.position.x - rect.xMin) * invWidth;
+            float v = (vertex.position.y - rect.yMin) * invHeight;
+            vertex.uv1 = new Vector4(u, v, 0f, 0f);
+            vh.SetUIVertex(vertex, i);
         }
     }
 
@@ -187,6 +250,11 @@ public class UIButtonMetallicVisual : MonoBehaviour,
 
     private void Update()
     {
+        if (_useLocalUV && !_canvasChannelReady && _targetImage != null && _targetImage.canvas != null)
+        {
+            EnsureCanvasTexCoord1();
+        }
+
         float dt = Time.unscaledDeltaTime;
         if (dt <= 0f) return;
 

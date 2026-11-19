@@ -23,6 +23,8 @@ Shader "UI/ModernMetallicButton"
         [Header(Focus Color Boost)]
         _FocusAdd ("Focus Self-Add", Range(0, 1)) = 0.0
 
+        [Toggle] _UseLocalUV ("Use Local UV (TEXCOORD1)", Float) = 0
+
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
         _StencilOp ("Stencil Operation", Float) = 0
@@ -76,9 +78,10 @@ Shader "UI/ModernMetallicButton"
 
             struct appdata_t
             {
-                float4 vertex   : POSITION;
-                float4 color    : COLOR;
-                float2 texcoord : TEXCOORD0;
+                float4 vertex    : POSITION;
+                float4 color     : COLOR;
+                float2 texcoord  : TEXCOORD0;
+                float2 texcoord1 : TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -88,6 +91,7 @@ Shader "UI/ModernMetallicButton"
                 fixed4 color         : COLOR;
                 float2 texcoord      : TEXCOORD0;
                 float4 worldPosition : TEXCOORD1;
+                float2 localUV       : TEXCOORD2;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -107,6 +111,7 @@ Shader "UI/ModernMetallicButton"
             float _RimIntensity;
             float _RimThickness;
             float _FocusAdd;
+            float _UseLocalUV;
 
             v2f vert(appdata_t v)
             {
@@ -116,6 +121,7 @@ Shader "UI/ModernMetallicButton"
                 OUT.worldPosition = v.vertex;
                 OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
                 OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+                OUT.localUV = v.texcoord1;
                 OUT.color = v.color * _Color;
                 return OUT;
             }
@@ -124,8 +130,11 @@ Shader "UI/ModernMetallicButton"
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 
+                // ボタン矩形内の正規化座標 (0〜1)。MultipleスプライトやTiledでも端から端まで均一に演出する
+                float2 effectUV = (_UseLocalUV > 0.5) ? IN.localUV : IN.texcoord;
+
                 // 縦方向のメタリックグラデーション
-                fixed4 grad = lerp(_GradBottomColor, _GradTopColor, saturate(IN.texcoord.y));
+                fixed4 grad = lerp(_GradBottomColor, _GradTopColor, saturate(effectUV.y));
                 color.rgb *= grad.rgb;
 
                 // 元の明るさ（輝度）を判定：暗いボタンは加算して鮮やかに、白い/明るいボタンは少し暗くして差別化
@@ -143,7 +152,7 @@ Shader "UI/ModernMetallicButton"
                 // 斜めに走る金属光沢（シマー）
                 if (_ShineIntensity > 0.001)
                 {
-                    float diag = IN.texcoord.x * 0.75 + IN.texcoord.y * 0.25;
+                    float diag = effectUV.x * 0.75 + effectUV.y * 0.25;
                     float dist = abs(diag - _ShineProgress);
                     float shine = smoothstep(_ShineWidth, 0.0, dist);
                     float core = smoothstep(_ShineWidth * 0.35, 0.0, dist);
@@ -158,8 +167,8 @@ Shader "UI/ModernMetallicButton"
                 // 外枠ボーダー（半透明ボタンの中身は白くせず、フチだけに白/黒の枠を描く）
                 if (_RimIntensity > 0.001)
                 {
-                    float edgeX = min(IN.texcoord.x, 1.0 - IN.texcoord.x);
-                    float edgeY = min(IN.texcoord.y, 1.0 - IN.texcoord.y);
+                    float edgeX = min(effectUV.x, 1.0 - effectUV.x);
+                    float edgeY = min(effectUV.y, 1.0 - effectUV.y);
                     float edge = min(edgeX, edgeY);
                     float rim = smoothstep(_RimThickness, _RimThickness * 0.65, edge);
                     float borderAlpha = saturate(rim * _RimIntensity);
