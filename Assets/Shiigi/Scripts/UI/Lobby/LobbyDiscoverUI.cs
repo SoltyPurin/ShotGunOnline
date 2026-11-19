@@ -172,6 +172,7 @@ public class LobbyDiscoverUI : LobbyViewBase
             initialCard ??= _spawnedCards[0];
 
             _selectedCard = initialCard;
+            UpdateSelectedCardVisuals();
             ShowRoomDetail(initialCard.SessionInfo);
         }
         else
@@ -407,8 +408,20 @@ public class LobbyDiscoverUI : LobbyViewBase
     private void HandleCardSelected(ISessionInfo session, RoomCardUI card)
     {
         _selectedCard = card;
+        UpdateSelectedCardVisuals();
         ShowRoomDetail(session);
         RebuildControllerNavigation();
+    }
+
+    private void UpdateSelectedCardVisuals()
+    {
+        foreach (var spawnedCard in _spawnedCards)
+        {
+            if (spawnedCard != null)
+            {
+                spawnedCard.SetSelected(spawnedCard == _selectedCard);
+            }
+        }
     }
 
     private void HandleCardSubmitted(ISessionInfo session, RoomCardUI card)
@@ -479,6 +492,7 @@ public class LobbyDiscoverUI : LobbyViewBase
     {
         _selectedSession = null;
         _selectedCard = null;
+        UpdateSelectedCardVisuals();
 
         if (_detailRoomNameText != null) _detailRoomNameText.text = "-";
         if (_detailPlayerCountText != null) _detailPlayerCountText.text = "- / -";
