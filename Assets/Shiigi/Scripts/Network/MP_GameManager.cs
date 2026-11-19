@@ -251,6 +251,9 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         SetState(GameState.Playing);
         Debug.Log("[MP_GameManager] ムービー終了。ゲーム開始！");
 
+        // 自プレイヤーの操作を先に解禁（後続のウェーブ開始処理で例外が起きても操作不能のまま残らないようにする）
+        _localPlayerLocker.FindAndUnlockLocalPlayer();
+
         // ホスト/サーバー側のみウェーブ開始を実行
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
         {
@@ -266,9 +269,6 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
                 Debug.LogWarning("[MP_GameManager] WaveManager が見つかりません。");
             }
         }
-
-        // 自プレイヤーの操作を解禁
-        _localPlayerLocker.FindAndUnlockLocalPlayer();
     }
 
     public void OnWaitingForPlayers()

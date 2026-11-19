@@ -21,25 +21,40 @@ public class PlayerStateManager : NetworkBehaviour
             NetworkVariableWritePermission.Owner
         );
 
+    private PlayerState _localState = PlayerState.Normal;
+
     public PlayerState PlayerState
     {
-        get { return _playerState.Value; }
+        get { return IsLocalControl ? _localState : _playerState.Value; }
     }
 
     private bool IsLocalControl => IsOwner || !IsSpawned;
 
-    //private void Update()
-    //{
-    //    Debug.Log(_playerState);
-    //}
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (IsOwner)
+        {
+            _playerState.Value = _localState;
+        }
+    }
+
+    private void ApplyState(PlayerState nextState)
+    {
+        if (!IsLocalControl) return;
+        _localState = nextState;
+        if (IsSpawned && IsOwner && _playerState.Value != nextState)
+        {
+            _playerState.Value = nextState;
+        }
+    }
 
     /// <summary>
     /// ウルトのステートに切り替え
     /// </summary>
     public void UltimateState()
     {
-        if (!IsLocalControl) return;
-        _playerState.Value = PlayerState.Ultimate;
+        ApplyState(PlayerState.Ultimate);
     }
 
     /// <summary>
@@ -47,8 +62,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void NormalState()
     {
-        if (!IsLocalControl) return;
-        _playerState.Value = PlayerState.Normal;
+        ApplyState(PlayerState.Normal);
     }
 
     /// <summary>
@@ -56,8 +70,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void FallState()
     {
-        if (!IsLocalControl) return;
-        _playerState.Value = PlayerState.Fall;
+        ApplyState(PlayerState.Fall);
     }
 
     /// <summary>
@@ -65,8 +78,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void KnockBackingState()
     {
-        if (!IsLocalControl) return;
-        _playerState.Value = PlayerState.KnockBack;
+        ApplyState(PlayerState.KnockBack);
     }
 
     /// <summary>
@@ -74,8 +86,7 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void DamageKnockBackState()
     {
-        if (!IsLocalControl) return;
-        _playerState.Value = PlayerState.DamageKnockBack;
+        ApplyState(PlayerState.DamageKnockBack);
     }
 
     /// <summary>
@@ -83,7 +94,6 @@ public class PlayerStateManager : NetworkBehaviour
     /// </summary>
     public void MovieState()
     {
-        if (!IsLocalControl) return;
-        _playerState.Value = PlayerState.Movie;
+        ApplyState(PlayerState.Movie);
     }
 }

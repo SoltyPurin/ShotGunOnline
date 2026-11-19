@@ -140,6 +140,11 @@ public class SessionDisconnectHandler
             TryCacheDialogFromScene();
             await _cleanupSessionAsync();
 
+            if (_isApplicationQuitting || SceneManager.GetActiveScene().name == _titleSceneName)
+            {
+                return;
+            }
+
             if (_canvasObj != null)
             {
                 _canvasObj.SetActive(true);

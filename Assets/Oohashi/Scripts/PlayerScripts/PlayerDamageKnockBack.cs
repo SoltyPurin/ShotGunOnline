@@ -295,6 +295,27 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     }
 
     /// <summary>
+    /// サーバー側で敵の爆発等が命中した際、対象プレイヤーのOwner端末へ確実に被弾ノックバックを適用する
+    /// </summary>
+    public void ApplyServerExplosionHit(Vector3 direction, float power)
+    {
+        if (IsOwner || !IsSpawned)
+        {
+            SetDirection(direction, power, null);
+        }
+        else if (IsServer)
+        {
+            TakeDamageOwnerRpc(direction, power);
+        }
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void TakeDamageOwnerRpc(Vector3 direction, float power)
+    {
+        SetDirection(direction, power, null);
+    }
+
+    /// <summary>
     /// サーバー側で敵の弾や爆発がクライアントに命中した際、クライアント実機上でダメージ処理を実行させるRPC
     /// </summary>
     [ClientRpc]

@@ -18,6 +18,9 @@ public class SoulGraduallyMoveToPlayer : MonoBehaviour
 
     private readonly string PLAYER_TAG = "Player";
     private NetworkObject _networkObject;
+    private GameObject _cachedTargetPlayer;
+    private float _retargetTimer = 0f;
+    private const float RETARGET_INTERVAL = 0.2f;
 
     private void Awake()
     {
@@ -40,13 +43,30 @@ public class SoulGraduallyMoveToPlayer : MonoBehaviour
     {
         if (!_isActive) return;
 
-        // シーン内の全プレイヤーから最寄りのプレイヤーを探索（ローカルプレイヤーを優先）
+        Vector2 curPos = transform.position;
+        _retargetTimer -= Time.fixedDeltaTime;
+
+        if (_retargetTimer <= 0f || _cachedTargetPlayer == null || !_cachedTargetPlayer.activeInHierarchy)
+        {
+            _retargetTimer = RETARGET_INTERVAL;
+            _cachedTargetPlayer = FindBestTargetPlayer(curPos);
+        }
+
+        if (_cachedTargetPlayer != null && Vector2.Distance(curPos, _cachedTargetPlayer.transform.position) <= _chaseRange)
+        {
+            Vector2 targetPos = _cachedTargetPlayer.transform.position;
+            Vector2 direction = (targetPos - curPos).normalized;
+            transform.position += (Vector3)direction * _coinMoveSpeed * Time.fixedDeltaTime;
+        }
+    }
+
+    private GameObject FindBestTargetPlayer(Vector2 curPos)
+    {
         GameObject[] players = GameObject.FindGameObjectsWithTag(PLAYER_TAG);
-        if (players == null || players.Length == 0) return;
+        if (players == null || players.Length == 0) return null;
 
         GameObject targetPlayer = null;
         float minDistance = float.MaxValue;
-        Vector2 curPos = transform.position;
 
         foreach (var p in players)
         {
@@ -58,8 +78,7 @@ public class SoulGraduallyMoveToPlayer : MonoBehaviour
             // 自機（ローカルプレイヤー）が範囲内にいれば最優先で吸い寄せる
             if (netObj != null && netObj.IsLocalPlayer && dist <= _chaseRange)
             {
-                targetPlayer = p;
-                break;
+                return p;
             }
 
             if (dist < minDistance)
@@ -69,11 +88,6 @@ public class SoulGraduallyMoveToPlayer : MonoBehaviour
             }
         }
 
-        if (targetPlayer != null && Vector2.Distance(curPos, targetPlayer.transform.position) <= _chaseRange)
-        {
-            Vector2 targetPos = targetPlayer.transform.position;
-            Vector2 direction = (targetPos - curPos).normalized;
-            transform.position += (Vector3)direction * _coinMoveSpeed * Time.fixedDeltaTime;
-        }
+        return targetPlayer;
     }
 }

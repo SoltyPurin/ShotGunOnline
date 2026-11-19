@@ -23,6 +23,7 @@ public class FloorOasis : MonoBehaviour
     private bool _isTaked = false;
     private int _currentObservationIndex = 0;
     private bool _initialFloorSpawned = false;
+    private bool _suppressDestroyOnDisable = false;
 
     private bool IsServerAuthority =>
         NetworkManager.Singleton != null &&
@@ -34,8 +35,31 @@ public class FloorOasis : MonoBehaviour
         TrySpawnInitialFloor();
     }
 
+    /// <summary>
+    /// シーン遷移時のアンロード中に Despawn/Destroy を起こさないよう事前に停止・非表示化する
+    /// </summary>
+    public void PrepareForSceneTransition()
+    {
+        _suppressDestroyOnDisable = true;
+        enabled = false;
+
+        if (_currentFloorObject != null)
+        {
+            foreach (var sr in _currentFloorObject.GetComponentsInChildren<SpriteRenderer>(true))
+            {
+                if (sr != null) sr.enabled = false;
+            }
+        }
+    }
+
     private void OnDisable()
     {
+        if (_suppressDestroyOnDisable || !gameObject.scene.isLoaded)
+        {
+            _currentFloorObject = null;
+            _initialFloorSpawned = false;
+            return;
+        }
         DespawnCurrentFloor();
     }
 

@@ -4,13 +4,13 @@ using System.Collections;
 
 public class ClearFunctionBaseClass : NetworkBehaviour
 {
-    [Header("‚±‚ÌƒIƒuƒWƒFƒNƒg‚Íâ‘Î‚ÉPlateParentƒIƒuƒWƒFƒNƒg‚ÌqƒIƒuƒWƒFƒNƒg‚É‚µ‚Ä‚­‚¾‚³‚¢")]
-    [Header("â‘Î‚É‚±‚ÌƒIƒuƒWƒFƒNƒg‚ÉNetworkObjectƒNƒ‰ƒX‚ğƒAƒ^ƒbƒ`‚µ‚È‚¢‚Å‚­‚¾‚³‚¢")]
-    [Header("‚à‚µNetworkObject‚ğƒAƒ^ƒbƒ`‚µ‚Ä‚µ‚Ü‚Á‚½‚çâ‘Î‚Éíœ‚µ‚Ä‚­‚¾‚³‚¢")]
+    [Header("ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯çµ¶å¯¾ã«PlateParentã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã—ã¦ãã ã•ã„")]
+    [Header("çµ¶å¯¾ã«ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«NetworkObjectã‚¯ãƒ©ã‚¹ã‚’ã‚¢ã‚¿ãƒƒãƒã—ãªã„ã§ãã ã•ã„")]
+    [Header("ã‚‚ã—NetworkObjectã‚’ã‚¢ã‚¿ãƒƒãƒã—ã¦ã—ã¾ã£ãŸã‚‰çµ¶å¯¾ã«å‰Šé™¤ã—ã¦ãã ã•ã„")]
     [Space(10)]
     [SerializeField] private bool _dummy;
 
-    [SerializeField, Header("“¥‚Ü‚ê‚½Œã‰½•b‚ÅÁ‚¦‚é‚©")]
+    [SerializeField, Header("è¸ã¾ã‚ŒãŸå¾Œä½•ç§’ã§æ¶ˆãˆã‚‹ã‹")]
     private float _deactiveTime = 3;
 
     private float _saveTheDeactiveTime = 0;
@@ -20,16 +20,16 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     private NetworkVariable<bool> _isStepOn = new NetworkVariable<bool>();
 
 
-    [SerializeField, Header("ƒNƒŠƒA‚µ‚½‚çÁ‚¦‚éƒIƒuƒWƒFƒNƒgH")]
+    [SerializeField, Header("ã‚¯ãƒªã‚¢ã—ãŸã‚‰æ¶ˆãˆã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼Ÿ")]
     private bool _isClearedVanishObj = false;
 
-    [SerializeField,Header("o‚Ä‚«‚½‚ç°‚É‚È‚éƒIƒuƒWƒFƒNƒgH")]
+    [SerializeField,Header("å‡ºã¦ããŸã‚‰åºŠã«ãªã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼Ÿ")]
     private bool _isFloorObject = false;
 
-    [SerializeField, Header("(Š´ˆ³”Â‚Æ“¯Šú‚³‚¹‚Ä“®‚©‚µ‚½‚¢ê‡)“¯Šú‚·‚éŠ´ˆ³”Â")]
+    [SerializeField, Header("(æ„Ÿåœ§æ¿ã¨åŒæœŸã•ã›ã¦å‹•ã‹ã—ãŸã„å ´åˆ)åŒæœŸã™ã‚‹æ„Ÿåœ§æ¿")]
     private DetectOnPlayer _pressurePlate = default;
 
-    [SerializeField, Header("(ƒLƒƒƒ“ƒhƒ‹‚Æ“¯Šú‚³‚¹‚Ä“®‚©‚µ‚½‚¢ê‡)“¯Šú‚·‚éƒLƒƒƒ“ƒhƒ‹")]
+    [SerializeField, Header("(ã‚­ãƒ£ãƒ³ãƒ‰ãƒ«ã¨åŒæœŸã•ã›ã¦å‹•ã‹ã—ãŸã„å ´åˆ)åŒæœŸã™ã‚‹ã‚­ãƒ£ãƒ³ãƒ‰ãƒ«")]
     private CandleTakeFire _candle = default;
 
     private SpriteRenderer _sprite = default;
@@ -38,13 +38,13 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        //Š´ˆ³”Â‚Æ“¯Šú‚³‚¹‚éƒIƒuƒWƒFƒNƒg‚Ìê‡‚ÍŒöŠJ‚µ‚Ä‚ ‚ébool‚ğw“Ç‚·‚é
+        //æ„Ÿåœ§æ¿ã¨åŒæœŸã•ã›ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å ´åˆã¯å…¬é–‹ã—ã¦ã‚ã‚‹boolã‚’è³¼èª­ã™ã‚‹
         if (_pressurePlate != null)
         {
             _pressurePlate.OnPlayerOnPlate += SyncGimmickFunction;
         }
 
-        //ƒLƒƒƒ“ƒhƒ‹‚Æ“¯Šú‚³‚¹‚éƒIƒuƒWƒFƒNƒg‚Ìê‡‚à“¯‚¶‚­
+        //ã‚­ãƒ£ãƒ³ãƒ‰ãƒ«ã¨åŒæœŸã•ã›ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å ´åˆã‚‚åŒã˜ã
         if(_candle != null)
         {
             _candle.IsCandleTakeFire += SyncGimmickFunction;
@@ -60,11 +60,30 @@ public class ClearFunctionBaseClass : NetworkBehaviour
             _pressurePlate.OnPlayerOnPlate -= SyncGimmickFunction;
         }
 
-        if(_candle != null)
+        if (_candle != null)
         {
             _candle.IsCandleTakeFire -= SyncGimmickFunction;
         }
 
+        StopDeactiveCoroutine();
+        if (_sprite != null) _sprite.enabled = false;
+        if (_collider != null) _collider.enabled = false;
+    }
+
+    private void OnDisable()
+    {
+        StopDeactiveCoroutine();
+        if (_sprite != null) _sprite.enabled = false;
+        if (_collider != null) _collider.enabled = false;
+    }
+
+    private void StopDeactiveCoroutine()
+    {
+        if (_deactiveCoroutine != null)
+        {
+            StopCoroutine(_deactiveCoroutine);
+            _deactiveCoroutine = null;
+        }
     }
 
     private void Awake()
@@ -82,11 +101,11 @@ public class ClearFunctionBaseClass : NetworkBehaviour
 
     }
     /// <summary>
-    /// Š´ˆ³”Â‚ª‘S•”‰Ÿ‚³‚ê‚½‚Éì“®‚·‚éƒƒ\ƒbƒh
+    /// æ„Ÿåœ§æ¿ãŒå…¨éƒ¨æŠ¼ã•ã‚ŒãŸæ™‚ã«ä½œå‹•ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public virtual void Function()
     {
-        // ƒT[ƒo[‚©‚ç‘SƒNƒ‰ƒCƒAƒ“ƒg’[––‚ÖÀs‚ğŒÄ‚Ñ‚©‚¯‚é
+        // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç«¯æœ«ã¸å®Ÿè¡Œã‚’å‘¼ã³ã‹ã‘ã‚‹
         if (IsServer)
         {
             FunctionClientRpc();
@@ -94,7 +113,7 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     }
 
     /// <summary>
-    /// ‘S’[––iƒzƒXƒgEƒNƒ‰ƒCƒAƒ“ƒgj‚ÅˆêÄ‚ÉÁ‹/oŒ»ˆ—‚ğÀs‚·‚é ClientRpc
+    /// å…¨ç«¯æœ«ï¼ˆãƒ›ã‚¹ãƒˆãƒ»ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆï¼‰ã§ä¸€æ–‰ã«æ¶ˆå»/å‡ºç¾å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ ClientRpc
     /// </summary>
     [ClientRpc]
     private void FunctionClientRpc()
@@ -104,13 +123,13 @@ public class ClearFunctionBaseClass : NetworkBehaviour
 
     private void ExecuteFunction()
     {
-        // ƒNƒŠƒA‚µ‚½‚ÉÁ‚¦‚éƒIƒuƒWƒFƒNƒg‚¾‚Á‚½‚çƒXƒvƒ‰ƒCƒg‚ÆƒRƒ‰ƒCƒ_[‚ğ–³Œø‰»
+        // ã‚¯ãƒªã‚¢ã—ãŸæ™‚ã«æ¶ˆãˆã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã ã£ãŸã‚‰ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã¨ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’ç„¡åŠ¹åŒ–
         if (_isClearedVanishObj)
         {
             _sprite.enabled = false;
             _collider.enabled = false;
         }
-        // ‚»‚¤‚Å‚È‚¯‚ê‚ÎoŒ»
+        // ãã†ã§ãªã‘ã‚Œã°å‡ºç¾
         else
         {
             if (_isFloorObject)
@@ -123,22 +142,20 @@ public class ClearFunctionBaseClass : NetworkBehaviour
         }
     }
     /// <summary>
-    /// “Á’è‚ÌŠ´ˆ³”Â‚ª‰Ÿ‚³‚ê‚½“™‚Éì“®‚·‚éƒƒ\ƒbƒh
+    /// ç‰¹å®šã®æ„Ÿåœ§æ¿ãŒæŠ¼ã•ã‚ŒãŸæ™‚ç­‰ã«ä½œå‹•ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     /// <param name="isPress"></param>
     public virtual void SyncGimmickFunction(bool isPress)
     {
+        if (!enabled || !IsSpawned) return;
+
         if (isPress)
         {
             _saveTheDeactiveTime = _deactiveTime;
-            // “¥‚Ü‚ê‚½‚ç“_–Åˆ—‚ğ’â~
-            if (_deactiveCoroutine != null)
-            {
-                StopCoroutine(_deactiveCoroutine);
-                _deactiveCoroutine = null;
-            }
+            // è¸ã¾ã‚ŒãŸã‚‰ç‚¹æ»…å‡¦ç†ã‚’åœæ­¢
+            StopDeactiveCoroutine();
 
-            // ƒIƒuƒWƒFƒNƒg‚ğ•\¦
+            // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¡¨ç¤º
             if (!_isClearedVanishObj)
             {
                 _sprite.enabled = true;
@@ -152,7 +169,7 @@ public class ClearFunctionBaseClass : NetworkBehaviour
         }
         else
         {
-            // —£‚ê‚½‚ç“_–ÅEÁ–Åˆ—‚ğŠJn
+            // é›¢ã‚ŒãŸã‚‰ç‚¹æ»…ãƒ»æ¶ˆæ»…å‡¦ç†ã‚’é–‹å§‹
             if (_deactiveCoroutine != null)
             {
                 StopCoroutine(_deactiveCoroutine);
@@ -163,7 +180,7 @@ public class ClearFunctionBaseClass : NetworkBehaviour
     }
     private IEnumerator DeactiveProtocol()
     {
-        //Œo‰ßŠÔ
+        //çµŒéæ™‚é–“
         float elapsed = 0f;
         float startInterval = 0.2f;
         float minInterval = 0.03f;
@@ -171,9 +188,15 @@ public class ClearFunctionBaseClass : NetworkBehaviour
 
         while (elapsed < _saveTheDeactiveTime)
         {
+            if (!enabled || !IsSpawned || _sprite == null)
+            {
+                _deactiveCoroutine = null;
+                yield break;
+            }
+
             _sprite.enabled = !_sprite.enabled;
 
-            // c‚èŠÔ‚É‰‚¶‚Ä“_–ÅŠÔŠu‚ğ’Z‚­‚·‚é
+            // æ®‹ã‚Šæ™‚é–“ã«å¿œã˜ã¦ç‚¹æ»…é–“éš”ã‚’çŸ­ãã™ã‚‹
             float progress = elapsed / _saveTheDeactiveTime;
 
             float blinkInterval = Mathf.Lerp(
@@ -182,7 +205,7 @@ public class ClearFunctionBaseClass : NetworkBehaviour
                 progress
             );
 
-            // ÅŒã‚Ì‘Ò‹@‚Åİ’èŠÔ‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
+            // æœ€å¾Œã®å¾…æ©Ÿã§è¨­å®šæ™‚é–“ã‚’è¶…ãˆãªã„ã‚ˆã†ã«ã™ã‚‹
             float waitTime = Mathf.Min(
                 blinkInterval,
                 _saveTheDeactiveTime - elapsed
@@ -199,16 +222,16 @@ public class ClearFunctionBaseClass : NetworkBehaviour
             //blinkInterval -= intervalMinusTime;
         }
 
-        // ÅŒã‚ÉŠ®‘S‚É”ñ•\¦‚É‚·‚é
-        _sprite.enabled = false;
-        _collider.enabled = false;
+        // æœ€å¾Œã«å®Œå…¨ã«éè¡¨ç¤ºã«ã™ã‚‹
+        if (_sprite != null) _sprite.enabled = false;
+        if (_collider != null) _collider.enabled = false;
 
         _deactiveCoroutine = null;
     }
     [ClientRpc]
     private void SyncGimmickFunctionClientRpc(bool isPress)
     {
-        //‰Ÿ‚³‚ê‚½
+        //æŠ¼ã•ã‚ŒãŸæ™‚
         if (isPress)
         {
             if (_isClearedVanishObj)
@@ -226,7 +249,7 @@ public class ClearFunctionBaseClass : NetworkBehaviour
                 _collider.enabled = true;
             }
         }
-        //—£‚µ‚½‚Æ‚«
+        //é›¢ã—ãŸã¨ã
         else
         {
             if (_isClearedVanishObj)

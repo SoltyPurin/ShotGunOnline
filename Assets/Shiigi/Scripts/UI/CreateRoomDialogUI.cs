@@ -236,7 +236,9 @@ public class CreateRoomDialogUI : LobbyViewBase
             _advancedSettingsButton.onClick.AddListener(ToggleAdvancedSettings);
         }
 
+        _utcs?.TrySetCanceled();
         _utcs = new UniTaskCompletionSource<CreateRoomResult>();
+        var utcs = _utcs;
 
         // 決定ボタンが押されたとき
         _confirmCreateButton.onClick.AddListener(() =>
@@ -259,8 +261,15 @@ public class CreateRoomDialogUI : LobbyViewBase
             CloseAndSetResult(new CreateRoomResult { IsCanceled = true }).Forget();
         });
 
-        // フェード＆ポップアニメーションを表示
-        await base.ShowAsync();
+        // フェード＆ポップアニメーションを表示（演出がキャンセルされても結果待ちは継続する）
+        try
+        {
+            await base.ShowAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            // 表示演出のキャンセルは無視し、結果の確定を待つ
+        }
 
         if (EventSystem.current != null)
         {
@@ -273,17 +282,39 @@ public class CreateRoomDialogUI : LobbyViewBase
             }
         }
 
-        return await _utcs.Task;
+        return await utcs.Task;
     }
 
     private async UniTaskVoid CloseAndSetResult(CreateRoomResult result)
     {
+        if (_utcs == null) return;
+        var utcs = _utcs;
+        _utcs = null;
+
         if (_blocker != null)
         {
             _blocker.SetActive(false);
         }
-        await HideAsync();
-        _utcs?.TrySetResult(result);
+
+        try
+        {
+            await HideAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            // 非表示演出がキャンセル・破棄された場合でも結果は必ず確定させる
+        }
+        finally
+        {
+            utcs.TrySetResult(result);
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        _utcs?.TrySetCanceled();
+        _utcs = null;
+        base.OnDestroy();
     }
 
     private void ToggleAdvancedSettings()
@@ -455,6 +486,14 @@ public class CreateRoomDialogUI : LobbyViewBase
     /// </summary>
     private int GetMaxPlayersFromDropdown(int index)
     {
+        if (_maxPlayerOptions == null || _maxPlayerOptions.Count == 0)
+        {
+            return 4;
+        }
+        if (index < 0 || index >= _maxPlayerOptions.Count)
+        {
+            return _maxPlayerOptions[0];
+        }
         return _maxPlayerOptions[index];
     }
 

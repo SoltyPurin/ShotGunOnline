@@ -43,6 +43,7 @@ public class NetworkPlayerSpawner
 
     public void RegisterPlayer(NetworkObject player)
     {
+        _players.RemoveAll(p => p == null || !p.IsSpawned);
         if (player != null && !_players.Contains(player))
         {
             _players.Add(player);
@@ -66,6 +67,8 @@ public class NetworkPlayerSpawner
             Debug.LogError("[MP_GameManager] _playerPrefab がインスペクターで設定されていません！");
             return;
         }
+
+        _players.RemoveAll(p => p == null || !p.IsSpawned);
 
         var clients = networkManager.ConnectedClientsList;
         int index = 0;
@@ -99,6 +102,12 @@ public class NetworkPlayerSpawner
 
             GameObject playerObj = Object.Instantiate(_playerPrefab, pos, rot);
             var netObj = playerObj.GetComponent<NetworkObject>();
+            if (netObj == null)
+            {
+                Debug.LogError("[MP_GameManager] _playerPrefab に NetworkObject コンポーネントが付いていません！");
+                Object.Destroy(playerObj);
+                continue;
+            }
 
             // クライアントの所有権を付与してネットワーク上にスポーン
             netObj.SpawnAsPlayerObject(client.ClientId, destroyWithScene: true);

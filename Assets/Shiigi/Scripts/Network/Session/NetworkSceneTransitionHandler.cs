@@ -152,6 +152,13 @@ public class NetworkSceneTransitionHandler
         // サーバー（ホスト）自身はStartMultiplayGameで直接開始しているため無視
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer) return;
 
+        // ゲーム開始通知はホスト（サーバー）からのもののみ受け付ける
+        if (senderClientId != NetworkManager.ServerClientId)
+        {
+            Debug.LogWarning($"[MSM] ホスト以外からのゲーム開始通知を破棄しました (Sender: {senderClientId})");
+            return;
+        }
+
         Debug.Log($"[MSM] ホストからのゲーム開始通知を受信しました (Sender: {senderClientId})");
         NotifyGameStartingOnce();
     }

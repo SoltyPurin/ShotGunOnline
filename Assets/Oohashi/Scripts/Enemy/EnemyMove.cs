@@ -81,6 +81,15 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
     private bool _isClientKnockbackPending = false;
     private float _clientKnockbackTimer = 0f;
     private const float CLIENT_KNOCKBACK_TIMEOUT = 0.5f;
+    private const float CLIENT_PREDICTION_MAX_DURATION = 0.15f;
+
+    // クライアント先行ノックバック移動予測（RTT中の前進食い込み・手応え遅延を解消）
+    private bool _hasKnockbackPrediction = false;
+    private float _predictionElapsed = 0f;
+    private Vector2 _predictedKnockbackDir = Vector2.zero;
+    private float _predictedKnockbackForce = 0f;
+    private float _predictedKnockbackDecel = 0.5f;
+    private static readonly RaycastHit2D[] _predictWallHits = new RaycastHit2D[4];
 
     // 直前フレームでサーバー制御中だったか（復帰スナップ用）
     private bool _wasServerControlled = false;
@@ -120,6 +129,20 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         {
             _rigidBody.linearVelocity = Vector2.zero;
         }
+    }
+
+    /// <summary>
+    /// 攻撃したクライアント端末上でRTT待機なしにノックバック初速・硬直を即時予測反映する
+    /// </summary>
+    public void OnKnockBackPredicted(Vector2 blowDirection, float initialForce, float deceleration)
+    {
+        if (IsServer) return;
+        OnKnockBackStarted();
+        _hasKnockbackPrediction = true;
+        _predictionElapsed = 0f;
+        _predictedKnockbackDir = blowDirection;
+        _predictedKnockbackForce = Mathf.Max(0f, initialForce);
+        _predictedKnockbackDecel = Mathf.Max(0.05f, deceleration);
     }
 
     public void ChangeFloat(bool value)
@@ -181,6 +204,7 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
             if (_enemyState.Value == EnemyState.knockback || _clientKnockbackTimer <= 0f)
             {
                 _isClientKnockbackPending = false;
+                _hasKnockbackPrediction = false;
             }
         }
 
@@ -190,6 +214,34 @@ public class EnemyMove : Unity.Netcode.NetworkBehaviour
         if (serverControlled)
         {
             _wasServerControlled = true;
+
+            // サーバー側がノックバック処理を開始するまでのRTT（約50〜120ms）の間は、
+            // 古い前進中のServerPositionに引っ張られずローカル予測速度（またはヒットストップ静止）を適用する
+            if (_isClientKnockbackPending && _hasKnockbackPrediction && _predictionElapsed < CLIENT_PREDICTION_MAX_DURATION)
+            {
+                _predictionElapsed += Time.fixedDeltaTime;
+                if (_predictedKnockbackForce > 0f)
+                {
+                    float stepDist = _predictedKnockbackForce * Time.fixedDeltaTime;
+                    int hitCount = Physics2D.Raycast(curPos, _predictedKnockbackDir, ContactFilter2D.noFilter, _predictWallHits, stepDist + 0.4f);
+                    for (int i = 0; i < hitCount; i++)
+                    {
+                        Collider2D col = _predictWallHits[i].collider;
+                        if (col != null && !col.isTrigger && col.CompareTag("Wall"))
+                        {
+                            _predictedKnockbackForce *= 0.2f;
+                            stepDist = Mathf.Max(0f, _predictWallHits[i].distance - 0.4f);
+                            break;
+                        }
+                    }
+
+                    Vector2 nextPos = (Vector2)curPos + _predictedKnockbackDir * stepDist;
+                    transform.position = new Vector3(nextPos.x, nextPos.y, curPos.z);
+                    _predictedKnockbackForce = Mathf.Max(0f, _predictedKnockbackForce - _predictedKnockbackDecel);
+                }
+                return;
+            }
+
             // ノックバック中などは高速でサーバー位置に食らいつく
             float rate = isKnockback ? CLIENT_FOLLOW_RATE : 25f;
             float follow = 1f - Mathf.Exp(-rate * Time.fixedDeltaTime);

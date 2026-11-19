@@ -44,6 +44,22 @@ public class MP_OpeningSyncManager : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
+        if (_serverTimeoutCoroutine != null)
+        {
+            StopCoroutine(_serverTimeoutCoroutine);
+            _serverTimeoutCoroutine = null;
+        }
+
+        if (_clientWaitCoroutine != null)
+        {
+            StopCoroutine(_clientWaitCoroutine);
+            _clientWaitCoroutine = null;
+        }
+
+        _pendingClients.Clear();
+        _onAllReady = null;
+        _openingBegun = false;
+
         if (IsServer && NetworkManager != null)
         {
             NetworkManager.OnClientDisconnectCallback -= HandleClientDisconnected;
@@ -111,6 +127,8 @@ public class MP_OpeningSyncManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void ReportReadyRpc(RpcParams rpcParams = default)
     {
+        if (!IsServer || !_openingBegun) return;
+
         ulong senderId = rpcParams.Receive.SenderClientId;
         if (_pendingClients.Remove(senderId))
         {
@@ -134,6 +152,7 @@ public class MP_OpeningSyncManager : NetworkBehaviour
         }
 
         _clientWaitCoroutine = null;
+        if (!IsSpawned || NetworkManager == null || !NetworkManager.IsListening) yield break;
         ReportReadyRpc();
     }
 

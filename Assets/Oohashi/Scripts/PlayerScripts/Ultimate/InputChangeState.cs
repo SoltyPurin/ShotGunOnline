@@ -101,13 +101,13 @@ public class InputChangeState : NetworkBehaviour
             //ウルトを使用してないとき
             if (!_canUseUltimate)
             {
-                _flashAnimator.SetTrigger("Flash");
-                _seScript.PlayCanUseUltSound();
+                if (_flashAnimator != null) _flashAnimator.SetTrigger("Flash");
+                if (_seScript != null) _seScript.PlayCanUseUltSound();
             }
             _canUseUltimate = true;
 
 
-            if (!_canUltAura.activeInHierarchy && !_ultimateActive)
+            if (_canUltAura != null && !_canUltAura.activeInHierarchy && !_ultimateActive)
             {
                 _canUltAura.SetActive(true);
             }
@@ -116,7 +116,7 @@ public class InputChangeState : NetworkBehaviour
         {
             _canUseUltimate = false;
             _ultimateActive = false;
-            _canUltAura.SetActive(false);
+            if (_canUltAura != null) _canUltAura.SetActive(false);
             ToNormalAnimation();
             _stateManager.NormalState();
         }
@@ -176,6 +176,40 @@ public class InputChangeState : NetworkBehaviour
     /// </summary>
     public void ToNormalAnimation()
     {
+        ApplyToNormalVisuals();
+        if (IsSpawned && IsOwner)
+        {
+            SyncUltModeVisualsRpc(false);
+        }
+    }
+
+    /// <summary>
+    /// ウルトのアニメーションに切り替え、オーラバトラーにする
+    /// </summary>
+    public void ToUltAnimation()
+    {
+        ApplyToUltVisuals();
+        if (IsSpawned && IsOwner)
+        {
+            SyncUltModeVisualsRpc(true);
+        }
+    }
+
+    [Rpc(SendTo.NotOwner, InvokePermission = RpcInvokePermission.Owner)]
+    private void SyncUltModeVisualsRpc(bool toUlt)
+    {
+        if (toUlt)
+        {
+            ApplyToUltVisuals();
+        }
+        else
+        {
+            ApplyToNormalVisuals();
+        }
+    }
+
+    private void ApplyToNormalVisuals()
+    {
         if (_toNormal != null)
         {
             _toNormal.transform.position = this.transform.position;
@@ -195,18 +229,26 @@ public class InputChangeState : NetworkBehaviour
         }
     }
 
-    /// <summary>
-    /// ウルトのアニメーションに切り替え、オーラバトラーにする
-    /// </summary>
-    public void ToUltAnimation()
+    private void ApplyToUltVisuals()
     {
-        if (_toUlt == null) return;
-        _toUlt.transform.position = this.transform.position;
-        _toUltAnim.SetTrigger("Change");
-        _ultAura.SetActive(true);
-        _canUltAura.SetActive(false);
+        if (_toUlt != null)
+        {
+            _toUlt.transform.position = this.transform.position;
+            if (_toUltAnim != null)
+            {
+                _toUltAnim.SetTrigger("Change");
+            }
+        }
+        if (_ultAura != null)
+        {
+            _ultAura.SetActive(true);
+        }
+        if (_canUltAura != null)
+        {
+            _canUltAura.SetActive(false);
+        }
 
-        if (!_ultCharge.activeInHierarchy)
+        if (_ultCharge != null && !_ultCharge.activeInHierarchy)
         {
             ShowUltCharge(true);
         }

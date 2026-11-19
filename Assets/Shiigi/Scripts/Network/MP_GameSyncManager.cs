@@ -31,7 +31,8 @@ public class MP_GameSyncManager : NetworkBehaviour
     {
         Instance = this;
 
-        // フェーズが変わったときのコールバックを全クライアントで購読
+        // フェーズが変わったときのコールバックを全クライアントで購読（多重登録防止のため先に解除）
+        CurrentPhase.OnValueChanged -= OnPhaseChanged;
         CurrentPhase.OnValueChanged += OnPhaseChanged;
 
         if (IsServer)
@@ -41,6 +42,7 @@ public class MP_GameSyncManager : NetworkBehaviour
             // NGO標準のシーン同期イベントを購読
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null)
             {
+                NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleSceneEvent;
                 NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneEvent;
             }
         }
@@ -50,16 +52,33 @@ public class MP_GameSyncManager : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        CurrentPhase.OnValueChanged -= OnPhaseChanged;
-
-        if (IsServer && NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null)
-        {
-            NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleSceneEvent;
-        }
+        UnsubscribeAllEvents();
 
         if (Instance == this)
         {
             Instance = null;
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        UnsubscribeAllEvents();
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+
+        base.OnDestroy();
+    }
+
+    private void UnsubscribeAllEvents()
+    {
+        CurrentPhase.OnValueChanged -= OnPhaseChanged;
+
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null)
+        {
+            NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleSceneEvent;
         }
     }
 

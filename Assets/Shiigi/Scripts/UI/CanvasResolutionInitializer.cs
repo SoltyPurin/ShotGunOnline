@@ -132,7 +132,7 @@ public class CanvasResolutionInitializer : MonoBehaviour
         {
             if (coin != null)
             {
-                Object.Destroy(coin.gameObject);
+                DisableOrphanObject(coin.gameObject);
             }
         }
 
@@ -141,8 +141,25 @@ public class CanvasResolutionInitializer : MonoBehaviour
         {
             if (ctrl != null)
             {
-                Object.Destroy(ctrl.gameObject);
+                DisableOrphanObject(ctrl.gameObject);
             }
         }
+    }
+
+    private static void DisableOrphanObject(GameObject go)
+    {
+        if (go == null) return;
+
+        foreach (SpriteRenderer sr in go.GetComponentsInChildren<SpriteRenderer>(true))
+        {
+            if (sr != null) sr.enabled = false;
+        }
+
+        foreach (MonoBehaviour behaviour in go.GetComponentsInChildren<MonoBehaviour>(true))
+        {
+            if (behaviour != null) behaviour.enabled = false;
+        }
+
+        go.SetActive(false);
     }
 }

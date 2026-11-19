@@ -103,15 +103,25 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         RefreshPreview();
         RefreshShiftLabels();
 
+        _utcs?.TrySetCanceled();
         _utcs = new UniTaskCompletionSource<(bool Confirmed, string Text)>();
-        await ShowAsync();
+        var utcs = _utcs;
+
+        try
+        {
+            await ShowAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            // 表示演出がキャンセルされても結果待ちは継続する
+        }
 
         if (EventSystem.current != null && _initialFocusButton != null)
         {
             EventSystem.current.SetSelectedGameObject(_initialFocusButton.gameObject);
         }
 
-        return await _utcs.Task;
+        return await utcs.Task;
     }
 
     protected override void Awake()
@@ -276,8 +286,25 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             _blocker.SetActive(false);
         }
 
-        await HideAsync();
-        tcs.TrySetResult((confirmed, _currentText));
+        try
+        {
+            await HideAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            // 非表示演出がキャンセル・破棄された場合でも結果は必ず確定させる
+        }
+        finally
+        {
+            tcs.TrySetResult((confirmed, _currentText));
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        _utcs?.TrySetCanceled();
+        _utcs = null;
+        base.OnDestroy();
     }
 
     private void EnsureBlocker()

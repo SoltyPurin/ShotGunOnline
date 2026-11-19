@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class MoveCoin : NetworkBehaviour
@@ -61,15 +62,19 @@ public class MoveCoin : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
+        // 散布・追従ともに各端末でローカル計算するため、大量ドロップ時のNetworkTransform帯域消費と位置競合を防止
+        if (TryGetComponent<NetworkTransform>(out var netTransform))
+        {
+            netTransform.enabled = false;
+        }
+
         // 当たり判定は全端末で最初はオフにしておく
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
         if (boxCollider2D != null) boxCollider2D.enabled = false;
 
-        // 移動計算とパラメータ決定はサーバー側でのみ行う
+        // 移動計算とパラメータ決定はサーバー側でのみ行い、ClientRpcでホスト自身を含む全端末のローカル処理を統一開始する
         if (IsServer)
         {
-            _soulCollectRange = GetComponent<SoulGraduallyMoveToPlayer>();
-
             _xDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
             _yDirection = Random.Range(_moveMinusLimit, _movePlusLimit);
 
@@ -77,11 +82,7 @@ public class MoveCoin : NetworkBehaviour
             _moveDirection = new Vector2(_xDirection, _yDirection);
             _speedDecValue = Random.Range(_speedDecMinLimit, _speedDecMaxLimit);
 
-            _canMove = true;
-            StartCoroutine(ActiveHitjudgment());
-            MoveStartClientRpc(_moveDirection,
-            _firstMoveSpeed,
-            _speedDecValue);
+            MoveStartClientRpc(_moveDirection, _firstMoveSpeed, _speedDecValue);
         }
     }
     [ClientRpc]
@@ -103,11 +104,10 @@ public class MoveCoin : NetworkBehaviour
     private IEnumerator ActiveHitjudgment()
     {
         yield return new WaitForSeconds(_colliderActiveTime);
-        EnableColliderClientRpc();
+        EnableColliderLocal();
     }
 
-    [ClientRpc]
-    private void EnableColliderClientRpc()
+    private void EnableColliderLocal()
     {
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
         if (boxCollider2D != null) boxCollider2D.enabled = true;

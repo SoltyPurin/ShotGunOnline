@@ -26,6 +26,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     private NetworkSceneTransitionHandler _sceneTransitionHandler;
     private SessionDisconnectHandler _disconnectHandler;
     private bool _isDisconnecting;
+    private UniTask? _disconnectTask;
 
     public ISession CurrentSession => _sessionService?.CurrentSession;
     public bool IsInitialized => _servicesInitializer != null && _servicesInitializer.IsInitialized;
@@ -127,19 +128,29 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     }
 
     /// <summary>
-    /// ルームおよびRelay(NetworkManager)接続が存在する場合に切断し、ネットワーク関連オブジェクトをクリーンアップする
+    /// ルームおよびRelay(NetworkManager)接続が存在する場合に切断し、ネットワーク関連オブジェクトをクリーンアップする。
+    /// 既にクリーンアップ中の場合は、進行中の処理が完了するまで待機してから戻る。
     /// </summary>
-    public async UniTask DisconnectAndCleanupAsync()
+    public UniTask DisconnectAndCleanupAsync()
     {
-        if (_isDisconnecting) return;
+        // 多重呼び出し時に即座に return すると、呼び出し側がクリーンアップ完了前にシーン遷移等を行ってしまうため進行中タスクを共有する
+        if (_isDisconnecting && _disconnectTask.HasValue)
+        {
+            return _disconnectTask.Value;
+        }
 
         var hasActiveSession = CurrentSession != null;
         var hasNetworkManager = NetworkManager.Singleton != null;
-
-        if (!hasActiveSession && !hasNetworkManager) return;
+        if (!hasActiveSession && !hasNetworkManager) return UniTask.CompletedTask;
 
         _isDisconnecting = true;
+        var task = DisconnectAndCleanupCoreAsync(hasActiveSession).Preserve();
+        _disconnectTask = task;
+        return task;
+    }
 
+    private async UniTask DisconnectAndCleanupCoreAsync(bool hasActiveSession)
+    {
         try
         {
             EnsureSubsystemsInitialized();
@@ -177,6 +188,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         finally
         {
             _isDisconnecting = false;
+            _disconnectTask = null;
         }
     }
 

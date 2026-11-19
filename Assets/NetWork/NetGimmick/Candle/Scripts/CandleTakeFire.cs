@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CandleTakeFire : NetworkBehaviour
 {
-    #region •Ï”
+    #region å¤‰æ•°
     public event Action<bool> IsCandleTakeFire;
 
-    [SerializeField, Header("‰Î‚ªÁ‚¦‚é‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField, Header("ç«ãŒæ¶ˆãˆã‚‹ã¾ã§ã®æ™‚é–“")]
     private float _timeUntileItFireOff = 10.0f;
-    [SerializeField, Header("‰Î‚ªã‚Ü‚é‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField, Header("ç«ãŒå¼±ã¾ã‚‹ã¾ã§ã®æ™‚é–“")]
     private float _timeUntilItWeakens = 5.0f;
 
     private float _currentFireOnTime = 0;
@@ -27,7 +27,7 @@ public class CandleTakeFire : NetworkBehaviour
     private float _middleShotUnder = 0.6f;
     private float _middleShotCeil = 1.4f;
     #endregion
-    #region ’è”
+    #region å®šæ•°
     private readonly string FIRE_ON = "FireOn";
     private readonly string FIRE_OFF = "FireOff";
     private readonly string FIRE_WEAKER = "FireWeaker";
@@ -61,7 +61,7 @@ public class CandleTakeFire : NetworkBehaviour
         {
             return;
         }
-        //—^‚¦‚ç‚ê‚½ƒ`ƒƒ[ƒWŠÔ‚ª’†ŠÔƒVƒ‡ƒbƒg‚Ì’l‚Ì’†‚É”[‚Ü‚Á‚Ä‚È‚©‚Á‚½ê‡‚Íˆ—‚ğ‚µ‚È‚¢
+        //ä¸ãˆã‚‰ã‚ŒãŸãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ãŒä¸­é–“ã‚·ãƒ§ãƒƒãƒˆã®å€¤ã®ä¸­ã«ç´ã¾ã£ã¦ãªã‹ã£ãŸå ´åˆã¯å‡¦ç†ã‚’ã—ãªã„
         if(chargeTime < _middleShotUnder || chargeTime > _middleShotCeil)
         {
             return;
@@ -74,18 +74,12 @@ public class CandleTakeFire : NetworkBehaviour
         else
         {
             RequestTakeFireServerRpc();
+            // ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã§ã‚‚é…å»¶ãªãç€ç«ã‚¢ãƒ‹ãƒ¡ã‚’å³æ™‚ãƒ­ãƒ¼ã‚«ãƒ«å†ç”Ÿï¼ˆNetworkVariableã¸ã®ä¸æ­£æ›¸ãè¾¼ã¿ã¯è¡Œã‚ãªã„ï¼‰
+            ApplyFireOnVisualLocal();
         }
-
-        _isFireOn.Value = true;
-        _isFireOff = false;
-        _currentFireOnTime = 0;
-        _fireAnimator.ResetTrigger(FIRE_WEAKER);
-        _fireAnimator.ResetTrigger(FIRE_OFF);
-        _fireAnimator.SetTrigger(FIRE_ON);
-
     }
     /// <summary>
-    /// ƒNƒ‰ƒCƒAƒ“ƒg‚©‚çƒT[ƒo[‚Ö’…‰Î‚ğ—v‹‚·‚é RPC 
+    /// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰ã‚µãƒ¼ãƒãƒ¼ã¸ç€ç«ã‚’è¦æ±‚ã™ã‚‹ RPC
     /// </summary>
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void RequestTakeFireServerRpc()
@@ -94,21 +88,27 @@ public class CandleTakeFire : NetworkBehaviour
     }
 
     /// <summary>
-    /// ƒT[ƒo[ã‚ÅÀs‚³‚ê‚é’…‰ÎŠm’èˆ—
+    /// ã‚µãƒ¼ãƒãƒ¼ä¸Šã§å®Ÿè¡Œã•ã‚Œã‚‹ç€ç«ç¢ºå®šå‡¦ç†
     /// </summary>
     private void ExecuteTakeFire()
     {
-        // ‘SƒvƒŒƒCƒ„[’[––iƒzƒXƒg{ƒNƒ‰ƒCƒAƒ“ƒgj‚ÅˆêÄ‚É’…‰ÎƒAƒjƒ[ƒVƒ‡ƒ“‚Æƒ^ƒCƒ}[‚ğ‹N“®
+        if (!IsServer) return;
+        _isFireOn.Value = true;
+        // å…¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç«¯æœ«ï¼ˆãƒ›ã‚¹ãƒˆï¼‹ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆï¼‰ã§ä¸€æ–‰ã«ç€ç«ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã¨ã‚¿ã‚¤ãƒãƒ¼ã‚’èµ·å‹•
         StartFireClientRpc();
     }
 
     /// <summary>
-    /// ‘S’[––‚Å’…‰Îó‘ÔEƒAƒjƒ[ƒVƒ‡ƒ“Eƒ^ƒCƒ}[‚ğ“¯ŠúŠJn‚·‚é ClientRpc
+    /// å…¨ç«¯æœ«ã§ç€ç«çŠ¶æ…‹ãƒ»ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ã‚¿ã‚¤ãƒãƒ¼ã‚’åŒæœŸé–‹å§‹ã™ã‚‹ ClientRpc
     /// </summary>
     [ClientRpc]
     private void StartFireClientRpc()
     {
-        _isFireOn.Value = true;
+        ApplyFireOnVisualLocal();
+    }
+
+    private void ApplyFireOnVisualLocal()
+    {
         _isFireOff = false;
         _currentFireOnTime = 0;
 
@@ -125,34 +125,41 @@ public class CandleTakeFire : NetworkBehaviour
         {
             return;
         }
-        if (!_isFireOn.Value)
+        if (!_isFireOn.Value && _isFireOff)
         {
             return;
         }
         _currentFireOnTime += Time.fixedDeltaTime;
 
-        if(_currentFireOnTime > _timeUntilItWeakens)
+        if (_currentFireOnTime > _timeUntilItWeakens && !_isFireOff)
         {
-            Debug.Log("‰Šã‰»");
-            _fireAnimator.ResetTrigger(FIRE_OFF);
-            _fireAnimator.SetTrigger(FIRE_WEAKER);
+            if (_fireAnimator != null)
+            {
+                _fireAnimator.ResetTrigger(FIRE_OFF);
+                _fireAnimator.SetTrigger(FIRE_WEAKER);
+            }
         }
 
         if (_isFireOff)
         {
             return;
         }
-        if(_currentFireOnTime > _timeUntileItFireOff)
+        if (_currentFireOnTime > _timeUntileItFireOff)
         {
-            Debug.Log("‰ŠÁ¸");
-            _fireAnimator.ResetTrigger(FIRE_WEAKER);
-            _fireAnimator.SetTrigger(FIRE_OFF);
+            if (_fireAnimator != null)
+            {
+                _fireAnimator.ResetTrigger(FIRE_WEAKER);
+                _fireAnimator.SetTrigger(FIRE_OFF);
+            }
             _isFireOff = true;
-            _isFireOn.Value = false;
+            if (IsServer)
+            {
+                _isFireOn.Value = false;
+            }
         }
     }
     /// <summary>
-    /// ‰¼‚É‘S•”’…‰Î‚µ‚½‚ç’…‰Î‚µ‚Á‚Ï‚È‚µ‚È‚é‚Æ‚«‚Í‚±‚ê‚ªŒÄ‚Ño‚³‚ê‚é
+    /// ä»®ã«å…¨éƒ¨ç€ç«ã—ãŸã‚‰ç€ç«ã—ã£ã±ãªã—ãªã‚‹ã¨ãã¯ã“ã‚ŒãŒå‘¼ã³å‡ºã•ã‚Œã‚‹
     /// </summary>
     public void ClearJudgementConfirmed()
     {

@@ -79,6 +79,7 @@ public class ShootRange : MonoBehaviour
 
     private SceneTransitionManager _sceneTransitionManager = default;
     private readonly HashSet<PlayerDamageKnockBack> _hitPlayers = new HashSet<PlayerDamageKnockBack>();
+    private readonly HashSet<GameObject> _hitTargets = new HashSet<GameObject>();
 
 
     #endregion
@@ -174,6 +175,8 @@ public class ShootRange : MonoBehaviour
         //当たり判定のボックスの中に入っているオブジェクトを配列に登録
         Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, angle);
         _hitPlayers.Clear();
+        _hitTargets.Clear();
+        _isHit = false;
         //コライダー配列の中に入っているオブジェクトを探索
         foreach (Collider2D hit in hits)
         {
@@ -183,8 +186,12 @@ public class ShootRange : MonoBehaviour
             }
 
             bool isHit = false;
-            //ヒットしたオブジェクトを登録
-            GameObject hitObject = hit.gameObject;
+            // 複数Collider2Dを持つ敵やオブジェクトへの重複RPC送信（Despawn後のDeferred ServerRpc警告原因）を防止
+            GameObject hitObject = ResolveHitTargetObject(hit);
+            if (hitObject == null || hitObject == this.gameObject)
+            {
+                continue;
+            }
 
             // ロビー（MP_GameManager不在時）では他プレイヤーに対してダメージなしのノックバックのみ与える
             if (MP_GameManager.Instance == null)
@@ -201,19 +208,22 @@ public class ShootRange : MonoBehaviour
                 }
             }
 
+            if (!_hitTargets.Add(hitObject))
+            {
+                continue;
+            }
+
             if (hitObject.CompareTag(STONETAGNAME))
             {
                 StoneBlowAway(hitObject, chargeTime);
             }
             else if (hitObject.CompareTag(ARMORTAGNAME) || hitObject.CompareTag(MEDIUMARMORTAGNAME))
             {
-                ArmorHitObject(hitObject, chargeTime,isCritical);
+                ArmorHitObject(hitObject, chargeTime, isCritical);
                 isHit = true;
             }
             else if (hitObject.CompareTag(BOSSTAGNAME))
             {
-                GameObject boss = hitObject;
-                BossStateManagement bossStateManagement = boss.GetComponent<BossStateManagement>();
                 isHit = true;
                 BossHitObject(hitObject, chargeTime, isCritical);
             }
@@ -227,14 +237,28 @@ public class ShootRange : MonoBehaviour
             }
             else
             {
-                NormalHitObject(hitObject, chargeTime,isCritical);
+                NormalHitObject(hitObject, chargeTime, isCritical);
                 isHit = true;
             }
 
-            _isHit = isHit;
+            if (isHit)
+            {
+                _isHit = true;
+            }
         }
         _canCharge = true;
         _didSwingStart = false;
+    }
+
+    private static GameObject ResolveHitTargetObject(Collider2D hit)
+    {
+        if (hit == null) return null;
+        var netObj = hit.GetComponentInParent<NetworkObject>();
+        if (netObj != null)
+        {
+            return netObj.gameObject;
+        }
+        return hit.gameObject;
     }
 
     /// <summary>
@@ -329,17 +353,18 @@ public class ShootRange : MonoBehaviour
         BossHP bossHP = hitObject.GetComponent<BossHP>();
         if (!IsTargetValid(hitObject, bossHP)) return;
 
+        PlayerState curState = _stateManager != null ? _stateManager.PlayerState : PlayerState.Normal;
         BossKnockBack knockback = hitObject.GetComponent<BossKnockBack>();
         if (knockback != null)
         {
-            knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isCritical, false);
+            knockback.RequestHitServerRpc((Vector2)transform.position, chargeTime, curState, isCritical, curState == PlayerState.Ultimate);
         }
-        if (bossHP != null)
+        else if (bossHP != null)
         {
-            bossHP.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
+            bossHP.RequestTakeDamageServerRpc(chargeTime, curState);
         }
 
-        PlayLocalHitFeedback(hitObject, chargeTime, isCritical);
+        PlayLocalHitFeedback(hitObject, chargeTime, curState, isCritical);
     }
     /// <summary>
     /// 盾持ちに当たったときのメソッド
@@ -352,14 +377,18 @@ public class ShootRange : MonoBehaviour
         ArmorTakeDamage armorTakeDamage = hitObject.GetComponent<ArmorTakeDamage>();
         if (!IsTargetValid(hitObject, armorTakeDamage)) return;
 
+        PlayerState curState = _stateManager != null ? _stateManager.PlayerState : PlayerState.Normal;
         ArmorKnockBack armorKnockback = hitObject.GetComponent<ArmorKnockBack>();
         if (armorKnockback != null)
         {
-            armorKnockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isCritical, false);
-            armorTakeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
+            armorKnockback.RequestHitServerRpc((Vector2)transform.position, chargeTime, curState, isCritical, curState == PlayerState.Ultimate);
+        }
+        else if (armorTakeDamage != null)
+        {
+            armorTakeDamage.RequestTakeDamageServerRpc(chargeTime, curState);
         }
 
-        PlayLocalHitFeedback(hitObject, chargeTime, isCritical);
+        PlayLocalHitFeedback(hitObject, chargeTime, curState, isCritical);
     }
 
     /// <summary>
@@ -382,28 +411,39 @@ public class ShootRange : MonoBehaviour
         EnemyTakeDamage takeDamage = hitObject.GetComponent<EnemyTakeDamage>();
         if (!IsTargetValid(hitObject, takeDamage)) return;
 
+        PlayerState curState = _stateManager != null ? _stateManager.PlayerState : PlayerState.Normal;
         EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
         if (knockback != null)
         {
-            knockback.RequestKnockBackServerRpc((Vector2)transform.position, chargeTime, isSpecial, false);
-            takeDamage.RequestTakeDamageServerRpc(chargeTime, _stateManager.PlayerState);
+            knockback.RequestHitServerRpc((Vector2)transform.position, chargeTime, curState, isSpecial, curState == PlayerState.Ultimate);
+        }
+        else if (takeDamage != null)
+        {
+            takeDamage.RequestTakeDamageServerRpc(chargeTime, curState);
         }
 
-        PlayLocalHitFeedback(hitObject, chargeTime, isSpecial);
+        PlayLocalHitFeedback(hitObject, chargeTime, curState, isSpecial);
     }
 
     /// <summary>
-    /// クライアント側でもヒット瞬間に手応え（硬直・振動・エフェクト）を感じられるようローカル即時先行再生
+    /// クライアント側でもヒット瞬間に手応え（ノックバック初速予測・硬直・振動・エフェクト）を感じられるようローカル即時先行再生
     /// </summary>
-    private void PlayLocalHitFeedback(GameObject hitObject, float chargeTime, bool isCritical)
+    private void PlayLocalHitFeedback(GameObject hitObject, float chargeTime, PlayerState curState, bool isCritical)
     {
         if (hitObject == null) return;
 
-        // クライアント側でも撃った瞬間に敵の前進移動を即座に停止してノックバック追従に備える
-        EnemyMove enemyMove = hitObject.GetComponent<EnemyMove>();
-        if (enemyMove != null)
+        EnemyKnockBack knockback = hitObject.GetComponent<EnemyKnockBack>();
+        if (knockback != null)
         {
-            enemyMove.OnKnockBackStarted();
+            knockback.PredictLocalKnockBack((Vector2)transform.position, chargeTime, curState, isCritical, curState == PlayerState.Ultimate);
+        }
+        else
+        {
+            EnemyMove enemyMove = hitObject.GetComponent<EnemyMove>();
+            if (enemyMove != null)
+            {
+                enemyMove.OnKnockBackStarted();
+            }
         }
 
         DamageEffect damageEffect = hitObject.GetComponentInChildren<DamageEffect>();
