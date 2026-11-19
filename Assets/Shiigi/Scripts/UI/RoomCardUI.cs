@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class RoomCardUI : MonoBehaviour, ISelectHandler
+public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
 {
     [Header("テキスト")] [SerializeField] private Text _roomNameText;
     [SerializeField] private Text _playerCountText;
@@ -66,6 +66,7 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler
         {
             _cardButton.onClick.AddListener(HandleCardClicked);
             _cardVisual = UIButtonMetallicVisual.Attach(_cardButton);
+            _cardVisual?.SetUseOutline(false);
             EnsureButtonSound(_cardButton);
         }
 
@@ -207,6 +208,14 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler
     }
 
     public void OnSelect(BaseEventData eventData)
+    {
+        if (_sessionInfo != null)
+        {
+            OnCardSelected?.Invoke(_sessionInfo, this);
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
         if (_sessionInfo != null)
         {
