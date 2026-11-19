@@ -157,11 +157,21 @@ public class ConfirmDialogUI : LobbyViewBase
         // ポップ演出＆フェードイン（演出がキャンセルされても結果待ちは継続する）
         try
         {
-            await base.ShowAsync();
+            var showTask = base.ShowAsync();
+            if (EventSystem.current != null && _yesButton != null && _yesButton.gameObject.activeInHierarchy)
+            {
+                EventSystem.current.SetSelectedGameObject(_yesButton.gameObject);
+            }
+            await showTask;
         }
         catch (OperationCanceledException)
         {
             // 表示演出のキャンセルは無視し、結果の確定を待つ
+        }
+
+        if (EventSystem.current != null && _yesButton != null && _yesButton.gameObject.activeInHierarchy)
+        {
+            EventSystem.current.SetSelectedGameObject(_yesButton.gameObject);
         }
 
         return await utcs.Task;
