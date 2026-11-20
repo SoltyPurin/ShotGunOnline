@@ -159,7 +159,10 @@ public abstract class LobbyViewBase : MonoBehaviour
         if (uiModule == null || _configuredUiModule == uiModule) return;
         if (uiModule.move == null || uiModule.move.action == null) return;
 
-        // ロビーUI表示中はUpdate()でD-Padを直接処理するため、UIInputModule側のMoveからD-Padのみ除外して二重移動を防ぐ
+        // ロビーUI表示中はUpdate()でD-Padを直接処理するため、UIInputModule側のMoveからD-Padのみ除外して二重移動を防ぐ。
+        // また、DefaultInputActionsのMoveはPassThrough型のため、ゲームパッド接続時にスティックの微小ノイズ／静止値(0,0)が
+        // キーボード入力を上書きしてレスポンスを低下させる問題がある。
+        // Value型(Vector2)＋スティックデッドゾーン強化にすることで、コントローラー接続中でもキーボード入力が干渉されないようにする。
         _originalMoveActionRef = uiModule.move;
         InputAction originalAction = uiModule.move.action;
 
@@ -167,7 +170,8 @@ public abstract class LobbyViewBase : MonoBehaviour
         _dpadFilteredAsset.name = "LobbyDpadFilteredUIInput";
         string mapName = originalAction.actionMap != null ? originalAction.actionMap.name : "UI";
         var map = new InputActionMap(mapName);
-        _dpadFilteredMoveAction = map.AddAction(originalAction.name, originalAction.type);
+        _dpadFilteredMoveAction = map.AddAction(originalAction.name, InputActionType.Value);
+        _dpadFilteredMoveAction.expectedControlType = "Vector2";
 
         var bindings = originalAction.bindings;
         for (int i = 0; i < bindings.Count; i++)
@@ -178,6 +182,19 @@ public abstract class LobbyViewBase : MonoBehaviour
             {
                 continue;
             }
+
+            if (!string.IsNullOrEmpty(b.path) &&
+                (b.path.IndexOf("leftStick", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                 b.path.IndexOf("rightStick", StringComparison.OrdinalIgnoreCase) >= 0))
+            {
+                string deadzoneProcessor = b.isPartOfComposite
+                    ? "axisDeadzone(min=0.35,max=0.925)"
+                    : "stickDeadzone(min=0.35,max=0.925)";
+                b.processors = string.IsNullOrEmpty(b.processors)
+                    ? deadzoneProcessor
+                    : $"{b.processors},{deadzoneProcessor}";
+            }
+
             _dpadFilteredMoveAction.AddBinding(b);
         }
 

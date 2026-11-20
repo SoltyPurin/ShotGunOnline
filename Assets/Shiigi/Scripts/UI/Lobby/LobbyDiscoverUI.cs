@@ -25,7 +25,6 @@ public class LobbyDiscoverUI : LobbyViewBase
     [SerializeField] private TMP_Text _detailPlayerCountText;
     [SerializeField] private TMP_Text _detailGameStatusText;
     [SerializeField] private TMP_Text _detailProtocolText;
-    [SerializeField] private Button _detailJoinButton;
 
     // Presenterが購読するためのイベント群
     public event Action OnRefreshRequested;
@@ -60,12 +59,6 @@ public class LobbyDiscoverUI : LobbyViewBase
             _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
             EnsureButtonSound(_createRoomButton, UIButtonType.Default);
             UIButtonMetallicVisual.Attach(_createRoomButton);
-        }
-        if (_detailJoinButton != null)
-        {
-            _detailJoinButton.onClick.AddListener(HandleDetailJoinClicked);
-            EnsureButtonSound(_detailJoinButton, UIButtonType.Default);
-            UIButtonMetallicVisual.Attach(_detailJoinButton);
         }
 
         ClearRoomDetail();
@@ -172,6 +165,7 @@ public class LobbyDiscoverUI : LobbyViewBase
             initialCard ??= _spawnedCards[0];
 
             _selectedCard = initialCard;
+            UpdateSelectedCardVisuals();
             ShowRoomDetail(initialCard.SessionInfo);
         }
         else
@@ -213,7 +207,6 @@ public class LobbyDiscoverUI : LobbyViewBase
     {
         if (_refreshButton != null) _refreshButton.interactable = interactable;
         if (_createRoomButton != null) _createRoomButton.interactable = interactable;
-        if (_detailJoinButton != null) _detailJoinButton.interactable = interactable && CanJoinSession(_selectedSession);
         if (interactable)
         {
             RebuildControllerNavigation();
@@ -226,7 +219,6 @@ public class LobbyDiscoverUI : LobbyViewBase
         if (_roomMenuRoot != null && target.IsChildOf(_roomMenuRoot.transform)) return true;
         if (_refreshButton != null && target.IsChildOf(_refreshButton.transform)) return true;
         if (_createRoomButton != null && target.IsChildOf(_createRoomButton.transform)) return true;
-        if (_detailJoinButton != null && target.IsChildOf(_detailJoinButton.transform)) return true;
         return false;
     }
 
@@ -239,9 +231,6 @@ public class LobbyDiscoverUI : LobbyViewBase
         List<List<Button>> rows = BuildCardButtonGrid(activeCards);
         Button primaryTopLeft = _refreshButton != null ? _refreshButton : _createRoomButton;
         Button primaryTopRight = _createRoomButton != null ? _createRoomButton : _refreshButton;
-        Button activeDetailJoin = (_detailJoinButton != null && _detailJoinButton.gameObject.activeInHierarchy && _detailJoinButton.interactable)
-            ? _detailJoinButton
-            : null;
 
         for (int r = 0; r < rows.Count; r++)
         {
@@ -275,9 +264,7 @@ public class LobbyDiscoverUI : LobbyViewBase
                 }
 
                 nav.selectOnLeft = c > 0 ? row[c - 1] : primaryTopLeft;
-                nav.selectOnRight = c < row.Count - 1
-                    ? row[c + 1]
-                    : (activeDetailJoin != null ? activeDetailJoin : primaryTopRight);
+                nav.selectOnRight = c < row.Count - 1 ? row[c + 1] : primaryTopRight;
                 row[c].navigation = nav;
             }
         }
@@ -298,27 +285,9 @@ public class LobbyDiscoverUI : LobbyViewBase
             nav.selectOnUp = rows.Count > 0 ? rows[rows.Count - 1][Mathf.Min(1, rows[rows.Count - 1].Count - 1)] : _refreshButton;
             nav.selectOnDown = rows.Count > 0 ? rows[0][Mathf.Min(1, rows[0].Count - 1)] : _refreshButton;
             nav.selectOnLeft = _refreshButton;
-            nav.selectOnRight = activeDetailJoin != null ? activeDetailJoin : _refreshButton;
+            nav.selectOnRight = _refreshButton;
             _createRoomButton.navigation = nav;
         }
-
-        UpdateDetailJoinButtonNavigation(rows);
-    }
-
-    private void UpdateDetailJoinButtonNavigation(List<List<Button>> rows = null)
-    {
-        if (_detailJoinButton == null) return;
-
-        Button returnCardButton = _selectedCard != null && _selectedCard.JoinButton != null && _selectedCard.JoinButton.interactable
-            ? _selectedCard.JoinButton
-            : (rows != null && rows.Count > 0 ? rows[0][0] : _spawnedCards.FirstOrDefault(c => c != null && c.JoinButton != null && c.JoinButton.interactable)?.JoinButton);
-
-        var nav = new Navigation { mode = Navigation.Mode.Explicit };
-        nav.selectOnLeft = returnCardButton != null ? returnCardButton : (_refreshButton != null ? _refreshButton : _createRoomButton);
-        nav.selectOnUp = _createRoomButton != null ? _createRoomButton : _refreshButton;
-        nav.selectOnDown = returnCardButton;
-        nav.selectOnRight = _createRoomButton;
-        _detailJoinButton.navigation = nav;
     }
 
     private List<List<Button>> BuildCardButtonGrid(List<RoomCardUI> cards)
@@ -407,34 +376,38 @@ public class LobbyDiscoverUI : LobbyViewBase
     private void HandleCardSelected(ISessionInfo session, RoomCardUI card)
     {
         _selectedCard = card;
+        UpdateSelectedCardVisuals();
         ShowRoomDetail(session);
         RebuildControllerNavigation();
+    }
+
+    private void UpdateSelectedCardVisuals()
+    {
+        foreach (var spawnedCard in _spawnedCards)
+        {
+            if (spawnedCard != null)
+            {
+                spawnedCard.SetSelected(spawnedCard == _selectedCard);
+            }
+        }
     }
 
     private void HandleCardSubmitted(ISessionInfo session, RoomCardUI card)
     {
         HandleCardSelected(session, card);
 
-        if (_detailJoinButton != null &&
-            _detailJoinButton.gameObject.activeInHierarchy &&
-            _detailJoinButton.interactable &&
-            EventSystem.current != null)
+        if (CanJoinSession(session))
         {
-            EventSystem.current.SetSelectedGameObject(_detailJoinButton.gameObject);
-        }
-    }
-
-    private void HandleDetailJoinClicked()
-    {
-        if (CanJoinSession(_selectedSession))
-        {
-            OnJoinRoomRequested?.Invoke(_selectedSession);
+            OnJoinRoomRequested?.Invoke(session);
         }
     }
 
     private void HandleJoinRequest(ISessionInfo session)
     {
-        OnJoinRoomRequested?.Invoke(session);
+        if (CanJoinSession(session))
+        {
+            OnJoinRoomRequested?.Invoke(session);
+        }
     }
 
     private void ShowRoomDetail(ISessionInfo session)
@@ -467,24 +440,18 @@ public class LobbyDiscoverUI : LobbyViewBase
             var protocol = SessionPlayerPropertyHelper.GetSessionRelayProtocol(session);
             _detailProtocolText.text = protocol.ToString();
         }
-
-        if (_detailJoinButton != null)
-        {
-            bool viewInteractable = _canvasGroup == null || _canvasGroup.interactable;
-            _detailJoinButton.interactable = viewInteractable && CanJoinSession(session);
-        }
     }
 
     private void ClearRoomDetail()
     {
         _selectedSession = null;
         _selectedCard = null;
+        UpdateSelectedCardVisuals();
 
         if (_detailRoomNameText != null) _detailRoomNameText.text = "-";
         if (_detailPlayerCountText != null) _detailPlayerCountText.text = "- / -";
         if (_detailGameStatusText != null) _detailGameStatusText.text = "-";
         if (_detailProtocolText != null) _detailProtocolText.text = "-";
-        if (_detailJoinButton != null) _detailJoinButton.interactable = false;
     }
 
     private static bool CanJoinSession(ISessionInfo session)
@@ -525,7 +492,6 @@ public class LobbyDiscoverUI : LobbyViewBase
         if (_detailPlayerCountText == null) _detailPlayerCountText = FindDescendantComponent<TMP_Text>(detailRoot, "TMP_NumberOfPlayers");
         if (_detailGameStatusText == null) _detailGameStatusText = FindDescendantComponent<TMP_Text>(detailRoot, "TMP_InGameStatus");
         if (_detailProtocolText == null) _detailProtocolText = FindDescendantComponent<TMP_Text>(detailRoot, "TMP_UsedProtocol");
-        if (_detailJoinButton == null) _detailJoinButton = FindDescendantComponent<Button>(detailRoot, "Button_Join");
 
         if (_detailRoomNameText != null)
         {
