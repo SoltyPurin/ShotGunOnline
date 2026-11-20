@@ -11,7 +11,7 @@ public class Wave : MonoBehaviour
     #region 【Structs】
 
     [System.Serializable]
-    private struct GimmickData
+    public struct GimmickData
     {
         [Tooltip("ギミック出現までの時間（フレーム）")]
         public int _generateFrame;
@@ -64,12 +64,6 @@ public class Wave : MonoBehaviour
     }
     #endregion
     #region protected変数
-    [SerializeField, Header("敵の格納場所")]
-    protected List<ObjData> _objList = new List<ObjData>();
-    public List<ObjData> ObjList
-    {
-        get { return _objList; }
-    }
 
     protected int _nowObj = 0;
 
@@ -81,13 +75,16 @@ public class Wave : MonoBehaviour
 
     protected bool _isWaveEnd = false;
 
-    [SerializeField, Header("何秒に一回敵をスポーンさせるか(ゾンビモード限定)")]
-    protected float _enemySpawnInterval = 10.0f;
+    protected float _enemySpawnInterval = 0f;
     //各ウェーブのスコアを計算するスクリプトを取得
     protected EnemyCountAndCreateTime _counter = default;
 
     [SerializeField, Header("ウェーブの難易度")]
     protected Difficulty _difficulty = Difficulty.Easy;
+
+    [SerializeField, Header("ギミックの格納場所")]
+    protected List<GimmickData> _gimmickList = new List<GimmickData>();
+
 
     #endregion
     #region 【各種変数】
@@ -95,8 +92,13 @@ public class Wave : MonoBehaviour
     [Header("ウェーブの属性")]
     public WaveEnemyType _waveType = WaveEnemyType.Normal;
 
-    [SerializeField, Header("ギミックの格納場所")]
-    private List<GimmickData> _gimmickList = new List<GimmickData>();
+    [SerializeField, Header("敵の格納場所")]
+    private List<ObjData> _objList = new List<ObjData>();
+    public List<ObjData> ObjList
+    {
+        get { return _objList; }
+    }
+
 
 
 
@@ -219,7 +221,7 @@ public class Wave : MonoBehaviour
         _initEnemyCount = EnemyCount();
     }
 
-    public virtual void FixedUpdate()
+    private void FixedUpdate()
     {
         if (!IsServerAuthority)
         {
@@ -291,7 +293,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// ギミックの有効化用メソッド
     /// </summary>
-    private void GimmickSetTrue()
+    public virtual void GimmickSetTrue()
     {
         // ギミックが存在しないならステートを変更し早期リターン
         if (_gimmickList == null || _gimmickList.Count <= 0)
@@ -386,7 +388,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 敵の有効化用メソッド、同じ座標にネットワーク対応の敵を出現させて元の敵を削除
     /// </summary>
-    public virtual void ObjSetTrue()
+    private void ObjSetTrue()
     {
         // 敵が存在しないならウェーブ終了可能、ステートを変更し早期リターン
         if (_objList == null || _objList.Count <= 0)
@@ -499,7 +501,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 次に有効化する敵の位置に遷移するメソッド
     /// </summary>
-    public virtual void NextObj()
+    private void NextObj()
     {
         //次のリストの位置に移動しframeの値を初期化
         if (_nowObj < (_objList.Count - 1))

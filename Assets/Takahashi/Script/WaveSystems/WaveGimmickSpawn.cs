@@ -38,7 +38,10 @@ public class WaveGimmickSpawn : MonoBehaviour
     {
         //初期化とスプライトの非表示
         _timer = 0.0f;
-        _spawnCollider.enabled = false;
+        if(_spawnCollider != null)
+        {
+            _spawnCollider.enabled = false;
+        }
         foreach (SpriteRenderer sr in _spriteRenderers)
         {
             if (sr != null)
@@ -97,7 +100,11 @@ public class WaveGimmickSpawn : MonoBehaviour
         if(_timer >= _colliderOnTime)
         {
             _timer = 0.0f;
-            _spawnCollider.enabled = true;
+            if(_spawnCollider != null)
+            {
+                _spawnCollider.enabled = true;
+
+            }
             _state = GimmickState.Wait;
             return;
         }
