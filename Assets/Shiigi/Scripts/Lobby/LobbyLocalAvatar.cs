@@ -29,6 +29,7 @@ public class LobbyLocalAvatar : MonoBehaviour
 
         LobbyMovement.AutoResolveVisuals(transform, ref _playerAnimation, ref _frontSprite, ref _backSprite);
         LobbyMovement.ApplyFacing(_frontSprite, _backSprite, _facingMask);
+        PlayerNameplateUI.EnsureAttached(gameObject);
     }
 
     public void SetFacingMask(byte facingMask)

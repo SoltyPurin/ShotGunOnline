@@ -53,6 +53,8 @@ public class CreateRoomDialogUI : LobbyViewBase
     [SerializeField] private bool _enableVirtualKeyboard;
     [SerializeField] private LobbyVirtualKeyboardUI _virtualKeyboardPrefab;
 
+    public LobbyVirtualKeyboardUI VirtualKeyboardPrefab => _virtualKeyboardPrefab;
+
     private static readonly (string Label, RelayProtocol Protocol)[] _protocolOptions =
     {
         ("DTLS", RelayProtocol.DTLS),

@@ -71,6 +71,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
             Instance = this;
             DontDestroyOnLoad(gameObject);
             EnsureSubsystemsInitialized();
+            PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
         }
         else
         {
@@ -111,6 +112,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     {
         if (Instance == this)
         {
+            PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
             UnsubscribeNetworkEvents();
             Instance = null;
         }
@@ -261,6 +263,21 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     {
         EnsureSubsystemsInitialized();
         return _sessionService.SetReadyStatusAsync(isReady);
+    }
+
+    /// <summary>
+    /// 現在のセッションにローカルプレイヤー名を反映する
+    /// </summary>
+    public UniTask UpdatePlayerNameAsync(string playerName)
+    {
+        EnsureSubsystemsInitialized();
+        return _sessionService.UpdatePlayerNameAsync(playerName);
+    }
+
+    private void HandleLocalProfileChanged(PlayerProfile profile)
+    {
+        if (profile == null || CurrentSession == null) return;
+        UpdatePlayerNameAsync(profile.PlayerName).Forget();
     }
 
     /// <summary>

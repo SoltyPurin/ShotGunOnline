@@ -23,13 +23,11 @@ public class LobbyPlayerEntryUI : MonoBehaviour
             return;
         }
 
-        // プレイヤーIDの簡易表示(名前システム作るまでのプレースホルダ)
-        string playerName = player.Id;
-        if (playerName.Length > 8)
+        if (_playerNameText != null)
         {
-            playerName = playerName.Substring(0, 8) + "...";
+            _playerNameText.supportRichText = false;
+            _playerNameText.text = SessionPlayerPropertyHelper.GetPlayerName(player);
         }
-        _playerNameText.text = playerName;
 
         // 準備状況の取得（ドメインヘルパーへ委譲）
         var isReady = SessionPlayerPropertyHelper.IsPlayerReady(player);

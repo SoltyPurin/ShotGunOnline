@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -34,11 +35,18 @@ public class LobbyNetworkPlayer : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+    private readonly NetworkVariable<FixedString64Bytes> _netPlayerName = new NetworkVariable<FixedString64Bytes>(
+        default,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
     private Rigidbody2D _rigidbody;
     private Vector2 _input;
     private Vector2? _pendingTeleport;
 
     public byte FacingMask => _netFacingMask.Value;
+    public string PlayerName => (IsOwner || !IsSpawned) ? PlayerProfileStore.PlayerName : _netPlayerName.Value.ToString();
+    public event Action<string> OnPlayerNameChanged;
 
     private void Awake()
     {
@@ -48,29 +56,50 @@ public class LobbyNetworkPlayer : NetworkBehaviour
 
         LobbyMovement.AutoResolveVisuals(transform, ref _playerAnimation, ref _frontSprite, ref _backSprite);
         LobbyMovement.ApplyFacing(_frontSprite, _backSprite, 0);
+        PlayerNameplateUI.EnsureAttached(gameObject);
     }
 
     public override void OnNetworkSpawn()
     {
         LobbyMovement.ApplyFacing(_frontSprite, _backSprite, _netFacingMask.Value);
+        _netPlayerName.OnValueChanged += HandleNetPlayerNameChanged;
 
         // 他プレイヤーの物理は動かさず、同期された位置に任せる
         if (!IsOwner)
         {
             _rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody.linearVelocity = Vector2.zero;
+            OnPlayerNameChanged?.Invoke(_netPlayerName.Value.ToString());
             return;
         }
+
+        _netPlayerName.Value = new FixedString64Bytes(PlayerProfileStore.PlayerName);
+        PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
+        OnPlayerNameChanged?.Invoke(PlayerProfileStore.PlayerName);
 
         LocalPlayerSpawned?.Invoke(this);
     }
 
     public override void OnNetworkDespawn()
     {
+        _netPlayerName.OnValueChanged -= HandleNetPlayerNameChanged;
         if (IsOwner)
         {
+            PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
             LocalPlayerDespawned?.Invoke(this);
         }
+    }
+
+    private void HandleLocalProfileChanged(PlayerProfile profile)
+    {
+        if (!IsSpawned || !IsOwner || profile == null) return;
+        _netPlayerName.Value = new FixedString64Bytes(profile.PlayerName);
+        OnPlayerNameChanged?.Invoke(profile.PlayerName);
+    }
+
+    private void HandleNetPlayerNameChanged(FixedString64Bytes previousValue, FixedString64Bytes newValue)
+    {
+        OnPlayerNameChanged?.Invoke(newValue.ToString());
     }
 
     /// <summary>
