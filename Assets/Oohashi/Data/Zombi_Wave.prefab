@@ -11466,6 +11466,7 @@ Transform:
   m_Children:
   - {fileID: 8053162591843807196}
   - {fileID: 7002415006721791091}
+  - {fileID: 1254649926364004694}
   m_Father: {fileID: 8633991032050963370}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9208839151907021764
@@ -11484,12 +11485,18 @@ MonoBehaviour:
   _gimmickList:
   - _generateFrame: 0
     _waveGimmick: {fileID: 2640758847605285403}
+  - _generateFrame: 0
+    _waveGimmick: {fileID: 6116211563123341118}
   _waveType: 3
   _objList:
   - _generateFrame: 0
     _waveObj: {fileID: 324268900780772433}
   _autoTransition: 1
   _waveStartText: 
+  _mobSpawnStopTime: 5
+  _bossSpawnWaves:
+  - bossSpawner: {fileID: 8747982093650019899, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+    spawnWaveCount: 5
 --- !u!1 &8705709239785035479
 GameObject:
   m_ObjectHideFlags: 0
@@ -12416,3 +12423,76 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8336686506918295792, guid: 45fee4fdbec43194e895aeb01b0820be, type: 3}
   m_PrefabInstance: {fileID: 5612479007105071571}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8663298750957626171
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4117802870158598698}
+    m_Modifications:
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.14693
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05727
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8747982093650019899, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+      propertyPath: m_Name
+      value: MiddleArmorBossSpawnPos
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+--- !u!4 &1254649926364004694 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+  m_PrefabInstance: {fileID: 8663298750957626171}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6116211563123341118 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3232210498039600133, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+  m_PrefabInstance: {fileID: 8663298750957626171}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d792cd55ff7620e4ab2edbf4a5e72626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 public class ZombiModeSummonEnemy : NetworkBehaviour
 {
@@ -39,6 +40,8 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
 
     private int _divisionValueIncludeValue = 0;
 
+    private bool _isSpawnStop = false;
+
     private void Start()
     {
         if (JsonSaver.Instance != null && JsonSaver.Instance.EnemyJson != null)
@@ -57,12 +60,25 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!IsServer) return;
+        if (_isSpawnStop)
+        {
+            return;
+        }
         _popTimer += Time.fixedDeltaTime;
         if (_popTimer >= _enemySpawnInterval)
         {
             CalcAndSetSpawnPos();
             PopEnemy();
         }
+    }
+
+    public IEnumerator SpawnStop(float stopTime)
+    {
+        _isSpawnStop = true;
+        Debug.Log("スポーン停止");
+        yield return new WaitForSeconds(stopTime);
+        _isSpawnStop = false;
+        Debug.Log("スポーン再開");
     }
 
     private void PopEnemy()
@@ -153,5 +169,13 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
             _spawnPositions.Add(new Vector2(_center.x - calcValue, _center.y));
         }
 
+    }
+
+    public void AdditionBossInList(GameObject bossObj, int odds)
+    {
+        EnemyAndSpawnOdds eAo = new EnemyAndSpawnOdds();
+        eAo.enemy = bossObj;
+        eAo.odds = odds;
+        _enemyList.Add(eAo);
     }
 }

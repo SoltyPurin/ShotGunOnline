@@ -85,6 +85,13 @@ public class Wave : MonoBehaviour
     [SerializeField, Header("ギミックの格納場所")]
     protected List<GimmickData> _gimmickList = new List<GimmickData>();
 
+    protected int _nowGimmick = 0;
+
+    protected int _gimmickFrame = 0;
+
+
+    // このWaveからネットワーク生成されたギミック（岩など）の追跡リスト（次ステージ移行時に確実に破棄する用）
+    protected readonly List<GameObject> _spawnedGimmickObjects = new List<GameObject>();
 
     #endregion
     #region 【各種変数】
@@ -120,14 +127,10 @@ public class Wave : MonoBehaviour
 
 
     //その他変数
-    private int _nowGimmick = 0;
-    private int _gimmickFrame = 0;
     private int _prevEnemyCount = 0;
     private int _initEnemyCount = 0;
     private WaveManager _waveManager = default;
 
-    // このWaveからネットワーク生成されたギミック（岩など）の追跡リスト（次ステージ移行時に確実に破棄する用）
-    private readonly List<GameObject> _spawnedGimmickObjects = new List<GameObject>();
 
     private bool IsServerAuthority =>
         NetworkManager.Singleton == null ||
@@ -366,8 +369,14 @@ public class Wave : MonoBehaviour
                         };
                     }
 
-                    // 5. サーバー側で不要になった配置用ダミーを破棄
-                    Destroy(waveGimmickObj.gameObject);
+                    if (!spawnedGimmick.GetComponent<ZombiModeSummonEnemy>() &&
+                        !spawnedGimmick.GetComponent<BossCharacterSpawner>())
+                    {
+                        //ギミックにスポナーがついてたら破棄しない
+                        // 5. スポナー以外のサーバー側で不要になった配置用ダミーを破棄
+                        Destroy(waveGimmickObj.gameObject);
+                    }
+
                 }
                 else
                 {
@@ -483,7 +492,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 次有効化するギミックの位置に遷移するメソッド
     /// </summary>
-    private void NextGimmick()
+    public void NextGimmick()
     {
         if (_nowGimmick < (_gimmickList.Count - 1))
         {
