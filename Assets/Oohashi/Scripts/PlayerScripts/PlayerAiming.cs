@@ -41,7 +41,6 @@ public class PlayerAiming : NetworkBehaviour
     private CutsceneControlledPlayer _cutscenePlayer = default;
 
     private Vector2 _rightStickInput;
-    private Gamepad _gamePad;
 
     [Header("プレイヤーのオブジェクト取得")]
     [SerializeField] private GameObject _playerObject = default;
@@ -53,15 +52,15 @@ public class PlayerAiming : NetworkBehaviour
 
     private Vector3 _prevDirection = Vector3.right;
     private bool _useMouseAim = false;
+    private Vector2 _lastMousePosition;
+    private bool _hasMousePositionInitialized = false;
+
+    private const float StickDeadZoneSqr = 0.04f; // 0.2^2
+    private const float MouseMoveThresholdSqr = 9f; // 3px以上動いたらマウス操作とみなす
 
 
     private void Awake()
     {
-        if (Gamepad.current != null)
-        {
-            _gamePad = Gamepad.current;
-        }
-
         if (_playerStateManager == null)
         {
             _playerStateManager = GetComponent<PlayerStateManager>();
@@ -117,6 +116,7 @@ public class PlayerAiming : NetworkBehaviour
         if (!CanAim())
         {
             _rightStickInput = Vector2.zero;
+            _hasMousePositionInitialized = false;
             if (_playerObject != null)
             {
                 _playerObject.transform.localPosition = Vector3.zero;
@@ -131,6 +131,7 @@ public class PlayerAiming : NetworkBehaviour
 
         if (LobbyMovement.IsInputBlocked || LobbyViewBase.TopActiveView != null)
         {
+            _hasMousePositionInitialized = false;
             return;
         }
 
@@ -149,7 +150,7 @@ public class PlayerAiming : NetworkBehaviour
     {
         if (!_useMouseAim)
         {
-            if (_rightStickInput.sqrMagnitude > 0.04f)
+            if (_rightStickInput.sqrMagnitude > StickDeadZoneSqr)
             {
                 _prevDirection = new Vector3(_rightStickInput.x, _rightStickInput.y, 0f).normalized;
             }
@@ -158,9 +159,7 @@ public class PlayerAiming : NetworkBehaviour
 
         if (Camera.main == null) return;
 
-        Vector3 mousePos = Mouse.current != null
-            ? (Vector3)Mouse.current.position.ReadValue()
-            : Input.mousePosition;
+        Vector2 mousePos = GetMousePosition();
         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z - transform.position.z)));
         Vector3 diff = worldMousePos - transform.position;
         diff.z = 0f;
@@ -172,25 +171,76 @@ public class PlayerAiming : NetworkBehaviour
 
     private void InputAiming()
     {
-        if (_gamePad == null && Gamepad.current != null)
-        {
-            _gamePad = Gamepad.current;
-        }
-        Vector2 stickInput = Vector2.zero;
-        if (_gamePad != null)
-        {
-            stickInput = _gamePad.rightStick.ReadValue();
-        }
+        var gamepad = Gamepad.current;
+        Vector2 stickInput = gamepad != null ? gamepad.rightStick.ReadValue() : Vector2.zero;
 
-        if (stickInput.sqrMagnitude > 0.04f)
+        if (stickInput.sqrMagnitude > StickDeadZoneSqr)
         {
             _rightStickInput = stickInput;
             _useMouseAim = false;
+            SyncMousePosition();
+            return;
+        }
+
+        _rightStickInput = Vector2.zero;
+
+        // 左スティックやトリガー等のコントローラー操作があった場合もマウスエイムを解除する
+        if (IsOtherGamepadInputActive(gamepad))
+        {
+            _useMouseAim = false;
+            SyncMousePosition();
+            return;
+        }
+
+        // マウスが一定距離以上動いたときだけマウスエイムへ切り替える
+        Vector2 currentMousePos = GetMousePosition();
+        if (!_hasMousePositionInitialized)
+        {
+            _lastMousePosition = currentMousePos;
+            _hasMousePositionInitialized = true;
+            return;
+        }
+
+        if (!_useMouseAim)
+        {
+            if ((currentMousePos - _lastMousePosition).sqrMagnitude > MouseMoveThresholdSqr)
+            {
+                _useMouseAim = true;
+                _lastMousePosition = currentMousePos;
+            }
         }
         else
         {
-            _useMouseAim = true;
+            _lastMousePosition = currentMousePos;
         }
+    }
+
+    private bool IsOtherGamepadInputActive(Gamepad gamepad)
+    {
+        if (gamepad == null) return false;
+
+        return gamepad.leftStick.ReadValue().sqrMagnitude > StickDeadZoneSqr
+            || gamepad.rightTrigger.ReadValue() > 0.2f
+            || gamepad.leftTrigger.ReadValue() > 0.2f
+            || gamepad.rightShoulder.isPressed
+            || gamepad.leftShoulder.isPressed
+            || gamepad.buttonSouth.isPressed
+            || gamepad.buttonEast.isPressed
+            || gamepad.buttonWest.isPressed
+            || gamepad.buttonNorth.isPressed;
+    }
+
+    private Vector2 GetMousePosition()
+    {
+        return Mouse.current != null
+            ? Mouse.current.position.ReadValue()
+            : (Vector2)Input.mousePosition;
+    }
+
+    private void SyncMousePosition()
+    {
+        _lastMousePosition = GetMousePosition();
+        _hasMousePositionInitialized = true;
     }
 
     private void UpdateRemoteAimVisuals()
