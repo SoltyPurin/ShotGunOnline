@@ -72,11 +72,14 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
         }
     }
 
-    public IEnumerator SpawnStop(float stopTime)
+    public void SpawnStop()
     {
         _isSpawnStop = true;
         Debug.Log("スポーン停止");
-        yield return new WaitForSeconds(stopTime);
+    }
+
+    public void SpawnRestart()
+    {
         _isSpawnStop = false;
         Debug.Log("スポーン再開");
     }

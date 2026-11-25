@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -71,6 +72,8 @@ public class BossHP : EnemyTakeDamage
     internal bool _isInvincible = true;
     private bool _isAnimeGot = false;
 
+    public event Action<bool> IsBossDead;
+
     #endregion
 
     public override void Start()
@@ -126,7 +129,7 @@ public class BossHP : EnemyTakeDamage
         _playTheSEManager.PlayEnemyDamageSound();
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
@@ -141,7 +144,7 @@ public class BossHP : EnemyTakeDamage
 
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
 
@@ -190,7 +193,7 @@ public class BossHP : EnemyTakeDamage
 
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
 
@@ -285,10 +288,15 @@ public class BossHP : EnemyTakeDamage
         if (_bossAnimator != null) _bossAnimator.SetBool("isDead", true);
     }
 
-    private void DeadBossProcess()
+    /// <summary>
+    /// ボスの死亡処理、渡す値はtrueでいい
+    /// </summary>
+    /// <param name="isDead"></param>
+    private void DeadBossProcess(bool isDead)
     {
         if (_isDead) return;
         _isDead = true;
+        IsBossDead?.Invoke(_isDead);
         FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: 開始");
 
         if (TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTrans))

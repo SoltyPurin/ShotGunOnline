@@ -23,13 +23,14 @@ public class ZombiWave : Wave
     protected List<ZombiModeSummonEnemy> _summonEnemys = new List<ZombiModeSummonEnemy>();
     private int _currentWaveCount = 0;
 
-    private bool _isBossSpawning = false;
     public override void Start()
     {
+        base.Start();
+
         foreach (GimmickData data in _gimmickList)
         {
             ZombiModeSummonEnemy zombi = data._waveGimmick.GetComponent<ZombiModeSummonEnemy>();
-            if (zombi != null)
+            if (zombi != null )
             {
                 _enemySpawnInterval += zombi.EnemySpawnInterval;
                 _summonEnemys.Add(zombi);
@@ -40,7 +41,6 @@ public class ZombiWave : Wave
         {
             _enemySpawnInterval /= _summonEnemys.Count;
         }
-        base.Start();
         StartCoroutine(CallCreateTime());
     }
 
@@ -74,29 +74,13 @@ public class ZombiWave : Wave
         }
         _counter.EnemyCount(0, (int)_difficulty, _waveType, _enemySpawnInterval);
         StartCoroutine(CallCreateTime());
-        foreach(BossSpawnStruct structs in _bossSpawnWaves)
+        foreach (BossSpawnStruct structs in _bossSpawnWaves)
         {
             if (_currentWaveCount %structs.spawnWaveCount  == 0)
             {
                 MiddleBossCharacterSpawner spawner = structs.bossSpawner.GetComponent<MiddleBossCharacterSpawner>();
                 spawner.SpawnBoss();
-                _isBossSpawning = true;
             }
         }
-        if( _isBossSpawning)
-        {
-            foreach(ZombiModeSummonEnemy summonEnemy in _summonEnemys)
-            {
-                summonEnemy.StartCoroutine(summonEnemy.SpawnStop(_mobSpawnStopTime));
-            }
-            StartCoroutine(UnlockSpawn(_mobSpawnStopTime));
-
-        }
-    }
-
-    private IEnumerator UnlockSpawn(float stopTime)
-    {
-        yield return new WaitForSeconds(stopTime);
-        _isBossSpawning = false;
     }
 }

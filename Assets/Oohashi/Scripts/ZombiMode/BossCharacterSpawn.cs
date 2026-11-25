@@ -22,12 +22,30 @@ public class BossCharacterSpawn : MiddleBossCharacterSpawner
 
     private int _currentSpawnCount = 0;
 
+    private  ZombiModeSummonEnemy[] _summoners = new ZombiModeSummonEnemy[0];
+
     public override void SpawnBoss()
     {
         base.SpawnBoss();
         _currentSpawnCount++;
         _currentSpawnCount = Mathf.Clamp(_currentSpawnCount, 0, _bossEnhancedValue.Count-1);
         BossEnhance();
+        ZakoSpawnStop();
+    }
+
+    private void ZakoSpawnStop()
+    {
+        _summoners = FindObjectsByType<ZombiModeSummonEnemy>();
+
+        foreach (ZombiModeSummonEnemy summonEnemy in _summoners)
+        {
+            // 実際にネットワークスポーンされているスポナーだけを停止
+            if (summonEnemy.IsSpawned && summonEnemy.IsServer)
+            {
+                summonEnemy.SpawnStop();
+            }
+        }
+
     }
 
     private void BossEnhance()
@@ -46,6 +64,24 @@ public class BossCharacterSpawn : MiddleBossCharacterSpawner
         if(bossHP != null)
         {
             bossHP.EnhanceBossHP(_bossEnhancedValue[_currentSpawnCount].addHP);
+        }
+
+        bossHP.IsBossDead += ZakoSpawnRestart;
+    }
+
+    private void ZakoSpawnRestart(bool isDead)
+    {
+        if (isDead)
+        {
+            foreach (ZombiModeSummonEnemy summonEnemy in _summoners)
+            {
+                // 実際にネットワークスポーンされているスポナーだけに再開指示を送る
+                if (summonEnemy.IsSpawned && summonEnemy.IsServer)
+                {
+                    summonEnemy.SpawnRestart();
+                }
+            }
+
         }
     }
 }
