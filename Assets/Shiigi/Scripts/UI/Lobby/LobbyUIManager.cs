@@ -25,6 +25,8 @@ public class LobbyUIManager : MonoBehaviour
     [Tooltip("画面左上のメニュー開閉ボタン（未設定時は自動生成）")]
     [SerializeField] private Button _menuToggleButton;
     [SerializeField] private Text _menuToggleButtonText;
+    [SerializeField] private GameObject _menuToggleHamburgerIcon;
+    [SerializeField] private GameObject _menuToggleCloseIcon;
     [SerializeField] private string _titleSceneName = "Title";
 
     [Header("プレイヤー名変更設定")]
@@ -53,6 +55,7 @@ public class LobbyUIManager : MonoBehaviour
         // Viewのイベントを購読
         _discoverUI.OnRefreshRequested += RefreshRoomList;
         _discoverUI.OnCreateRoomRequested += OpenCreateRoomDialog;
+        _discoverUI.OnBackRequested += HandleDiscoverBackRequested;
         _discoverUI.OnJoinRoomRequested += JoinRoom;
 
         // ルームUIのイベントを購読
@@ -116,6 +119,7 @@ public class LobbyUIManager : MonoBehaviour
         {
             _discoverUI.OnRefreshRequested -= RefreshRoomList;
             _discoverUI.OnCreateRoomRequested -= OpenCreateRoomDialog;
+            _discoverUI.OnBackRequested -= HandleDiscoverBackRequested;
             _discoverUI.OnJoinRoomRequested -= JoinRoom;
         }
 
@@ -347,6 +351,19 @@ public class LobbyUIManager : MonoBehaviour
         ApplyVisibility(immediate: false);
     }
 
+    private void HandleDiscoverBackRequested()
+    {
+        if (!CanToggleMenu()) return;
+        if (_hamburgerMenuUI != null)
+        {
+            ReturnToHamburgerFromMatchingMenu();
+        }
+        else
+        {
+            SetMenuOpen(false);
+        }
+    }
+
     /// <summary>
     /// ロビーUIの表示状態を明示的に設定する
     /// </summary>
@@ -498,40 +515,68 @@ public class LobbyUIManager : MonoBehaviour
     {
         if (_menuToggleButton == null) return;
 
-        bool canShowButton = _currentState != LobbyUIState.Connecting;
+        bool hasCustomIcons = _menuToggleHamburgerIcon != null || _menuToggleCloseIcon != null;
+        bool isAnyMenuOpen = _isHamburgerOpen || _isMenuOpen;
+        bool canShowButton = _currentState != LobbyUIState.Connecting && (!hasCustomIcons || !_isHamburgerOpen);
         _menuToggleButton.gameObject.SetActive(canShowButton);
         _menuToggleButton.interactable = canShowButton && !LobbyViewBase.IsModalOpen;
 
-        if (_menuToggleButtonText == null) return;
-
-        if (_hamburgerMenuUI != null)
+        if (_menuToggleHamburgerIcon != null)
         {
-            if (_isHamburgerOpen || _isMenuOpen)
+            _menuToggleHamburgerIcon.SetActive(!isAnyMenuOpen);
+        }
+        if (_menuToggleCloseIcon != null)
+        {
+            _menuToggleCloseIcon.SetActive(isAnyMenuOpen);
+        }
+
+        if (_menuToggleButtonText != null)
+        {
+            if (hasCustomIcons)
+            {
+                if (isAnyMenuOpen)
+                {
+                    _menuToggleButtonText.text = "ステージへ戻る";
+                }
+                else if (_currentState == LobbyUIState.InRoom && _sessionService?.CurrentSession != null)
+                {
+                    var s = _sessionService.CurrentSession;
+                    _menuToggleButtonText.text = $"メニュー ({s.Players.Count}/{s.MaxPlayers})";
+                }
+                else
+                {
+                    _menuToggleButtonText.text = "メニュー";
+                }
+            }
+            else if (_hamburgerMenuUI != null)
+            {
+                if (_isHamburgerOpen || _isMenuOpen)
+                {
+                    _menuToggleButtonText.text = "× ステージへ戻る [Tab / Esc / Option]";
+                }
+                else if (_currentState == LobbyUIState.InRoom && _sessionService?.CurrentSession != null)
+                {
+                    var s = _sessionService.CurrentSession;
+                    _menuToggleButtonText.text = $"≡ メニュー ({s.Players.Count}/{s.MaxPlayers}) [Tab / Esc / Option]";
+                }
+                else
+                {
+                    _menuToggleButtonText.text = "≡ メニュー [Tab / Esc / Option]";
+                }
+            }
+            else if (_isMenuOpen)
             {
                 _menuToggleButtonText.text = "× ステージへ戻る [Tab / Esc / Option]";
             }
             else if (_currentState == LobbyUIState.InRoom && _sessionService?.CurrentSession != null)
             {
                 var s = _sessionService.CurrentSession;
-                _menuToggleButtonText.text = $"≡ メニュー ({s.Players.Count}/{s.MaxPlayers}) [Tab / Esc / Option]";
+                _menuToggleButtonText.text = $"ルームメニュー ({s.Players.Count}/{s.MaxPlayers}) [Tab / Esc / Option]";
             }
             else
             {
-                _menuToggleButtonText.text = "≡ メニュー [Tab / Esc / Option]";
+                _menuToggleButtonText.text = "マッチングメニューを開く [Tab / Esc / Option]";
             }
-        }
-        else if (_isMenuOpen)
-        {
-            _menuToggleButtonText.text = "× ステージへ戻る [Tab / Esc / Option]";
-        }
-        else if (_currentState == LobbyUIState.InRoom && _sessionService?.CurrentSession != null)
-        {
-            var s = _sessionService.CurrentSession;
-            _menuToggleButtonText.text = $"ルームメニュー ({s.Players.Count}/{s.MaxPlayers}) [Tab / Esc / Option]";
-        }
-        else
-        {
-            _menuToggleButtonText.text = "マッチングメニューを開く [Tab / Esc / Option]";
         }
 
         UpdatePlayerNameButtonVisual();

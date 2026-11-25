@@ -8,17 +8,24 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
 {
     [Header("テキスト")] [SerializeField] private Text _roomNameText;
     [SerializeField] private Text _playerCountText;
+    [SerializeField] private Text _statusText;
+    [SerializeField] private Graphic _statusIndicator;
 
     [Header("ボタン")] [SerializeField] private Button _joinButton;
     [SerializeField] private Button _cardButton;
 
     [Header("選択状態の見た目")]
-    [SerializeField] private Color _selectedBgColor = new Color(0.38f, 0.28f, 0.12f, 0.98f);
-    [SerializeField] private Color _selectedOutlineColor = new Color(1.0f, 0.86f, 0.32f, 1.0f);
-    [SerializeField] private Vector2 _selectedOutlineDistance = new Vector2(4f, -4f);
-    [SerializeField] private Color _selectedAccentColor = new Color(1.0f, 0.84f, 0.28f, 1.0f);
-    [SerializeField] private Color _selectedTextColor = new Color(1.0f, 0.97f, 0.84f, 1.0f);
-    [SerializeField] private float _accentBarWidth = 10f;
+    [SerializeField] private Color _selectedBgColor = new Color(0.28f, 0.21f, 0.11f, 0.98f);
+    [SerializeField] private Color _selectedOutlineColor = new Color(0.98f, 0.83f, 0.43f, 1.0f);
+    [SerializeField] private Vector2 _selectedOutlineDistance = new Vector2(2.5f, -2.5f);
+    [SerializeField] private Color _selectedAccentColor = new Color(0.36f, 0.92f, 0.80f, 1.0f);
+    [SerializeField] private Color _selectedTextColor = new Color(1.0f, 0.98f, 0.90f, 1.0f);
+    [SerializeField] private float _accentBarWidth = 7f;
+
+    [Header("ステータス色")]
+    [SerializeField] private Color _waitingStatusColor = new Color(0.36f, 0.92f, 0.80f, 1f);
+    [SerializeField] private Color _inGameStatusColor = new Color(0.92f, 0.48f, 0.38f, 1f);
+    [SerializeField] private Color _fullStatusColor = new Color(0.76f, 0.66f, 0.48f, 1f);
 
     private ISessionInfo _sessionInfo;
     private Image _backgroundImage;
@@ -245,6 +252,21 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
         {
             var currentPlayerCount = sessionInfo.MaxPlayers - sessionInfo.AvailableSlots;
             _playerCountText.text = $"{currentPlayerCount} / {sessionInfo.MaxPlayers}";
+        }
+
+        bool isInGame = SessionPlayerPropertyHelper.IsSessionInGame(sessionInfo);
+        bool isFull = sessionInfo.AvailableSlots <= 0;
+        string statusLabel = isInGame ? "試合中" : (isFull ? "満員" : "待機中");
+        Color statusColor = isInGame ? _inGameStatusColor : (isFull ? _fullStatusColor : _waitingStatusColor);
+
+        if (_statusText != null)
+        {
+            _statusText.text = statusLabel;
+            _statusText.color = statusColor;
+        }
+        if (_statusIndicator != null)
+        {
+            _statusIndicator.color = statusColor;
         }
 
         // 旧参加ボタンが有効な場合のみ満員時に非活性化する（カード自体の選択は満員でも許可）

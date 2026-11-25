@@ -11,8 +11,10 @@ public class LobbyDiscoverUI : LobbyViewBase
 {
     [Header("マッチング用ボタン")][SerializeField] private Button _refreshButton;
     [SerializeField] private Button _createRoomButton;
+    [SerializeField] private Button _backButton;
 
     [Header("ルーム用コンテナ")][SerializeField] private Transform _roomListContainer;
+    [SerializeField] private GameObject _emptyStateObject;
 
     [Header("ルーム用カードUIプレハブ")]
     [SerializeField]
@@ -29,6 +31,7 @@ public class LobbyDiscoverUI : LobbyViewBase
     // Presenterが購読するためのイベント群
     public event Action OnRefreshRequested;
     public event Action OnCreateRoomRequested;
+    public event Action OnBackRequested;
     public event Action<ISessionInfo> OnJoinRoomRequested;
 
     private readonly List<RoomCardUI> _spawnedCards = new();
@@ -59,6 +62,11 @@ public class LobbyDiscoverUI : LobbyViewBase
             _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
             EnsureButtonSound(_createRoomButton, UIButtonType.Default);
             UIButtonMetallicVisual.Attach(_createRoomButton);
+        }
+        if (_backButton != null)
+        {
+            _backButton.onClick.AddListener(() => OnBackRequested?.Invoke());
+            EnsureButtonSound(_backButton, UIButtonType.Cancel);
         }
 
         ClearRoomDetail();
@@ -159,6 +167,8 @@ public class LobbyDiscoverUI : LobbyViewBase
 
         if (_spawnedCards.Count > 0)
         {
+            if (_emptyStateObject != null) _emptyStateObject.SetActive(false);
+
             RoomCardUI initialCard = !string.IsNullOrEmpty(previousSelectedId)
                 ? _spawnedCards.FirstOrDefault(c => c != null && c.SessionInfo != null && c.SessionInfo.Id == previousSelectedId)
                 : null;
@@ -170,6 +180,7 @@ public class LobbyDiscoverUI : LobbyViewBase
         }
         else
         {
+            if (_emptyStateObject != null) _emptyStateObject.SetActive(true);
             ClearRoomDetail();
         }
 
@@ -207,6 +218,7 @@ public class LobbyDiscoverUI : LobbyViewBase
     {
         if (_refreshButton != null) _refreshButton.interactable = interactable;
         if (_createRoomButton != null) _createRoomButton.interactable = interactable;
+        if (_backButton != null) _backButton.interactable = interactable;
         if (interactable)
         {
             RebuildControllerNavigation();
@@ -432,7 +444,11 @@ public class LobbyDiscoverUI : LobbyViewBase
 
         if (_detailGameStatusText != null)
         {
+            bool inGame = SessionPlayerPropertyHelper.IsSessionInGame(session);
             _detailGameStatusText.text = SessionPlayerPropertyHelper.GetSessionGameStatusDisplayText(session);
+            _detailGameStatusText.color = inGame
+                ? new Color(0.94f, 0.50f, 0.40f, 1f)
+                : new Color(0.36f, 0.92f, 0.80f, 1f);
         }
 
         if (_detailProtocolText != null)
@@ -448,9 +464,18 @@ public class LobbyDiscoverUI : LobbyViewBase
         _selectedCard = null;
         UpdateSelectedCardVisuals();
 
+        if (_emptyStateObject != null && _spawnedCards.Count == 0)
+        {
+            _emptyStateObject.SetActive(true);
+        }
+
         if (_detailRoomNameText != null) _detailRoomNameText.text = "-";
         if (_detailPlayerCountText != null) _detailPlayerCountText.text = "- / -";
-        if (_detailGameStatusText != null) _detailGameStatusText.text = "-";
+        if (_detailGameStatusText != null)
+        {
+            _detailGameStatusText.text = "-";
+            _detailGameStatusText.color = new Color(0.78f, 0.69f, 0.51f, 1f);
+        }
         if (_detailProtocolText != null) _detailProtocolText.text = "-";
     }
 

@@ -17,10 +17,12 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
     [SerializeField] private CanvasGroup _drawerCanvasGroup;
     [SerializeField] private Button _dimmerButton;
     [SerializeField] private CanvasGroup _dimmerCanvasGroup;
+    [SerializeField] private Button _closeButton;
 
     [Header("プロフィール表示")]
     [SerializeField] private TMP_Text _playerNameText;
     [SerializeField] private TMP_Text _statusText;
+    [SerializeField] private Graphic _statusIndicator;
 
     [Header("メニューボタン")]
     [SerializeField] private Button _matchingButton;
@@ -32,9 +34,9 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
     [SerializeField] private float _slideDuration = 0.22f;
 
     [Header("ステータス色設定")]
-    [SerializeField] private Color _onlineColor = new Color(0.49f, 1f, 0.54f, 1f);
-    [SerializeField] private Color _inRoomColor = new Color(1f, 0.84f, 0.38f, 1f);
-    [SerializeField] private Color _offlineColor = new Color(0.68f, 0.7f, 0.74f, 1f);
+    [SerializeField] private Color _onlineColor = new Color(0.36f, 0.92f, 0.80f, 1f);
+    [SerializeField] private Color _inRoomColor = new Color(1f, 0.82f, 0.34f, 1f);
+    [SerializeField] private Color _offlineColor = new Color(0.66f, 0.62f, 0.56f, 1f);
 
     public event Action OnMatchingMenuRequested;
     public event Action OnEditNameRequested;
@@ -99,6 +101,12 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
             _dimmerButton.onClick.AddListener(() => OnCloseRequested?.Invoke());
         }
 
+        if (_closeButton != null)
+        {
+            _closeButton.onClick.AddListener(() => OnCloseRequested?.Invoke());
+            EnsureButtonSound(_closeButton, UIButtonType.Cancel);
+        }
+
         CaptureOpenPositionIfNeeded();
         RebuildNavigation();
     }
@@ -131,7 +139,9 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         _isOpen = open;
         _animSequence?.Kill();
 
-        float slideWidth = _drawerPanel != null ? Mathf.Max(320f, _drawerPanel.rect.width) : 420f;
+        float slideWidth = _drawerPanel != null
+            ? Mathf.Max(320f, _drawerPanel.rect.width + Mathf.Max(0f, _openAnchoredPosition.x) + 48f)
+            : 480f;
         Vector2 closedPos = _openAnchoredPosition - new Vector2(slideWidth, 0f);
 
         if (immediate)
@@ -286,23 +296,33 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
     {
         RefreshPlayerName(PlayerProfileStore.PlayerName);
 
+        string statusLabel;
+        Color statusColor;
+        if (isInRoom)
+        {
+            statusLabel = "ルーム参加中";
+            statusColor = _inRoomColor;
+        }
+        else if (isOnline)
+        {
+            statusLabel = "オンライン";
+            statusColor = _onlineColor;
+        }
+        else
+        {
+            statusLabel = "オフライン";
+            statusColor = _offlineColor;
+        }
+
         if (_statusText != null)
         {
-            if (isInRoom)
-            {
-                _statusText.text = "● ルーム参加中";
-                _statusText.color = _inRoomColor;
-            }
-            else if (isOnline)
-            {
-                _statusText.text = "● オンライン";
-                _statusText.color = _onlineColor;
-            }
-            else
-            {
-                _statusText.text = "● オフライン";
-                _statusText.color = _offlineColor;
-            }
+            _statusText.text = statusLabel;
+            _statusText.color = statusColor;
+        }
+
+        if (_statusIndicator != null)
+        {
+            _statusIndicator.color = statusColor;
         }
 
         if (_matchingButtonText != null)
