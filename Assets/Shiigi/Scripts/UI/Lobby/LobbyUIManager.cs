@@ -55,6 +55,7 @@ public class LobbyUIManager : MonoBehaviour
         // Viewのイベントを購読
         _discoverUI.OnRefreshRequested += RefreshRoomList;
         _discoverUI.OnCreateRoomRequested += OpenCreateRoomDialog;
+        _discoverUI.OnBackRequested += HandleDiscoverBackRequested;
         _discoverUI.OnJoinRoomRequested += JoinRoom;
 
         // ルームUIのイベントを購読
@@ -118,6 +119,7 @@ public class LobbyUIManager : MonoBehaviour
         {
             _discoverUI.OnRefreshRequested -= RefreshRoomList;
             _discoverUI.OnCreateRoomRequested -= OpenCreateRoomDialog;
+            _discoverUI.OnBackRequested -= HandleDiscoverBackRequested;
             _discoverUI.OnJoinRoomRequested -= JoinRoom;
         }
 
@@ -347,6 +349,19 @@ public class LobbyUIManager : MonoBehaviour
         _isHamburgerOpen = true;
         UISound.Play(UISoundType.Cancel);
         ApplyVisibility(immediate: false);
+    }
+
+    private void HandleDiscoverBackRequested()
+    {
+        if (!CanToggleMenu()) return;
+        if (_hamburgerMenuUI != null)
+        {
+            ReturnToHamburgerFromMatchingMenu();
+        }
+        else
+        {
+            SetMenuOpen(false);
+        }
     }
 
     /// <summary>
