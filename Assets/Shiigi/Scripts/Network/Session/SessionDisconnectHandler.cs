@@ -274,20 +274,6 @@ public class SessionDisconnectHandler
 
         canvasObj.AddComponent<GraphicRaycaster>();
 
-        // 全画面ブロッカー (黒半透明で背後のクリックを防ぐオーバーレイ)
-        var blockerObj = new GameObject("ScreenBlocker", typeof(RectTransform), typeof(Image));
-        blockerObj.transform.SetParent(canvasObj.transform, false);
-        var blockerRect = blockerObj.GetComponent<RectTransform>();
-        blockerRect.anchorMin = Vector2.zero;
-        blockerRect.anchorMax = Vector2.one;
-        blockerRect.sizeDelta = Vector2.zero;
-        blockerRect.anchoredPosition = Vector2.zero;
-        blockerRect.pivot = new Vector2(0.5f, 0.5f);
-
-        var blockerImage = blockerObj.GetComponent<Image>();
-        blockerImage.color = new Color(0f, 0f, 0f, 0.6f);
-        blockerImage.raycastTarget = true;
-
         // MultiplayerLobbyScene の LobbyUIManager と同じレイアウト枠 (SizeDelta: -300, -100) を再現
         var frameObj = new GameObject("DialogFrame", typeof(RectTransform));
         var frameRect = frameObj.GetComponent<RectTransform>();
