@@ -501,8 +501,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossCharacterSpawner
   ShowTopMostFoldoutHeaderGroup: 1
+  _spawnBossObj: {fileID: 9007165033885049428, guid: 3702a1f3cca1e864487ab494a1e2f93f, type: 3}
   _isSpawnWithZako: 1
-  _spawnBoss: {fileID: 9007165033885049428, guid: 3702a1f3cca1e864487ab494a1e2f93f, type: 3}
   _spawnOdds: 10
 --- !u!114 &2638999697237269071
 MonoBehaviour:

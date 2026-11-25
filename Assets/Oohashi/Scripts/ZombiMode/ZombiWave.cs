@@ -36,28 +36,6 @@ public class ZombiWave : Wave
             }
         }
 
-        //for (int i = 0; i < _gimmickList.Count; i++)
-        //{
-        //    GimmickData data = _gimmickList[i];
-
-        //    if (data._waveGimmick == null)
-        //    {
-        //        Debug.LogError($"ƒMƒ~ƒbƒNƒŠƒXƒg‚Ì {i} ”Ô–Ú‚ª null ‚Å‚·");
-        //        continue;
-        //    }
-
-        //    ZombiModeSummonEnemy zombi =
-        //        data._waveGimmick.GetComponent<ZombiModeSummonEnemy>();
-
-        //    if (zombi != null)
-        //    {
-        //        _enemySpawnInterval += zombi.EnemySpawnInterval;
-        //        _summonEnemys.Add(zombi);
-        //    }
-        //}
-
-
-        //_enemySpawnInterval /= _gimmickList.Count;
         if (_summonEnemys.Count > 0)
         {
             _enemySpawnInterval /= _summonEnemys.Count;
@@ -66,6 +44,21 @@ public class ZombiWave : Wave
         StartCoroutine(CallCreateTime());
     }
 
+    public override void ObjSetFalse()
+    {
+        if (_objList != null)
+        {
+            //“G‚ðˆê’U‘S‚Ä–³Œø‰»
+            for (int i = 0; i < _objList.Count; i++)
+            {
+                if (_objList[i]._waveObj != null)
+                {
+                    _objList[i]._waveObj.gameObject.SetActive(false);
+                }
+            }
+        }
+
+    }
     private IEnumerator CallCreateTime()
     {
         yield return new WaitForSeconds(_enemySpawnInterval);
@@ -83,10 +76,9 @@ public class ZombiWave : Wave
         StartCoroutine(CallCreateTime());
         foreach(BossSpawnStruct structs in _bossSpawnWaves)
         {
-            if (structs.spawnWaveCount % _currentWaveCount == 0 && _currentWaveCount != 1)
+            if (_currentWaveCount %structs.spawnWaveCount  == 0)
             {
-                Debug.Log("Š„‚èŽZ‚µ‚½Œ‹‰Ê‚Í" + structs.spawnWaveCount+"%"+ _currentWaveCount + "=" +structs.spawnWaveCount%_currentWaveCount);
-                BossCharacterSpawner spawner = structs.bossSpawner.GetComponent<BossCharacterSpawner>();
+                MiddleBossCharacterSpawner spawner = structs.bossSpawner.GetComponent<MiddleBossCharacterSpawner>();
                 spawner.SpawnBoss();
                 _isBossSpawning = true;
             }
@@ -97,7 +89,14 @@ public class ZombiWave : Wave
             {
                 summonEnemy.StartCoroutine(summonEnemy.SpawnStop(_mobSpawnStopTime));
             }
+            StartCoroutine(UnlockSpawn(_mobSpawnStopTime));
+
         }
     }
 
+    private IEnumerator UnlockSpawn(float stopTime)
+    {
+        yield return new WaitForSeconds(stopTime);
+        _isBossSpawning = false;
+    }
 }

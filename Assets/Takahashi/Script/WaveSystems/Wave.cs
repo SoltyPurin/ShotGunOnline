@@ -81,6 +81,12 @@ public class Wave : MonoBehaviour
 
     [SerializeField, Header("ウェーブの難易度")]
     protected Difficulty _difficulty = Difficulty.Easy;
+    [SerializeField, Header("敵の格納場所")]
+    protected List<ObjData> _objList = new List<ObjData>();
+    public List<ObjData> ObjList
+    {
+        get { return _objList; }
+    }
 
     [SerializeField, Header("ギミックの格納場所")]
     protected List<GimmickData> _gimmickList = new List<GimmickData>();
@@ -98,13 +104,6 @@ public class Wave : MonoBehaviour
 
     [Header("ウェーブの属性")]
     public WaveEnemyType _waveType = WaveEnemyType.Normal;
-
-    [SerializeField, Header("敵の格納場所")]
-    private List<ObjData> _objList = new List<ObjData>();
-    public List<ObjData> ObjList
-    {
-        get { return _objList; }
-    }
 
 
 
@@ -266,7 +265,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 全オブジェクトの無効化メソッド
     /// </summary>
-    private void ObjSetFalse()
+    public virtual void ObjSetFalse()
     {
         if (_gimmickList != null)
         {
@@ -370,7 +369,7 @@ public class Wave : MonoBehaviour
                     }
 
                     if (!spawnedGimmick.GetComponent<ZombiModeSummonEnemy>() &&
-                        !spawnedGimmick.GetComponent<BossCharacterSpawner>())
+                        !spawnedGimmick.GetComponent<MiddleBossCharacterSpawner>())
                     {
                         //ギミックにスポナーがついてたら破棄しない
                         // 5. スポナー以外のサーバー側で不要になった配置用ダミーを破棄

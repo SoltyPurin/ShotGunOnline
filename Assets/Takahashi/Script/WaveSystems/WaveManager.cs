@@ -652,7 +652,6 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     /// </summary>
     private void NextWave()
     {
-        Debug.Log("ウェーブの数更新");
         //ウェーブがまだ残っているなら次のウェーブへ
         if (_waveIndex.Value < (TotalWaveCount - 1))
         {

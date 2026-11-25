@@ -85,18 +85,17 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
     {
         if (_enemyList != null && _enemyList.Count > 0)
         {
-            GameObject spawnEnemy = OddsLotteryGameObjectReturn();
-            if(spawnEnemy == null)
-            {
-                spawnEnemy = _enemyList[0].enemy;
-            }
             for(int i = 0; i< _spawnPositions.Count; i++)
             {
+                GameObject spawnEnemy = OddsLotteryGameObjectReturn();
+                if (spawnEnemy == null)
+                {
+                    spawnEnemy = _enemyList[0].enemy;
+                }
                 SpawnEnemy(spawnEnemy, _spawnPositions[i]);
             }
         }
         _enemySpawnRadius += _spawnRadiusPlusValue;
-        Debug.Log("—N‚­”¼Œa‚Í" + _enemySpawnRadius);
         _enemySpawnInterval -= _intervalReductionTime;
         _popTimer = 0;
     }
@@ -154,7 +153,6 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
     private void CalcAndSetSpawnPos()
     {
         _divisionValueIncludeValue = _enemySpawnRadius / _enemyApartSpawnMeters;
-        Debug.Log("for‚ð‰ñ‚·‰ñ”‚Í" + _divisionValueIncludeValue);
         _spawnPositions.Clear();
         for (int i = 1; i <= _divisionValueIncludeValue; i++)
         {

@@ -155,7 +155,6 @@ public class BossStateManagement : EnemyMove
             _playerObject = GameObject.FindWithTag(PLAYERTAGNAME);
         }
 
-        Debug.Log("現在のステートは" + _currentState);
     }
 
     protected void BossStateChange()
@@ -340,5 +339,14 @@ public class BossStateManagement : EnemyMove
     public void SetBossState(BossState state)
     {
         _currentState = state;
+    }
+
+    /// <summary>
+    /// 強化値、とりあえずボスだけに実装するけど必要であれば雑魚にも実装する
+    /// </summary>
+    /// <param name="interval"></param>
+    public void EnhanceInterval(float interval)
+    {
+        _actionCoolTime -= interval;
     }
 }

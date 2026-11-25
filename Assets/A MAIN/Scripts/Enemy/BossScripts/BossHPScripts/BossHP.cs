@@ -314,4 +314,19 @@ public class BossHP : EnemyTakeDamage
         FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: DeathProtocol 開始");
         StartCoroutine(DeathProtocol(1.0f));
     }
+
+    public void EnhanceBossHP(float addHP)
+    {
+        _maxHP.Value += addHP;
+        _enemyHP.Value += addHP;
+        BossHPUI hpui = FindAnyObjectByType<BossHPUI>();
+        if (hpui != null)
+        {
+            hpui.FindBoss();
+        }
+        else
+        {
+            Debug.Log("hpUIが見当たらない");
+        }
+    }
 }
