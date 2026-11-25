@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -73,6 +74,16 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
     );
+
+    private NetworkVariable<FixedString64Bytes> _netPlayerName = new NetworkVariable<FixedString64Bytes>(
+        default,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
+
+    public string PlayerName => IsLocalControl ? PlayerProfileStore.PlayerName : _netPlayerName.Value.ToString();
+    public event System.Action<string> OnPlayerNameChanged;
+
     private void Start()
     {
         if (_rigidbody == null)
@@ -93,6 +104,8 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
                 raycaster.enabled = false;
             }
         }
+
+        PlayerNameplateUI.EnsureAttached(gameObject);
     }
 
     public override void OnNetworkSpawn()
@@ -109,8 +122,18 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             _rigidbody.linearVelocity = Vector2.zero;
         }
 
+        _netPlayerName.OnValueChanged += HandleNetPlayerNameChanged;
+        if (!IsOwner)
+        {
+            OnPlayerNameChanged?.Invoke(_netPlayerName.Value.ToString());
+        }
+
         if (IsOwner)
         {
+            _netPlayerName.Value = new FixedString64Bytes(PlayerProfileStore.PlayerName);
+            PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
+            OnPlayerNameChanged?.Invoke(PlayerProfileStore.PlayerName);
+
             // 開始ムービー・待機中等の場合はMovieState（操作ロック）を維持し、それ以外ならNormalStateにする
             bool isOpeningCutscene = false;
             if (MP_GameManager.Instance != null)
@@ -147,11 +170,25 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
+        _netPlayerName.OnValueChanged -= HandleNetPlayerNameChanged;
         if (IsOwner)
         {
+            PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
             LocalPlayerDespawned?.Invoke(this);
         }
         base.OnNetworkDespawn();
+    }
+
+    private void HandleLocalProfileChanged(PlayerProfile profile)
+    {
+        if (!IsSpawned || !IsOwner || profile == null) return;
+        _netPlayerName.Value = new FixedString64Bytes(profile.PlayerName);
+        OnPlayerNameChanged?.Invoke(profile.PlayerName);
+    }
+
+    private void HandleNetPlayerNameChanged(FixedString64Bytes previousValue, FixedString64Bytes newValue)
+    {
+        OnPlayerNameChanged?.Invoke(newValue.ToString());
     }
 
     public void Teleport(Vector2 position)

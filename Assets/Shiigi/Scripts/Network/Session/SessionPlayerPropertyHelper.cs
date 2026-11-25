@@ -14,6 +14,7 @@ public static class SessionPlayerPropertyHelper
     public const string GameStatusInGameValue = "InGame";
     public const string ReadyPropertyKey = "IsReady";
     public const string RelayConnectedPropertyKey = "IsRelayConnected";
+    public const string PlayerNamePropertyKey = "PlayerName";
     private const string TrueValue = "true";
     private const string FalseValue = "false";
 
@@ -125,6 +126,55 @@ public static class SessionPlayerPropertyHelper
         {
             { RelayConnectedPropertyKey, new PlayerProperty(value, VisibilityPropertyOptions.Member) }
         };
+    }
+
+    /// <summary>
+    /// プレイヤー名の更新用プロパティ辞書を生成する
+    /// </summary>
+    public static Dictionary<string, PlayerProperty> CreatePlayerNameProperties(string playerName)
+    {
+        string sanitized = PlayerProfile.SanitizePlayerName(playerName);
+        return new Dictionary<string, PlayerProperty>
+        {
+            { PlayerNamePropertyKey, new PlayerProperty(sanitized, VisibilityPropertyOptions.Member) }
+        };
+    }
+
+    /// <summary>
+    /// Relay接続完了状態とプレイヤー名をまとめて保存する初期プロパティ辞書を生成する
+    /// </summary>
+    public static Dictionary<string, PlayerProperty> CreateInitialConnectedPlayerProperties(string playerName)
+    {
+        string sanitized = PlayerProfile.SanitizePlayerName(playerName);
+        return new Dictionary<string, PlayerProperty>
+        {
+            { RelayConnectedPropertyKey, new PlayerProperty(TrueValue, VisibilityPropertyOptions.Member) },
+            { PlayerNamePropertyKey, new PlayerProperty(sanitized, VisibilityPropertyOptions.Member) }
+        };
+    }
+
+    /// <summary>
+    /// 指定したプレイヤーの表示名を取得する（未設定時はプレイヤーID短縮表示にフォールバック）
+    /// </summary>
+    public static string GetPlayerName(IReadOnlyPlayer player)
+    {
+        if (player?.Properties != null &&
+            player.Properties.TryGetValue(PlayerNamePropertyKey, out var prop) &&
+            !string.IsNullOrWhiteSpace(prop?.Value))
+        {
+            string sanitized = PlayerProfile.SanitizePlayerName(prop.Value);
+            if (!string.IsNullOrEmpty(sanitized))
+            {
+                return sanitized;
+            }
+        }
+
+        string fallbackId = player?.Id ?? "Unknown";
+        if (fallbackId.Length > 8)
+        {
+            return fallbackId.Substring(0, 8) + "...";
+        }
+        return fallbackId;
     }
 
     /// <summary>

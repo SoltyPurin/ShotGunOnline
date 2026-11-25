@@ -17,8 +17,11 @@ public class ConfirmDialogUI : LobbyViewBase
     [SerializeField] private Button _noButton;
     [SerializeField] private Color _blockerColor = new Color(0f, 0f, 0f, 0.5f);
 
+    private const int TopmostSortingOrder = 500;
+
     private UniTaskCompletionSource<bool> _utcs;
     private GameObject _blocker;
+    private Canvas _overrideCanvas;
 
     protected override void Awake()
     {
@@ -78,6 +81,11 @@ public class ConfirmDialogUI : LobbyViewBase
     {
         _utcs?.TrySetCanceled();
 
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+        EnsureTopmostSorting();
         EnsureBlocker();
 
         if (_messageText != null)
@@ -158,6 +166,7 @@ public class ConfirmDialogUI : LobbyViewBase
         try
         {
             var showTask = base.ShowAsync();
+            EnsureTopmostSorting();
             if (EventSystem.current != null && _yesButton != null && _yesButton.gameObject.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(_yesButton.gameObject);
@@ -209,6 +218,35 @@ public class ConfirmDialogUI : LobbyViewBase
         _utcs?.TrySetCanceled();
         _utcs = null;
         base.OnDestroy();
+    }
+
+    private void EnsureTopmostSorting()
+    {
+        transform.SetAsLastSibling();
+
+        if (_overrideCanvas == null)
+        {
+            _overrideCanvas = GetComponent<Canvas>();
+            if (_overrideCanvas == null)
+            {
+                _overrideCanvas = gameObject.AddComponent<Canvas>();
+            }
+        }
+
+        var rootCanvas = transform.parent != null ? transform.parent.GetComponentInParent<Canvas>()?.rootCanvas : null;
+        if (rootCanvas != null)
+        {
+            _overrideCanvas.sortingLayerID = rootCanvas.sortingLayerID;
+        }
+
+        // 非アクティブ中に設定するとUnityが無視することがあるため、アクティブ状態で必ず再適用する
+        _overrideCanvas.overrideSorting = true;
+        _overrideCanvas.sortingOrder = TopmostSortingOrder;
+
+        if (GetComponent<GraphicRaycaster>() == null)
+        {
+            gameObject.AddComponent<GraphicRaycaster>();
+        }
     }
 
     private void EnsureBlocker()

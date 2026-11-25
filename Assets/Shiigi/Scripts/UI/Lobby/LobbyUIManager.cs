@@ -3,6 +3,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LobbyUIManager : MonoBehaviour
@@ -19,19 +20,30 @@ public class LobbyUIManager : MonoBehaviour
     [Header("集会所メニュー開閉設定")]
     [Tooltip("シーン開始時にロビーUIを開いた状態にするか（false の場合は集会所ステージから開始）")]
     [SerializeField] private bool _startWithMenuOpen = false;
-    [Tooltip("画面右上のメニュー開閉ボタン（未設定時は自動生成）")]
+    [Tooltip("ハンバーガーメニュー（設定時はOption/Tab/Escでこちらを開き、そこから各機能へ遷移）")]
+    [SerializeField] private LobbyHamburgerMenuUI _hamburgerMenuUI;
+    [Tooltip("画面左上のメニュー開閉ボタン（未設定時は自動生成）")]
     [SerializeField] private Button _menuToggleButton;
     [SerializeField] private Text _menuToggleButtonText;
+    [SerializeField] private string _titleSceneName = "Title";
+
+    [Header("プレイヤー名変更設定")]
+    [Tooltip("プレイヤー名変更ボタン（ハンバーガーメニュー未設定時のみ自動生成）")]
+    [SerializeField] private Button _playerNameButton;
+    [SerializeField] private Text _playerNameButtonText;
+    [SerializeField] private LobbyVirtualKeyboardUI _virtualKeyboardPrefab;
 
     private ILobbySessionService _sessionService;
     private MultiplayerSessionManager _sessionManager;
     private LobbyUIState _currentState;
     private bool _isMenuOpen;
+    private bool _isHamburgerOpen;
     private bool _hasRefreshedOnce;
     private bool _isBusyOperation;
     private bool _isUpdatingReady;
+    private bool _isEditingPlayerName;
 
-    public bool IsMenuOpen => _isMenuOpen;
+    public bool IsMenuOpen => _isMenuOpen || _isHamburgerOpen;
 
     private void Start()
     {
@@ -58,6 +70,7 @@ public class LobbyUIManager : MonoBehaviour
             _sessionManager.OnGameStarting += ShowGameStarting;
         }
         LobbyViewBase.OnActiveViewStackChanged += UpdateToggleButtonVisual;
+        PlayerProfileStore.OnProfileChanged += HandlePlayerProfileChanged;
 
         if (_createRoomDialogUI != null)
         {
@@ -70,9 +83,11 @@ public class LobbyUIManager : MonoBehaviour
 
         HideLegacyTitleBackdropIfNeeded();
         EnsureToggleHudButtonCreated();
+        SetupHamburgerOrProfileUI();
 
         // 初期状態に遷移（集会所ステージ移動から開始できるよう _startWithMenuOpen を反映）
         _isMenuOpen = _startWithMenuOpen;
+        _isHamburgerOpen = false;
         TransitionTo(LobbyUIState.Discover, immediate: true);
     }
 
@@ -83,6 +98,17 @@ public class LobbyUIManager : MonoBehaviour
         if (_menuToggleButton != null)
         {
             _menuToggleButton.onClick.RemoveListener(ToggleMenuVisibility);
+        }
+        if (_playerNameButton != null)
+        {
+            _playerNameButton.onClick.RemoveListener(OpenPlayerNameKeyboard);
+        }
+        if (_hamburgerMenuUI != null)
+        {
+            _hamburgerMenuUI.OnMatchingMenuRequested -= OpenMatchingMenuFromHamburger;
+            _hamburgerMenuUI.OnEditNameRequested -= OpenPlayerNameKeyboard;
+            _hamburgerMenuUI.OnReturnToTitleRequested -= RequestReturnToTitle;
+            _hamburgerMenuUI.OnCloseRequested -= CloseHamburgerMenu;
         }
 
         // オブジェクトが破棄されたらイベントの購読を解除
@@ -110,6 +136,7 @@ public class LobbyUIManager : MonoBehaviour
             _sessionManager.OnGameStarting -= ShowGameStarting;
         }
         LobbyViewBase.OnActiveViewStackChanged -= UpdateToggleButtonVisual;
+        PlayerProfileStore.OnProfileChanged -= HandlePlayerProfileChanged;
     }
 
     private void Update()
@@ -132,15 +159,41 @@ public class LobbyUIManager : MonoBehaviour
 
     private void HandleControllerMenuInput()
     {
-        if (!_isMenuOpen || !CanToggleMenu()) return;
+        if (!CanToggleMenu()) return;
+
+        // ハンバーガーメニュー展開中のコントローラー操作
+        if (_isHamburgerOpen)
+        {
+            var pad = Gamepad.current;
+            if (pad != null && pad.buttonEast.wasPressedThisFrame)
+            {
+                SetHamburgerMenuOpen(false);
+                return;
+            }
+
+            if (EventSystem.current != null && !IsCurrentSelectionValid() && WasNavigationInputPressedThisFrame())
+            {
+                _hamburgerMenuUI?.FocusDefaultButton();
+            }
+            return;
+        }
+
+        if (!_isMenuOpen) return;
 
         var gamepad = Gamepad.current;
         if (gamepad != null)
         {
-            // Bボタン: メニューを閉じて集会所へ戻る
+            // Bボタン: ハンバーガーメニュー利用時はハンバーガーメニューへ戻り、未設定時は集会所へ戻る
             if (gamepad.buttonEast.wasPressedThisFrame)
             {
-                SetMenuOpen(false);
+                if (_hamburgerMenuUI != null)
+                {
+                    ReturnToHamburgerFromMatchingMenu();
+                }
+                else
+                {
+                    SetMenuOpen(false);
+                }
                 return;
             }
 
@@ -216,11 +269,82 @@ public class LobbyUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ロビーUI（ルーム検索・ルーム待機画面）の表示/非表示を切り替える
+    /// ロビーUI（ハンバーガーメニューまたはマッチング画面）の表示/非表示を切り替える
     /// </summary>
     public void ToggleMenuVisibility()
     {
+        if (!CanToggleMenu()) return;
+
+        if (_hamburgerMenuUI != null)
+        {
+            if (_isMenuOpen)
+            {
+                SetMenuOpen(false);
+            }
+            else
+            {
+                SetHamburgerMenuOpen(!_isHamburgerOpen);
+            }
+            return;
+        }
+
         SetMenuOpen(!_isMenuOpen);
+    }
+
+    /// <summary>
+    /// ハンバーガーメニューの表示状態を明示的に設定する
+    /// </summary>
+    public void SetHamburgerMenuOpen(bool isOpen)
+    {
+        if (_hamburgerMenuUI == null || !CanToggleMenu()) return;
+        if (_isHamburgerOpen == isOpen) return;
+
+        _isHamburgerOpen = isOpen;
+        if (_isHamburgerOpen)
+        {
+            _isMenuOpen = false;
+        }
+
+        UISound.Play(_isHamburgerOpen ? UISoundType.Enter : UISoundType.Cancel);
+        ApplyVisibility(immediate: false);
+
+        if (!_isHamburgerOpen && !_isMenuOpen && EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
+    private void CloseHamburgerMenu()
+    {
+        SetHamburgerMenuOpen(false);
+    }
+
+    private void OpenMatchingMenuFromHamburger()
+    {
+        if (!CanToggleMenu()) return;
+
+        _isHamburgerOpen = false;
+        _isMenuOpen = true;
+        UISound.Play(UISoundType.Enter);
+        ApplyVisibility(immediate: false);
+
+        if (_currentState == LobbyUIState.Discover && !_hasRefreshedOnce)
+        {
+            _hasRefreshedOnce = true;
+            RefreshRoomList();
+        }
+
+        FocusCurrentViewDefaultElementDelayed().Forget();
+    }
+
+    private void ReturnToHamburgerFromMatchingMenu()
+    {
+        if (_hamburgerMenuUI == null || !CanToggleMenu()) return;
+
+        _isMenuOpen = false;
+        _isHamburgerOpen = true;
+        UISound.Play(UISoundType.Cancel);
+        ApplyVisibility(immediate: false);
     }
 
     /// <summary>
@@ -275,16 +399,22 @@ public class LobbyUIManager : MonoBehaviour
 
         bool discoverTarget = !isConnecting && _isMenuOpen && _currentState == LobbyUIState.Discover;
         bool roomTarget = !isConnecting && _isMenuOpen && _currentState == LobbyUIState.InRoom;
+        bool hamburgerTarget = !isConnecting && _isHamburgerOpen && !_isMenuOpen;
 
         if (immediate)
         {
             _discoverUI.SetVisible(discoverTarget);
             _roomUI.SetVisibleInstant(roomTarget);
+            _hamburgerMenuUI?.SetOpen(hamburgerTarget, immediate: true);
         }
         else
         {
             UpdateViewVisibilityAnimated(_discoverUI, discoverTarget);
             UpdateViewVisibilityAnimated(_roomUI, roomTarget);
+            if (_hamburgerMenuUI != null && _hamburgerMenuUI.IsOpen != hamburgerTarget)
+            {
+                _hamburgerMenuUI.SetOpen(hamburgerTarget, immediate: false);
+            }
         }
 
         // Connectingステートの場合はローディング表示を出す
@@ -298,7 +428,7 @@ public class LobbyUIManager : MonoBehaviour
         }
 
         // メニュー表示中または通信中は集会所キャラの移動入力をブロックする
-        LobbyMovement.IsInputBlocked = isConnecting || _isMenuOpen;
+        LobbyMovement.IsInputBlocked = isConnecting || _isMenuOpen || _isHamburgerOpen;
 
         UpdateToggleButtonVisual();
     }
@@ -331,6 +461,17 @@ public class LobbyUIManager : MonoBehaviour
     private bool CanToggleMenu()
     {
         if (_currentState == LobbyUIState.Connecting) return false;
+        if (_isEditingPlayerName) return false;
+        if (_createRoomDialogUI != null && _createRoomDialogUI.gameObject.activeInHierarchy) return false;
+        if (_confirmDialogUI != null && _confirmDialogUI.gameObject.activeInHierarchy) return false;
+        return true;
+    }
+
+    private bool CanOpenPlayerNameEditor()
+    {
+        if (_isEditingPlayerName || _isBusyOperation || _isStartingGame) return false;
+        if (_currentState == LobbyUIState.Connecting) return false;
+        if (LobbyViewBase.IsModalOpen) return false;
         if (_createRoomDialogUI != null && _createRoomDialogUI.gameObject.activeInHierarchy) return false;
         if (_confirmDialogUI != null && _confirmDialogUI.gameObject.activeInHierarchy) return false;
         return true;
@@ -363,7 +504,23 @@ public class LobbyUIManager : MonoBehaviour
 
         if (_menuToggleButtonText == null) return;
 
-        if (_isMenuOpen)
+        if (_hamburgerMenuUI != null)
+        {
+            if (_isHamburgerOpen || _isMenuOpen)
+            {
+                _menuToggleButtonText.text = "× ステージへ戻る [Tab / Esc / Option]";
+            }
+            else if (_currentState == LobbyUIState.InRoom && _sessionService?.CurrentSession != null)
+            {
+                var s = _sessionService.CurrentSession;
+                _menuToggleButtonText.text = $"≡ メニュー ({s.Players.Count}/{s.MaxPlayers}) [Tab / Esc / Option]";
+            }
+            else
+            {
+                _menuToggleButtonText.text = "≡ メニュー [Tab / Esc / Option]";
+            }
+        }
+        else if (_isMenuOpen)
         {
             _menuToggleButtonText.text = "× ステージへ戻る [Tab / Esc / Option]";
         }
@@ -376,6 +533,251 @@ public class LobbyUIManager : MonoBehaviour
         {
             _menuToggleButtonText.text = "マッチングメニューを開く [Tab / Esc / Option]";
         }
+
+        UpdatePlayerNameButtonVisual();
+    }
+
+    private void UpdatePlayerNameButtonVisual()
+    {
+        bool canShow = _currentState != LobbyUIState.Connecting;
+        bool canInteract = canShow && !LobbyViewBase.IsModalOpen && !_isEditingPlayerName;
+        bool isOnline = _sessionManager != null && _sessionManager.IsInitialized;
+        var currentSession = _sessionService?.CurrentSession;
+        bool isInRoom = _currentState == LobbyUIState.InRoom && currentSession != null;
+
+        if (_hamburgerMenuUI != null)
+        {
+            _hamburgerMenuUI.SetInteractable(canInteract);
+            _hamburgerMenuUI.RefreshState(
+                isOnline,
+                isInRoom,
+                currentSession != null ? currentSession.Players.Count : 0,
+                currentSession != null ? currentSession.MaxPlayers : 0);
+        }
+
+        if (_playerNameButton == null) return;
+
+        bool showFallbackButton = canShow && _hamburgerMenuUI == null;
+        _playerNameButton.gameObject.SetActive(showFallbackButton);
+        _playerNameButton.interactable = showFallbackButton && canInteract;
+
+        if (_playerNameButtonText != null)
+        {
+            _playerNameButtonText.supportRichText = false;
+            _playerNameButtonText.text = $"名前: {PlayerProfileStore.PlayerName}";
+        }
+    }
+
+    private void SetupHamburgerOrProfileUI()
+    {
+        if (_hamburgerMenuUI == null)
+        {
+            _hamburgerMenuUI = GetComponentInChildren<LobbyHamburgerMenuUI>(true);
+        }
+        if (_hamburgerMenuUI == null)
+        {
+            _hamburgerMenuUI = FindAnyObjectByType<LobbyHamburgerMenuUI>(FindObjectsInactive.Include);
+        }
+
+        if (_hamburgerMenuUI != null)
+        {
+            _hamburgerMenuUI.OnMatchingMenuRequested -= OpenMatchingMenuFromHamburger;
+            _hamburgerMenuUI.OnMatchingMenuRequested += OpenMatchingMenuFromHamburger;
+            _hamburgerMenuUI.OnEditNameRequested -= OpenPlayerNameKeyboard;
+            _hamburgerMenuUI.OnEditNameRequested += OpenPlayerNameKeyboard;
+            _hamburgerMenuUI.OnReturnToTitleRequested -= RequestReturnToTitle;
+            _hamburgerMenuUI.OnReturnToTitleRequested += RequestReturnToTitle;
+            _hamburgerMenuUI.OnCloseRequested -= CloseHamburgerMenu;
+            _hamburgerMenuUI.OnCloseRequested += CloseHamburgerMenu;
+
+            UpdatePlayerNameButtonVisual();
+            return;
+        }
+
+        EnsurePlayerNameButtonCreated();
+    }
+
+    private void RequestReturnToTitle()
+    {
+        if (_isBusyOperation || _currentState == LobbyUIState.Connecting || _isStartingGame) return;
+        ReturnToTitleAsync().Forget();
+    }
+
+    private async UniTaskVoid ReturnToTitleAsync()
+    {
+        _isBusyOperation = true;
+        try
+        {
+            if (_confirmDialogUI != null)
+            {
+                bool confirmed = await _confirmDialogUI.ShowAsync("タイトル画面に戻りますか？");
+                if (this == null) return;
+
+                if (!confirmed)
+                {
+                    if (_isHamburgerOpen)
+                    {
+                        _hamburgerMenuUI?.FocusDefaultButton();
+                    }
+                    return;
+                }
+            }
+
+            _isHamburgerOpen = false;
+            _isMenuOpen = false;
+            TransitionTo(LobbyUIState.Connecting, immediate: true);
+
+            if (_sessionManager != null)
+            {
+                await _sessionManager.DisconnectAndCleanupAsync();
+                if (this == null) return;
+            }
+
+            SceneManager.LoadScene(string.IsNullOrEmpty(_titleSceneName) ? "Title" : _titleSceneName);
+        }
+        catch (System.OperationCanceledException)
+        {
+            // ダイアログ破棄等によるキャンセル時は静かに終了
+        }
+        finally
+        {
+            _isBusyOperation = false;
+        }
+    }
+
+    private void HandlePlayerProfileChanged(PlayerProfile profile)
+    {
+        UpdatePlayerNameButtonVisual();
+    }
+
+    /// <summary>
+    /// 仮想キーボードを開いてプレイヤー名を変更する
+    /// </summary>
+    public void OpenPlayerNameKeyboard()
+    {
+        if (!CanOpenPlayerNameEditor()) return;
+        OpenPlayerNameKeyboardAsync().Forget();
+    }
+
+    private async UniTaskVoid OpenPlayerNameKeyboardAsync()
+    {
+        if (!CanOpenPlayerNameEditor()) return;
+
+        _isEditingPlayerName = true;
+        LobbyMovement.IsInputBlocked = true;
+        UpdateToggleButtonVisual();
+
+        try
+        {
+            Canvas parentCanvas = GetComponentInParent<Canvas>();
+            LobbyVirtualKeyboardUI prefab = _virtualKeyboardPrefab != null
+                ? _virtualKeyboardPrefab
+                : (_createRoomDialogUI != null ? _createRoomDialogUI.VirtualKeyboardPrefab : null);
+
+            var (confirmed, inputText) = await LobbyVirtualKeyboardUI.OpenAsync(
+                parentCanvas,
+                initialText: PlayerProfileStore.PlayerName,
+                title: "プレイヤー名を入力",
+                maxLength: PlayerProfile.MaxPlayerNameLength,
+                prefab: prefab,
+                showPresets: false);
+
+            if (this == null) return;
+
+            if (confirmed)
+            {
+                PlayerProfileStore.SetPlayerName(inputText);
+            }
+        }
+        catch (System.OperationCanceledException)
+        {
+            // ダイアログ破棄等によるキャンセル時は静かに終了
+        }
+        finally
+        {
+            _isEditingPlayerName = false;
+            if (this != null)
+            {
+                LobbyMovement.IsInputBlocked = _currentState == LobbyUIState.Connecting || _isMenuOpen || _isHamburgerOpen;
+                UpdateToggleButtonVisual();
+                if (_isHamburgerOpen)
+                {
+                    _hamburgerMenuUI?.FocusEditNameButton();
+                }
+                else if (_isMenuOpen)
+                {
+                    FocusCurrentViewDefaultElementDelayed().Forget();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 画面左上のメニュー開閉ボタンの下にプレイヤー名変更HUDボタンを自動生成する（インスペクター未設定時）
+    /// </summary>
+    private void EnsurePlayerNameButtonCreated()
+    {
+        if (_playerNameButton == null)
+        {
+            Transform existing = transform.Find("Button_EditPlayerName");
+            if (existing != null)
+            {
+                _playerNameButton = existing.GetComponent<Button>();
+                _playerNameButtonText = existing.GetComponentInChildren<Text>(true);
+            }
+        }
+
+        if (_playerNameButton == null)
+        {
+            GameObject btnGo = new GameObject("Button_EditPlayerName", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            btnGo.transform.SetParent(transform, false);
+
+            if (_menuToggleButton != null)
+            {
+                btnGo.transform.SetSiblingIndex(_menuToggleButton.transform.GetSiblingIndex() + 1);
+            }
+
+            RectTransform rt = btnGo.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0f, 1f);
+            rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0f, 1f);
+            rt.anchoredPosition = new Vector2(32f, -96f);
+            rt.sizeDelta = new Vector2(460f, 52f);
+
+            Image img = btnGo.GetComponent<Image>();
+            img.color = new Color(0.12f, 0.14f, 0.18f, 0.88f);
+
+            _playerNameButton = btnGo.GetComponent<Button>();
+            _playerNameButton.targetGraphic = img;
+
+            GameObject txtGo = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            txtGo.transform.SetParent(btnGo.transform, false);
+
+            RectTransform txtRt = txtGo.GetComponent<RectTransform>();
+            txtRt.anchorMin = Vector2.zero;
+            txtRt.anchorMax = Vector2.one;
+            txtRt.offsetMin = new Vector2(12f, 4f);
+            txtRt.offsetMax = new Vector2(-12f, -4f);
+
+            _playerNameButtonText = txtGo.GetComponent<Text>();
+            Font referenceFont = _menuToggleButtonText != null
+                ? _menuToggleButtonText.font
+                : GetComponentInChildren<Text>(true)?.font;
+            if (referenceFont == null)
+            {
+                referenceFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            }
+            _playerNameButtonText.font = referenceFont;
+            _playerNameButtonText.fontSize = 20;
+            _playerNameButtonText.alignment = TextAnchor.MiddleCenter;
+            _playerNameButtonText.color = Color.white;
+            _playerNameButtonText.supportRichText = false;
+        }
+
+        _playerNameButton.onClick.RemoveListener(OpenPlayerNameKeyboard);
+        _playerNameButton.onClick.AddListener(OpenPlayerNameKeyboard);
+        UIButtonMetallicVisual.Attach(_playerNameButton);
+        UpdatePlayerNameButtonVisual();
     }
 
     /// <summary>

@@ -145,6 +145,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     private float _lastNormalShotTime = -999f;
     private const float MIN_NORMAL_SHOT_INTERVAL = 0.22f;
     private bool _localPushShootButton = false;
+    private bool _suppressMouseFireUntilRelease = false;
     private bool _ultShootRequested = false;
 
     private void Start()
@@ -213,14 +214,28 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             // キーボード・マウスの射撃入力を取得
             _isKeyboardShootPressed = false;
             _isKeyboardShootDown = false;
+            bool isPointerOverUI = IsPointerOverBlockingUI();
             if (Mouse.current != null)
             {
-                // UIボタン上のクリック開始による暴発を防止
-                if (_localPushShootButton || !IsPointerOverInteractableUI())
+                if (Mouse.current.leftButton.wasPressedThisFrame && isPointerOverUI)
+                {
+                    _suppressMouseFireUntilRelease = true;
+                }
+                if (!Mouse.current.leftButton.isPressed)
+                {
+                    _suppressMouseFireUntilRelease = false;
+                }
+
+                // UI上のクリック開始による暴発を防止
+                if (!_suppressMouseFireUntilRelease && (_localPushShootButton || !isPointerOverUI))
                 {
                     _isKeyboardShootPressed |= Mouse.current.leftButton.isPressed;
                     _isKeyboardShootDown |= Mouse.current.leftButton.wasPressedThisFrame;
                 }
+            }
+            else
+            {
+                _suppressMouseFireUntilRelease = false;
             }
             if (Keyboard.current != null)
             {
@@ -228,10 +243,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 _isKeyboardShootDown |= Keyboard.current.spaceKey.wasPressedThisFrame;
             }
 
-            // 入力判定
+            // 入力判定（旧Input Managerの"Fire"にもマウス左クリックが割り当たるため、UI上クリック時は抑止する）
+            bool blockLegacyFire = _suppressMouseFireUntilRelease || (!_localPushShootButton && isPointerOverUI);
+            bool isLegacyFirePressed = !blockLegacyFire && Input.GetButton(FIREBUTTONNAME);
+            bool isLegacyFireDown = !blockLegacyFire && Input.GetButtonDown(FIREBUTTONNAME);
+
             bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
-            bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || Input.GetButton(FIREBUTTONNAME);
-            bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || Input.GetButtonDown(FIREBUTTONNAME);
+            bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || isLegacyFirePressed;
+            bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || isLegacyFireDown;
 
             IsShootButtonPressed = isShootPressed;
 
@@ -272,7 +291,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
 
     private static readonly List<RaycastResult> _uiRaycastResults = new List<RaycastResult>();
 
-    private static bool IsPointerOverInteractableUI()
+    private static bool IsPointerOverBlockingUI()
     {
         if (Mouse.current == null || EventSystem.current == null) return false;
         var pointerData = new PointerEventData(EventSystem.current)
@@ -285,6 +304,13 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         {
             var go = _uiRaycastResults[i].gameObject;
             if (go == null) continue;
+
+            var canvas = go.GetComponentInParent<Canvas>();
+            if (canvas != null && canvas.renderMode == RenderMode.WorldSpace)
+            {
+                continue;
+            }
+
             var selectable = go.GetComponentInParent<Selectable>();
             if (selectable != null && selectable.IsInteractable())
             {

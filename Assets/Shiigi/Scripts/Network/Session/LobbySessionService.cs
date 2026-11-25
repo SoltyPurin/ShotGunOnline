@@ -301,6 +301,21 @@ public class LobbySessionService : ILobbySessionService
         }
     }
 
+    public async UniTask UpdatePlayerNameAsync(string playerName)
+    {
+        if (_currentSession?.CurrentPlayer == null) return;
+
+        try
+        {
+            var properties = SessionPlayerPropertyHelper.CreatePlayerNameProperties(playerName);
+            await SaveCurrentPlayerPropertiesAsync(properties);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[MSM]: プレイヤー名のセッション反映に失敗しました: {ex.Message}");
+        }
+    }
+
     private bool EnsureServicesInitialized()
     {
         if (_servicesInitializer.IsInitialized) return true;
@@ -335,8 +350,8 @@ public class LobbySessionService : ILobbySessionService
 
     private async UniTask SaveRelayConnectedPropertyAsync()
     {
-        var relayProps = SessionPlayerPropertyHelper.CreateRelayConnectedProperties(true);
-        await SaveCurrentPlayerPropertiesAsync(relayProps);
+        var initialProps = SessionPlayerPropertyHelper.CreateInitialConnectedPlayerProperties(PlayerProfileStore.PlayerName);
+        await SaveCurrentPlayerPropertiesAsync(initialProps);
     }
 
     /// <summary>
