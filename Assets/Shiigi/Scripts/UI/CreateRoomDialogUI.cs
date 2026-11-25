@@ -48,6 +48,7 @@ public class CreateRoomDialogUI : LobbyViewBase
     [SerializeField] private Button _advancedSettingsButton;
     [SerializeField] private GameObject _advancedSettingsPanel;
     [SerializeField] private Dropdown _protocolDropdown;
+    [SerializeField] private RectTransform _advancedArrowIndicator;
 
     [Header("仮想キーボード")]
     [SerializeField] private bool _enableVirtualKeyboard;
@@ -222,6 +223,7 @@ public class CreateRoomDialogUI : LobbyViewBase
         if (_advancedSettingsPanel != null)
         {
             _advancedSettingsPanel.SetActive(false);
+            UpdateAdvancedArrowVisual(false);
             if (_advancedSettingsPanel.transform.parent is RectTransform parentRect)
             {
                 LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
@@ -323,12 +325,20 @@ public class CreateRoomDialogUI : LobbyViewBase
     {
         if (_advancedSettingsPanel == null) return;
 
-        _advancedSettingsPanel.SetActive(!_advancedSettingsPanel.activeSelf);
+        bool nextActive = !_advancedSettingsPanel.activeSelf;
+        _advancedSettingsPanel.SetActive(nextActive);
+        UpdateAdvancedArrowVisual(nextActive);
         if (_advancedSettingsPanel.transform.parent is RectTransform parentRect)
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
         }
         RebuildNavigation();
+    }
+
+    private void UpdateAdvancedArrowVisual(bool isExpanded)
+    {
+        if (_advancedArrowIndicator == null) return;
+        _advancedArrowIndicator.localEulerAngles = new Vector3(0f, 0f, isExpanded ? 180f : 0f);
     }
 
     private void RebuildNavigation()

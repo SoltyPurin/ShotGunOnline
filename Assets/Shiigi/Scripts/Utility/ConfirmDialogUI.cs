@@ -22,6 +22,8 @@ public class ConfirmDialogUI : LobbyViewBase
     private UniTaskCompletionSource<bool> _utcs;
     private GameObject _blocker;
     private Canvas _overrideCanvas;
+    private Text _yesButtonLabel;
+    private string _defaultYesButtonText;
 
     protected override void Awake()
     {
@@ -31,6 +33,15 @@ public class ConfirmDialogUI : LobbyViewBase
         if (_messageText != null)
         {
             _messageText.supportRichText = false;
+        }
+
+        if (_yesButton != null)
+        {
+            _yesButtonLabel = _yesButton.GetComponentInChildren<Text>(true);
+            if (_yesButtonLabel != null)
+            {
+                _defaultYesButtonText = _yesButtonLabel.text;
+            }
         }
 
         EnsureButtonSound(_yesButton, UIButtonType.Default);
@@ -97,13 +108,19 @@ public class ConfirmDialogUI : LobbyViewBase
         {
             _yesButton.onClick.RemoveAllListeners();
 
-            if (!string.IsNullOrEmpty(yesButtonText))
+            if (_yesButtonLabel == null)
             {
-                var textComp = _yesButton.GetComponentInChildren<Text>();
-                if (textComp != null)
+                _yesButtonLabel = _yesButton.GetComponentInChildren<Text>(true);
+                if (_yesButtonLabel != null && string.IsNullOrEmpty(_defaultYesButtonText))
                 {
-                    textComp.text = yesButtonText;
+                    _defaultYesButtonText = _yesButtonLabel.text;
                 }
+            }
+            if (_yesButtonLabel != null)
+            {
+                _yesButtonLabel.text = !string.IsNullOrEmpty(yesButtonText)
+                    ? yesButtonText
+                    : _defaultYesButtonText;
             }
 
             // 背後UIや他ボタンへのキーボード/ゲームパッドのフォーカス移動を防止
