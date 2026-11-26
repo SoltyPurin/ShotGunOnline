@@ -3076,6 +3076,7 @@ MonoBehaviour:
   _advancedArrowIndicator: {fileID: 1970000620}
   _enableVirtualKeyboard: 1
   _virtualKeyboardPrefab: {fileID: 4261535779789801351, guid: e9ed20871006a974483b389ba837e20c, type: 3}
+  _textInputDialogPrefab: {fileID: 7500000003, guid: 4f2a81d6c9e348b0b7152e4a8d3c60f1, type: 3}
 --- !u!1 &629336563
 GameObject:
   m_ObjectHideFlags: 0
