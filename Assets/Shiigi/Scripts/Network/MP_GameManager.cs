@@ -89,6 +89,8 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
             _cutsceneCoroutine = null;
         }
 
+        _localPlayerLocker?.Dispose();
+
         if (Instance == this)
         {
             Instance = null;
@@ -169,7 +171,7 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
             SpawnAllPlayers();
         }
 
-        _localPlayerLocker.TryFindAndLockLocalPlayer();
+        _localPlayerLocker.TryFindAndLockLocalPlayer(forceImmediateSearch: true);
         PrepareCutscenePlayers();
 
         if (_cutsceneCoroutine != null)
@@ -202,9 +204,13 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         }
         else
         {
-            var clientIds = new List<ulong>();
-            foreach (var p in players) clientIds.Add(p.OwnerClientId);
-            assignment = PlayerSlotAssignment.CreateSorted(clientIds);
+            var clientIds = new ulong[players.Count];
+            for (int i = 0; i < players.Count; i++)
+            {
+                clientIds[i] = players[i].OwnerClientId;
+            }
+            Array.Sort(clientIds);
+            assignment = new PlayerSlotAssignment(clientIds);
         }
 
         Debug.Log($"[MP_GameManager] 開始ムービーに {players.Count} 人のプレイヤーを同期します。{assignment}");
