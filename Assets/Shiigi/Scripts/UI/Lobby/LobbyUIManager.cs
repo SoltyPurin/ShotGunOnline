@@ -34,6 +34,7 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private Button _playerNameButton;
     [SerializeField] private Text _playerNameButtonText;
     [SerializeField] private LobbyVirtualKeyboardUI _virtualKeyboardPrefab;
+    [SerializeField] private LobbyTextInputDialogUI _textInputDialogPrefab;
 
     private ILobbySessionService _sessionService;
     private MultiplayerSessionManager _sessionManager;
@@ -723,17 +724,32 @@ public class LobbyUIManager : MonoBehaviour
         try
         {
             Canvas parentCanvas = GetComponentInParent<Canvas>();
-            LobbyVirtualKeyboardUI prefab = _virtualKeyboardPrefab != null
-                ? _virtualKeyboardPrefab
-                : (_createRoomDialogUI != null ? _createRoomDialogUI.VirtualKeyboardPrefab : null);
+            bool confirmed;
+            string inputText;
 
-            var (confirmed, inputText) = await LobbyVirtualKeyboardUI.OpenAsync(
-                parentCanvas,
-                initialText: PlayerProfileStore.PlayerName,
-                title: "プレイヤー名を入力",
-                maxLength: PlayerProfile.MaxPlayerNameLength,
-                prefab: prefab,
-                showPresets: false);
+            if (!LobbyInputDeviceTracker.ShouldUseVirtualKeyboard && _textInputDialogPrefab != null)
+            {
+                (confirmed, inputText) = await LobbyTextInputDialogUI.OpenAsync(
+                    parentCanvas,
+                    initialText: PlayerProfileStore.PlayerName,
+                    title: "プレイヤー名を入力",
+                    maxLength: PlayerProfile.MaxPlayerNameLength,
+                    prefab: _textInputDialogPrefab);
+            }
+            else
+            {
+                LobbyVirtualKeyboardUI prefab = _virtualKeyboardPrefab != null
+                    ? _virtualKeyboardPrefab
+                    : (_createRoomDialogUI != null ? _createRoomDialogUI.VirtualKeyboardPrefab : null);
+
+                (confirmed, inputText) = await LobbyVirtualKeyboardUI.OpenAsync(
+                    parentCanvas,
+                    initialText: PlayerProfileStore.PlayerName,
+                    title: "プレイヤー名を入力",
+                    maxLength: PlayerProfile.MaxPlayerNameLength,
+                    prefab: prefab,
+                    showPresets: false);
+            }
 
             if (this == null) return;
 

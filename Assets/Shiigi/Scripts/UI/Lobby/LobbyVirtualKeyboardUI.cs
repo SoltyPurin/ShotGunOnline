@@ -33,11 +33,15 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     private Color _previewBaseColor = Color.white;
     private Color _shiftBaseColor = Color.white;
     private string _currentText = string.Empty;
+    private string _lastCompositionString = string.Empty;
     private int _maxLength = DEFAULT_MAX_LENGTH;
     private bool _isShiftActive = true;
     private bool _isInitialized = false;
     private float _caretTimer;
     private bool _caretVisible = true;
+    private bool _imeEnabledByDialog;
+    private IMECompositionMode _previousImeMode = IMECompositionMode.Auto;
+    private bool _wasComposingLastFrame;
 
     /// <summary>
     /// 指定されたCanvas配下に仮想キーボードプレハブを表示し、入力結果（確定有無と文字列）を返す汎用メソッド
@@ -98,8 +102,11 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
         transform.SetAsLastSibling();
         EnsureBlocker();
+        EnableImeForPhysicalKeyboard();
         _caretTimer = 0f;
         _caretVisible = true;
+        _lastCompositionString = string.Empty;
+        _wasComposingLastFrame = false;
         RefreshPreview();
         RefreshShiftLabels();
 
@@ -145,9 +152,32 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
         if (_canvasGroup != null && !_canvasGroup.interactable) return;
 
+        // 日本語IME変換中の状態監視（変換候補ウィンドウの位置更新＋変換中プレビュー反映）
+        string composition = Input.compositionString ?? string.Empty;
+        bool isComposing = composition.Length > 0;
+        if (isComposing)
+        {
+            UpdateImeCursorPosition();
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+            {
+                // 変換中の Space / Enter が仮想キーボードのボタン Submit として誤爆しないようにフォーカスを外す
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+        }
+        if (composition != _lastCompositionString)
+        {
+            _lastCompositionString = composition;
+            ResetCaretBlink();
+            RefreshPreview();
+        }
+
+        // IME変換中、または直前フレームで変換確定／キャンセルした直後の Esc/Enter でダイアログを誤操作しない
+        bool suppressDialogControlKeys = isComposing || _wasComposingLastFrame;
+        _wasComposingLastFrame = isComposing;
+
         bool cancelPressed =
             (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
-            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
+            (!suppressDialogControlKeys && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
 
         if (cancelPressed)
         {
@@ -156,7 +186,12 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             return;
         }
 
-        if (HandlePhysicalKeyboardInput())
+        if (HandlePhysicalKeyboardInput(suppressDialogControlKeys))
+        {
+            return;
+        }
+
+        if (isComposing)
         {
             return;
         }
@@ -194,7 +229,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         }
     }
 
-    private bool HandlePhysicalKeyboardInput()
+    private bool HandlePhysicalKeyboardInput(bool suppressControlKeys)
     {
         string input = Input.inputString;
         if (string.IsNullOrEmpty(input))
@@ -209,6 +244,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             char c = input[i];
             if (c == '\b')
             {
+                if (suppressControlKeys) continue;
                 if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
                 {
                     EventSystem.current.SetSelectedGameObject(null);
@@ -221,6 +257,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
             if (c == '\n' || c == '\r')
             {
+                if (suppressControlKeys) continue;
                 // ボタン選択中はUIのSubmitに任せ、物理キーボード入力中（非選択時）のみEnterで確定する
                 if (!hasSelection)
                 {
@@ -281,6 +318,8 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         var tcs = _utcs;
         _utcs = null;
 
+        RestoreImeMode();
+
         if (_blocker != null)
         {
             _blocker.SetActive(false);
@@ -302,9 +341,43 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
     protected override void OnDestroy()
     {
+        RestoreImeMode();
         _utcs?.TrySetCanceled();
         _utcs = null;
         base.OnDestroy();
+    }
+
+    private void EnableImeForPhysicalKeyboard()
+    {
+        if (!_imeEnabledByDialog)
+        {
+            _previousImeMode = Input.imeCompositionMode;
+            _imeEnabledByDialog = true;
+        }
+        Input.imeCompositionMode = IMECompositionMode.On;
+        UpdateImeCursorPosition();
+    }
+
+    private void RestoreImeMode()
+    {
+        if (!_imeEnabledByDialog) return;
+        Input.imeCompositionMode = _previousImeMode;
+        _imeEnabledByDialog = false;
+        _lastCompositionString = string.Empty;
+        _wasComposingLastFrame = false;
+    }
+
+    private void UpdateImeCursorPosition()
+    {
+        if (_previewText == null) return;
+        Vector3 worldPos = _previewText.rectTransform.position;
+        Canvas rootCanvas = GetComponentInParent<Canvas>()?.rootCanvas;
+        Camera cam = (rootCanvas != null && rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            ? rootCanvas.worldCamera
+            : null;
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, worldPos);
+        // Input.compositionCursorPos は左上原点（Y下向き）
+        Input.compositionCursorPos = new Vector2(screenPos.x, Screen.height - screenPos.y + 32f);
     }
 
     private void EnsureBlocker()
@@ -648,9 +721,12 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
     private void RefreshPreview()
     {
+        string composition = Input.compositionString ?? string.Empty;
+        bool hasComposition = composition.Length > 0;
+
         if (_previewText != null)
         {
-            if (string.IsNullOrEmpty(_currentText))
+            if (string.IsNullOrEmpty(_currentText) && !hasComposition)
             {
                 string caretHex = ColorUtility.ToHtmlStringRGBA(_previewBaseColor);
                 string caretMarkup = _caretVisible
@@ -661,6 +737,23 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
                 _previewText.supportRichText = true;
                 _previewText.color = _previewBaseColor;
                 _previewText.text = $"{caretMarkup}<color=#{placeholderHex}>（未入力）</color>";
+            }
+            else if (hasComposition)
+            {
+                string caret = _caretVisible ? "|" : string.Empty;
+                // ユーザー入力文字列に '<' が含まれない場合のみ変換中文字列をソウルシアンで強調表示する
+                if (!_currentText.Contains("<") && !composition.Contains("<"))
+                {
+                    _previewText.supportRichText = true;
+                    _previewText.color = _previewBaseColor;
+                    _previewText.text = $"{_currentText}<color=#5CEACCFF>{composition}</color>{caret}";
+                }
+                else
+                {
+                    _previewText.supportRichText = false;
+                    _previewText.color = _previewBaseColor;
+                    _previewText.text = $"{_currentText}[{composition}]{caret}";
+                }
             }
             else
             {
@@ -673,7 +766,8 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
         if (_counterText != null)
         {
-            _counterText.text = $"{_currentText.Length} / {_maxLength}";
+            int displayLen = _currentText.Length + composition.Length;
+            _counterText.text = $"{displayLen} / {_maxLength}";
         }
     }
 

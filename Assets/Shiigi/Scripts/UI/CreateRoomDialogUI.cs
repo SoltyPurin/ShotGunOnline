@@ -67,10 +67,15 @@ public class CreateRoomDialogUI : LobbyViewBase
     private GameObject _blocker;
     private bool _isOpeningVirtualKeyboard;
 
+    private bool ShouldUseVirtualKeyboard => _enableVirtualKeyboard && LobbyInputDeviceTracker.ShouldUseVirtualKeyboard;
+
     protected override void Awake()
     {
         _viewType = UIViewType.ModalDialog;
         base.Awake();
+
+        LobbyInputDeviceTracker.EnsureInitialized();
+        LobbyInputDeviceTracker.OnInputModeChanged += HandleInputModeChanged;
 
         EnsureButtonSound(_confirmCreateButton, UIButtonType.Default);
         EnsureButtonSound(_cancelDialogButton, UIButtonType.Cancel);
@@ -95,8 +100,8 @@ public class CreateRoomDialogUI : LobbyViewBase
         base.Update();
         if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView || _isOpeningVirtualKeyboard) return;
 
-        // 仮想キーボードが有効な場合、ルーム名欄をクリック/Submit/決定(Enter/Space/A)で仮想キーボードを開く
-        if (_enableVirtualKeyboard && _roomNameInputField != null)
+        // コントローラー操作時かつ仮想キーボード有効時のみ、ルーム名欄の選択＋決定で仮想キーボードを開く
+        if (ShouldUseVirtualKeyboard && _roomNameInputField != null)
         {
             bool isRoomNameSelected =
                 EventSystem.current != null &&
@@ -104,11 +109,7 @@ public class CreateRoomDialogUI : LobbyViewBase
 
             bool openRequestedBySubmit =
                 isRoomNameSelected &&
-                ((Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame) ||
-                 (Keyboard.current != null &&
-                  (Keyboard.current.enterKey.wasPressedThisFrame ||
-                   Keyboard.current.numpadEnterKey.wasPressedThisFrame ||
-                   Keyboard.current.spaceKey.wasPressedThisFrame)));
+                (Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame);
 
             if (_roomNameInputField.isFocused || openRequestedBySubmit)
             {
@@ -116,6 +117,16 @@ public class CreateRoomDialogUI : LobbyViewBase
                 OpenVirtualKeyboardAsync().Forget();
                 return;
             }
+        }
+
+        // キーボード直接入力中は Escape で入力欄のフォーカス解除のみ行い、ダイアログ自体は閉じない
+        if (!ShouldUseVirtualKeyboard && _roomNameInputField != null && _roomNameInputField.isFocused)
+        {
+            if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                _roomNameInputField.DeactivateInputField();
+            }
+            return;
         }
 
         Dropdown openDropdown = GetOpenDropdown();
@@ -178,7 +189,7 @@ public class CreateRoomDialogUI : LobbyViewBase
 
     public override GameObject GetDefaultFocusTarget()
     {
-        if (Gamepad.current != null && _confirmCreateButton != null && _confirmCreateButton.gameObject.activeInHierarchy)
+        if (LobbyInputDeviceTracker.ShouldUseVirtualKeyboard && _confirmCreateButton != null && _confirmCreateButton.gameObject.activeInHierarchy)
         {
             return _confirmCreateButton.gameObject;
         }
@@ -209,6 +220,7 @@ public class CreateRoomDialogUI : LobbyViewBase
 
         // UI初期化
         _roomNameInputField.text = "";
+        ApplyRoomNameInputMode();
 
         // ドロップダウン初期化
         SetMaxPlayersDropdownOptions();
@@ -277,7 +289,7 @@ public class CreateRoomDialogUI : LobbyViewBase
 
         if (EventSystem.current != null)
         {
-            GameObject initialFocus = Gamepad.current != null && _confirmCreateButton != null
+            GameObject initialFocus = LobbyInputDeviceTracker.ShouldUseVirtualKeyboard && _confirmCreateButton != null
                 ? _confirmCreateButton.gameObject
                 : (_roomNameInputField != null ? _roomNameInputField.gameObject : _confirmCreateButton?.gameObject);
             if (initialFocus != null)
@@ -316,9 +328,15 @@ public class CreateRoomDialogUI : LobbyViewBase
 
     protected override void OnDestroy()
     {
+        LobbyInputDeviceTracker.OnInputModeChanged -= HandleInputModeChanged;
         _utcs?.TrySetCanceled();
         _utcs = null;
         base.OnDestroy();
+    }
+
+    private void HandleInputModeChanged(bool usingGamepad)
+    {
+        ApplyRoomNameInputMode();
     }
 
     private void ToggleAdvancedSettings()
@@ -408,9 +426,10 @@ public class CreateRoomDialogUI : LobbyViewBase
     {
         if (_roomNameInputField == null) return;
 
-        // 仮想キーボード有効時はフォーカスしただけでは入力開始せず、クリックや決定で仮想キーボードを開く
-        _roomNameInputField.shouldActivateOnSelect = !_enableVirtualKeyboard;
-        _roomNameInputField.readOnly = _enableVirtualKeyboard;
+        // コントローラー操作時（仮想キーボード有効）のみ直接入力を抑制し、キーボード／マウス操作時は直接入力を許可する
+        bool useVirtualKeyboard = ShouldUseVirtualKeyboard;
+        _roomNameInputField.shouldActivateOnSelect = !useVirtualKeyboard;
+        _roomNameInputField.readOnly = useVirtualKeyboard;
     }
 
     private void OnValidate()
