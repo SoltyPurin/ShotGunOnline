@@ -529,8 +529,9 @@ public class Wave : MonoBehaviour
     /// ウェーブが終了できるかどうかの判定をするメソッド
     /// </summary>
     /// <returns>全ての敵が有効なら終了</returns>
-    public bool IsEnd()
+    public virtual bool IsEnd()
     {
+        Debug.Log("IsEndが呼び出された");
         //for文でリスト内でまだ出現していない敵を判別
         for (int i = 0; i < _objList.Count; ++i)
         {

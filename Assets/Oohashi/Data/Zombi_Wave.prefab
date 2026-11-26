@@ -11483,15 +11483,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ZombiWave
   _difficulty: 1
+  _objList:
+  - _generateFrame: 0
+    _waveObj: {fileID: 324268900780772433}
   _gimmickList:
   - _generateFrame: 0
     _waveGimmick: {fileID: 2640758847605285403}
   - _generateFrame: 0
     _waveGimmick: {fileID: 6116211563123341118}
-  _waveType: 3
-  _objList:
   - _generateFrame: 0
-    _waveObj: {fileID: 324268900780772433}
+    _waveGimmick: {fileID: 5820763820570214352}
+  _waveType: 3
   _autoTransition: 1
   _waveStartText: 
   _mobSpawnStopTime: 5
@@ -12393,7 +12395,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4336339261331003604, guid: c2d2dded55666da4983d83ad01d8398c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -12555,7 +12558,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: MiddleArmorBossSpawnPos
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -5375947109646753668, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -12565,3 +12569,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7589499019417592429, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
   m_PrefabInstance: {fileID: 8943198367731166165}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5820763820570214352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3232210498039600133, guid: 55adf17de68f1ba49af023f60492a657, type: 3}
+  m_PrefabInstance: {fileID: 8943198367731166165}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d792cd55ff7620e4ab2edbf4a5e72626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

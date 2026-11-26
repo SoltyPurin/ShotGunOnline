@@ -26,7 +26,6 @@ public class ZombiWave : Wave
     public override void Start()
     {
         base.Start();
-
         foreach (GimmickData data in _gimmickList)
         {
             ZombiModeSummonEnemy zombi = data._waveGimmick.GetComponent<ZombiModeSummonEnemy>();
@@ -61,6 +60,10 @@ public class ZombiWave : Wave
     }
     private IEnumerator CallCreateTime()
     {
+        if (NetworkManager.Singleton == null ||!NetworkManager.Singleton.IsServer)
+        {
+            yield break;
+        }
         yield return new WaitForSeconds(_enemySpawnInterval);
         _currentWaveCount++;
         _enemySpawnInterval = 0;
@@ -82,5 +85,10 @@ public class ZombiWave : Wave
                 spawner.SpawnBoss();
             }
         }
+    }
+
+    public override bool IsEnd()
+    {
+        return false;
     }
 }

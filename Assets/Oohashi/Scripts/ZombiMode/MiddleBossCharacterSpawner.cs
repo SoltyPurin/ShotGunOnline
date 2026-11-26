@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class MiddleBossCharacterSpawner : NetworkBehaviour
 {
-    #region protected
-    [SerializeField, Header("スポーンさせるボス")]
-    protected GameObject _spawnBossObj = default;
+    #region protected]
+    protected GameObject _spawnBoss = default;
     #endregion
+
+    [SerializeField, Header("スポーンさせるボス")]
+    private GameObject _spawnBossPrefab = default;
 
     [SerializeField, Header("初登場後、雑魚の中に混ぜる？")]
     private bool _isSpawnWithZako = false;
@@ -15,12 +17,17 @@ public class MiddleBossCharacterSpawner : NetworkBehaviour
 
     public virtual void SpawnBoss()
     {
-        GameObject boss = Instantiate(_spawnBossObj, this.transform.position, Quaternion.identity);
-        NetworkObject nBoss = boss.GetComponent<NetworkObject>();
+        if (NetworkManager.Singleton == null ||!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+
+        _spawnBoss = Instantiate(_spawnBossPrefab, this.transform.position, Quaternion.identity);
+        NetworkObject nBoss = _spawnBoss.GetComponent<NetworkObject>();
         if (nBoss != null)
         {
             nBoss.Spawn();
-            WaveObj waveObj = boss.GetComponent<WaveObj>();
+            WaveObj waveObj = _spawnBoss.GetComponent<WaveObj>();
             if(waveObj != null)
             {
                 waveObj.PopAnim();
@@ -34,7 +41,7 @@ public class MiddleBossCharacterSpawner : NetworkBehaviour
         ZombiModeSummonEnemy[] summoner = FindObjectsByType<ZombiModeSummonEnemy>();
         foreach(ZombiModeSummonEnemy useSummon in  summoner)
         {
-            useSummon.AdditionBossInList(_spawnBossObj, _spawnOdds);
+            useSummon.AdditionBossInList(_spawnBossPrefab, _spawnOdds);
         }
     }
 }

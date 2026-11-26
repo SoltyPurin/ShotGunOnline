@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Netcode;
 
 public class BossCharacterSpawn : MiddleBossCharacterSpawner
 {
@@ -26,11 +27,15 @@ public class BossCharacterSpawn : MiddleBossCharacterSpawner
 
     public override void SpawnBoss()
     {
+        if (NetworkManager.Singleton == null ||!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
         base.SpawnBoss();
-        _currentSpawnCount++;
         _currentSpawnCount = Mathf.Clamp(_currentSpawnCount, 0, _bossEnhancedValue.Count-1);
         BossEnhance();
         ZakoSpawnStop();
+        _currentSpawnCount++;
     }
 
     private void ZakoSpawnStop()
@@ -50,9 +55,10 @@ public class BossCharacterSpawn : MiddleBossCharacterSpawner
 
     private void BossEnhance()
     {
-        NavMesh2DAgent nav = _spawnBossObj.GetComponent<NavMesh2DAgent>();
-        BossStateManagement bossState = _spawnBossObj.GetComponent<BossStateManagement>();
-        BossHP bossHP = _spawnBossObj.GetComponent<BossHP>();
+        Debug.Log("ボス強化");
+        NavMesh2DAgent nav = _spawnBoss.GetComponent<NavMesh2DAgent>();
+        BossStateManagement bossState = _spawnBoss.GetComponent<BossStateManagement>();
+        BossHP bossHP = _spawnBoss.GetComponent<BossHP>();
         if(nav != null)
         {
             nav.SpeedUp(_bossEnhancedValue[_currentSpawnCount].speed);
@@ -64,24 +70,30 @@ public class BossCharacterSpawn : MiddleBossCharacterSpawner
         if(bossHP != null)
         {
             bossHP.EnhanceBossHP(_bossEnhancedValue[_currentSpawnCount].addHP);
+            bossHP.IsBossDead += ZakoSpawnRestart;
         }
 
-        bossHP.IsBossDead += ZakoSpawnRestart;
     }
 
     private void ZakoSpawnRestart(bool isDead)
     {
-        if (isDead)
+        BossHP bossHP = _spawnBoss.GetComponent<BossHP>();
+        if (bossHP != null)
         {
-            foreach (ZombiModeSummonEnemy summonEnemy in _summoners)
+            bossHP.IsBossDead -= ZakoSpawnRestart;
+        }
+        if (!isDead)
+        {
+            return;
+        }
+        Debug.Log("死亡処理");
+        foreach (ZombiModeSummonEnemy summonEnemy in _summoners)
+        {
+            // 実際にネットワークスポーンされているスポナーだけに再開指示を送る
+            if (summonEnemy.IsSpawned && summonEnemy.IsServer)
             {
-                // 実際にネットワークスポーンされているスポナーだけに再開指示を送る
-                if (summonEnemy.IsSpawned && summonEnemy.IsServer)
-                {
-                    summonEnemy.SpawnRestart();
-                }
+                summonEnemy.SpawnRestart();
             }
-
         }
     }
 }

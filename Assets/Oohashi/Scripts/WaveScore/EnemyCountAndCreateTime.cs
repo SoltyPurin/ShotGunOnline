@@ -99,7 +99,6 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     public void EnemyCount(int count,int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
-        Debug.Log("敵の数カウント");
         // ネットワーク接続中かつサーバーなら ClientRpc で全端末に同期
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && IsServer)
         {
