@@ -327,6 +327,12 @@ public class BossHP : EnemyTakeDamage
     {
         _maxHP.Value += addHP;
         _enemyHP.Value += addHP;
+        ShowBossHPUIClientRpc();
+    }
+
+    [ClientRpc]
+    private void ShowBossHPUIClientRpc()
+    {
         BossHPUI hpui = FindAnyObjectByType<BossHPUI>();
         if (hpui != null)
         {
