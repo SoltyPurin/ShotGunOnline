@@ -8802,6 +8802,7 @@ MonoBehaviour:
   _autoAttachButtonSounds: 1
   _loadingContext: {fileID: 1970000149}
   _blockerColor: {r: 0.02, g: 0.013, b: 0.007, a: 0.78}
+  _dotsStepInterval: 0.36
 --- !u!1 &2018656091
 GameObject:
   m_ObjectHideFlags: 0
@@ -37323,9 +37324,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1970000102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5f56e57b655c6e4cb7d5d102a746c0b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9623e5072cd75454b800b4418c0faaca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingAnimation
+  _orbitRadius: 50
+  _chasePeriod: 1.05
+  _orbitRotateSpeed: -24
+  _minRuneAlpha: 0.16
+  _minRuneScale: 0.78
+  _maxRuneScale: 1.24
+  _outerRingA: {fileID: 1970000080}
+  _outerRingB: {fileID: 1970000085}
+  _centerOuter: {fileID: 1970000095}
+  _centerCore: {fileID: 1970000099}
+  _outerRingASpeed: -18
+  _outerRingBSpeed: 12
+  _centerOuterSpeed: 30
+  _corePulseSpeed: 3.2
 --- !u!1 &1970000105
 GameObject:
   m_ObjectHideFlags: 0
