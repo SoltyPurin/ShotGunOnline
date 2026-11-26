@@ -1,13 +1,16 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
 /// FHD(1920x1080)以外の解像度でもUIやアニメーションの位置・サイズが正確に維持されるよう、
-/// すべてのScreenSpace CanvasのCanvasScalerおよびフルスクリーンオーバーレイを自動調整する初期化クラス。
+/// すべてのScreenSpace CanvasのCanvasScalerおよびフルスクリーンオーバーレイを自動調整する単一責務クラス (SRP)。
 /// </summary>
 public class CanvasResolutionInitializer : MonoBehaviour
 {
+    private const string ResultSceneName = "ResultScene";
+    private static readonly Vector2 ReferenceResolution = new Vector2(1920f, 1080f);
     private static CanvasResolutionInitializer s_instance;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -35,6 +38,10 @@ public class CanvasResolutionInitializer : MonoBehaviour
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (s_instance == this)
+        {
+            s_instance = null;
+        }
     }
 
     private void Start()
@@ -45,12 +52,6 @@ public class CanvasResolutionInitializer : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         AdjustAllCanvases();
-
-        // リザルト画面でシーン遷移の残留オブジェクト（ソウルなど）が残らないようクリーンアップ
-        if (scene.name == "ResultScene")
-        {
-            CleanupResultSceneOrphans();
-        }
     }
 
     /// <summary>
@@ -58,62 +59,49 @@ public class CanvasResolutionInitializer : MonoBehaviour
     /// </summary>
     public static void AdjustAllCanvases()
     {
-        Canvas[] canvases = Object.FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        Canvas[] canvases = UnityEngine.Object.FindObjectsByType<Canvas>(FindObjectsInactive.Include);
 
-        foreach (Canvas canvas in canvases)
+        for (int i = 0; i < canvases.Length; i++)
         {
-            if (canvas == null) continue;
-
-            // ワールド空間UI (頭上HPバー等) は対象外
-            if (canvas.renderMode == RenderMode.WorldSpace)
+            Canvas canvas = canvases[i];
+            if (canvas == null || canvas.renderMode == RenderMode.WorldSpace)
             {
                 continue;
             }
 
-            CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
-            if (scaler == null)
+            if (!canvas.TryGetComponent<CanvasScaler>(out var scaler))
             {
                 scaler = canvas.gameObject.AddComponent<CanvasScaler>();
             }
 
-            // CanvasScalerを1920x1080基準に統一設定
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.referenceResolution = ReferenceResolution;
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             scaler.matchWidthOrHeight = 0.5f;
 
-            // 全画面フェード・暗転用UIのストレッチ対応
             AdjustFullScreenOverlayImages(canvas);
         }
     }
 
     /// <summary>
-    /// フェード画像等の全画面オーバーレイが、16:9以外の縦横比(16:10や21:9等)でも画面端まで確実に覆うよう設定
+    /// フェード画像等の全画面オーバーレイが、16:9以外の縦横比でも画面端まで確実に覆うよう設定
     /// </summary>
     private static void AdjustFullScreenOverlayImages(Canvas canvas)
     {
-        // ResultSceneのUIパネル（Blackなど）を誤って全画面ストレッチしないよう除外
-        if (canvas.gameObject.scene.name == "ResultScene")
+        if (canvas.gameObject.scene.name == ResultSceneName)
         {
             return;
         }
 
         Image[] images = canvas.GetComponentsInChildren<Image>(true);
-        foreach (Image img in images)
+        for (int i = 0; i < images.Length; i++)
         {
+            Image img = images[i];
             if (img == null) continue;
 
-            string nameLower = img.gameObject.name.ToLower();
-            // 明確な全画面フェード・暗転オブジェクトのみを対象にする
-            bool isFadeOverlay = nameLower.StartsWith("fadeimage") ||
-                                 nameLower == "wavechangefade" ||
-                                 nameLower == "transitionwhite" ||
-                                 nameLower == "fade_panel";
-
-            if (isFadeOverlay)
+            if (IsFadeOverlayName(img.gameObject.name))
             {
                 RectTransform rt = img.rectTransform;
-                // 全画面ストレッチ (Anchor: 0..1, Offsets: 0) に設定
                 rt.anchorMin = Vector2.zero;
                 rt.anchorMax = Vector2.one;
                 rt.offsetMin = Vector2.zero;
@@ -122,44 +110,12 @@ public class CanvasResolutionInitializer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// シーン遷移時に誤って持ち越された可能性のあるソウル等のゲーム内オブジェクトをResultSceneから確実に消去
-    /// </summary>
-    private static void CleanupResultSceneOrphans()
+    private static bool IsFadeOverlayName(string objectName)
     {
-        MoveCoin[] coins = Object.FindObjectsByType<MoveCoin>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (MoveCoin coin in coins)
-        {
-            if (coin != null)
-            {
-                DisableOrphanObject(coin.gameObject);
-            }
-        }
-
-        CoinControl[] coinCtrls = Object.FindObjectsByType<CoinControl>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (CoinControl ctrl in coinCtrls)
-        {
-            if (ctrl != null)
-            {
-                DisableOrphanObject(ctrl.gameObject);
-            }
-        }
-    }
-
-    private static void DisableOrphanObject(GameObject go)
-    {
-        if (go == null) return;
-
-        foreach (SpriteRenderer sr in go.GetComponentsInChildren<SpriteRenderer>(true))
-        {
-            if (sr != null) sr.enabled = false;
-        }
-
-        foreach (MonoBehaviour behaviour in go.GetComponentsInChildren<MonoBehaviour>(true))
-        {
-            if (behaviour != null) behaviour.enabled = false;
-        }
-
-        go.SetActive(false);
+        if (string.IsNullOrEmpty(objectName)) return false;
+        return objectName.StartsWith("fadeimage", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(objectName, "wavechangefade", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(objectName, "transitionwhite", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(objectName, "fade_panel", StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 /// <summary>
 /// 通信中・更新中などのローディングオーバーレイ表示を制御するクラス。
 /// LobbyViewBase を継承し、LoadingOverlay タイプのフェード演出を適用します。
-/// 表示時に全画面ブロック用UIを生成し、背後UIのボタン押下を防止します。
 /// </summary>
 public class LoadingOverlayController : LobbyViewBase
 {
@@ -47,15 +46,8 @@ public class LoadingOverlayController : LobbyViewBase
         }
     }
 
-    public void SetLoadingState(bool isLoading)
-    {
-        SetLoadingState(isLoading, null, false);
-    }
-
-    public void SetLoadingState(bool isLoading, string context)
-    {
-        SetLoadingState(isLoading, context, false);
-    }
+    public void SetLoadingState(bool isLoading) => SetLoadingState(isLoading, null, false);
+    public void SetLoadingState(bool isLoading, string context) => SetLoadingState(isLoading, context, false);
 
     public void SetLoadingState(bool isLoading, string context, bool immediate)
     {
@@ -77,7 +69,6 @@ public class LoadingOverlayController : LobbyViewBase
         {
             EnsureBlocker();
 
-            // キーボードやゲームパッドで背後UIボタンが誤押下されないようフォーカスを解除
             if (EventSystem.current != null)
             {
                 EventSystem.current.SetSelectedGameObject(null);
@@ -92,20 +83,17 @@ public class LoadingOverlayController : LobbyViewBase
                 ShowAsync().Forget();
             }
         }
+        else if (immediate)
+        {
+            if (_blocker != null)
+            {
+                _blocker.SetActive(false);
+            }
+            SetVisibleInstant(false);
+        }
         else
         {
-            if (immediate)
-            {
-                if (_blocker != null)
-                {
-                    _blocker.SetActive(false);
-                }
-                SetVisibleInstant(false);
-            }
-            else
-            {
-                CloseAsync().Forget();
-            }
+            CloseAsync().Forget();
         }
     }
 
