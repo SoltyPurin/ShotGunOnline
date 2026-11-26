@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyDamageUI : MonoBehaviour
+public class EnemyDamageUI : NetworkBehaviour
 {
     [SerializeField] protected Slider _hpSlider;
 

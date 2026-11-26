@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class BossHPUI : EnemyDamageUI
@@ -56,7 +57,26 @@ public class BossHPUI : EnemyDamageUI
     // HP‚ª•Ï‰»‚µ‚½‚¾‚¯Às‚³‚ê‚éŒy—Ê‚Èˆ—
     private void OnHPChanged(float previousValue, float newValue)
     {
+        _isSearchBossWave = false;
         UpdateHP(newValue);
+    }
+    [ClientRpc]
+    public void CanvasDeactiveClientRpc()
+    {
+        Debug.Log(
+      $"CanvasDeactiveClientRpcÀs IsServer:{IsServer} IsClient:{IsClient}"
+  );
+
+        if (_canvas == null)
+        {
+            Debug.LogError("Canvas‚ªnull‚Å‚·");
+            return;
+        }
+
+        _canvas.SetActive(false);
+
+        Debug.Log($"Canvas‚ÌActiveó‘ÔF{_canvas.activeSelf}");
+        //_canvas.SetActive(false);
     }
 
     private void OnDestroy()

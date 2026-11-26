@@ -352,6 +352,11 @@ public class BossHP : EnemyTakeDamage
         if (_shadow != null) _shadow.SetActive(false);
         FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: DeathProtocol 開始");
         StartCoroutine(DeathProtocol(1.0f));
+        BossHPUI hpui = FindAnyObjectByType<BossHPUI>();
+        if (hpui != null)
+        {
+            hpui.CanvasDeactiveClientRpc();
+        }
     }
 
     public void EnhanceBossHP(float addHP)
