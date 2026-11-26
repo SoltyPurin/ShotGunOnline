@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using Unity.Services.Multiplayer;
 using UnityEngine;
@@ -9,16 +8,21 @@ using UnityEngine.UI;
 
 public class LobbyDiscoverUI : LobbyViewBase
 {
-    [Header("マッチング用ボタン")][SerializeField] private Button _refreshButton;
+    private static readonly Color InGameDetailColor = new Color(0.94f, 0.50f, 0.40f, 1f);
+    private static readonly Color WaitingDetailColor = new Color(0.36f, 0.92f, 0.80f, 1f);
+    private static readonly Color EmptyDetailColor = new Color(0.78f, 0.69f, 0.51f, 1f);
+
+    [Header("マッチング用ボタン")]
+    [SerializeField] private Button _refreshButton;
     [SerializeField] private Button _createRoomButton;
     [SerializeField] private Button _backButton;
 
-    [Header("ルーム用コンテナ")][SerializeField] private Transform _roomListContainer;
+    [Header("ルーム用コンテナ")]
+    [SerializeField] private Transform _roomListContainer;
     [SerializeField] private GameObject _emptyStateObject;
 
     [Header("ルーム用カードUIプレハブ")]
-    [SerializeField]
-    private RoomCardUI _roomCardPrefab;
+    [SerializeField] private RoomCardUI _roomCardPrefab;
 
     [Header("ルーム詳細パネル")]
     [SerializeField] private GameObject _roomMenuRoot;
@@ -28,13 +32,14 @@ public class LobbyDiscoverUI : LobbyViewBase
     [SerializeField] private TMP_Text _detailGameStatusText;
     [SerializeField] private TMP_Text _detailProtocolText;
 
-    // Presenterが購読するためのイベント群
     public event Action OnRefreshRequested;
     public event Action OnCreateRoomRequested;
     public event Action OnBackRequested;
     public event Action<ISessionInfo> OnJoinRoomRequested;
 
     private readonly List<RoomCardUI> _spawnedCards = new();
+    private readonly List<RoomCardUI> _activeCardsBuffer = new();
+    private readonly List<(Button Button, Vector2 Pos)> _cardRectBuffer = new();
     private ISessionInfo _selectedSession;
     private RoomCardUI _selectedCard;
 
@@ -46,7 +51,7 @@ public class LobbyDiscoverUI : LobbyViewBase
         ResolveDetailPanelReferences();
 
         var scrollRect = GetComponentInChildren<ScrollRect>(true);
-        if (scrollRect != null && scrollRect.GetComponent<ScrollRectAutoFollower>() == null)
+        if (scrollRect != null && !scrollRect.TryGetComponent<ScrollRectAutoFollower>(out _))
         {
             scrollRect.gameObject.AddComponent<ScrollRectAutoFollower>();
         }
@@ -54,34 +59,21 @@ public class LobbyDiscoverUI : LobbyViewBase
         if (_refreshButton != null)
         {
             _refreshButton.onClick.AddListener(() => OnRefreshRequested?.Invoke());
-            EnsureButtonSound(_refreshButton, UIButtonType.SubAction);
-            UIButtonMetallicVisual.Attach(_refreshButton);
+            UIButtonSound.ConfigureButton(_refreshButton, UIButtonType.SubAction);
         }
         if (_createRoomButton != null)
         {
             _createRoomButton.onClick.AddListener(() => OnCreateRoomRequested?.Invoke());
-            EnsureButtonSound(_createRoomButton, UIButtonType.Default);
-            UIButtonMetallicVisual.Attach(_createRoomButton);
+            UIButtonSound.ConfigureButton(_createRoomButton, UIButtonType.Default);
         }
         if (_backButton != null)
         {
             _backButton.onClick.AddListener(() => OnBackRequested?.Invoke());
-            EnsureButtonSound(_backButton, UIButtonType.Cancel);
+            UIButtonSound.EnsureAttached(_backButton, UIButtonType.Cancel);
         }
 
         ClearRoomDetail();
         RebuildControllerNavigation();
-    }
-
-    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
-    {
-        if (button == null) return;
-        var s = button.GetComponent<UIButtonSound>();
-        if (s == null)
-        {
-            s = button.gameObject.AddComponent<UIButtonSound>();
-        }
-        s.ButtonType = buttonType;
     }
 
     protected override void OnShowStarted()
@@ -106,9 +98,6 @@ public class LobbyDiscoverUI : LobbyViewBase
         if (_createRoomButton != null) _createRoomButton.gameObject.SetActive(active);
     }
 
-    /// <summary>
-    /// 親パネル（RoomMenu）の表示/非表示を切り替える
-    /// </summary>
     public void SetMenuRootActive(bool active)
     {
         EnsureRoomMenuRoot();
@@ -118,9 +107,6 @@ public class LobbyDiscoverUI : LobbyViewBase
         }
     }
 
-    /// <summary>
-    /// ルーム一覧パネルおよび作成・更新ボタンの表示/非表示を一括で切り替える（即時反映）
-    /// </summary>
     public void SetVisible(bool visible)
     {
         if (visible)
@@ -147,12 +133,12 @@ public class LobbyDiscoverUI : LobbyViewBase
 
         if (sessions != null)
         {
-            foreach (var session in sessions)
+            for (int i = 0; i < sessions.Count; i++)
             {
+                var session = sessions[i];
                 var card = Instantiate(_roomCardPrefab, _roomListContainer);
                 card.Setup(session);
 
-                // カード選択・決定・旧参加イベントを購読
                 card.OnCardSelected += HandleCardSelected;
                 card.OnCardSubmitted += HandleCardSubmitted;
                 card.OnJoinRequested += HandleJoinRequest;
@@ -169,11 +155,7 @@ public class LobbyDiscoverUI : LobbyViewBase
         {
             if (_emptyStateObject != null) _emptyStateObject.SetActive(false);
 
-            RoomCardUI initialCard = !string.IsNullOrEmpty(previousSelectedId)
-                ? _spawnedCards.FirstOrDefault(c => c != null && c.SessionInfo != null && c.SessionInfo.Id == previousSelectedId)
-                : null;
-            initialCard ??= _spawnedCards[0];
-
+            RoomCardUI initialCard = FindCardBySessionId(previousSelectedId) ?? _spawnedCards[0];
             _selectedCard = initialCard;
             UpdateSelectedCardVisuals();
             ShowRoomDetail(initialCard.SessionInfo);
@@ -187,9 +169,20 @@ public class LobbyDiscoverUI : LobbyViewBase
         RebuildControllerNavigation();
     }
 
-    /// <summary>
-    /// コントローラー／キーボード操作向けにデフォルトの選択要素へフォーカスを当てる
-    /// </summary>
+    private RoomCardUI FindCardBySessionId(string sessionId)
+    {
+        if (string.IsNullOrEmpty(sessionId)) return null;
+        for (int i = 0; i < _spawnedCards.Count; i++)
+        {
+            var card = _spawnedCards[i];
+            if (card != null && card.SessionInfo != null && card.SessionInfo.Id == sessionId)
+            {
+                return card;
+            }
+        }
+        return null;
+    }
+
     public void FocusDefaultElement()
     {
         if (EventSystem.current == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
@@ -203,12 +196,15 @@ public class LobbyDiscoverUI : LobbyViewBase
 
     public override GameObject GetDefaultFocusTarget()
     {
-        Button firstCardBtn = _spawnedCards
-            .Where(c => c != null && c.JoinButton != null && c.JoinButton.gameObject.activeInHierarchy && c.JoinButton.interactable)
-            .Select(c => c.JoinButton)
-            .FirstOrDefault();
+        for (int i = 0; i < _spawnedCards.Count; i++)
+        {
+            var card = _spawnedCards[i];
+            if (card != null && card.JoinButton != null && card.JoinButton.gameObject.activeInHierarchy && card.JoinButton.interactable)
+            {
+                return card.JoinButton.gameObject;
+            }
+        }
 
-        if (firstCardBtn != null) return firstCardBtn.gameObject;
         if (_createRoomButton != null && _createRoomButton.gameObject.activeInHierarchy && _createRoomButton.interactable) return _createRoomButton.gameObject;
         if (_refreshButton != null && _refreshButton.gameObject.activeInHierarchy && _refreshButton.interactable) return _refreshButton.gameObject;
         return null;
@@ -236,11 +232,17 @@ public class LobbyDiscoverUI : LobbyViewBase
 
     private void RebuildControllerNavigation()
     {
-        var activeCards = _spawnedCards
-            .Where(c => c != null && c.JoinButton != null && c.JoinButton.interactable)
-            .ToList();
+        _activeCardsBuffer.Clear();
+        for (int i = 0; i < _spawnedCards.Count; i++)
+        {
+            var c = _spawnedCards[i];
+            if (c != null && c.JoinButton != null && c.JoinButton.interactable)
+            {
+                _activeCardsBuffer.Add(c);
+            }
+        }
 
-        List<List<Button>> rows = BuildCardButtonGrid(activeCards);
+        List<List<Button>> rows = BuildCardButtonGrid(_activeCardsBuffer);
         Button primaryTopLeft = _refreshButton != null ? _refreshButton : _createRoomButton;
         Button primaryTopRight = _createRoomButton != null ? _createRoomButton : _refreshButton;
 
@@ -283,22 +285,26 @@ public class LobbyDiscoverUI : LobbyViewBase
 
         if (_refreshButton != null)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = rows.Count > 0 ? rows[rows.Count - 1][0] : _createRoomButton;
-            nav.selectOnDown = rows.Count > 0 ? rows[0][0] : _createRoomButton;
-            nav.selectOnLeft = _createRoomButton;
-            nav.selectOnRight = _createRoomButton;
-            _refreshButton.navigation = nav;
+            _refreshButton.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = rows.Count > 0 ? rows[rows.Count - 1][0] : _createRoomButton,
+                selectOnDown = rows.Count > 0 ? rows[0][0] : _createRoomButton,
+                selectOnLeft = _createRoomButton,
+                selectOnRight = _createRoomButton
+            };
         }
 
         if (_createRoomButton != null)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = rows.Count > 0 ? rows[rows.Count - 1][Mathf.Min(1, rows[rows.Count - 1].Count - 1)] : _refreshButton;
-            nav.selectOnDown = rows.Count > 0 ? rows[0][Mathf.Min(1, rows[0].Count - 1)] : _refreshButton;
-            nav.selectOnLeft = _refreshButton;
-            nav.selectOnRight = _refreshButton;
-            _createRoomButton.navigation = nav;
+            _createRoomButton.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = rows.Count > 0 ? rows[rows.Count - 1][Mathf.Min(1, rows[rows.Count - 1].Count - 1)] : _refreshButton,
+                selectOnDown = rows.Count > 0 ? rows[0][Mathf.Min(1, rows[0].Count - 1)] : _refreshButton,
+                selectOnLeft = _refreshButton,
+                selectOnRight = _refreshButton
+            };
         }
     }
 
@@ -307,40 +313,57 @@ public class LobbyDiscoverUI : LobbyViewBase
         var rows = new List<List<Button>>();
         if (cards.Count == 0) return rows;
 
-        // レイアウト計算済みの座標から行・列を構築（未計算時はGridLayoutGroupから列数を算出）
-        var cardRects = cards
-            .Select(c => new { Button = c.JoinButton, Rect = c.GetComponent<RectTransform>() })
-            .Where(x => x.Rect != null)
-            .ToList();
+        _cardRectBuffer.Clear();
+        bool hasLayoutPositions = false;
+        Vector2 firstPos = Vector2.zero;
 
-        bool hasLayoutPositions = cardRects.Count > 1 &&
-            cardRects.Any(x => (x.Rect.anchoredPosition - cardRects[0].Rect.anchoredPosition).sqrMagnitude > 1f);
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (cards[i].TryGetComponent<RectTransform>(out var rect))
+            {
+                Vector2 pos = rect.anchoredPosition;
+                if (_cardRectBuffer.Count == 0)
+                {
+                    firstPos = pos;
+                }
+                else if ((pos - firstPos).sqrMagnitude > 1f)
+                {
+                    hasLayoutPositions = true;
+                }
+                _cardRectBuffer.Add((cards[i].JoinButton, pos));
+            }
+        }
 
         if (hasLayoutPositions)
         {
-            // Y座標が大きい（上にある）順に並べ、誤差10px以内を同じ行として扱う
-            var sorted = cardRects
-                .OrderByDescending(x => x.Rect.anchoredPosition.y)
-                .ThenBy(x => x.Rect.anchoredPosition.x)
-                .ToList();
-
-            float currentRowY = sorted[0].Rect.anchoredPosition.y;
-            var currentRow = new List<(Button Button, float X)>();
-
-            foreach (var item in sorted)
+            // Y座標降順 → X座標昇順でインプレースソート（LINQクロージャと中間リストを排除）
+            _cardRectBuffer.Sort(static (a, b) =>
             {
-                if (Mathf.Abs(item.Rect.anchoredPosition.y - currentRowY) > 10f)
+                if (Mathf.Abs(a.Pos.y - b.Pos.y) > 10f)
                 {
-                    rows.Add(currentRow.OrderBy(x => x.X).Select(x => x.Button).ToList());
-                    currentRow.Clear();
-                    currentRowY = item.Rect.anchoredPosition.y;
+                    return b.Pos.y.CompareTo(a.Pos.y);
                 }
-                currentRow.Add((item.Button, item.Rect.anchoredPosition.x));
+                return a.Pos.x.CompareTo(b.Pos.x);
+            });
+
+            float currentRowY = _cardRectBuffer[0].Pos.y;
+            var currentRow = new List<Button>();
+
+            for (int i = 0; i < _cardRectBuffer.Count; i++)
+            {
+                var item = _cardRectBuffer[i];
+                if (Mathf.Abs(item.Pos.y - currentRowY) > 10f)
+                {
+                    rows.Add(currentRow);
+                    currentRow = new List<Button>();
+                    currentRowY = item.Pos.y;
+                }
+                currentRow.Add(item.Button);
             }
 
             if (currentRow.Count > 0)
             {
-                rows.Add(currentRow.OrderBy(x => x.X).Select(x => x.Button).ToList());
+                rows.Add(currentRow);
             }
 
             return rows;
@@ -349,7 +372,7 @@ public class LobbyDiscoverUI : LobbyViewBase
         int columns = EstimateGridColumns();
         for (int i = 0; i < cards.Count; i += columns)
         {
-            var row = new List<Button>();
+            var row = new List<Button>(columns);
             for (int j = 0; j < columns && i + j < cards.Count; j++)
             {
                 row.Add(cards[i + j].JoinButton);
@@ -362,9 +385,10 @@ public class LobbyDiscoverUI : LobbyViewBase
 
     private int EstimateGridColumns()
     {
-        if (_roomListContainer == null) return 1;
-        var grid = _roomListContainer.GetComponent<GridLayoutGroup>();
-        if (grid == null) return 1;
+        if (_roomListContainer == null || !_roomListContainer.TryGetComponent<GridLayoutGroup>(out var grid))
+        {
+            return 1;
+        }
 
         if (grid.constraint == GridLayoutGroup.Constraint.FixedColumnCount && grid.constraintCount > 0)
         {
@@ -387,16 +411,17 @@ public class LobbyDiscoverUI : LobbyViewBase
 
     private void HandleCardSelected(ISessionInfo session, RoomCardUI card)
     {
+        // ホバーやカーソル移動のたびにナビゲーション全再構築を行う無駄な処理を廃止し、表示更新のみ行う
         _selectedCard = card;
         UpdateSelectedCardVisuals();
         ShowRoomDetail(session);
-        RebuildControllerNavigation();
     }
 
     private void UpdateSelectedCardVisuals()
     {
-        foreach (var spawnedCard in _spawnedCards)
+        for (int i = 0; i < _spawnedCards.Count; i++)
         {
+            var spawnedCard = _spawnedCards[i];
             if (spawnedCard != null)
             {
                 spawnedCard.SetSelected(spawnedCard == _selectedCard);
@@ -408,7 +433,7 @@ public class LobbyDiscoverUI : LobbyViewBase
     {
         HandleCardSelected(session, card);
 
-        if (CanJoinSession(session))
+        if (SessionPlayerPropertyHelper.CanJoinSession(session))
         {
             OnJoinRoomRequested?.Invoke(session);
         }
@@ -416,7 +441,7 @@ public class LobbyDiscoverUI : LobbyViewBase
 
     private void HandleJoinRequest(ISessionInfo session)
     {
-        if (CanJoinSession(session))
+        if (SessionPlayerPropertyHelper.CanJoinSession(session))
         {
             OnJoinRoomRequested?.Invoke(session);
         }
@@ -438,7 +463,7 @@ public class LobbyDiscoverUI : LobbyViewBase
 
         if (_detailPlayerCountText != null)
         {
-            var currentPlayerCount = session.MaxPlayers - session.AvailableSlots;
+            int currentPlayerCount = SessionPlayerPropertyHelper.GetCurrentPlayerCount(session);
             _detailPlayerCountText.text = $"{currentPlayerCount} / {session.MaxPlayers}";
         }
 
@@ -446,9 +471,7 @@ public class LobbyDiscoverUI : LobbyViewBase
         {
             bool inGame = SessionPlayerPropertyHelper.IsSessionInGame(session);
             _detailGameStatusText.text = SessionPlayerPropertyHelper.GetSessionGameStatusDisplayText(session);
-            _detailGameStatusText.color = inGame
-                ? new Color(0.94f, 0.50f, 0.40f, 1f)
-                : new Color(0.36f, 0.92f, 0.80f, 1f);
+            _detailGameStatusText.color = inGame ? InGameDetailColor : WaitingDetailColor;
         }
 
         if (_detailProtocolText != null)
@@ -474,16 +497,9 @@ public class LobbyDiscoverUI : LobbyViewBase
         if (_detailGameStatusText != null)
         {
             _detailGameStatusText.text = "-";
-            _detailGameStatusText.color = new Color(0.78f, 0.69f, 0.51f, 1f);
+            _detailGameStatusText.color = EmptyDetailColor;
         }
         if (_detailProtocolText != null) _detailProtocolText.text = "-";
-    }
-
-    private static bool CanJoinSession(ISessionInfo session)
-    {
-        return session != null &&
-               session.AvailableSlots > 0 &&
-               !SessionPlayerPropertyHelper.IsSessionInGame(session);
     }
 
     private void EnsureRoomMenuRoot()
@@ -546,21 +562,22 @@ public class LobbyDiscoverUI : LobbyViewBase
 
     private void ClearRoomList()
     {
-        foreach (var card in _spawnedCards.Where(card => card != null))
+        for (int i = 0; i < _spawnedCards.Count; i++)
         {
+            var card = _spawnedCards[i];
+            if (card == null) continue;
             card.OnCardSelected -= HandleCardSelected;
             card.OnCardSubmitted -= HandleCardSubmitted;
             card.OnJoinRequested -= HandleJoinRequest;
             Destroy(card.gameObject);
         }
+        _spawnedCards.Clear();
+        _selectedCard = null;
 
-        // カードコンテナの子オブジェクトをクリア
-        for (var i = 0; i < _roomListContainer.childCount; i++)
+        if (_roomListContainer == null) return;
+        for (int i = 0; i < _roomListContainer.childCount; i++)
         {
             Destroy(_roomListContainer.GetChild(i).gameObject);
         }
-
-        _spawnedCards.Clear();
-        _selectedCard = null;
     }
 }

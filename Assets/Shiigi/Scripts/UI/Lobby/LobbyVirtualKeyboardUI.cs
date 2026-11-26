@@ -8,19 +8,18 @@ using UnityEngine.UI;
 
 /// <summary>
 /// コントローラー操作に対応した汎用ソフトウェアキーボード（モーダルダイアログ）。
-/// プレハブ（LobbyVirtualKeyboardUI.prefab）の見た目・レイアウトを維持したまま、
-/// タイトル・初期文字列・最大文字数・プリセット表示を引数で指定して汎用的に呼び出せます。
+/// LobbyModalDialogBase を継承し、ブロッカー・結果待機処理を共通化しています。
 /// </summary>
-public class LobbyVirtualKeyboardUI : LobbyViewBase
+public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, string Text)>
 {
-    private const int DEFAULT_MAX_LENGTH = 20;
+    private const int DefaultMaxLength = 20;
+    private const float CaretBlinkInterval = 0.5f;
+    private static readonly Color DefaultBlockerColor = new Color(0f, 0f, 0f, 0.68f);
 
     private readonly List<List<Button>> _navigationRows = new();
     private readonly List<(Button Button, Text Label, string LowerChar)> _letterButtons = new();
     private readonly List<Button> _presetButtons = new();
 
-    private UniTaskCompletionSource<(bool Confirmed, string Text)> _utcs;
-    private GameObject _blocker;
     private GameObject _presetRowObj;
     private Text _titleText;
     private Text _previewText;
@@ -28,15 +27,15 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     private Text _shiftButtonLabel;
     private Button _initialFocusButton;
 
-    private const float CaretBlinkInterval = 0.5f;
-
     private Color _previewBaseColor = Color.white;
     private Color _shiftBaseColor = Color.white;
+    private string _emptyCaretVisibleMarkup = "|（未入力）";
+    private string _emptyCaretHiddenMarkup = " （未入力）";
     private string _currentText = string.Empty;
     private string _lastCompositionString = string.Empty;
-    private int _maxLength = DEFAULT_MAX_LENGTH;
+    private int _maxLength = DefaultMaxLength;
     private bool _isShiftActive = true;
-    private bool _isInitialized = false;
+    private bool _isInitialized;
     private float _caretTimer;
     private bool _caretVisible = true;
     private bool _imeEnabledByDialog;
@@ -50,7 +49,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         Canvas parentCanvas,
         string initialText = "",
         string title = "テキストを入力",
-        int maxLength = DEFAULT_MAX_LENGTH,
+        int maxLength = DefaultMaxLength,
         LobbyVirtualKeyboardUI prefab = null,
         bool showPresets = true,
         string[] customPresets = null)
@@ -83,7 +82,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     public async UniTask<(bool Confirmed, string Text)> OpenDialogAsync(
         string initialText = "",
         string title = "テキストを入力",
-        int maxLength = DEFAULT_MAX_LENGTH,
+        int maxLength = DefaultMaxLength,
         bool showPresets = true,
         string[] customPresets = null)
     {
@@ -101,7 +100,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         BuildExplicitNavigation();
 
         transform.SetAsLastSibling();
-        EnsureBlocker();
+        EnsureModalBlocker(DefaultBlockerColor);
         EnableImeForPhysicalKeyboard();
         _caretTimer = 0f;
         _caretVisible = true;
@@ -110,18 +109,8 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         RefreshPreview();
         RefreshShiftLabels();
 
-        _utcs?.TrySetCanceled();
-        _utcs = new UniTaskCompletionSource<(bool Confirmed, string Text)>();
-        var utcs = _utcs;
-
-        try
-        {
-            await ShowAsync();
-        }
-        catch (OperationCanceledException)
-        {
-            // 表示演出がキャンセルされても結果待ちは継続する
-        }
+        var utcs = BeginResultWait();
+        await ShowModalAnimatedSafelyAsync();
 
         if (EventSystem.current != null && _initialFocusButton != null)
         {
@@ -133,7 +122,6 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
     protected override void Awake()
     {
-        _viewType = UIViewType.ModalDialog;
         _autoAttachButtonSounds = false;
         base.Awake();
     }
@@ -146,13 +134,12 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
     protected override void Update()
     {
         base.Update();
-        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+        if (!IsAwaitingResult || !gameObject.activeInHierarchy || !IsTopActiveView) return;
 
         UpdateCaretBlink();
 
-        if (_canvasGroup != null && !_canvasGroup.interactable) return;
+        if (!CanProcessModalInput) return;
 
-        // 日本語IME変換中の状態監視（変換候補ウィンドウの位置更新＋変換中プレビュー反映）
         string composition = Input.compositionString ?? string.Empty;
         bool isComposing = composition.Length > 0;
         if (isComposing)
@@ -160,7 +147,6 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             UpdateImeCursorPosition();
             if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
             {
-                // 変換中の Space / Enter が仮想キーボードのボタン Submit として誤爆しないようにフォーカスを外す
                 EventSystem.current.SetSelectedGameObject(null);
             }
         }
@@ -171,60 +157,51 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             RefreshPreview();
         }
 
-        // IME変換中、または直前フレームで変換確定／キャンセルした直後の Esc/Enter でダイアログを誤操作しない
         bool suppressDialogControlKeys = isComposing || _wasComposingLastFrame;
         _wasComposingLastFrame = isComposing;
 
-        bool cancelPressed =
-            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
-            (!suppressDialogControlKeys && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
-
-        if (cancelPressed)
+        if (LobbyUIInputHelper.WasCancelPressedThisFrame(allowKeyboardEscape: !suppressDialogControlKeys))
         {
             UISound.Play(UISoundType.Cancel);
-            CloseWithResult(confirmed: false).Forget();
+            CloseDialog(confirmed: false);
             return;
         }
 
-        if (HandlePhysicalKeyboardInput(suppressDialogControlKeys))
-        {
-            return;
-        }
-
-        if (isComposing)
+        if (HandlePhysicalKeyboardInput(suppressDialogControlKeys) || isComposing)
         {
             return;
         }
 
         RestoreFocusOnDirectionalInputIfNeeded();
 
-        if (Gamepad.current != null)
+        var gamepad = Gamepad.current;
+        if (gamepad != null)
         {
-            if (Gamepad.current.buttonWest.wasPressedThisFrame)
+            if (gamepad.buttonWest.wasPressedThisFrame)
             {
                 UISound.Play(UISoundType.Enter);
                 Backspace();
                 return;
             }
 
-            if (Gamepad.current.buttonNorth.wasPressedThisFrame)
+            if (gamepad.buttonNorth.wasPressedThisFrame)
             {
                 UISound.Play(UISoundType.Enter);
                 AppendChar(" ");
                 return;
             }
 
-            if (Gamepad.current.leftTrigger.wasPressedThisFrame)
+            if (gamepad.leftTrigger.wasPressedThisFrame)
             {
                 UISound.Play(UISoundType.Enter);
                 ToggleShift();
                 return;
             }
 
-            if (Gamepad.current.rightTrigger.wasPressedThisFrame || Gamepad.current.startButton.wasPressedThisFrame)
+            if (gamepad.rightTrigger.wasPressedThisFrame || gamepad.startButton.wasPressedThisFrame)
             {
                 UISound.Play(UISoundType.Enter);
-                CloseWithResult(confirmed: true).Forget();
+                CloseDialog(confirmed: true);
             }
         }
     }
@@ -245,7 +222,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             if (c == '\b')
             {
                 if (suppressControlKeys) continue;
-                if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+                if (hasSelection && EventSystem.current != null)
                 {
                     EventSystem.current.SetSelectedGameObject(null);
                     hasSelection = false;
@@ -258,11 +235,10 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             if (c == '\n' || c == '\r')
             {
                 if (suppressControlKeys) continue;
-                // ボタン選択中はUIのSubmitに任せ、物理キーボード入力中（非選択時）のみEnterで確定する
                 if (!hasSelection)
                 {
                     UISound.Play(UISoundType.Enter);
-                    CloseWithResult(confirmed: true).Forget();
+                    CloseDialog(confirmed: true);
                     return true;
                 }
                 continue;
@@ -270,7 +246,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
             if (!char.IsControl(c))
             {
-                if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+                if (hasSelection && EventSystem.current != null)
                 {
                     EventSystem.current.SetSelectedGameObject(null);
                     hasSelection = false;
@@ -290,60 +266,20 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             return;
         }
 
-        bool gamepadMoved =
-            Gamepad.current != null &&
-            (Gamepad.current.dpad.up.wasPressedThisFrame ||
-             Gamepad.current.dpad.down.wasPressedThisFrame ||
-             Gamepad.current.dpad.left.wasPressedThisFrame ||
-             Gamepad.current.dpad.right.wasPressedThisFrame ||
-             Gamepad.current.leftStick.ReadValue().sqrMagnitude > 0.25f);
-
-        bool arrowPressed =
-            Keyboard.current != null &&
-            (Keyboard.current.upArrowKey.wasPressedThisFrame ||
-             Keyboard.current.downArrowKey.wasPressedThisFrame ||
-             Keyboard.current.leftArrowKey.wasPressedThisFrame ||
-             Keyboard.current.rightArrowKey.wasPressedThisFrame);
-
-        if (gamepadMoved || arrowPressed)
+        if (LobbyUIInputHelper.WasDirectionalInputPressedThisFrame())
         {
             EventSystem.current.SetSelectedGameObject(_initialFocusButton.gameObject);
         }
     }
 
-    private async UniTaskVoid CloseWithResult(bool confirmed)
+    private void CloseDialog(bool confirmed)
     {
-        if (_utcs == null) return;
-
-        var tcs = _utcs;
-        _utcs = null;
-
-        RestoreImeMode();
-
-        if (_blocker != null)
-        {
-            _blocker.SetActive(false);
-        }
-
-        try
-        {
-            await HideAsync();
-        }
-        catch (OperationCanceledException)
-        {
-            // 非表示演出がキャンセル・破棄された場合でも結果は必ず確定させる
-        }
-        finally
-        {
-            tcs.TrySetResult((confirmed, _currentText));
-        }
+        CloseModalWithResultAsync((confirmed, _currentText), onBeforeHide: RestoreImeMode).Forget();
     }
 
     protected override void OnDestroy()
     {
         RestoreImeMode();
-        _utcs?.TrySetCanceled();
-        _utcs = null;
         base.OnDestroy();
     }
 
@@ -376,28 +312,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             ? rootCanvas.worldCamera
             : null;
         Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, worldPos);
-        // Input.compositionCursorPos は左上原点（Y下向き）
         Input.compositionCursorPos = new Vector2(screenPos.x, Screen.height - screenPos.y + 32f);
-    }
-
-    private void EnsureBlocker()
-    {
-        if (_blocker == null)
-        {
-            Transform existing = transform.Find("ScreenBlocker");
-            if (existing != null)
-            {
-                _blocker = existing.gameObject;
-            }
-            else
-            {
-                _blocker = UIBlockerHelper.EnsureBlocker(transform, new Color(0f, 0f, 0f, 0.68f));
-                return;
-            }
-        }
-
-        _blocker.SetActive(true);
-        _blocker.transform.SetAsFirstSibling();
     }
 
     #region プレハブUIのバインド（見た目維持）
@@ -430,6 +345,13 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             {
                 _previewText.supportRichText = true;
                 _previewBaseColor = _previewText.color;
+
+                // 点滅のたびに ColorUtility.ToHtmlStringRGBA を生成しないよう事前キャッシュ
+                string caretHex = ColorUtility.ToHtmlStringRGBA(_previewBaseColor);
+                Color placeholderColor = new Color(_previewBaseColor.r, _previewBaseColor.g, _previewBaseColor.b, 0.55f);
+                string placeholderHex = ColorUtility.ToHtmlStringRGBA(placeholderColor);
+                _emptyCaretVisibleMarkup = $"<color=#{caretHex}>|</color><color=#{placeholderHex}>（未入力）</color>";
+                _emptyCaretHiddenMarkup = $"<color=#00000000>|</color><color=#{placeholderHex}>（未入力）</color>";
             }
         }
 
@@ -507,10 +429,10 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
                 btn.onClick.AddListener(() => AppendChar(" "));
                 return;
             case "Key_Cancel":
-                btn.onClick.AddListener(() => CloseWithResult(confirmed: false).Forget());
+                btn.onClick.AddListener(() => CloseDialog(confirmed: false));
                 return;
             case "Key_Confirm":
-                btn.onClick.AddListener(() => CloseWithResult(confirmed: true).Forget());
+                btn.onClick.AddListener(() => CloseDialog(confirmed: true));
                 return;
         }
 
@@ -623,8 +545,7 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             Transform child = rowTr.GetChild(i);
             if (!child.gameObject.activeSelf) continue;
 
-            Button btn = child.GetComponent<Button>();
-            if (btn != null && btn.interactable)
+            if (child.TryGetComponent<Button>(out var btn) && btn.interactable)
             {
                 buttons.Add(btn);
             }
@@ -688,8 +609,9 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
 
     private void RefreshShiftLabels()
     {
-        foreach (var (_, label, lowerChar) in _letterButtons)
+        for (int i = 0; i < _letterButtons.Count; i++)
         {
+            var (_, label, lowerChar) = _letterButtons[i];
             if (label != null)
             {
                 label.text = _isShiftActive ? lowerChar.ToUpperInvariant() : lowerChar;
@@ -728,20 +650,13 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
         {
             if (string.IsNullOrEmpty(_currentText) && !hasComposition)
             {
-                string caretHex = ColorUtility.ToHtmlStringRGBA(_previewBaseColor);
-                string caretMarkup = _caretVisible
-                    ? $"<color=#{caretHex}>|</color>"
-                    : "<color=#00000000>|</color>";
-                Color placeholderColor = new Color(_previewBaseColor.r, _previewBaseColor.g, _previewBaseColor.b, 0.55f);
-                string placeholderHex = ColorUtility.ToHtmlStringRGBA(placeholderColor);
                 _previewText.supportRichText = true;
                 _previewText.color = _previewBaseColor;
-                _previewText.text = $"{caretMarkup}<color=#{placeholderHex}>（未入力）</color>";
+                _previewText.text = _caretVisible ? _emptyCaretVisibleMarkup : _emptyCaretHiddenMarkup;
             }
             else if (hasComposition)
             {
                 string caret = _caretVisible ? "|" : string.Empty;
-                // ユーザー入力文字列に '<' が含まれない場合のみ変換中文字列をソウルシアンで強調表示する
                 if (!_currentText.Contains("<") && !composition.Contains("<"))
                 {
                     _previewText.supportRichText = true;
@@ -757,7 +672,6 @@ public class LobbyVirtualKeyboardUI : LobbyViewBase
             }
             else
             {
-                // ユーザー入力文字列内のタグ(<color>等)が解釈されないようRichTextを無効化
                 _previewText.supportRichText = false;
                 _previewText.color = _previewBaseColor;
                 _previewText.text = _caretVisible ? $"{_currentText}|" : _currentText;

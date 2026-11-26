@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class LobbyPlayerEntryUI : MonoBehaviour
 {
+    private static readonly Color MemberRoleColor = new Color(0.74f, 0.62f, 0.40f, 1f);
+
     [SerializeField] private Text _playerNameText;
     [SerializeField] private Image _statusImage;
     [SerializeField] private Text _statusLabelText;
@@ -24,10 +26,9 @@ public class LobbyPlayerEntryUI : MonoBehaviour
         if (_roleTagText != null)
         {
             _roleTagText.text = isHost ? "HOST // ホスト" : "MEMBER // 参加メンバー";
-            _roleTagText.color = isHost ? _hostColor : new Color(0.74f, 0.62f, 0.40f, 1f);
+            _roleTagText.color = isHost ? _hostColor : MemberRoleColor;
         }
 
-        // Relay接続が完了しているか確認（ホストは常に接続済み扱い）
         bool isRelayConnected = SessionPlayerPropertyHelper.IsPlayerRelayConnected(player, isHost);
 
         if (!isRelayConnected)
@@ -47,8 +48,7 @@ public class LobbyPlayerEntryUI : MonoBehaviour
             _playerNameText.text = SessionPlayerPropertyHelper.GetPlayerName(player);
         }
 
-        // 準備状況の取得（ドメインヘルパーへ委譲）
-        var isReady = SessionPlayerPropertyHelper.IsPlayerReady(player);
+        bool isReady = SessionPlayerPropertyHelper.IsPlayerReady(player);
 
         if (isHost)
         {
@@ -66,13 +66,8 @@ public class LobbyPlayerEntryUI : MonoBehaviour
 
     private void ApplyPortraitSprite(int skinId)
     {
-        if (_portraitImage == null || _skinPortraits == null || _skinPortraits.Length == 0)
-        {
-            return;
-        }
-
-        int index = ((skinId % _skinPortraits.Length) + _skinPortraits.Length) % _skinPortraits.Length;
-        Sprite portrait = _skinPortraits[index];
+        if (_portraitImage == null) return;
+        Sprite portrait = LobbyUIInputHelper.SelectCyclicSprite(_skinPortraits, skinId);
         if (portrait != null)
         {
             _portraitImage.sprite = portrait;

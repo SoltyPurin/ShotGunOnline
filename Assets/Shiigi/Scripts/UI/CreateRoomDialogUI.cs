@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -22,18 +21,20 @@ public struct RoomAdvancedSettings
     };
 }
 
-// ダイアログから返却される結果のデータ
+/// <summary>
+/// ダイアログから返却される結果のデータ
+/// </summary>
 public struct CreateRoomResult
 {
-    public bool IsCanceled; // キャンセルされたかどうか
-    public string RoomName; // 入力されたルーム名
-    public int MaxPlayers; // 選択された最大人数
-    public RoomAdvancedSettings AdvancedSettings; // 詳細設定（通信プロトコルなど）
+    public bool IsCanceled;
+    public string RoomName;
+    public int MaxPlayers;
+    public RoomAdvancedSettings AdvancedSettings;
 
     public RelayProtocol Protocol => AdvancedSettings.Protocol;
 }
 
-public class CreateRoomDialogUI : LobbyViewBase
+public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
 {
     [Header("ルーム作成用UI")]
     [SerializeField] private InputField _roomNameInputField;
@@ -56,34 +57,28 @@ public class CreateRoomDialogUI : LobbyViewBase
 
     public LobbyVirtualKeyboardUI VirtualKeyboardPrefab => _virtualKeyboardPrefab;
 
-    private static readonly (string Label, RelayProtocol Protocol)[] _protocolOptions =
+    private static readonly (string Label, RelayProtocol Protocol)[] ProtocolOptions =
     {
         ("DTLS", RelayProtocol.DTLS),
         ("UDP", RelayProtocol.UDP),
         ("WSS(TCP)", RelayProtocol.WSS)
     };
 
-    private UniTaskCompletionSource<CreateRoomResult> _utcs;
-    private GameObject _blocker;
     private bool _isOpeningVirtualKeyboard;
+    private Dropdown _lastAutoFollowerAttachedDropdown;
 
     private bool ShouldUseVirtualKeyboard => _enableVirtualKeyboard && LobbyInputDeviceTracker.ShouldUseVirtualKeyboard;
 
     protected override void Awake()
     {
-        _viewType = UIViewType.ModalDialog;
         base.Awake();
 
         LobbyInputDeviceTracker.EnsureInitialized();
         LobbyInputDeviceTracker.OnInputModeChanged += HandleInputModeChanged;
 
-        EnsureButtonSound(_confirmCreateButton, UIButtonType.Default);
-        EnsureButtonSound(_cancelDialogButton, UIButtonType.Cancel);
-        EnsureButtonSound(_advancedSettingsButton, UIButtonType.SubAction);
-
-        UIButtonMetallicVisual.Attach(_confirmCreateButton);
-        UIButtonMetallicVisual.Attach(_cancelDialogButton);
-        UIButtonMetallicVisual.Attach(_advancedSettingsButton);
+        UIButtonSound.ConfigureButton(_confirmCreateButton, UIButtonType.Default);
+        UIButtonSound.ConfigureButton(_cancelDialogButton, UIButtonType.Cancel);
+        UIButtonSound.ConfigureButton(_advancedSettingsButton, UIButtonType.SubAction);
 
         if (_roomNameInputField != null && _roomNameInputField.textComponent != null)
         {
@@ -91,16 +86,14 @@ public class CreateRoomDialogUI : LobbyViewBase
         }
 
         ApplyRoomNameInputMode();
-
         RebuildNavigation();
     }
 
     protected override void Update()
     {
         base.Update();
-        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView || _isOpeningVirtualKeyboard) return;
+        if (!IsAwaitingResult || !gameObject.activeInHierarchy || !IsTopActiveView || _isOpeningVirtualKeyboard) return;
 
-        // コントローラー操作時かつ仮想キーボード有効時のみ、ルーム名欄の選択＋決定で仮想キーボードを開く
         if (ShouldUseVirtualKeyboard && _roomNameInputField != null)
         {
             bool isRoomNameSelected =
@@ -109,7 +102,8 @@ public class CreateRoomDialogUI : LobbyViewBase
 
             bool openRequestedBySubmit =
                 isRoomNameSelected &&
-                (Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame);
+                Gamepad.current != null &&
+                Gamepad.current.buttonSouth.wasPressedThisFrame;
 
             if (_roomNameInputField.isFocused || openRequestedBySubmit)
             {
@@ -132,16 +126,17 @@ public class CreateRoomDialogUI : LobbyViewBase
         Dropdown openDropdown = GetOpenDropdown();
         if (openDropdown != null)
         {
-            EnsureDropdownListAutoFollower(openDropdown);
+            if (_lastAutoFollowerAttachedDropdown != openDropdown)
+            {
+                _lastAutoFollowerAttachedDropdown = openDropdown;
+                EnsureDropdownListAutoFollower(openDropdown);
+            }
 
-            bool closeDropdown =
-                (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
-                (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
-
-            if (closeDropdown)
+            if (LobbyUIInputHelper.WasCancelPressedThisFrame())
             {
                 UISound.Play(UISoundType.Cancel);
                 openDropdown.Hide();
+                _lastAutoFollowerAttachedDropdown = null;
                 if (EventSystem.current != null)
                 {
                     EventSystem.current.SetSelectedGameObject(openDropdown.gameObject);
@@ -149,25 +144,28 @@ public class CreateRoomDialogUI : LobbyViewBase
             }
             return;
         }
+        _lastAutoFollowerAttachedDropdown = null;
 
-        bool cancelPressed =
-            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
-            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
-
-        if (cancelPressed)
+        if (LobbyUIInputHelper.WasCancelPressedThisFrame())
         {
             UISound.Play(UISoundType.Cancel);
-            CloseAndSetResult(new CreateRoomResult { IsCanceled = true }).Forget();
+            CloseModalWithResultAsync(new CreateRoomResult { IsCanceled = true }).Forget();
         }
     }
 
     private Dropdown GetOpenDropdown()
     {
-        if (_maxPlayersDropDown != null && _maxPlayersDropDown.transform.Find("Dropdown List") != null)
+        // Dropdown展開時は子要素数が通常より増えるため、子要素数チェックで不要な名前検索を抑止
+        if (_maxPlayersDropDown != null &&
+            _maxPlayersDropDown.transform.childCount > 3 &&
+            _maxPlayersDropDown.transform.Find("Dropdown List") != null)
         {
             return _maxPlayersDropDown;
         }
-        if (_protocolDropdown != null && _protocolDropdown.transform.Find("Dropdown List") != null)
+        if (_protocolDropdown != null &&
+            _protocolDropdown.gameObject.activeInHierarchy &&
+            _protocolDropdown.transform.childCount > 3 &&
+            _protocolDropdown.transform.Find("Dropdown List") != null)
         {
             return _protocolDropdown;
         }
@@ -181,7 +179,7 @@ public class CreateRoomDialogUI : LobbyViewBase
         if (listTransform == null) return;
 
         var scrollRect = listTransform.GetComponentInChildren<ScrollRect>(true);
-        if (scrollRect != null && scrollRect.GetComponent<ScrollRectAutoFollower>() == null)
+        if (scrollRect != null && !scrollRect.TryGetComponent<ScrollRectAutoFollower>(out _))
         {
             scrollRect.gameObject.AddComponent<ScrollRectAutoFollower>();
         }
@@ -200,29 +198,16 @@ public class CreateRoomDialogUI : LobbyViewBase
         return _confirmCreateButton != null ? _confirmCreateButton.gameObject : null;
     }
 
-    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
-    {
-        if (button == null) return;
-        var sound = button.GetComponent<UIButtonSound>();
-        if (sound == null)
-        {
-            sound = button.gameObject.AddComponent<UIButtonSound>();
-        }
-        sound.ButtonType = buttonType;
-    }
-
     /// <summary>
     /// ダイアログを表示し、ユーザーが決定またはキャンセルするまで待機
     /// </summary>
     public async UniTask<CreateRoomResult> ShowAsync()
     {
-        EnsureBlocker();
+        EnsureModalBlocker(_blockerColor);
 
-        // UI初期化
-        _roomNameInputField.text = "";
+        _roomNameInputField.text = string.Empty;
         ApplyRoomNameInputMode();
 
-        // ドロップダウン初期化
         SetMaxPlayersDropdownOptions();
         _maxPlayersDropDown.value = 0;
 
@@ -243,7 +228,6 @@ public class CreateRoomDialogUI : LobbyViewBase
         }
         RebuildNavigation();
 
-        // イベントの多重登録を防ぐため、一度クリアして再アタッチ
         _confirmCreateButton.onClick.RemoveAllListeners();
         _cancelDialogButton.onClick.RemoveAllListeners();
         if (_advancedSettingsButton != null)
@@ -252,14 +236,11 @@ public class CreateRoomDialogUI : LobbyViewBase
             _advancedSettingsButton.onClick.AddListener(ToggleAdvancedSettings);
         }
 
-        _utcs?.TrySetCanceled();
-        _utcs = new UniTaskCompletionSource<CreateRoomResult>();
-        var utcs = _utcs;
+        var utcs = BeginResultWait();
 
-        // 決定ボタンが押されたとき
         _confirmCreateButton.onClick.AddListener(() =>
         {
-            CloseAndSetResult(new CreateRoomResult
+            CloseModalWithResultAsync(new CreateRoomResult
             {
                 IsCanceled = false,
                 RoomName = _roomNameInputField.text,
@@ -271,27 +252,16 @@ public class CreateRoomDialogUI : LobbyViewBase
             }).Forget();
         });
 
-        // キャンセルボタンが押されたとき
         _cancelDialogButton.onClick.AddListener(() =>
         {
-            CloseAndSetResult(new CreateRoomResult { IsCanceled = true }).Forget();
+            CloseModalWithResultAsync(new CreateRoomResult { IsCanceled = true }).Forget();
         });
 
-        // フェード＆ポップアニメーションを表示（演出がキャンセルされても結果待ちは継続する）
-        try
-        {
-            await base.ShowAsync();
-        }
-        catch (OperationCanceledException)
-        {
-            // 表示演出のキャンセルは無視し、結果の確定を待つ
-        }
+        await ShowModalAnimatedSafelyAsync();
 
         if (EventSystem.current != null)
         {
-            GameObject initialFocus = LobbyInputDeviceTracker.ShouldUseVirtualKeyboard && _confirmCreateButton != null
-                ? _confirmCreateButton.gameObject
-                : (_roomNameInputField != null ? _roomNameInputField.gameObject : _confirmCreateButton?.gameObject);
+            GameObject initialFocus = GetDefaultFocusTarget();
             if (initialFocus != null)
             {
                 EventSystem.current.SetSelectedGameObject(initialFocus);
@@ -301,36 +271,9 @@ public class CreateRoomDialogUI : LobbyViewBase
         return await utcs.Task;
     }
 
-    private async UniTaskVoid CloseAndSetResult(CreateRoomResult result)
-    {
-        if (_utcs == null) return;
-        var utcs = _utcs;
-        _utcs = null;
-
-        if (_blocker != null)
-        {
-            _blocker.SetActive(false);
-        }
-
-        try
-        {
-            await HideAsync();
-        }
-        catch (OperationCanceledException)
-        {
-            // 非表示演出がキャンセル・破棄された場合でも結果は必ず確定させる
-        }
-        finally
-        {
-            utcs.TrySetResult(result);
-        }
-    }
-
     protected override void OnDestroy()
     {
         LobbyInputDeviceTracker.OnInputModeChanged -= HandleInputModeChanged;
-        _utcs?.TrySetCanceled();
-        _utcs = null;
         base.OnDestroy();
     }
 
@@ -367,34 +310,42 @@ public class CreateRoomDialogUI : LobbyViewBase
 
         if (_roomNameInputField != null)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnDown = _maxPlayersDropDown != null ? (Selectable)_maxPlayersDropDown : _advancedSettingsButton;
-            nav.selectOnUp = bottomPrimary;
-            _roomNameInputField.navigation = nav;
+            _roomNameInputField.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnDown = _maxPlayersDropDown != null ? (Selectable)_maxPlayersDropDown : _advancedSettingsButton,
+                selectOnUp = bottomPrimary
+            };
         }
 
         if (_maxPlayersDropDown != null)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = _roomNameInputField;
-            nav.selectOnDown = _advancedSettingsButton != null ? (Selectable)_advancedSettingsButton : bottomPrimary;
-            _maxPlayersDropDown.navigation = nav;
+            _maxPlayersDropDown.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = _roomNameInputField,
+                selectOnDown = _advancedSettingsButton != null ? (Selectable)_advancedSettingsButton : bottomPrimary
+            };
         }
 
         if (_advancedSettingsButton != null)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = _maxPlayersDropDown != null ? (Selectable)_maxPlayersDropDown : _roomNameInputField;
-            nav.selectOnDown = afterAdvanced;
-            _advancedSettingsButton.navigation = nav;
+            _advancedSettingsButton.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = _maxPlayersDropDown != null ? (Selectable)_maxPlayersDropDown : _roomNameInputField,
+                selectOnDown = afterAdvanced
+            };
         }
 
         if (protocolVisible)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = _advancedSettingsButton;
-            nav.selectOnDown = bottomPrimary;
-            _protocolDropdown.navigation = nav;
+            _protocolDropdown.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = _advancedSettingsButton,
+                selectOnDown = bottomPrimary
+            };
         }
 
         Selectable aboveBottom = protocolVisible
@@ -403,22 +354,26 @@ public class CreateRoomDialogUI : LobbyViewBase
 
         if (_confirmCreateButton != null)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = aboveBottom;
-            nav.selectOnDown = _roomNameInputField;
-            nav.selectOnLeft = _cancelDialogButton;
-            nav.selectOnRight = _cancelDialogButton;
-            _confirmCreateButton.navigation = nav;
+            _confirmCreateButton.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = aboveBottom,
+                selectOnDown = _roomNameInputField,
+                selectOnLeft = _cancelDialogButton,
+                selectOnRight = _cancelDialogButton
+            };
         }
 
         if (_cancelDialogButton != null)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = aboveBottom;
-            nav.selectOnDown = _roomNameInputField;
-            nav.selectOnLeft = _confirmCreateButton;
-            nav.selectOnRight = _confirmCreateButton;
-            _cancelDialogButton.navigation = nav;
+            _cancelDialogButton.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = aboveBottom,
+                selectOnDown = _roomNameInputField,
+                selectOnLeft = _confirmCreateButton,
+                selectOnRight = _confirmCreateButton
+            };
         }
     }
 
@@ -426,7 +381,6 @@ public class CreateRoomDialogUI : LobbyViewBase
     {
         if (_roomNameInputField == null) return;
 
-        // コントローラー操作時（仮想キーボード有効）のみ直接入力を抑制し、キーボード／マウス操作時は直接入力を許可する
         bool useVirtualKeyboard = ShouldUseVirtualKeyboard;
         _roomNameInputField.shouldActivateOnSelect = !useVirtualKeyboard;
         _roomNameInputField.readOnly = useVirtualKeyboard;
@@ -449,7 +403,6 @@ public class CreateRoomDialogUI : LobbyViewBase
         {
             _roomNameInputField.DeactivateInputField();
             Canvas parentCanvas = GetComponentInParent<Canvas>();
-            Font font = _roomNameInputField.textComponent != null ? _roomNameInputField.textComponent.font : null;
             int maxLength = _roomNameInputField.characterLimit > 0 ? _roomNameInputField.characterLimit : 20;
 
             var (confirmed, text) = await LobbyVirtualKeyboardUI.OpenAsync(
@@ -475,46 +428,30 @@ public class CreateRoomDialogUI : LobbyViewBase
         }
     }
 
-    private void EnsureBlocker()
-    {
-        if (_blocker == null)
-        {
-            _blocker = UIBlockerHelper.EnsureBlocker(transform, _blockerColor);
-        }
-        else
-        {
-            _blocker.SetActive(true);
-            _blocker.transform.SetAsFirstSibling();
-        }
-    }
-
-    /// <summary>
-    /// 最大人数ドロップダウンの選択肢を設定する
-    /// </summary>
     private void SetMaxPlayersDropdownOptions()
     {
         _maxPlayersDropDown.ClearOptions();
-
-        // ドロップダウンの選択肢を最大人数リストから作成
-        var options = _maxPlayerOptions.Select(maxPlayers => maxPlayers.ToString()).ToList();
+        var options = new List<string>(_maxPlayerOptions.Count);
+        for (int i = 0; i < _maxPlayerOptions.Count; i++)
+        {
+            options.Add(_maxPlayerOptions[i].ToString());
+        }
         _maxPlayersDropDown.AddOptions(options);
     }
 
-    /// <summary>
-    /// 通信プロトコルドロップダウンの選択肢を設定する
-    /// </summary>
     private void SetProtocolDropdownOptions()
     {
         if (_protocolDropdown == null) return;
 
         _protocolDropdown.ClearOptions();
-        var options = _protocolOptions.Select(option => option.Label).ToList();
+        var options = new List<string>(ProtocolOptions.Length);
+        for (int i = 0; i < ProtocolOptions.Length; i++)
+        {
+            options.Add(ProtocolOptions[i].Label);
+        }
         _protocolDropdown.AddOptions(options);
     }
 
-    /// <summary>
-    /// ドロップダウンの項目に合わせて人数を返す
-    /// </summary>
     private int GetMaxPlayersFromDropdown(int index)
     {
         if (_maxPlayerOptions == null || _maxPlayerOptions.Count == 0)
@@ -528,15 +465,12 @@ public class CreateRoomDialogUI : LobbyViewBase
         return _maxPlayerOptions[index];
     }
 
-    /// <summary>
-    /// ドロップダウンの項目に合わせて通信プロトコルを返す
-    /// </summary>
-    private RelayProtocol GetProtocolFromDropdown(int index)
+    private static RelayProtocol GetProtocolFromDropdown(int index)
     {
-        if (index < 0 || index >= _protocolOptions.Length)
+        if (index < 0 || index >= ProtocolOptions.Length)
         {
             return RelayProtocol.DTLS;
         }
-        return _protocolOptions[index].Protocol;
+        return ProtocolOptions[index].Protocol;
     }
 }
