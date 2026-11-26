@@ -74,6 +74,7 @@ public class LobbyUIManager : MonoBehaviour
         }
         LobbyViewBase.OnActiveViewStackChanged += UpdateToggleButtonVisual;
         PlayerProfileStore.OnProfileChanged += HandlePlayerProfileChanged;
+        PlayerSkinSync.OnLocalPlayerSkinChanged += HandleLocalPlayerSkinChanged;
 
         if (_createRoomDialogUI != null)
         {
@@ -141,6 +142,7 @@ public class LobbyUIManager : MonoBehaviour
         }
         LobbyViewBase.OnActiveViewStackChanged -= UpdateToggleButtonVisual;
         PlayerProfileStore.OnProfileChanged -= HandlePlayerProfileChanged;
+        PlayerSkinSync.OnLocalPlayerSkinChanged -= HandleLocalPlayerSkinChanged;
     }
 
     private void Update()
@@ -597,7 +599,8 @@ public class LobbyUIManager : MonoBehaviour
                 isOnline,
                 isInRoom,
                 currentSession != null ? currentSession.Players.Count : 0,
-                currentSession != null ? currentSession.MaxPlayers : 0);
+                currentSession != null ? currentSession.MaxPlayers : 0,
+                isInRoom ? PlayerSkinSync.LocalPlayerSkinId : 0);
         }
 
         if (_playerNameButton == null) return;
@@ -691,6 +694,11 @@ public class LobbyUIManager : MonoBehaviour
     }
 
     private void HandlePlayerProfileChanged(PlayerProfile profile)
+    {
+        UpdatePlayerNameButtonVisual();
+    }
+
+    private void HandleLocalPlayerSkinChanged(int skinId)
     {
         UpdatePlayerNameButtonVisual();
     }

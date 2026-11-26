@@ -101,6 +101,12 @@ MonoBehaviour:
   _statusLabelText: {fileID: 7200000032}
   _roleTagText: {fileID: 7200000022}
   _leftSpineImage: {fileID: 7200000004}
+  _portraitImage: {fileID: 7200000018}
+  _skinPortraits:
+  - {fileID: 6454490000420998888, guid: 2d0d57473ee9718459509d2a70859d2b, type: 3}
+  - {fileID: 9113291519894422807, guid: 625f572dfe5350e4b951424dc3efecdf, type: 3}
+  - {fileID: -4912019858324938879, guid: 3789fcca39309214e85ad681a75f47b6, type: 3}
+  - {fileID: -6268037493484981051, guid: e86d30af9fbba43438a11ede285f1b9f, type: 3}
   _hostColor: {r: 0.976, g: 0.827, b: 0.427, a: 1}
   _readyColor: {r: 0.361, g: 0.918, b: 0.8, a: 1}
   _waitingColor: {r: 0.83, g: 0.62, b: 0.36, a: 1}

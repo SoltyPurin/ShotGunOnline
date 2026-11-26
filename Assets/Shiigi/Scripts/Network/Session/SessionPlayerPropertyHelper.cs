@@ -15,6 +15,7 @@ public static class SessionPlayerPropertyHelper
     public const string ReadyPropertyKey = "IsReady";
     public const string RelayConnectedPropertyKey = "IsRelayConnected";
     public const string PlayerNamePropertyKey = "PlayerName";
+    public const string SkinIdPropertyKey = "SkinId";
     private const string TrueValue = "true";
     private const string FalseValue = "false";
 
@@ -141,15 +142,46 @@ public static class SessionPlayerPropertyHelper
     }
 
     /// <summary>
-    /// Relay接続完了状態とプレイヤー名をまとめて保存する初期プロパティ辞書を生成する
+    /// スキンIDの更新用プロパティ辞書を生成する
     /// </summary>
-    public static Dictionary<string, PlayerProperty> CreateInitialConnectedPlayerProperties(string playerName)
+    public static Dictionary<string, PlayerProperty> CreateSkinIdProperties(int skinId)
+    {
+        int normalized = Math.Max(0, skinId);
+        return new Dictionary<string, PlayerProperty>
+        {
+            { SkinIdPropertyKey, new PlayerProperty(normalized.ToString(), VisibilityPropertyOptions.Member) }
+        };
+    }
+
+    /// <summary>
+    /// 指定したプレイヤーのスキンIDを取得する（未設定・不正時はフォールバック値を返す）
+    /// </summary>
+    public static int GetPlayerSkinId(IReadOnlyPlayer player, int fallbackSkinId = 0)
+    {
+        if (player?.Properties != null &&
+            player.Properties.TryGetValue(SkinIdPropertyKey, out var prop) &&
+            !string.IsNullOrWhiteSpace(prop?.Value) &&
+            int.TryParse(prop.Value, out int parsed) &&
+            parsed >= 0)
+        {
+            return parsed;
+        }
+
+        return Math.Max(0, fallbackSkinId);
+    }
+
+    /// <summary>
+    /// Relay接続完了状態・プレイヤー名・スキンIDをまとめて保存する初期プロパティ辞書を生成する
+    /// </summary>
+    public static Dictionary<string, PlayerProperty> CreateInitialConnectedPlayerProperties(string playerName, int skinId = 0)
     {
         string sanitized = PlayerProfile.SanitizePlayerName(playerName);
+        int normalizedSkinId = Math.Max(0, skinId);
         return new Dictionary<string, PlayerProperty>
         {
             { RelayConnectedPropertyKey, new PlayerProperty(TrueValue, VisibilityPropertyOptions.Member) },
-            { PlayerNamePropertyKey, new PlayerProperty(sanitized, VisibilityPropertyOptions.Member) }
+            { PlayerNamePropertyKey, new PlayerProperty(sanitized, VisibilityPropertyOptions.Member) },
+            { SkinIdPropertyKey, new PlayerProperty(normalizedSkinId.ToString(), VisibilityPropertyOptions.Member) }
         };
     }
 

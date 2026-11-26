@@ -79,13 +79,16 @@ public class LobbyRoomUI : LobbyViewBase
 
         // リストクリア＆プレイヤー一覧描画
         ClearPlayerList();
+        int playerIndex = 0;
         foreach (var player in session.Players)
         {
             var entry = Instantiate(_playerEntryPrefab, _playerContainer);
             var isHost = session.Host == player.Id;
+            int fallbackSkinId = isHost ? 0 : playerIndex;
 
-            entry.Setup(player, isHost);
+            entry.Setup(player, isHost, fallbackSkinId);
             _spawnedEntries.Add(entry);
+            playerIndex++;
         }
 
         // ローカルプレイヤーがホストかどうかでボタンの出し分け
