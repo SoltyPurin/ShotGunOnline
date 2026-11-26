@@ -1,4 +1,3 @@
-using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +5,9 @@ using UnityEngine;
 /// </summary>
 public class TitleManager : MonoBehaviour
 {
+    [Header("オプションUI参照（未設定時はシーン内から自動検出）")]
+    [SerializeField] private FrameRateOptionUI _optionUI;
+
     private void Start()
     {
         // ポーズ画面などから遷移した際に時間停止状態が残らないよう復帰
@@ -13,7 +15,7 @@ public class TitleManager : MonoBehaviour
         FrameRateManager.RefreshCurrentSettings();
         EnsureOptionUISetup();
 
-        CleanupNetworkSession();
+        MultiplayerSessionManager.CleanupOrShutdownStatic();
     }
 
     /// <summary>
@@ -21,36 +23,33 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     private void EnsureOptionUISetup()
     {
-        var rects = FindObjectsByType<RectTransform>(FindObjectsInactive.Include);
-        foreach (var rt in rects)
+        if (_optionUI != null) return;
+
+        _optionUI = FindAnyObjectByType<FrameRateOptionUI>(FindObjectsInactive.Include);
+        if (_optionUI != null) return;
+
+        foreach (var canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Include))
         {
-            if (rt != null && rt.name == "OptionButtons")
+            if (canvas == null) continue;
+            Transform optionButtons = FindChildRecursive(canvas.transform, "OptionButtons");
+            if (optionButtons != null)
             {
-                if (rt.GetComponent<FrameRateOptionUI>() == null)
-                {
-                    rt.gameObject.AddComponent<FrameRateOptionUI>();
-                }
-                break;
+                _optionUI = optionButtons.gameObject.AddComponent<FrameRateOptionUI>();
+                return;
             }
         }
     }
 
-    /// <summary>
-    /// タイトル画面遷移時に残存しているルームセッションやNetworkManagerがあれば切断・破棄を要求する
-    /// </summary>
-    private void CleanupNetworkSession()
+    private static Transform FindChildRecursive(Transform parent, string targetName)
     {
-        if (MultiplayerSessionManager.Instance != null)
+        for (int i = 0; i < parent.childCount; i++)
         {
-            _ = MultiplayerSessionManager.Instance.DisconnectAndCleanupAsync();
+            Transform child = parent.GetChild(i);
+            if (child.name == targetName) return child;
+
+            Transform nested = FindChildRecursive(child, targetName);
+            if (nested != null) return nested;
         }
-        else if (NetworkManager.Singleton != null)
-        {
-            if (NetworkManager.Singleton.IsListening || NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient)
-            {
-                NetworkManager.Singleton.Shutdown();
-            }
-            Destroy(NetworkManager.Singleton.gameObject);
-        }
+        return null;
     }
 }

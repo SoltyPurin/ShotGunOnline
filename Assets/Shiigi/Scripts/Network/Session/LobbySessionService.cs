@@ -183,10 +183,10 @@ public class LobbySessionService : ILobbySessionService
             return false;
         }
 
-        // 試合中・ロック中のルームへ途中参加すると、プレイヤーが生成されない／開始同期が崩れるため参加させない
-        if (targetRoom.IsLocked || SessionPlayerPropertyHelper.IsSessionInGame(targetRoom))
+        // 試合中・ロック中・満員のルームへ途中参加すると、プレイヤーが生成されない／開始同期が崩れるため参加させない
+        if (!SessionPlayerPropertyHelper.CanJoinSession(targetRoom))
         {
-            Debug.LogWarning("[MSM]: 試合中またはロック中のルームのため、参加をスキップしました。");
+            Debug.LogWarning("[MSM]: 参加不可状態（試合中・満員・ロック中）のルームのため、参加をスキップしました。");
             return false;
         }
 
