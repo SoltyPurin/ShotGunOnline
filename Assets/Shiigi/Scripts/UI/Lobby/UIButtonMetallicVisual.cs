@@ -1,11 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
 /// ボタン選択（コントローラー/キーボード）およびホバー時の演出コンポーネント。
-/// ボタン自身の色（エディタ設定）をベースに、選択時は元のカラーを加算して濃くしつつ、
-/// 拡大アニメーション・外枠（白/黒）・金属光沢の斜めシマーを適用。
+/// アイドル収束時のマテリアル更新スキップとメッシュ変更時のゼロGCバッファにより、大量のボタン配置時でも低負荷に動作します。
 /// </summary>
 [DisallowMultipleComponent]
 public class UIButtonMetallicVisual : MonoBehaviour,
@@ -25,6 +25,9 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private static readonly int SpriteUVBoundsId = Shader.PropertyToID("_SpriteUVBounds");
     private static readonly int FocusAddId = Shader.PropertyToID("_FocusAdd");
     private static readonly int UseLocalUVId = Shader.PropertyToID("_UseLocalUV");
+
+    private static readonly List<IMeshModifier> s_modifierBuffer = new(8);
+    private const float RestEpsilon = 0.0005f;
 
     [Header("選択時の外枠・発色設定")]
     [SerializeField] private bool _useOutline = true;
@@ -50,6 +53,15 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private bool _initialized;
     private bool _useLocalUV;
     private bool _canvasChannelReady;
+    private bool _isVisualAtRest;
+    private bool _staticShaderPropsDirty = true;
+    private Sprite _lastCachedSprite;
+    private Vector2 _lastCachedRectSize;
+
+    private float _shineTimer = -1f;
+    private float _periodicTimer;
+    private float _currentRimIntensity;
+    private float _currentFocusAdd;
 
     /// <summary>
     /// 指定されたボタンに金属光沢ビジュアルを付与（既存なら取得）する
@@ -58,18 +70,12 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     {
         if (button == null) return null;
 
-        var visual = button.GetComponent<UIButtonMetallicVisual>();
-        if (visual == null)
+        if (!button.TryGetComponent<UIButtonMetallicVisual>(out var visual))
         {
             visual = button.gameObject.AddComponent<UIButtonMetallicVisual>();
         }
         return visual;
     }
-
-    private float _shineTimer = -1f;
-    private float _periodicTimer;
-    private float _currentRimIntensity;
-    private float _currentFocusAdd;
 
     private bool IsFocused
     {
@@ -84,6 +90,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     public void SetUseOutline(bool useOutline)
     {
         _useOutline = useOutline;
+        _isVisualAtRest = false;
     }
 
     private void Awake()
@@ -95,6 +102,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     {
         EnsureInitialized();
         EnsureCanvasTexCoord1();
+        _staticShaderPropsDirty = true;
         ResetVisualImmediate();
     }
 
@@ -125,6 +133,8 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     public void ConfigureColors(Color normalColor, Color focusedColor, Color accentColor)
     {
         _outlineColor = accentColor;
+        _staticShaderPropsDirty = true;
+        _isVisualAtRest = false;
         SetMaterialColor(RimColorId, _outlineColor);
     }
 
@@ -192,7 +202,6 @@ public class UIButtonMetallicVisual : MonoBehaviour,
             _baseScale = Vector3.one;
         }
 
-        // 金属光沢＆外枠シェーダーのインスタンスマテリアルを設定
         if (_targetImage != null)
         {
             _useLocalUV = (_targetImage.gameObject == gameObject);
@@ -212,6 +221,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
                 _runtimeMaterial.SetFloat(FocusAddId, 0f);
                 _runtimeMaterial.SetFloat(UseLocalUVId, _useLocalUV ? 1f : 0f);
                 _targetImage.material = _runtimeMaterial;
+                _staticShaderPropsDirty = true;
             }
 
             EnsureCanvasTexCoord1();
@@ -253,24 +263,25 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         float invWidth = 1f / rect.width;
         float invHeight = 1f / rect.height;
 
-        // このコンポーネントより先に実行された有効な Shadow / Outline の複製倍率を算出し、
-        // 末尾の本体メッシュ頂点だけにエフェクトマスク(uv1.z = 1)を立てる
         int multiplier = 1;
-        var modifiers = GetComponents<IMeshModifier>();
-        for (int m = 0; m < modifiers.Length; m++)
+        s_modifierBuffer.Clear();
+        GetComponents(s_modifierBuffer);
+        for (int m = 0; m < s_modifierBuffer.Count; m++)
         {
-            if (ReferenceEquals(modifiers[m], this)) break;
-            if (modifiers[m] is Behaviour behaviour && !behaviour.isActiveAndEnabled) continue;
+            var mod = s_modifierBuffer[m];
+            if (ReferenceEquals(mod, this)) break;
+            if (mod is Behaviour behaviour && !behaviour.isActiveAndEnabled) continue;
 
-            if (modifiers[m] is Outline)
+            if (mod is Outline)
             {
                 multiplier *= 5;
             }
-            else if (modifiers[m] is Shadow)
+            else if (mod is Shadow)
             {
                 multiplier *= 2;
             }
         }
+        s_modifierBuffer.Clear();
 
         int count = vh.currentVertCount;
         int mainStartIndex = (multiplier > 1 && count % multiplier == 0)
@@ -294,6 +305,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         transform.localScale = _baseScale;
         _currentRimIntensity = 0f;
         _currentFocusAdd = 0f;
+        _isVisualAtRest = false;
 
         if (_runtimeMaterial != null)
         {
@@ -315,33 +327,42 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         if (dt <= 0f) return;
 
         bool focused = IsFocused;
+        bool isIdleTarget = !focused && !_isPressed && _shineTimer < 0f;
+
+        // 非フォーカスかつアニメーション完全収束済みなら毎フレームの計算・マテリアル書き込みをスキップ
+        if (isIdleTarget && _isVisualAtRest)
+        {
+            return;
+        }
+        _isVisualAtRest = false;
+
         bool interactable = _selectable == null || _selectable.IsInteractable();
 
-        // スケール補間（選択時に少し大きくする）
         float targetScaleMul = 1f;
-        if (!interactable)
+        if (interactable)
         {
-            targetScaleMul = 1f;
-        }
-        else if (_isPressed)
-        {
-            targetScaleMul = _pressedScale;
-        }
-        else if (focused)
-        {
-            targetScaleMul = _focusedScale;
+            if (_isPressed) targetScaleMul = _pressedScale;
+            else if (focused) targetScaleMul = _focusedScale;
         }
 
+        float lerpFactor = 1f - Mathf.Exp(-_transitionSpeed * dt);
         Vector3 targetScale = _baseScale * targetScaleMul;
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, 1f - Mathf.Exp(-_transitionSpeed * dt));
+        Vector3 nextScale = Vector3.Lerp(transform.localScale, targetScale, lerpFactor);
+        bool scaleSettled = (nextScale - targetScale).sqrMagnitude < RestEpsilon * RestEpsilon;
+        transform.localScale = scaleSettled ? targetScale : nextScale;
 
-        // シェーダー演出（外枠・元色加算・金属シマー）の更新
         if (_runtimeMaterial != null)
         {
-            float lerpFactor = 1f - Mathf.Exp(-_transitionSpeed * dt);
-            float pulse = focused ? (0.85f + 0.15f * Mathf.Sin(Time.unscaledTime * 5.5f)) : 0f;
-            _currentRimIntensity = Mathf.Lerp(_currentRimIntensity, (_useOutline && focused) ? pulse : 0f, lerpFactor);
-            _currentFocusAdd = Mathf.Lerp(_currentFocusAdd, focused ? _focusSelfAdd : 0f, lerpFactor);
+            UpdateStaticMaterialPropertiesIfNeeded();
+
+            float targetRim = (_useOutline && focused) ? (0.85f + 0.15f * Mathf.Sin(Time.unscaledTime * 5.5f)) : 0f;
+            float targetFocusAdd = focused ? _focusSelfAdd : 0f;
+
+            _currentRimIntensity = Mathf.Lerp(_currentRimIntensity, targetRim, lerpFactor);
+            _currentFocusAdd = Mathf.Lerp(_currentFocusAdd, targetFocusAdd, lerpFactor);
+
+            if (!focused && _currentRimIntensity < RestEpsilon) _currentRimIntensity = 0f;
+            if (!focused && _currentFocusAdd < RestEpsilon) _currentFocusAdd = 0f;
 
             if (focused)
             {
@@ -372,25 +393,47 @@ public class UIButtonMetallicVisual : MonoBehaviour,
                 }
             }
 
-            RectTransform rt = _targetImage != null ? _targetImage.rectTransform : transform as RectTransform;
-            Vector2 rectSize = rt != null ? rt.rect.size : new Vector2(160f, 60f);
-
-            Sprite activeSprite = _targetImage != null ? _targetImage.sprite : null;
-            bool useSpriteAlpha = activeSprite != null && _targetImage.type != Image.Type.Tiled;
-            Vector4 uvBounds = activeSprite != null
-                ? UnityEngine.Sprites.DataUtility.GetOuterUV(activeSprite)
-                : new Vector4(0f, 0f, 1f, 1f);
-
-            SetMaterialColor(RimColorId, _outlineColor);
-            SetMaterialFloat(RimThicknessId, _outlineThickness);
-            SetMaterialVector(RectSizeId, new Vector4(Mathf.Max(1f, rectSize.x), Mathf.Max(1f, rectSize.y), 0f, 0f));
-            SetMaterialFloat(UseSpriteAlphaId, useSpriteAlpha ? 1f : 0f);
-            SetMaterialVector(SpriteUVBoundsId, uvBounds);
             SetMaterialFloat(RimIntensityId, _currentRimIntensity);
             SetMaterialFloat(FocusAddId, _currentFocusAdd);
             SetMaterialFloat(ShineProgressId, shineProgress);
             SetMaterialFloat(ShineIntensityId, shineIntensity);
+
+            if (isIdleTarget && scaleSettled && _currentRimIntensity == 0f && _currentFocusAdd == 0f && _shineTimer < 0f)
+            {
+                _isVisualAtRest = true;
+            }
         }
+        else if (isIdleTarget && scaleSettled)
+        {
+            _isVisualAtRest = true;
+        }
+    }
+
+    private void UpdateStaticMaterialPropertiesIfNeeded()
+    {
+        RectTransform rt = _targetImage != null ? _targetImage.rectTransform : transform as RectTransform;
+        Vector2 rectSize = rt != null ? rt.rect.size : new Vector2(160f, 60f);
+        Sprite activeSprite = _targetImage != null ? _targetImage.sprite : null;
+
+        bool sizeChanged = (rectSize - _lastCachedRectSize).sqrMagnitude > 0.01f;
+        bool spriteChanged = activeSprite != _lastCachedSprite;
+
+        if (!_staticShaderPropsDirty && !sizeChanged && !spriteChanged) return;
+
+        _staticShaderPropsDirty = false;
+        _lastCachedRectSize = rectSize;
+        _lastCachedSprite = activeSprite;
+
+        bool useSpriteAlpha = activeSprite != null && _targetImage.type != Image.Type.Tiled;
+        Vector4 uvBounds = activeSprite != null
+            ? UnityEngine.Sprites.DataUtility.GetOuterUV(activeSprite)
+            : new Vector4(0f, 0f, 1f, 1f);
+
+        SetMaterialColor(RimColorId, _outlineColor);
+        SetMaterialFloat(RimThicknessId, _outlineThickness);
+        SetMaterialVector(RectSizeId, new Vector4(Mathf.Max(1f, rectSize.x), Mathf.Max(1f, rectSize.y), 0f, 0f));
+        SetMaterialFloat(UseSpriteAlphaId, useSpriteAlpha ? 1f : 0f);
+        SetMaterialVector(SpriteUVBoundsId, uvBounds);
     }
 
     public void TriggerShine()
@@ -398,22 +441,26 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         if (_selectable != null && !_selectable.IsInteractable()) return;
         _shineTimer = 0f;
         _periodicTimer = 0f;
+        _isVisualAtRest = false;
     }
 
     public void OnSelect(BaseEventData eventData)
     {
         _isSelected = true;
+        _isVisualAtRest = false;
         TriggerShine();
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         _isSelected = false;
+        _isVisualAtRest = false;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         _isHovered = true;
+        _isVisualAtRest = false;
         TriggerShine();
     }
 
@@ -421,17 +468,20 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     {
         _isHovered = false;
         _isPressed = false;
+        _isVisualAtRest = false;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         if (_selectable != null && !_selectable.IsInteractable()) return;
         _isPressed = true;
+        _isVisualAtRest = false;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         _isPressed = false;
+        _isVisualAtRest = false;
     }
 
     public void OnSubmit(BaseEventData eventData)
