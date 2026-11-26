@@ -183,7 +183,7 @@ public class BossHP : EnemyTakeDamage
         _enemyHP.Value -= _fallDamage;
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
             return;
         }
         if (this.gameObject.activeInHierarchy)
@@ -292,7 +292,7 @@ public class BossHP : EnemyTakeDamage
         if (_playTheSEManager != null) _playTheSEManager.PlayRoadKill();
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
     [ClientRpc]
