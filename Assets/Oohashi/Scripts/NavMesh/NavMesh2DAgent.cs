@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public class NavMesh2DAgent : Unity.Netcode.NetworkBehaviour
 {
     [SerializeField, Header("移動速度")]
-    internal float _moveSpeed = 1.0f;
+    private float _moveSpeed = 1.0f;
 
     [SerializeField, Header("どれくらい近づいたら止まるか")]
     private float _stoppingDistance = 0f;
@@ -119,5 +119,14 @@ public class NavMesh2DAgent : Unity.Netcode.NetworkBehaviour
         {
             transform.position = Vector2.MoveTowards(current, target, _moveSpeed * Time.fixedDeltaTime);
         }
+    }
+
+    /// <summary>
+    /// 速度を上げる
+    /// </summary>
+    /// <param name="speed"></param>
+    public void SpeedUp(float speed)
+    {
+        _moveSpeed += speed;
     }
 }

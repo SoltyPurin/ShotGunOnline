@@ -5,6 +5,9 @@ using Unity.Netcode;
 
 public class PlayerHP : MonoBehaviour
 {
+    [SerializeField, Header("ダウンしてるアニメを再生するためのアニメーター")]
+    private Animator _downAnimator = default;
+    [SerializeField,Header("体力")]
     private int _hpValue = 5;
 
     private GameObject _playerObject = default;
@@ -50,21 +53,17 @@ public class PlayerHP : MonoBehaviour
             GetPlayerProtocol();
             return;
         }
-        if (SceneManager.GetActiveScene().name == "HPHonpen")
-        {
             _hpValue--;
             if (_hpValue <= 0)
             {
                 _inputShot.DeathMethod();
                 _playerMove.DeathMethod();
                 StartCoroutine(DeathMethod());
-            }
         }
     }
 
     private IEnumerator DeathMethod()
     {
-        yield return new WaitForSeconds(1);
-        SceneManager.LoadScene(TITLE);
+        yield return null;
     }
 }

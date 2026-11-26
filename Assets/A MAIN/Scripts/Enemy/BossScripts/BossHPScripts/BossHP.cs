@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -71,6 +72,8 @@ public class BossHP : EnemyTakeDamage
     internal bool _isInvincible = true;
     private bool _isAnimeGot = false;
 
+    public event Action<bool> IsBossDead;
+
     #endregion
 
     private void Awake()
@@ -135,7 +138,7 @@ public class BossHP : EnemyTakeDamage
         if (_playTheSEManager != null) _playTheSEManager.PlayEnemyDamageSound();
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
@@ -150,7 +153,7 @@ public class BossHP : EnemyTakeDamage
 
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
 
@@ -206,7 +209,7 @@ public class BossHP : EnemyTakeDamage
 
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
 
@@ -316,10 +319,15 @@ public class BossHP : EnemyTakeDamage
         if (_bossAnimator != null) _bossAnimator.SetBool("isDead", true);
     }
 
-    private void DeadBossProcess()
+    /// <summary>
+    /// ボスの死亡処理、渡す値はtrueでいい
+    /// </summary>
+    /// <param name="isDead"></param>
+    private void DeadBossProcess(bool isDead)
     {
         if (_isDead) return;
         _isDead = true;
+        IsBossDead?.Invoke(_isDead);
         FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: 開始");
 
         if (TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTrans))
@@ -344,5 +352,26 @@ public class BossHP : EnemyTakeDamage
         if (_shadow != null) _shadow.SetActive(false);
         FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: DeathProtocol 開始");
         StartCoroutine(DeathProtocol(1.0f));
+    }
+
+    public void EnhanceBossHP(float addHP)
+    {
+        _maxHP.Value += addHP;
+        _enemyHP.Value += addHP;
+        ShowBossHPUIClientRpc();
+    }
+
+    [ClientRpc]
+    private void ShowBossHPUIClientRpc()
+    {
+        BossHPUI hpui = FindAnyObjectByType<BossHPUI>();
+        if (hpui != null)
+        {
+            hpui.FindBoss();
+        }
+        else
+        {
+            Debug.Log("hpUIが見当たらない");
+        }
     }
 }

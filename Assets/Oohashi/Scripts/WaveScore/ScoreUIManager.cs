@@ -64,7 +64,6 @@ public class ScoreUIManager : MonoBehaviour
             return;
         }
         int nowWave = wave + 1;
-        Debug.Log("現在のウェーブは" + nowWave);
 
         _scoreText[0].text = time.ToString("F1");
         _scoreText[1].text = damage.ToString();

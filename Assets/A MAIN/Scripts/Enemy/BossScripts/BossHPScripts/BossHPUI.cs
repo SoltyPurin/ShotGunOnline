@@ -22,17 +22,26 @@ public class BossHPUI : EnemyDamageUI
     {
         if (!_isSearchBossWave && _waveManager.IsBossWave)
         {
-            _bossObject = GameObject.FindWithTag("Boss");
-            if (_bossObject != null)
-            {
-                _isSearchBossWave = true;
-                _canvas.SetActive(true);
-                _bossHP = _bossObject.GetComponent<BossHP>();
-
-                // 初期化とイベント登録
-                Initialize();
-            }
+            FindBoss();
         }
+    }
+
+    /// <summary>
+    /// ボス探して代入
+    /// </summary>
+    public void FindBoss()
+    {
+        _bossObject = GameObject.FindWithTag("Boss");
+        if (_bossObject != null)
+        {
+            _isSearchBossWave = true;
+            _canvas.SetActive(true);
+            _bossHP = _bossObject.GetComponent<BossHP>();
+
+            // 初期化とイベント登録
+            Initialize();
+        }
+
     }
 
     private void Initialize()

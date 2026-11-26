@@ -11,7 +11,7 @@ public class Wave : MonoBehaviour
     #region 【Structs】
 
     [System.Serializable]
-    private struct GimmickData
+    public struct GimmickData
     {
         [Tooltip("ギミック出現までの時間（フレーム）")]
         public int _generateFrame;
@@ -39,6 +39,7 @@ public class Wave : MonoBehaviour
         Normal,
         Boss,
         MediumBoss,
+        Survival,
     }
 
     /// <summary>
@@ -54,7 +55,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// ウェーブの状態遷移
     /// </summary>
-    private enum Transition
+    protected enum Transition
     {
         Wait,
         Gimmick,
@@ -62,24 +63,50 @@ public class Wave : MonoBehaviour
         End,
     }
     #endregion
+    #region protected変数
 
-    #region 【各種変数】
+    protected int _nowObj = 0;
 
-    [Header("ウェーブの属性")]
-    public WaveEnemyType _waveType = WaveEnemyType.Normal;
+    //現在のウェーブの状態
+    protected Transition _nowState = Transition.Wait;
 
-    [SerializeField, Header("ギミックの格納場所")]
-    private List<GimmickData> _gimmickList = new List<GimmickData>();
+    //スタートしてから現在のフレーム数
+    protected int _objFrame = 0;
 
+    protected bool _isWaveEnd = false;
+
+    protected float _enemySpawnInterval = 0f;
+    //各ウェーブのスコアを計算するスクリプトを取得
+    protected EnemyCountAndCreateTime _counter = default;
+
+    [SerializeField, Header("ウェーブの難易度")]
+    protected Difficulty _difficulty = Difficulty.Easy;
     [SerializeField, Header("敵の格納場所")]
-    private List<ObjData> _objList = new List<ObjData>();
+    protected List<ObjData> _objList = new List<ObjData>();
     public List<ObjData> ObjList
     {
         get { return _objList; }
     }
 
-    [SerializeField, Header("ウェーブの難易度")]
-    private Difficulty _difficulty = Difficulty.Easy;
+    [SerializeField, Header("ギミックの格納場所")]
+    protected List<GimmickData> _gimmickList = new List<GimmickData>();
+
+    protected int _nowGimmick = 0;
+
+    protected int _gimmickFrame = 0;
+
+
+    // このWaveからネットワーク生成されたギミック（岩など）の追跡リスト（次ステージ移行時に確実に破棄する用）
+    protected readonly List<GameObject> _spawnedGimmickObjects = new List<GameObject>();
+
+    #endregion
+    #region 【各種変数】
+
+    [Header("ウェーブの属性")]
+    public WaveEnemyType _waveType = WaveEnemyType.Normal;
+
+
+
 
     [SerializeField, Header("自動遷移させるかどうか")]
     private bool _autoTransition = true;
@@ -96,24 +123,13 @@ public class Wave : MonoBehaviour
         get { return _waveStartText; }
     }
 
-    //各ウェーブのスコアを計算するスクリプトを取得
-    private EnemyCountAndCreateTime _counter = default;
 
-    //現在のウェーブの状態
-    private Transition _nowState = Transition.Wait;
 
     //その他変数
-    private int _nowGimmick = 0;
-    private int _nowObj = 0;
-    private int _gimmickFrame = 0;
-    private int _objFrame = 0;
-    private bool _waveEnd = false;
     private int _prevEnemyCount = 0;
     private int _initEnemyCount = 0;
     private WaveManager _waveManager = default;
 
-    // このWaveからネットワーク生成されたギミック（岩など）の追跡リスト（次ステージ移行時に確実に破棄する用）
-    private readonly List<GameObject> _spawnedGimmickObjects = new List<GameObject>();
 
     private bool IsServerAuthority =>
         NetworkManager.Singleton == null ||
@@ -178,7 +194,7 @@ public class Wave : MonoBehaviour
         }
     }
 
-    private void Start()
+    public virtual void Start()
     {
         //各種変数の初期化
         _gimmickFrame = 0;
@@ -196,7 +212,7 @@ public class Wave : MonoBehaviour
         // スコアカウンター内に敵数と難易度を送信（左上ランクUIのタイマー開始）
         if (_counter != null)
         {
-            _counter.EnemyCount(_objList.Count, (int)_difficulty, _waveType);
+            _counter.EnemyCount(_objList.Count, (int)_difficulty, _waveType, _enemySpawnInterval);
         }
 
         //自動スタートが有効ならウェーブの状態を変更しスタート可能に
@@ -249,7 +265,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 全オブジェクトの無効化メソッド
     /// </summary>
-    private void ObjSetFalse()
+    public virtual void ObjSetFalse()
     {
         if (_gimmickList != null)
         {
@@ -279,7 +295,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// ギミックの有効化用メソッド
     /// </summary>
-    private void GimmickSetTrue()
+    public virtual void GimmickSetTrue()
     {
         // ギミックが存在しないならステートを変更し早期リターン
         if (_gimmickList == null || _gimmickList.Count <= 0)
@@ -352,8 +368,14 @@ public class Wave : MonoBehaviour
                         };
                     }
 
-                    // 5. サーバー側で不要になった配置用ダミーを破棄
-                    Destroy(waveGimmickObj.gameObject);
+                    if (!spawnedGimmick.GetComponent<ZombiModeSummonEnemy>() &&
+                        !spawnedGimmick.GetComponent<MiddleBossCharacterSpawner>())
+                    {
+                        //ギミックにスポナーがついてたら破棄しない
+                        // 5. スポナー以外のサーバー側で不要になった配置用ダミーを破棄
+                        Destroy(waveGimmickObj.gameObject);
+                    }
+
                 }
                 else
                 {
@@ -379,7 +401,7 @@ public class Wave : MonoBehaviour
         // 敵が存在しないならウェーブ終了可能、ステートを変更し早期リターン
         if (_objList == null || _objList.Count <= 0)
         {
-            _waveEnd = true;
+            _isWaveEnd = true;
             _nowState = Transition.End;
             return;
         }
@@ -416,7 +438,7 @@ public class Wave : MonoBehaviour
                     }
                 }
 
-                // 3. 本物のプレハブが見つかったら、ダミーと同じ位置に生成してSpawn！
+                // 3. 本物のプレハブが見つかったら、ダミーと同じ位置に生成してSpawn
                 if (prefabToSpawn != null)
                 {
                     GameObject spawnedEnemy = Instantiate(
@@ -469,7 +491,7 @@ public class Wave : MonoBehaviour
     /// <summary>
     /// 次有効化するギミックの位置に遷移するメソッド
     /// </summary>
-    private void NextGimmick()
+    public void NextGimmick()
     {
         if (_nowGimmick < (_gimmickList.Count - 1))
         {
@@ -498,7 +520,7 @@ public class Wave : MonoBehaviour
         else
         {
             //敵配置完了を通達
-            _waveEnd = true;
+            _isWaveEnd = true;
             _nowState = Transition.End;
         }
     }
@@ -507,8 +529,9 @@ public class Wave : MonoBehaviour
     /// ウェーブが終了できるかどうかの判定をするメソッド
     /// </summary>
     /// <returns>全ての敵が有効なら終了</returns>
-    public bool IsEnd()
+    public virtual bool IsEnd()
     {
+        Debug.Log("IsEndが呼び出された");
         //for文でリスト内でまだ出現していない敵を判別
         for (int i = 0; i < _objList.Count; ++i)
         {
@@ -529,7 +552,7 @@ public class Wave : MonoBehaviour
             _counter.Calculator();
         }
 
-        return _waveEnd;
+        return _isWaveEnd;
     }
 
     /// <summary>
