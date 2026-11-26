@@ -7833,6 +7833,12 @@ MonoBehaviour:
   _playerNameText: {fileID: 1950000233}
   _statusText: {fileID: 1950000251}
   _statusIndicator: {fileID: 1950000247}
+  _playerPortraitImage: {fileID: 1950000229}
+  _skinPortraits:
+  - {fileID: 6454490000420998888, guid: 2d0d57473ee9718459509d2a70859d2b, type: 3}
+  - {fileID: 9113291519894422807, guid: 625f572dfe5350e4b951424dc3efecdf, type: 3}
+  - {fileID: -4912019858324938879, guid: 3789fcca39309214e85ad681a75f47b6, type: 3}
+  - {fileID: -6268037493484981051, guid: e86d30af9fbba43438a11ede285f1b9f, type: 3}
   _matchingButton: {fileID: 1950000274}
   _matchingButtonText: {fileID: 1950000318}
   _editNameButton: {fileID: 1950000342}

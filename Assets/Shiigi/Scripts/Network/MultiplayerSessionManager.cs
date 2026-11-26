@@ -72,6 +72,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
             DontDestroyOnLoad(gameObject);
             EnsureSubsystemsInitialized();
             PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
+            PlayerSkinSync.OnLocalPlayerSkinChanged += HandleLocalPlayerSkinChanged;
         }
         else
         {
@@ -113,6 +114,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         if (Instance == this)
         {
             PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
+            PlayerSkinSync.OnLocalPlayerSkinChanged -= HandleLocalPlayerSkinChanged;
             UnsubscribeNetworkEvents();
             Instance = null;
         }
@@ -274,10 +276,25 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         return _sessionService.UpdatePlayerNameAsync(playerName);
     }
 
+    /// <summary>
+    /// 現在のセッションにローカルプレイヤーのスキンIDを反映する
+    /// </summary>
+    public UniTask UpdatePlayerSkinIdAsync(int skinId)
+    {
+        EnsureSubsystemsInitialized();
+        return _sessionService.UpdatePlayerSkinIdAsync(skinId);
+    }
+
     private void HandleLocalProfileChanged(PlayerProfile profile)
     {
         if (profile == null || CurrentSession == null) return;
         UpdatePlayerNameAsync(profile.PlayerName).Forget();
+    }
+
+    private void HandleLocalPlayerSkinChanged(int skinId)
+    {
+        if (CurrentSession == null) return;
+        UpdatePlayerSkinIdAsync(skinId).Forget();
     }
 
     /// <summary>

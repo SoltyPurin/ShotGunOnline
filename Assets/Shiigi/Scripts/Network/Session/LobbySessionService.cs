@@ -316,6 +316,21 @@ public class LobbySessionService : ILobbySessionService
         }
     }
 
+    public async UniTask UpdatePlayerSkinIdAsync(int skinId)
+    {
+        if (_currentSession?.CurrentPlayer == null) return;
+
+        try
+        {
+            var properties = SessionPlayerPropertyHelper.CreateSkinIdProperties(skinId);
+            await SaveCurrentPlayerPropertiesAsync(properties);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[MSM]: スキンIDのセッション反映に失敗しました: {ex.Message}");
+        }
+    }
+
     private bool EnsureServicesInitialized()
     {
         if (_servicesInitializer.IsInitialized) return true;
@@ -350,7 +365,9 @@ public class LobbySessionService : ILobbySessionService
 
     private async UniTask SaveRelayConnectedPropertyAsync()
     {
-        var initialProps = SessionPlayerPropertyHelper.CreateInitialConnectedPlayerProperties(PlayerProfileStore.PlayerName);
+        var initialProps = SessionPlayerPropertyHelper.CreateInitialConnectedPlayerProperties(
+            PlayerProfileStore.PlayerName,
+            PlayerSkinSync.LocalPlayerSkinId);
         await SaveCurrentPlayerPropertiesAsync(initialProps);
     }
 

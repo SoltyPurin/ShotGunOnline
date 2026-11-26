@@ -23,6 +23,8 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
     [SerializeField] private TMP_Text _playerNameText;
     [SerializeField] private TMP_Text _statusText;
     [SerializeField] private Graphic _statusIndicator;
+    [SerializeField] private Image _playerPortraitImage;
+    [SerializeField] private Sprite[] _skinPortraits;
 
     [Header("メニューボタン")]
     [SerializeField] private Button _matchingButton;
@@ -292,9 +294,10 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         }
     }
 
-    public void RefreshState(bool isOnline, bool isInRoom, int currentPlayers, int maxPlayers)
+    public void RefreshState(bool isOnline, bool isInRoom, int currentPlayers, int maxPlayers, int skinId = 0)
     {
         RefreshPlayerName(PlayerProfileStore.PlayerName);
+        RefreshPlayerSkin(isInRoom ? skinId : 0);
 
         string statusLabel;
         Color statusColor;
@@ -330,6 +333,21 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
             _matchingButtonText.text = isInRoom
                 ? $"ルームメニュー ({currentPlayers}/{maxPlayers})"
                 : "マッチングメニュー";
+        }
+    }
+
+    public void RefreshPlayerSkin(int skinId)
+    {
+        if (_playerPortraitImage == null || _skinPortraits == null || _skinPortraits.Length == 0)
+        {
+            return;
+        }
+
+        int index = ((skinId % _skinPortraits.Length) + _skinPortraits.Length) % _skinPortraits.Length;
+        Sprite portrait = _skinPortraits[index];
+        if (portrait != null)
+        {
+            _playerPortraitImage.sprite = portrait;
         }
     }
 

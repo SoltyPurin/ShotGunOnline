@@ -9,13 +9,18 @@ public class LobbyPlayerEntryUI : MonoBehaviour
     [SerializeField] private Text _statusLabelText;
     [SerializeField] private Text _roleTagText;
     [SerializeField] private Graphic _leftSpineImage;
+    [SerializeField] private Image _portraitImage;
+    [SerializeField] private Sprite[] _skinPortraits;
 
     [SerializeField] private Color _hostColor = new Color(0.98f, 0.83f, 0.43f, 1f);
     [SerializeField] private Color _readyColor = new Color(0.36f, 0.92f, 0.80f, 1f);
     [SerializeField] private Color _waitingColor = new Color(0.83f, 0.62f, 0.36f, 1f);
 
-    public void Setup(IReadOnlyPlayer player, bool isHost)
+    public void Setup(IReadOnlyPlayer player, bool isHost, int fallbackSkinId = 0)
     {
+        int skinId = SessionPlayerPropertyHelper.GetPlayerSkinId(player, fallbackSkinId);
+        ApplyPortraitSprite(skinId);
+
         if (_roleTagText != null)
         {
             _roleTagText.text = isHost ? "HOST // ホスト" : "MEMBER // 参加メンバー";
@@ -56,6 +61,21 @@ public class LobbyPlayerEntryUI : MonoBehaviour
         else
         {
             ApplyStatusVisual("準備中", _waitingColor);
+        }
+    }
+
+    private void ApplyPortraitSprite(int skinId)
+    {
+        if (_portraitImage == null || _skinPortraits == null || _skinPortraits.Length == 0)
+        {
+            return;
+        }
+
+        int index = ((skinId % _skinPortraits.Length) + _skinPortraits.Length) % _skinPortraits.Length;
+        Sprite portrait = _skinPortraits[index];
+        if (portrait != null)
+        {
+            _portraitImage.sprite = portrait;
         }
     }
 

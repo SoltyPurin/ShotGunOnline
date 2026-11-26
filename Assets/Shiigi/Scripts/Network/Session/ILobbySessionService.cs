@@ -17,5 +17,6 @@ public interface ILobbySessionService
     UniTask LeaveRoomSessionAsync();
     UniTask SetReadyStatusAsync(bool isReady);
     UniTask UpdatePlayerNameAsync(string playerName);
+    UniTask UpdatePlayerSkinIdAsync(int skinId);
     UniTask UpdateSessionGameStatusAsync(bool isInGame);
 }
