@@ -64,7 +64,7 @@ public class RealTimeScoreCircle : MonoBehaviour
     {
         _isSurvivalMode = true;
         _enemySpawnInterval = spawnInterval;
-        _rankText.text = "NextEnemyInterval";
+        _rankText.text = "‡";
         _progressRing.fillAmount = 1f;
         CancelTimer();
     }
@@ -77,7 +77,6 @@ public class RealTimeScoreCircle : MonoBehaviour
         if (_isSurvivalMode)
         {
             float assignmentValue = Mathf.Clamp01(1f - (currentTime / _enemySpawnInterval));
-            //Debug.Log("currentTime‚Í" + currentTime);
             _progressRing.fillAmount = assignmentValue;
             if(currentTime > _enemySpawnInterval)
             {

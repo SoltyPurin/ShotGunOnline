@@ -504,7 +504,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _spawnBossPrefab: {fileID: 9007165033885049428, guid: 3702a1f3cca1e864487ab494a1e2f93f, type: 3}
   _isSpawnWithZako: 1
-  _spawnOdds: 10
+  _spawnOdds: 1
 --- !u!114 &2638999697237269071
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -146,6 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _enemyType: 2
   _modifyValue: 0.75
   _damageMultiplier: 500
   _minDamage: 200

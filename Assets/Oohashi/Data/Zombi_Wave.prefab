@@ -11502,6 +11502,7 @@ MonoBehaviour:
     spawnWaveCount: 5
   - bossSpawner: {fileID: 5291833871287754453, guid: c2d2dded55666da4983d83ad01d8398c, type: 3}
     spawnWaveCount: 10
+  _zombiModeEndTime: 60
 --- !u!1 &8705709239785035479
 GameObject:
   m_ObjectHideFlags: 0

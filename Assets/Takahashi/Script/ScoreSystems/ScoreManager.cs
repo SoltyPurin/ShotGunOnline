@@ -2,6 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+/// <summary>
+/// スコアの収集を行う。
+/// 通常時はクリアタイムを保存する
+/// ゾンビモードの時は敵のキル数を保存する
+/// </summary>
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField, Header("取得系")]
@@ -38,6 +43,8 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField, Header("タイム計測する？")]
     private bool _timerActive = true;
+
+
 
     #region シングルトン化
     [HideInInspector]
@@ -155,4 +162,6 @@ public class ScoreManager : MonoBehaviour
             Debug.LogError("ScoreManager に _getScoreManager がセットされていません！");
         }
     }
+
+
 }

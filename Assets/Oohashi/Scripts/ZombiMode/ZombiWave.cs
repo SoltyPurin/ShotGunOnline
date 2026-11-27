@@ -23,6 +23,9 @@ public class ZombiWave : Wave
     protected List<ZombiModeSummonEnemy> _summonEnemys = new List<ZombiModeSummonEnemy>();
     private int _currentWaveCount = 0;
 
+    [SerializeField, Header("何秒でゾンビモードを終了するか")]
+    private float _zombiModeEndTime = 120.0f;
+
     public override void Start()
     {
         base.Start();
@@ -43,6 +46,28 @@ public class ZombiWave : Wave
         StartCoroutine(CallCreateTime());
     }
 
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        _zombiModeEndTime -= Time.fixedDeltaTime;
+        if(_zombiModeEndTime <= 0)
+        {
+            SceneTransitionManager sceneTransition = FindAnyObjectByType<SceneTransitionManager>(); 
+            if(sceneTransition != null)
+            {
+                int totalEnemyCount = 0;
+                foreach(ZombiModeSummonEnemy summons in _summonEnemys)
+                {
+                    summons.SpawnStop();
+                    totalEnemyCount += summons.SpawnCount;
+                }
+                _zombiModeEndTime = 120f;
+                sceneTransition.StartSceneTransition();
+                ScoreData scoreData = FindAnyObjectByType<ScoreData>();
+                scoreData.GetTotalEnemyCount(totalEnemyCount);
+            }
+        }
+    }
     public override void ObjSetFalse()
     {
         if (_objList != null)
@@ -60,10 +85,6 @@ public class ZombiWave : Wave
     }
     private IEnumerator CallCreateTime()
     {
-        if (NetworkManager.Singleton == null ||!NetworkManager.Singleton.IsServer)
-        {
-            yield break;
-        }
         yield return new WaitForSeconds(_enemySpawnInterval);
         _currentWaveCount++;
         _enemySpawnInterval = 0;
@@ -77,6 +98,10 @@ public class ZombiWave : Wave
         }
         _counter.EnemyCount(0, (int)_difficulty, _waveType, _enemySpawnInterval);
         StartCoroutine(CallCreateTime());
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer)
+        {
+            yield break;
+        }
         foreach (BossSpawnStruct structs in _bossSpawnWaves)
         {
             if (_currentWaveCount %structs.spawnWaveCount  == 0)

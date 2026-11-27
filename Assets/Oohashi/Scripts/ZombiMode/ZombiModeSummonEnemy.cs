@@ -42,6 +42,12 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
 
     private bool _isSpawnStop = false;
 
+    private int _spawnCount = 0;
+    public int SpawnCount
+    {
+        get { return _spawnCount; }
+    }
+
     private void Start()
     {
         if (JsonSaver.Instance != null && JsonSaver.Instance.EnemyJson != null)
@@ -96,11 +102,13 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
                     spawnEnemy = _enemyList[0].enemy;
                 }
                 SpawnEnemy(spawnEnemy, _spawnPositions[i]);
+                _spawnCount++;
             }
         }
         _enemySpawnRadius += _spawnRadiusPlusValue;
         _enemySpawnInterval -= _intervalReductionTime;
         _popTimer = 0;
+        Debug.Log("ここまで湧いた敵の数は" + _spawnCount);
     }
     /// <summary>
     /// ランダムな値を生成し、それに対応した配列番号を返す
@@ -146,6 +154,12 @@ public class ZombiModeSummonEnemy : NetworkBehaviour
             if (waveObj != null)
             {
                 waveObj.PopAnim();
+            }
+
+            EnemyTakeDamage takeDamage = enemy.GetComponent<EnemyTakeDamage>();
+            if(takeDamage != null)
+            {
+                takeDamage.SetZombiMode();
             }
         }
     }

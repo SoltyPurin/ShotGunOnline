@@ -24,10 +24,6 @@ public class ScoreCircle : MonoBehaviour
 
     #endregion
 
-    private void Start()
-    {
-    }
-
     public void Initialize(float maxValue, float totalScore)
     {
         if (maxValue <= 0)

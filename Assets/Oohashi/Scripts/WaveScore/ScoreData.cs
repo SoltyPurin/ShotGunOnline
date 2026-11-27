@@ -1,6 +1,15 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+public struct EnemyKillCounts
+{
+    [Tooltip("通常の敵のカウント")]
+    public int normalEnemyCount;
+    [Tooltip("中ボスのカウント")]
+    public int middleEnemyCount;
+    [Tooltip("ボスのキルカウント")]
+    public int bossEnemyCount;
+}
 
 public class ScoreData : MonoBehaviour
 {
@@ -19,6 +28,12 @@ public class ScoreData : MonoBehaviour
     private int _sRankValue = 7;
     [SerializeField, Header("合計Aランクの点数")]
     private int _aRankValue = 5;
+
+
+    private EnemyKillCounts _enemyKillCounts;
+    private bool _isZombiMode = false;
+
+    private int _totalEnemyCount = 0;
     #endregion
 
     #region ゲッター変数群
@@ -55,6 +70,21 @@ public class ScoreData : MonoBehaviour
     {
         get { return _totalTakenDamage; }
     }
+
+    public EnemyKillCounts GetEnemyKillCount
+    {
+        get { return _enemyKillCounts; }
+    }
+    public bool IsZombiMode
+    {
+        get { return _isZombiMode; }
+    }
+    public int TotalEnemyCount
+    {
+        get { return _totalEnemyCount; }
+    }
+
+
     #endregion
     #region 定数
     private readonly string WAVEMANAGER = "WaveManager";
@@ -170,6 +200,59 @@ public class ScoreData : MonoBehaviour
         _damageTakenCount = 0;
     }
 
+    /// <summary>
+    /// 敵のキル数を数える
+    /// </summary>
+    /// <param name="enemyType"></param>
+    public void GetEnemyCount(EnemyType enemyType)
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Normal:
+                _enemyKillCounts.normalEnemyCount += 1;
+                break;
+
+            case EnemyType.Middle:
+                _enemyKillCounts.middleEnemyCount += 1;
+                break;
+
+            case EnemyType.Boss:
+                _enemyKillCounts.bossEnemyCount += 1;
+                break;
+        }
+
+        _isZombiMode = true;
+    }
+
+    public void GetTotalEnemyCount(int count)
+    {
+        _totalEnemyCount += count;
+    }
+
+    /// <summary>
+    /// (クライアント側の場合)現在の値をホストから送られた値に上書きし、同期する
+    /// </summary>
+    /// <param name="normalCount"></param>
+    /// <param name="middleCount"></param>
+    /// <param name="bossCount"></param>
+    /// <param name="totalEnemyCount"></param>
+    /// <param name="damageTakenCount"></param>
+    /// <param name="totalTakenDamage"></param>
+    public void SetZombieScoreFromHost(
+    int normalCount,
+    int middleCount,
+    int bossCount,
+    int totalEnemyCount)
+    {
+        _enemyKillCounts.normalEnemyCount = normalCount;
+        _enemyKillCounts.middleEnemyCount = middleCount;
+        _enemyKillCounts.bossEnemyCount = bossCount;
+
+        _totalEnemyCount = totalEnemyCount;
+
+        _isZombiMode = true;
+
+    }
     /// <summary>
     /// ホストから最終リザルト用に通算被弾数を全端末へ同期させるためのメソッド
     /// </summary>

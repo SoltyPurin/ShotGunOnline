@@ -84,6 +84,11 @@ public class GetAndDisplayScores : MonoBehaviour
         if (scoreObject != null)
         {
             _scoreData = scoreObject.GetComponent<ScoreData>();
+            //ゾンビモードの場合は通常の処理を行わない
+            if (_scoreData.IsZombiMode)
+            {
+                return;
+            }
             if (_scoreData != null && _scoreData.ScoreList != null && _scoreData.ScoreList.Length > 0)
             {
                 _scoreSize = _scoreData.ScoreList.Length;

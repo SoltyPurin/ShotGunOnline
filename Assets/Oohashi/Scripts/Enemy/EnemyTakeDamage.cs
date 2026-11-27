@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
+public enum EnemyType
+{
+    Normal,
+    Middle,
+    Boss
+}
 public class EnemyTakeDamage : NetworkBehaviour
 {
+    [SerializeField,Header("敵の種類")]
+    private EnemyType _enemyType = EnemyType.Normal;
     [SerializeField, Header("プレイヤー数に乗算する値、これで複数人の時のHPの計算を調整")]
     private float _modifyValue = 0.75f;
     protected NetworkVariable<float> _enemyHP = new NetworkVariable<float>(
@@ -85,6 +93,8 @@ public class EnemyTakeDamage : NetworkBehaviour
     // 直近で攻撃を与えたプレイヤー（ソウル吸い込み先特定用）
     protected GameObject _lastAttackerPlayer = null;
 
+    private bool _isZombiMode = false;
+
     public virtual void Start()
     {
         JsonSaver.Instance.LoadAllConfigs();
@@ -95,7 +105,10 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
         _playerCoinDrop = GetComponent<PlayerCoinDrop>();
     }
-
+    public void SetZombiMode()
+    {
+        _isZombiMode = true;
+    }
     [Rpc(SendTo.Server)]
     public void RequestTakeDamageServerRpc(float chargeTime, PlayerState state, RpcParams rpcParams = default)
     {
@@ -356,7 +369,6 @@ public class EnemyTakeDamage : NetworkBehaviour
     {
         if (!IsServer) yield break;
         if (!gameObject.scene.isLoaded) yield break;
-
         _isDead = true;
 
         GameObject attacker = _lastAttackerPlayer != null ? _lastAttackerPlayer : GetTargetPlayer();
@@ -370,6 +382,11 @@ public class EnemyTakeDamage : NetworkBehaviour
         {
             bool isPlayerSoulGot = soul != null;
             _playerCoinDrop.CoinDrop(1, isPlayerSoulGot, attacker);
+        }
+        ScoreData scoreManager = FindAnyObjectByType<ScoreData>();
+        if (scoreManager != null && _isZombiMode)
+        {
+            scoreManager.GetEnemyCount(_enemyType);
         }
 
         PlayDeathEffectsClientRpc(_shouldDropCoin);
@@ -469,3 +486,5 @@ public class EnemyTakeDamage : NetworkBehaviour
         }
     }
 }
+
+

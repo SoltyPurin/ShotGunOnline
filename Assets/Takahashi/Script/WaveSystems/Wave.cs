@@ -223,7 +223,7 @@ public class Wave : MonoBehaviour
         _initEnemyCount = EnemyCount();
     }
 
-    private void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         if (!IsServerAuthority)
         {

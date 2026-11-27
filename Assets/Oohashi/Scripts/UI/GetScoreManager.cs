@@ -60,4 +60,6 @@ public class GetScoreManager : MonoBehaviour
         _secondScore = seconds;
         Debug.Log("•Û‘¶‚µ‚Ä‚ ‚éŠÔ‚Í " +  _minuteScore +"•ªF " + _secondScore);
     }
+
+
 }

@@ -102,17 +102,22 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
         // ネットワーク接続中かつサーバーなら ClientRpc で全端末に同期
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && IsServer)
         {
-            if (IsServer)
+            if (!IsServer)
             {
-                EnemyCountClientRpc(count, difficulty, type, zombiModeSpawnInterval);
+                return;
             }
+            if (!IsSpawned)
+            {
+                Debug.LogError("EnemyCountAndCreateTimeがSpawnされていません");
+                return;
+            }
+
+            EnemyCountClientRpc(count, difficulty, type, zombiModeSpawnInterval);
+
             return;
         }
-        //else
-        //{
             // オフライン / ソロプレイ時は直接ローカルで実行
             SetupTimerLocal(count, difficulty, type, zombiModeSpawnInterval);
-        //}
     }
 
     [ClientRpc]
@@ -123,11 +128,9 @@ public class EnemyCountAndCreateTime : NetworkBehaviour
 
     private void SetupTimerLocal(int count, int difficulty, Wave.WaveEnemyType type,float zombiModeSpawnInterval)
     {
-        bool isSurvivalMode = type == Wave.WaveEnemyType.Survival;
         _currentWaveTime = 0f;
         _canCountTimer = false;
 
-        _realTimeCircle.StartTimer();
         int curPlayerCount = (NetworkManager.Singleton.ConnectedClientsList.Count);
         float modifyValue = curPlayerCount * _modifyTimeForPlayers;
         switch (type)
