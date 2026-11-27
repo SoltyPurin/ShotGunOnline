@@ -11,6 +11,7 @@ public class LobbyDiscoverUI : LobbyViewBase
     private static readonly Color InGameDetailColor = new Color(0.94f, 0.50f, 0.40f, 1f);
     private static readonly Color WaitingDetailColor = new Color(0.36f, 0.92f, 0.80f, 1f);
     private static readonly Color EmptyDetailColor = new Color(0.78f, 0.69f, 0.51f, 1f);
+    private const float SameRowYThreshold = 10f;
 
     [Header("マッチング用ボタン")]
     [SerializeField] private Button _refreshButton;
@@ -40,6 +41,8 @@ public class LobbyDiscoverUI : LobbyViewBase
     private readonly List<RoomCardUI> _spawnedCards = new();
     private readonly List<RoomCardUI> _activeCardsBuffer = new();
     private readonly List<(Button Button, Vector2 Pos)> _cardRectBuffer = new();
+    private readonly List<List<Button>> _gridRowsBuffer = new();
+    private readonly List<List<Button>> _gridRowPool = new();
     private ISessionInfo _selectedSession;
     private RoomCardUI _selectedCard;
 
@@ -74,6 +77,11 @@ public class LobbyDiscoverUI : LobbyViewBase
 
         ClearRoomDetail();
         RebuildControllerNavigation();
+    }
+
+    protected override void OnBeforeShow()
+    {
+        SetMenuRootActive(true);
     }
 
     protected override void OnShowStarted()
@@ -181,17 +189,6 @@ public class LobbyDiscoverUI : LobbyViewBase
             }
         }
         return null;
-    }
-
-    public void FocusDefaultElement()
-    {
-        if (EventSystem.current == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
-
-        var target = GetDefaultFocusTarget();
-        if (target != null)
-        {
-            EventSystem.current.SetSelectedGameObject(target);
-        }
     }
 
     public override GameObject GetDefaultFocusTarget()
@@ -308,10 +305,25 @@ public class LobbyDiscoverUI : LobbyViewBase
         }
     }
 
+    private List<Button> RentGridRow()
+    {
+        for (int i = 0; i < _gridRowPool.Count; i++)
+        {
+            if (!_gridRowsBuffer.Contains(_gridRowPool[i]))
+            {
+                _gridRowPool[i].Clear();
+                return _gridRowPool[i];
+            }
+        }
+        var row = new List<Button>();
+        _gridRowPool.Add(row);
+        return row;
+    }
+
     private List<List<Button>> BuildCardButtonGrid(List<RoomCardUI> cards)
     {
-        var rows = new List<List<Button>>();
-        if (cards.Count == 0) return rows;
+        _gridRowsBuffer.Clear();
+        if (cards.Count == 0) return _gridRowsBuffer;
 
         _cardRectBuffer.Clear();
         bool hasLayoutPositions = false;
@@ -339,7 +351,7 @@ public class LobbyDiscoverUI : LobbyViewBase
             // Y座標降順 → X座標昇順でインプレースソート（LINQクロージャと中間リストを排除）
             _cardRectBuffer.Sort(static (a, b) =>
             {
-                if (Mathf.Abs(a.Pos.y - b.Pos.y) > 10f)
+                if (Mathf.Abs(a.Pos.y - b.Pos.y) > SameRowYThreshold)
                 {
                     return b.Pos.y.CompareTo(a.Pos.y);
                 }
@@ -347,40 +359,36 @@ public class LobbyDiscoverUI : LobbyViewBase
             });
 
             float currentRowY = _cardRectBuffer[0].Pos.y;
-            var currentRow = new List<Button>();
+            var currentRow = RentGridRow();
+            _gridRowsBuffer.Add(currentRow);
 
             for (int i = 0; i < _cardRectBuffer.Count; i++)
             {
                 var item = _cardRectBuffer[i];
-                if (Mathf.Abs(item.Pos.y - currentRowY) > 10f)
+                if (Mathf.Abs(item.Pos.y - currentRowY) > SameRowYThreshold)
                 {
-                    rows.Add(currentRow);
-                    currentRow = new List<Button>();
+                    currentRow = RentGridRow();
+                    _gridRowsBuffer.Add(currentRow);
                     currentRowY = item.Pos.y;
                 }
                 currentRow.Add(item.Button);
             }
 
-            if (currentRow.Count > 0)
-            {
-                rows.Add(currentRow);
-            }
-
-            return rows;
+            return _gridRowsBuffer;
         }
 
         int columns = EstimateGridColumns();
         for (int i = 0; i < cards.Count; i += columns)
         {
-            var row = new List<Button>(columns);
+            var row = RentGridRow();
             for (int j = 0; j < columns && i + j < cards.Count; j++)
             {
                 row.Add(cards[i + j].JoinButton);
             }
-            rows.Add(row);
+            _gridRowsBuffer.Add(row);
         }
 
-        return rows;
+        return _gridRowsBuffer;
     }
 
     private int EstimateGridColumns()
@@ -573,11 +581,5 @@ public class LobbyDiscoverUI : LobbyViewBase
         }
         _spawnedCards.Clear();
         _selectedCard = null;
-
-        if (_roomListContainer == null) return;
-        for (int i = 0; i < _roomListContainer.childCount; i++)
-        {
-            Destroy(_roomListContainer.GetChild(i).gameObject);
-        }
     }
 }

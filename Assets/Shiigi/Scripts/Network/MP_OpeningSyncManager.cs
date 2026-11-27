@@ -5,9 +5,8 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// 開始ムービー前の同期を担当するクラス (SRP)。MP_GameSyncManager と同じ NetworkObject に付ける。
-/// ホスト: プレイヤー生成 → 枠の対応表を作成して配布 → 全員の準備完了（全プレイヤーの出現）を待つ → 完了を通知
-/// クライアント: 対応表を受け取り、全プレイヤーが自端末に出現したらホストへ報告
+/// 開始ムービー前のプレイヤー生成・スロット配布・全員の準備完了待ちを同期する。
+/// MP_GameSyncManager と同じ NetworkObject にアタッチして使用する。
 /// </summary>
 public class MP_OpeningSyncManager : NetworkBehaviour
 {
@@ -24,6 +23,7 @@ public class MP_OpeningSyncManager : NetworkBehaviour
     private Action _onAllReady;
     private Coroutine _serverTimeoutCoroutine;
     private Coroutine _clientWaitCoroutine;
+    private readonly WaitForSecondsRealtime _clientPollWait = new(0.1f);
     private bool _openingBegun;
 
     /// <summary>ホストから受け取った枠の対応表があるか</summary>
@@ -44,6 +44,17 @@ public class MP_OpeningSyncManager : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
+        Cleanup();
+    }
+
+    public override void OnDestroy()
+    {
+        Cleanup();
+        base.OnDestroy();
+    }
+
+    private void Cleanup()
+    {
         if (_serverTimeoutCoroutine != null)
         {
             StopCoroutine(_serverTimeoutCoroutine);
@@ -60,7 +71,7 @@ public class MP_OpeningSyncManager : NetworkBehaviour
         _onAllReady = null;
         _openingBegun = false;
 
-        if (IsServer && NetworkManager != null)
+        if (NetworkManager != null)
         {
             NetworkManager.OnClientDisconnectCallback -= HandleClientDisconnected;
         }
@@ -139,16 +150,16 @@ public class MP_OpeningSyncManager : NetworkBehaviour
 
     private IEnumerator WaitForPlayersThenReportRoutine(PlayerSlotAssignment assignment)
     {
-        float elapsed = 0f;
+        float startTime = Time.realtimeSinceStartup;
         while (!AreAllPlayersSpawnedLocally(assignment))
         {
-            if (elapsed >= _clientSpawnWaitTimeoutSeconds)
+            if (Time.realtimeSinceStartup - startTime >= _clientSpawnWaitTimeoutSeconds)
             {
                 Debug.LogWarning("[MP_OpeningSyncManager] 全プレイヤーの出現を待ちきれなかったため、準備完了を報告します。");
                 break;
             }
-            elapsed += Time.unscaledDeltaTime;
-            yield return null;
+            _clientPollWait.Reset();
+            yield return _clientPollWait;
         }
 
         _clientWaitCoroutine = null;

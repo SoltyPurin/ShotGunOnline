@@ -3,9 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// プレイヤーキャラクターの頭上にプレイヤー名を表示するワールド空間ネームプレート。
-/// IPlayerNameSource インターフェースにのみ依存し (DIP / OCP)、イベント駆動で表示名を更新することで
-/// LateUpdate での毎フレーム文字列アロケーションをゼロに保ちます。
+/// プレイヤー頭上にプレイヤー名を表示するワールド空間ネームプレート。
 /// </summary>
 public class PlayerNameplateUI : MonoBehaviour
 {
@@ -23,6 +21,12 @@ public class PlayerNameplateUI : MonoBehaviour
     private const float MaxBackgroundWidth = 340f;
 
     private static Font s_cachedFont;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        s_cachedFont = null;
+    }
 
     private IPlayerNameSource _nameSource;
     private GameObject _canvasRoot;
@@ -54,7 +58,13 @@ public class PlayerNameplateUI : MonoBehaviour
     /// </summary>
     public void SetNameSource(IPlayerNameSource source)
     {
+        if (ReferenceEquals(_nameSource, source)) return;
+
         UnsubscribeEvents();
+        if (_nameSource is IDisposable previousDisposable)
+        {
+            previousDisposable.Dispose();
+        }
         _nameSource = source;
         if (_isInitialized)
         {
@@ -268,7 +278,7 @@ public class PlayerNameplateUI : MonoBehaviour
     }
 
     /// <summary>
-    /// 外部フォルダ（Assets/Oohashi）の PlayerMove を無修正で IPlayerNameSource として扱うアダプタークラス (Adapter / OCP)。
+    /// PlayerMove を IPlayerNameSource として扱うアダプター。
     /// </summary>
     private sealed class PlayerMoveNameSourceAdapter : IPlayerNameSource, IDisposable
     {

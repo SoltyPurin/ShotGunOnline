@@ -23,6 +23,7 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
 
     private Button _button;
     private RectTransform _rectTransform;
+    private UIButtonMetallicVisual _metallicVisual;
     private Vector3 _originalScale = Vector3.one;
     private CancellationTokenSource _animCts;
 
@@ -61,7 +62,7 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
     }
 
     /// <summary>
-    /// 指定されたボタンに UIButtonSound を付与（既存なら取得）してボタン種別を設定する共通メソッド (DRY)
+    /// 指定ボタンに UIButtonSound を付与（既存なら取得）してボタン種別を設定する
     /// </summary>
     public static UIButtonSound EnsureAttached(Button button, UIButtonType buttonType = UIButtonType.Default)
     {
@@ -104,6 +105,11 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
         }
     }
 
+    private void OnDisable()
+    {
+        CancelAnimation();
+    }
+
     private void OnDestroy()
     {
         CancelAnimation();
@@ -129,7 +135,19 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
 
         if (style.UseScaleBounce && _rectTransform != null && gameObject.activeInHierarchy)
         {
-            PlayBounceAnimationAsync(style).Forget();
+            if (_metallicVisual == null)
+            {
+                TryGetComponent(out _metallicVisual);
+            }
+
+            if (_metallicVisual != null && _metallicVisual.isActiveAndEnabled)
+            {
+                _metallicVisual.TriggerClickBounce(style.PressedScale, style.BounceDuration);
+            }
+            else
+            {
+                PlayBounceAnimationAsync(style).Forget();
+            }
         }
     }
 
@@ -147,45 +165,65 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
     private async UniTaskVoid PlayBounceAnimationAsync(ButtonTypeStyle style)
     {
         CancelAnimation();
-        _animCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
-        var ct = _animCts.Token;
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+        _animCts = cts;
+        var ct = cts.Token;
 
         Vector3 pressedScale = _originalScale * style.PressedScale;
         float halfDuration = Mathf.Max(0.01f, style.BounceDuration * 0.5f);
 
-        float elapsed = 0f;
-        while (elapsed < halfDuration)
+        try
         {
-            if (ct.IsCancellationRequested) return;
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
-            _rectTransform.localScale = Vector3.Lerp(_originalScale, pressedScale, t);
-            await UniTask.Yield(PlayerLoopTiming.Update, ct);
-        }
+            float elapsed = 0f;
+            while (elapsed < halfDuration)
+            {
+                if (ct.IsCancellationRequested) return;
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / halfDuration);
+                _rectTransform.localScale = Vector3.Lerp(_originalScale, pressedScale, t);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
 
-        elapsed = 0f;
-        while (elapsed < halfDuration)
+            elapsed = 0f;
+            while (elapsed < halfDuration)
+            {
+                if (ct.IsCancellationRequested) return;
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / halfDuration);
+                _rectTransform.localScale = Vector3.Lerp(pressedScale, _originalScale, t);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
+
+            if (_rectTransform != null)
+            {
+                _rectTransform.localScale = _originalScale;
+            }
+        }
+        catch (System.OperationCanceledException)
         {
-            if (ct.IsCancellationRequested) return;
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
-            _rectTransform.localScale = Vector3.Lerp(pressedScale, _originalScale, t);
-            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
-
-        _rectTransform.localScale = _originalScale;
+        finally
+        {
+            if (_animCts == cts)
+            {
+                _animCts = null;
+            }
+            cts.Dispose();
+        }
     }
 
     private void CancelAnimation()
     {
+        bool wasAnimating = _animCts != null;
         if (_animCts != null)
         {
-            _animCts.Cancel();
-            _animCts.Dispose();
+            var cts = _animCts;
             _animCts = null;
+            cts.Cancel();
+            cts.Dispose();
         }
 
-        if (_rectTransform != null)
+        if (wasAnimating && _rectTransform != null)
         {
             _rectTransform.localScale = _originalScale;
         }
@@ -204,7 +242,7 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
             lower.Contains("back") ||
             lower.Contains("leave") ||
             lower.Contains("exit") ||
-            lower.Contains("no"))
+            IsNoButtonName(lower))
         {
             return UIButtonType.Cancel;
         }
@@ -218,5 +256,17 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
         }
 
         return UIButtonType.Default;
+    }
+
+    private static bool IsNoButtonName(string lower)
+    {
+        return lower == "no" ||
+               lower.StartsWith("no_") ||
+               lower.StartsWith("no ") ||
+               lower.EndsWith("_no") ||
+               lower.EndsWith(" no") ||
+               lower.Contains("_no_") ||
+               lower.Contains("nobutton") ||
+               lower.Contains("no_btn");
     }
 }

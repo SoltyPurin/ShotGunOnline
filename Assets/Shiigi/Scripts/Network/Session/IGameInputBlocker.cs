@@ -2,8 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 通信エラー切断時などにシーン内のゲームプレイ入力を一括遮断する責務を抽象化するインターフェース (DIP / SRP)。
-/// ネットワークセッション管理層がインゲームの具象プレイヤークラス群に直接依存するのを防ぎます。
+/// 切断エラー時などにゲームプレイ入力を一括遮断するためのインターフェース。
 /// </summary>
 public interface IGameInputBlocker
 {

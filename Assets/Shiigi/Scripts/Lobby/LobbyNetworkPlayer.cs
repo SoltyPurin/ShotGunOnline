@@ -71,6 +71,9 @@ public class LobbyNetworkPlayer : NetworkBehaviour, IPlayerNameSource
     public override void OnNetworkSpawn()
     {
         ApplyFacingIfChanged(_netFacingMask.Value);
+        ApplyAnimSpeedIfChanged(_netAnimSpeed.Value);
+        _netFacingMask.OnValueChanged += HandleNetFacingMaskChanged;
+        _netAnimSpeed.OnValueChanged += HandleNetAnimSpeedChanged;
         _netPlayerName.OnValueChanged += HandleNetPlayerNameChanged;
 
         if (!IsOwner)
@@ -91,12 +94,33 @@ public class LobbyNetworkPlayer : NetworkBehaviour, IPlayerNameSource
 
     public override void OnNetworkDespawn()
     {
+        _netFacingMask.OnValueChanged -= HandleNetFacingMaskChanged;
+        _netAnimSpeed.OnValueChanged -= HandleNetAnimSpeedChanged;
         _netPlayerName.OnValueChanged -= HandleNetPlayerNameChanged;
+        PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
         if (IsOwner)
         {
-            PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
             LocalPlayerDespawned?.Invoke(this);
         }
+    }
+
+    public override void OnDestroy()
+    {
+        _netFacingMask.OnValueChanged -= HandleNetFacingMaskChanged;
+        _netAnimSpeed.OnValueChanged -= HandleNetAnimSpeedChanged;
+        _netPlayerName.OnValueChanged -= HandleNetPlayerNameChanged;
+        PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
+        base.OnDestroy();
+    }
+
+    private void HandleNetFacingMaskChanged(byte previousValue, byte newValue)
+    {
+        ApplyFacingIfChanged(newValue);
+    }
+
+    private void HandleNetAnimSpeedChanged(float previousValue, float newValue)
+    {
+        ApplyAnimSpeedIfChanged(newValue);
     }
 
     private void HandleLocalProfileChanged(PlayerProfile profile)
@@ -152,29 +176,29 @@ public class LobbyNetworkPlayer : NetworkBehaviour, IPlayerNameSource
 
     private void Update()
     {
-        if (!IsSpawned) return;
+        if (!IsSpawned || !IsOwner) return;
 
-        if (IsOwner)
+        ApplyPendingTeleport();
+
+        _input = LobbyMovement.ReadMoveInput();
+        float animSpeed = LobbyMovement.ToAnimSpeed(_input);
+        if (Mathf.Abs(_netAnimSpeed.Value - animSpeed) > 0.01f || (animSpeed == 0f && _netAnimSpeed.Value != 0f))
         {
-            ApplyPendingTeleport();
+            _netAnimSpeed.Value = animSpeed;
+        }
 
-            _input = LobbyMovement.ReadMoveInput();
-            float animSpeed = LobbyMovement.ToAnimSpeed(_input);
-            if (Mathf.Abs(_netAnimSpeed.Value - animSpeed) > 0.01f || (animSpeed == 0f && _netAnimSpeed.Value != 0f))
-            {
-                _netAnimSpeed.Value = animSpeed;
-            }
-
-            byte nextFacing = LobbyMovement.UpdateFacingMask(_input, _netFacingMask.Value);
-            if (_netFacingMask.Value != nextFacing)
-            {
-                _netFacingMask.Value = nextFacing;
-            }
+        byte nextFacing = LobbyMovement.UpdateFacingMask(_input, _netFacingMask.Value);
+        if (_netFacingMask.Value != nextFacing)
+        {
+            _netFacingMask.Value = nextFacing;
         }
 
         ApplyFacingIfChanged(_netFacingMask.Value);
+        ApplyAnimSpeedIfChanged(_netAnimSpeed.Value);
+    }
 
-        float syncedAnimSpeed = _netAnimSpeed.Value;
+    private void ApplyAnimSpeedIfChanged(float syncedAnimSpeed)
+    {
         if (Mathf.Abs(syncedAnimSpeed - _lastAppliedAnimSpeed) > 0.005f || (syncedAnimSpeed == 0f && _lastAppliedAnimSpeed != 0f))
         {
             _lastAppliedAnimSpeed = syncedAnimSpeed;

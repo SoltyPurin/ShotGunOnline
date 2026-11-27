@@ -7,9 +7,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// ロビー画面の各UIパネル・ダイアログの基底クラス (SRP / OCP)。
-/// UISettingsConfig に基づくフェード＆ポップアニメーション、アクティブビュースタック管理、フォーカス保護を提供します。
-/// InputModule設定やD-Padリピート制御は単一責務クラス（LobbyUIInputModuleConfigurator / DPadRepeatNavigator）へ委譲しています。
+/// ロビー画面の各UIパネル・ダイアログの基底クラス。
+/// フェード・ポップアニメーション、アクティブビュースタック、フォーカス保護を提供する。
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 public abstract class LobbyViewBase : MonoBehaviour
@@ -49,12 +48,26 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     private static readonly List<LobbyViewBase> _activeViews = new();
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        _activeViews.Clear();
+        OnActiveViewStackChanged = null;
+    }
+
     public static LobbyViewBase TopActiveView
     {
         get
         {
-            PruneDestroyedViews();
-            return _activeViews.Count > 0 ? _activeViews[_activeViews.Count - 1] : null;
+            for (int i = _activeViews.Count - 1; i >= 0; i--)
+            {
+                if (_activeViews[i] != null)
+                {
+                    return _activeViews[i];
+                }
+                _activeViews.RemoveAt(i);
+            }
+            return null;
         }
     }
 
@@ -69,7 +82,7 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     public static event Action OnActiveViewStackChanged;
 
-    private DPadRepeatNavigator _dpadNavigator;
+    private readonly DPadRepeatNavigator _dpadNavigator = new();
     private Func<Transform, bool> _cachedOwnershipPredicate;
     private Func<GameObject> _cachedDefaultFocusFunc;
     private CancellationTokenSource _animCts;
@@ -194,58 +207,57 @@ public abstract class LobbyViewBase : MonoBehaviour
     public async UniTask ShowAsync(CancellationToken cancellationToken = default)
     {
         CancelCurrentAnimation();
-        _animCts = CancellationTokenSource.CreateLinkedTokenSource(
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(
             cancellationToken,
             this.GetCancellationTokenOnDestroy());
+        _animCts = cts;
+        var ct = cts.Token;
 
-        var ct = _animCts.Token;
-
-        _isVisible = true;
-        gameObject.SetActive(true);
-        PushActiveView(this);
-
-        _canvasGroup.interactable = false;
-        _canvasGroup.blocksRaycasts = true;
-
-        var style = CurrentStyle;
-        UISound.Play(style.ShowSound);
-        OnShowStarted();
-
-        if (style.ShowDuration > 0f)
+        try
         {
-            float elapsed = 0f;
-            Vector3 targetScale = Vector3.one;
-            Vector3 startScale = style.UseScalePop ? new Vector3(style.StartScale, style.StartScale, 1f) : targetScale;
+            OnBeforeShow();
+            EnsureComponents();
 
-            while (elapsed < style.ShowDuration)
+            _isVisible = true;
+            gameObject.SetActive(true);
+            PushActiveView(this);
+
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = true;
+
+            var style = CurrentStyle;
+            UISound.Play(style.ShowSound);
+            OnShowStarted();
+
+            if (style.ShowDuration > 0f)
             {
-                if (ct.IsCancellationRequested) return;
+                Vector3 targetScale = Vector3.one;
+                Vector3 startScale = style.UseScalePop ? new Vector3(style.StartScale, style.StartScale, 1f) : targetScale;
+                bool completed = await AnimateFadeAndScaleAsync(
+                    style.ShowDuration, 0f, 1f, startScale, targetScale, style.UseScalePop, easeOut: true, ct);
+                if (!completed) return;
+            }
 
-                elapsed += Time.unscaledDeltaTime;
-                float t = Mathf.Clamp01(elapsed / style.ShowDuration);
-                float eased = 1f - (1f - t) * (1f - t);
+            _canvasGroup.alpha = 1f;
+            _rectTransform.localScale = Vector3.one;
+            bool isTop = IsTopActiveView;
+            _canvasGroup.interactable = isTop;
+            _canvasGroup.blocksRaycasts = true;
+            OnActiveInteractableChanged(isTop);
 
-                _canvasGroup.alpha = eased;
-                if (style.UseScalePop)
-                {
-                    _rectTransform.localScale = Vector3.LerpUnclamped(startScale, targetScale, eased);
-                }
-
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            OnShowCompleted();
+            if (isTop)
+            {
+                RestoreDefaultFocus();
             }
         }
-
-        _canvasGroup.alpha = 1f;
-        _rectTransform.localScale = Vector3.one;
-        bool isTop = IsTopActiveView;
-        _canvasGroup.interactable = isTop;
-        _canvasGroup.blocksRaycasts = true;
-        OnActiveInteractableChanged(isTop);
-
-        OnShowCompleted();
-        if (isTop)
+        finally
         {
-            RestoreDefaultFocus();
+            if (_animCts == cts)
+            {
+                _animCts = null;
+            }
+            cts.Dispose();
         }
     }
 
@@ -257,60 +269,91 @@ public abstract class LobbyViewBase : MonoBehaviour
         if (!_isVisible && !gameObject.activeSelf) return;
 
         CancelCurrentAnimation();
-        _animCts = CancellationTokenSource.CreateLinkedTokenSource(
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(
             cancellationToken,
             this.GetCancellationTokenOnDestroy());
+        _animCts = cts;
+        var ct = cts.Token;
 
-        var ct = _animCts.Token;
-
-        _isVisible = false;
-        _canvasGroup.interactable = false;
-        _canvasGroup.blocksRaycasts = false;
-        OnActiveInteractableChanged(false);
-        RemoveActiveView(this);
-
-        var style = CurrentStyle;
-        UISound.Play(style.HideSound);
-        OnHideStarted();
-
-        if (style.HideDuration > 0f && gameObject.activeInHierarchy)
+        try
         {
-            float elapsed = 0f;
-            Vector3 startScale = _rectTransform.localScale;
-            Vector3 endScale = style.UseScalePop ? new Vector3(style.StartScale, style.StartScale, 1f) : startScale;
-            float startAlpha = _canvasGroup.alpha;
+            EnsureComponents();
 
-            while (elapsed < style.HideDuration)
+            _isVisible = false;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
+            OnActiveInteractableChanged(false);
+            RemoveActiveView(this);
+
+            var style = CurrentStyle;
+            UISound.Play(style.HideSound);
+            OnHideStarted();
+
+            if (style.HideDuration > 0f && gameObject.activeInHierarchy)
             {
-                if (ct.IsCancellationRequested) return;
-
-                elapsed += Time.unscaledDeltaTime;
-                float t = Mathf.Clamp01(elapsed / style.HideDuration);
-                float eased = t * t;
-
-                _canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, eased);
-                if (style.UseScalePop)
-                {
-                    _rectTransform.localScale = Vector3.LerpUnclamped(startScale, endScale, eased);
-                }
-
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+                Vector3 startScale = _rectTransform.localScale;
+                Vector3 endScale = style.UseScalePop ? new Vector3(style.StartScale, style.StartScale, 1f) : startScale;
+                bool completed = await AnimateFadeAndScaleAsync(
+                    style.HideDuration, _canvasGroup.alpha, 0f, startScale, endScale, style.UseScalePop, easeOut: false, ct);
+                if (!completed) return;
             }
+
+            _canvasGroup.alpha = 0f;
+            _rectTransform.localScale = Vector3.one;
+            gameObject.SetActive(false);
+
+            OnHideCompleted();
         }
+        finally
+        {
+            if (_animCts == cts)
+            {
+                _animCts = null;
+            }
+            cts.Dispose();
+        }
+    }
 
-        _canvasGroup.alpha = 0f;
-        _rectTransform.localScale = Vector3.one;
-        gameObject.SetActive(false);
+    private async UniTask<bool> AnimateFadeAndScaleAsync(
+        float duration,
+        float startAlpha,
+        float endAlpha,
+        Vector3 startScale,
+        Vector3 endScale,
+        bool useScalePop,
+        bool easeOut,
+        CancellationToken ct)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            if (ct.IsCancellationRequested) return false;
 
-        OnHideCompleted();
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = easeOut ? 1f - (1f - t) * (1f - t) : t * t;
+
+            _canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, eased);
+            if (useScalePop)
+            {
+                _rectTransform.localScale = Vector3.LerpUnclamped(startScale, endScale, eased);
+            }
+
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        }
+        return !ct.IsCancellationRequested;
     }
 
     /// <summary>
     /// アニメーションを介さず即座に表示/非表示を切り替える（初期化時用）
     /// </summary>
-    public void SetVisibleInstant(bool visible)
+    public virtual void SetVisibleInstant(bool visible)
     {
         CancelCurrentAnimation();
+        if (visible)
+        {
+            OnBeforeShow();
+        }
         _isVisible = visible;
 
         EnsureComponents();
@@ -359,13 +402,15 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     public void RestoreDefaultFocus()
     {
-        if (!IsTopActiveView || !_isVisible || EventSystem.current == null) return;
+        if (!gameObject.activeInHierarchy || !IsTopActiveView || !_isVisible || EventSystem.current == null) return;
         var target = GetDefaultFocusTarget();
         if (target != null && target.activeInHierarchy)
         {
             EventSystem.current.SetSelectedGameObject(target);
         }
     }
+
+    public virtual void FocusDefaultElement() => RestoreDefaultFocus();
 
     public virtual GameObject GetDefaultFocusTarget() => null;
     protected virtual void OnActiveInteractableChanged(bool interactable) { }
@@ -414,6 +459,7 @@ public abstract class LobbyViewBase : MonoBehaviour
         OnActiveViewStackChanged?.Invoke();
     }
 
+    protected virtual void OnBeforeShow() { }
     protected virtual void OnShowStarted() { }
     protected virtual void OnShowCompleted() { }
     protected virtual void OnHideStarted() { }

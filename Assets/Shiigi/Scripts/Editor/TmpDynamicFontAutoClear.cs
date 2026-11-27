@@ -89,6 +89,7 @@ public class TmpDynamicFontSaveProcessor : AssetModificationProcessor
         {
             string path = paths[i];
             if (string.IsNullOrEmpty(path) || !path.EndsWith(".asset")) continue;
+            if (AssetDatabase.GetMainAssetTypeAtPath(path) != typeof(TMP_FontAsset)) continue;
 
             var fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(path);
             TmpDynamicFontAutoClear.ClearDynamicFontIfNeeded(fontAsset);

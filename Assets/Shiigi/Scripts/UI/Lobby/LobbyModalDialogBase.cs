@@ -3,9 +3,8 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 非同期で結果（TResult）を返すモーダルダイアログの共通基底クラス (OCP / LSP / DRY)。
-/// 背面クリック遮断用ブロッカー（ScreenBlocker）の制御と、UniTaskCompletionSource の
-/// 二重起動・キャンセル・破棄時クリーンアップを一元管理します。
+/// 非同期で結果（TResult）を返すモーダルダイアログの基底クラス。
+/// 背面ブロッカー制御と結果待機のライフサイクルを管理する。
 /// </summary>
 public abstract class LobbyModalDialogBase<TResult> : LobbyViewBase
 {

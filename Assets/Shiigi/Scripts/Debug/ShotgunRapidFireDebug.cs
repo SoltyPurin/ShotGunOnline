@@ -76,12 +76,6 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
     private void Awake()
     {
-        if (!Debug.isDebugBuild && !Application.isEditor)
-        {
-            Destroy(this);
-            return;
-        }
-
         if (_playerShot == null)
         {
             _playerShot = GetComponent<InputPlayerShot>();
@@ -89,6 +83,17 @@ public class ShotgunRapidFireDebug : MonoBehaviour
         if (_playerShot != null)
         {
             _cachedOverHeat = _playerShot.GetComponent<OverHeat>();
+        }
+    }
+
+    private void OnDisable()
+    {
+        _wasHoldingFire = false;
+        _isUIButtonHolding = false;
+        _rapidFireTimer = 0f;
+        if (_playerShot != null)
+        {
+            _playerShot.IsRapidFireActive = false;
         }
     }
 
@@ -141,7 +146,7 @@ public class ShotgunRapidFireDebug : MonoBehaviour
                 if (_rapidFireTimer >= _fireInterval)
                 {
                     TriggerRapidShot();
-                    _rapidFireTimer = 0f;
+                    _rapidFireTimer = Mathf.Min(_rapidFireTimer - _fireInterval, _fireInterval);
                 }
             }
         }
@@ -354,22 +359,56 @@ public class ShotgunRapidFireDebug : MonoBehaviour
         GUI.DragWindow(new Rect(0, 0, _windowRect.width, 24));
     }
 
-    private static bool IsKeyDownLegacyOrNew(KeyCode legacyKey, Key newKey)
+    private static bool IsKeyDownLegacyOrNew(KeyCode legacyKey, Key fallbackNewKey)
     {
-        if (Keyboard.current != null && Keyboard.current[newKey].wasPressedThisFrame)
+        if (Keyboard.current != null)
         {
-            return true;
+            Key mapped = MapKeyCodeToInputSystemKey(legacyKey, fallbackNewKey);
+            var control = Keyboard.current[mapped];
+            if (control != null && control.wasPressedThisFrame)
+            {
+                return true;
+            }
         }
         return Input.GetKeyDown(legacyKey);
     }
 
-    private static bool IsKeyHeldLegacyOrNew(KeyCode legacyKey, Key newKey)
+    private static bool IsKeyHeldLegacyOrNew(KeyCode legacyKey, Key fallbackNewKey)
     {
-        if (Keyboard.current != null && Keyboard.current[newKey].isPressed)
+        if (Keyboard.current != null)
         {
-            return true;
+            Key mapped = MapKeyCodeToInputSystemKey(legacyKey, fallbackNewKey);
+            var control = Keyboard.current[mapped];
+            if (control != null && control.isPressed)
+            {
+                return true;
+            }
         }
         return Input.GetKey(legacyKey);
+    }
+
+    private static Key MapKeyCodeToInputSystemKey(KeyCode legacyKey, Key fallbackKey)
+    {
+        switch (legacyKey)
+        {
+            case KeyCode.Return: return Key.Enter;
+            case KeyCode.Alpha0: return Key.Digit0;
+            case KeyCode.Alpha1: return Key.Digit1;
+            case KeyCode.Alpha2: return Key.Digit2;
+            case KeyCode.Alpha3: return Key.Digit3;
+            case KeyCode.Alpha4: return Key.Digit4;
+            case KeyCode.Alpha5: return Key.Digit5;
+            case KeyCode.Alpha6: return Key.Digit6;
+            case KeyCode.Alpha7: return Key.Digit7;
+            case KeyCode.Alpha8: return Key.Digit8;
+            case KeyCode.Alpha9: return Key.Digit9;
+        }
+
+        if (System.Enum.TryParse(legacyKey.ToString(), ignoreCase: true, out Key parsed) && parsed != Key.None)
+        {
+            return parsed;
+        }
+        return fallbackKey;
     }
 }
 #endif

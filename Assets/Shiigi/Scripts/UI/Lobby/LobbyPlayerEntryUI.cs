@@ -1,4 +1,4 @@
-﻿using Unity.Services.Multiplayer;
+using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,8 +18,18 @@ public class LobbyPlayerEntryUI : MonoBehaviour
     [SerializeField] private Color _readyColor = new Color(0.36f, 0.92f, 0.80f, 1f);
     [SerializeField] private Color _waitingColor = new Color(0.83f, 0.62f, 0.36f, 1f);
 
+    private void Awake()
+    {
+        if (_playerNameText != null)
+        {
+            _playerNameText.supportRichText = false;
+        }
+    }
+
     public void Setup(IReadOnlyPlayer player, bool isHost, int fallbackSkinId = 0)
     {
+        if (player == null) return;
+
         int skinId = SessionPlayerPropertyHelper.GetPlayerSkinId(player, fallbackSkinId);
         ApplyPortraitSprite(skinId);
 
@@ -35,7 +45,6 @@ public class LobbyPlayerEntryUI : MonoBehaviour
         {
             if (_playerNameText != null)
             {
-                _playerNameText.supportRichText = false;
                 _playerNameText.text = "接続中...";
             }
             ApplyStatusVisual("接続中...", _waitingColor);
@@ -44,7 +53,6 @@ public class LobbyPlayerEntryUI : MonoBehaviour
 
         if (_playerNameText != null)
         {
-            _playerNameText.supportRichText = false;
             _playerNameText.text = SessionPlayerPropertyHelper.GetPlayerName(player);
         }
 

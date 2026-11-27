@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 確認・エラー表示用のモーダルダイアログUI。
-/// LobbyModalDialogBase を継承し、ブロッカー制御と結果待機ライフサイクルを共通化しています (OCP / DRY)。
 /// </summary>
 public class ConfirmDialogUI : LobbyModalDialogBase<bool>
 {
@@ -17,8 +16,10 @@ public class ConfirmDialogUI : LobbyModalDialogBase<bool>
     private const int TopmostSortingOrder = 500;
 
     private Canvas _overrideCanvas;
+    private GraphicRaycaster _graphicRaycaster;
     private Text _yesButtonLabel;
     private string _defaultYesButtonText;
+    private bool _isButtonsBound;
 
     protected override void Awake()
     {
@@ -40,6 +41,50 @@ public class ConfirmDialogUI : LobbyModalDialogBase<bool>
 
         UIButtonSound.ConfigureButton(_yesButton, UIButtonType.Default);
         UIButtonSound.ConfigureButton(_noButton, UIButtonType.Cancel);
+        BindButtonsIfNeeded();
+    }
+
+    protected override void OnDestroy()
+    {
+        if (_isButtonsBound)
+        {
+            if (_yesButton != null)
+            {
+                _yesButton.onClick.RemoveListener(HandleYesClicked);
+            }
+            if (_noButton != null)
+            {
+                _noButton.onClick.RemoveListener(HandleNoClicked);
+            }
+            _isButtonsBound = false;
+        }
+
+        base.OnDestroy();
+    }
+
+    private void BindButtonsIfNeeded()
+    {
+        if (_isButtonsBound) return;
+        _isButtonsBound = true;
+
+        if (_yesButton != null)
+        {
+            _yesButton.onClick.AddListener(HandleYesClicked);
+        }
+        if (_noButton != null)
+        {
+            _noButton.onClick.AddListener(HandleNoClicked);
+        }
+    }
+
+    private void HandleYesClicked()
+    {
+        CloseModalWithResultAsync(true).Forget();
+    }
+
+    private void HandleNoClicked()
+    {
+        CloseModalWithResultAsync(false).Forget();
     }
 
     protected override void Update()
@@ -80,6 +125,7 @@ public class ConfirmDialogUI : LobbyModalDialogBase<bool>
             _messageText.text = message;
         }
 
+        BindButtonsIfNeeded();
         ConfigureDialogButtons(showNoButton, yesButtonText);
         FocusYesButton();
 
@@ -89,7 +135,6 @@ public class ConfirmDialogUI : LobbyModalDialogBase<bool>
             FocusYesButton();
         });
 
-        FocusYesButton();
         return await utcs.Task;
     }
 
@@ -97,9 +142,6 @@ public class ConfirmDialogUI : LobbyModalDialogBase<bool>
     {
         if (_yesButton != null)
         {
-            _yesButton.onClick.RemoveAllListeners();
-            _yesButton.onClick.AddListener(() => CloseModalWithResultAsync(true).Forget());
-
             if (_yesButtonLabel == null)
             {
                 _yesButtonLabel = _yesButton.GetComponentInChildren<Text>(true);
@@ -127,8 +169,6 @@ public class ConfirmDialogUI : LobbyModalDialogBase<bool>
 
         if (_noButton != null)
         {
-            _noButton.onClick.RemoveAllListeners();
-            _noButton.onClick.AddListener(() => CloseModalWithResultAsync(false).Forget());
             _noButton.gameObject.SetActive(showNoButton);
 
             if (showNoButton && _yesButton != null)
@@ -169,9 +209,9 @@ public class ConfirmDialogUI : LobbyModalDialogBase<bool>
         _overrideCanvas.overrideSorting = true;
         _overrideCanvas.sortingOrder = TopmostSortingOrder;
 
-        if (!TryGetComponent<GraphicRaycaster>(out _))
+        if (_graphicRaycaster == null && !TryGetComponent(out _graphicRaycaster))
         {
-            gameObject.AddComponent<GraphicRaycaster>();
+            _graphicRaycaster = gameObject.AddComponent<GraphicRaycaster>();
         }
     }
 }

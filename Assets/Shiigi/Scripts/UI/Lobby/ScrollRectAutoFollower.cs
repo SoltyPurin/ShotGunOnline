@@ -28,9 +28,15 @@ public class ScrollRectAutoFollower : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        _isAutoScrolling = false;
+        _lastSelected = null;
+    }
+
     private void Update()
     {
-        if (_scrollRect == null || _scrollRect.content == null || _scrollRect.viewport == null) return;
+        if (_scrollRect == null || !_scrollRect.vertical || _scrollRect.content == null || _scrollRect.viewport == null) return;
 
         var current = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
         if (current != _lastSelected)
@@ -85,6 +91,12 @@ public class ScrollRectAutoFollower : MonoBehaviour
         float scrollableHeight = contentHeight - viewportHeight;
         if (scrollableHeight <= 1f) return false;
 
+        float lossyY = _scrollRect.viewport.lossyScale.y;
+        float absLossyY = Mathf.Abs(lossyY);
+        if (absLossyY <= 0.0001f) return false;
+
+        float worldPadding = _padding * absLossyY;
+
         target.GetWorldCorners(_targetCorners);
         _scrollRect.viewport.GetWorldCorners(_viewportCorners);
 
@@ -94,21 +106,20 @@ public class ScrollRectAutoFollower : MonoBehaviour
         float viewTop = _viewportCorners[1].y;
 
         float deltaWorld;
-        if (targetTop > viewTop - _padding)
+        if (targetTop > viewTop - worldPadding)
         {
-            deltaWorld = targetTop - (viewTop - _padding);
+            deltaWorld = targetTop - (viewTop - worldPadding);
         }
-        else if (targetBottom < viewBottom + _padding)
+        else if (targetBottom < viewBottom + worldPadding)
         {
-            deltaWorld = targetBottom - (viewBottom + _padding);
+            deltaWorld = targetBottom - (viewBottom + worldPadding);
         }
         else
         {
             return false;
         }
 
-        float lossyY = _scrollRect.viewport.lossyScale.y;
-        float deltaLocal = Mathf.Abs(lossyY) > 0.0001f ? deltaWorld / lossyY : deltaWorld;
+        float deltaLocal = deltaWorld / lossyY;
         normalizedY = Mathf.Clamp01(_scrollRect.verticalNormalizedPosition + deltaLocal / scrollableHeight);
         return true;
     }

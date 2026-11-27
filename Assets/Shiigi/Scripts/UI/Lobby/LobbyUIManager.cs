@@ -8,9 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// ロビー画面全体の画面状態遷移とルームセッション操作ユースケースを統合調整するプレゼンター／コーディネータークラス (SRP / DIP)。
-/// HUDボタン構築・表示更新は LobbyHudPresenter へ、デバイス別テキスト入力は LobbyTextInputPrompt へ、
-/// 入力判定は LobbyUIInputHelper へそれぞれ委譲し、async void を排除して安全な UniTask フローで統一しています。
+/// ロビー画面の画面状態遷移とルームセッション操作を統括する。
 /// </summary>
 public class LobbyUIManager : MonoBehaviour
 {
@@ -57,7 +55,7 @@ public class LobbyUIManager : MonoBehaviour
     public bool IsMenuOpen => _isMenuOpen || _isHamburgerOpen;
 
     /// <summary>
-    /// 外部またはテストコードから ILobbySessionService を注入するためのエントリポイント (DIP)
+    /// 外部から ILobbySessionService を注入する
     /// </summary>
     public void InjectSessionService(ILobbySessionService sessionService)
     {
@@ -81,7 +79,7 @@ public class LobbyUIManager : MonoBehaviour
         {
             _discoverUI.OnRefreshRequested += HandleRefreshRoomListRequested;
             _discoverUI.OnCreateRoomRequested += HandleOpenCreateRoomDialogRequested;
-            _discoverUI.OnBackRequested += HandleDiscoverBackRequested;
+            _discoverUI.OnBackRequested += HandleMenuBackRequested;
             _discoverUI.OnJoinRoomRequested += HandleJoinRoomRequested;
         }
 
@@ -94,6 +92,7 @@ public class LobbyUIManager : MonoBehaviour
 
         if (_sessionService != null)
         {
+            _sessionService.OnSessionChanged -= UpdateRoomUI;
             _sessionService.OnSessionChanged += UpdateRoomUI;
         }
         if (_sessionManager != null)
@@ -149,7 +148,7 @@ public class LobbyUIManager : MonoBehaviour
         {
             _discoverUI.OnRefreshRequested -= HandleRefreshRoomListRequested;
             _discoverUI.OnCreateRoomRequested -= HandleOpenCreateRoomDialogRequested;
-            _discoverUI.OnBackRequested -= HandleDiscoverBackRequested;
+            _discoverUI.OnBackRequested -= HandleMenuBackRequested;
             _discoverUI.OnJoinRoomRequested -= HandleJoinRoomRequested;
         }
 
@@ -216,7 +215,7 @@ public class LobbyUIManager : MonoBehaviour
         {
             if (gamepad.buttonEast.wasPressedThisFrame)
             {
-                HandleDiscoverBackRequested();
+                HandleMenuBackRequested();
                 return;
             }
 
@@ -316,7 +315,7 @@ public class LobbyUIManager : MonoBehaviour
         ApplyVisibility(immediate: false);
     }
 
-    private void HandleDiscoverBackRequested()
+    private void HandleMenuBackRequested()
     {
         if (!CanToggleMenu()) return;
         if (_hamburgerMenuUI != null)
@@ -396,8 +395,17 @@ public class LobbyUIManager : MonoBehaviour
             _loadingOverlay.SetLoadingState(isConnecting, isConnecting ? "通信中..." : null, immediate);
         }
 
-        LobbyMovement.IsInputBlocked = isConnecting || _isMenuOpen || _isHamburgerOpen;
+        SyncMovementInputBlock();
         RefreshHudVisuals();
+    }
+
+    private void SyncMovementInputBlock()
+    {
+        LobbyMovement.IsInputBlocked =
+            _currentState == LobbyUIState.Connecting ||
+            _isMenuOpen ||
+            _isHamburgerOpen ||
+            _isEditingPlayerName;
     }
 
     private void UpdateViewVisibilityAnimated(LobbyViewBase view, bool targetVisible)
@@ -406,11 +414,7 @@ public class LobbyUIManager : MonoBehaviour
 
         if (targetVisible)
         {
-            if (view == _discoverUI)
-            {
-                _discoverUI.SetMenuRootActive(true);
-            }
-            if (!view.IsVisible || !view.gameObject.activeSelf)
+            if (!view.IsVisible || !view.gameObject.activeInHierarchy)
             {
                 view.ShowAsync().Forget();
             }
@@ -536,7 +540,7 @@ public class LobbyUIManager : MonoBehaviour
         if (!CanOpenPlayerNameEditor()) return;
 
         _isEditingPlayerName = true;
-        LobbyMovement.IsInputBlocked = true;
+        SyncMovementInputBlock();
         RefreshHudVisuals();
 
         try
@@ -571,7 +575,7 @@ public class LobbyUIManager : MonoBehaviour
             _isEditingPlayerName = false;
             if (this != null)
             {
-                LobbyMovement.IsInputBlocked = _currentState == LobbyUIState.Connecting || _isMenuOpen || _isHamburgerOpen;
+                SyncMovementInputBlock();
                 RefreshHudVisuals();
                 if (_isHamburgerOpen)
                 {
@@ -623,7 +627,7 @@ public class LobbyUIManager : MonoBehaviour
 
     #endregion
 
-    #region セッション操作ユースケース（async void 排除・共通排他制御）
+    #region セッション操作ユースケース
 
     private async UniTaskVoid RunBusyOperationAsync(Func<UniTask> operation)
     {
@@ -713,37 +717,10 @@ public class LobbyUIManager : MonoBehaviour
             }
         }
 
-        TransitionTo(LobbyUIState.Connecting);
-        try
-        {
-            bool success = await _sessionService.CreateRoomSessionAsync(
-                result.RoomName,
-                result.MaxPlayers,
-                result.Protocol);
-            if (this == null) return;
-
-            if (success)
-            {
-                TransitionTo(LobbyUIState.InRoom);
-                UpdateRoomUI();
-            }
-            else
-            {
-                TransitionTo(LobbyUIState.Discover);
-                if (_confirmDialogUI != null)
-                {
-                    await _confirmDialogUI.ShowAsync("ルームの作成に失敗しました。");
-                }
-            }
-        }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            Debug.LogError($"[LobbyUIManager] ルーム作成中にエラーが発生しました: {ex.Message}");
-            if (this != null)
-            {
-                TransitionTo(LobbyUIState.Discover);
-            }
-        }
+        await ExecuteSessionConnectionAsync(
+            () => _sessionService.CreateRoomSessionAsync(result.RoomName, result.MaxPlayers, result.Protocol),
+            failureDialogMessage: "ルームの作成に失敗しました。",
+            errorLogPrefix: "ルーム作成中");
     }
 
     private async UniTask JoinRoomCoreAsync(ISessionInfo sessionInfo)
@@ -762,10 +739,21 @@ public class LobbyUIManager : MonoBehaviour
             }
         }
 
+        await ExecuteSessionConnectionAsync(
+            () => _sessionService.JoinRoomSessionAsync(sessionInfo),
+            failureDialogMessage: "ルームへの参加に失敗しました。",
+            errorLogPrefix: "ルーム参加中");
+    }
+
+    private async UniTask ExecuteSessionConnectionAsync(
+        Func<UniTask<bool>> connectAction,
+        string failureDialogMessage,
+        string errorLogPrefix)
+    {
         TransitionTo(LobbyUIState.Connecting);
         try
         {
-            bool success = await _sessionService.JoinRoomSessionAsync(sessionInfo);
+            bool success = await connectAction();
             if (this == null) return;
 
             if (success)
@@ -778,13 +766,13 @@ public class LobbyUIManager : MonoBehaviour
                 TransitionTo(LobbyUIState.Discover);
                 if (_confirmDialogUI != null)
                 {
-                    await _confirmDialogUI.ShowAsync("ルームへの参加に失敗しました。");
+                    await _confirmDialogUI.ShowAsync(failureDialogMessage);
                 }
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            Debug.LogError($"[LobbyUIManager] ルーム参加中にエラーが発生しました: {ex.Message}");
+            Debug.LogError($"[LobbyUIManager] {errorLogPrefix}にエラーが発生しました: {ex.Message}");
             if (this != null)
             {
                 TransitionTo(LobbyUIState.Discover);
@@ -864,18 +852,42 @@ public class LobbyUIManager : MonoBehaviour
     private void StartGame()
     {
         if (_isStartingGame) return;
+        if (_sessionManager == null)
+        {
+            Debug.LogError("[LobbyUIManager] MultiplayerSessionManager が見つからないためゲームを開始できません。");
+            return;
+        }
+
         _isStartingGame = true;
         StartGameAsync().Forget();
     }
 
     private async UniTaskVoid StartGameAsync()
     {
-        // EventSystem のクリックイベントループを抜けてからシーン遷移を開始する
-        await UniTask.Yield(PlayerLoopTiming.Update);
-        if (this == null) return;
+        try
+        {
+            // EventSystem のクリックイベントループを抜けてからシーン遷移を開始する
+            await UniTask.Yield(PlayerLoopTiming.Update);
+            if (this == null) return;
 
-        TransitionTo(LobbyUIState.Connecting, immediate: true);
-        _sessionManager?.StartMultiplayGame();
+            if (_sessionManager == null)
+            {
+                _isStartingGame = false;
+                return;
+            }
+
+            TransitionTo(LobbyUIState.Connecting, immediate: true);
+            _sessionManager.StartMultiplayGame();
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Debug.LogError($"[LobbyUIManager] ゲーム開始処理でエラーが発生しました: {ex.Message}");
+            _isStartingGame = false;
+            if (this != null)
+            {
+                TransitionTo(LobbyUIState.InRoom);
+            }
+        }
     }
 
     private void ShowGameStarting() => ShowGameStartingAsync().Forget();

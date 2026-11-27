@@ -5,8 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// キーボード／マウス操作時に直接テキスト入力（日本語IME対応）を行うコンパクトなモーダルダイアログ。
-/// LobbyModalDialogBase を継承し、ブロッカー・結果待機処理を共通化しています。
+/// キーボード／マウス操作時に直接テキスト入力（IME対応）を行うモーダルダイアログ。
 /// </summary>
 public class LobbyTextInputDialogUI : LobbyModalDialogBase<(bool Confirmed, string Text)>
 {
@@ -55,6 +54,28 @@ public class LobbyTextInputDialogUI : LobbyModalDialogBase<(bool Confirmed, stri
     {
         base.Awake();
         BindButtonsIfNeeded();
+    }
+
+    protected override void OnDestroy()
+    {
+        if (_isBound)
+        {
+            if (_inputField != null)
+            {
+                _inputField.onValueChanged.RemoveListener(HandleValueChanged);
+            }
+            if (_confirmButton != null)
+            {
+                _confirmButton.onClick.RemoveListener(ConfirmInput);
+            }
+            if (_cancelButton != null)
+            {
+                _cancelButton.onClick.RemoveListener(CancelInput);
+            }
+            _isBound = false;
+        }
+
+        base.OnDestroy();
     }
 
     private void BindButtonsIfNeeded()

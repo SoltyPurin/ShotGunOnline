@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// タイトル画面などのOptionメニュー内で、FPS設定および垂直同期(VSync)設定のUI表示・操作を行うクラス。
-/// 効果音再生は UISound に委譲し (DIP / DRY)、SEManager 具象検索への依存を排除しています。
+/// Option メニュー内の FPS・垂直同期(VSync)設定UI。
 /// </summary>
 public class FrameRateOptionUI : MonoBehaviour
 {

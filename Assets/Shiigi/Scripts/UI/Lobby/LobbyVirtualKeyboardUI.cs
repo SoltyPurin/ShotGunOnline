@@ -7,8 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// コントローラー操作に対応した汎用ソフトウェアキーボード（モーダルダイアログ）。
-/// LobbyModalDialogBase を継承し、ブロッカー・結果待機処理を共通化しています。
+/// コントローラー操作に対応したソフトウェアキーボード（モーダルダイアログ）。
 /// </summary>
 public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, string Text)>
 {
@@ -18,9 +17,10 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
 
     private readonly List<List<Button>> _navigationRows = new();
     private readonly List<(Button Button, Text Label, string LowerChar)> _letterButtons = new();
-    private readonly List<Button> _presetButtons = new();
+    private readonly List<(Button Button, Text Label, string DefaultText)> _presetButtons = new();
 
     private GameObject _presetRowObj;
+    private Canvas _cachedRootCanvas;
     private Text _titleText;
     private Text _previewText;
     private Text _counterText;
@@ -34,6 +34,8 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
     private string _currentText = string.Empty;
     private string _lastCompositionString = string.Empty;
     private int _maxLength = DefaultMaxLength;
+    private int _lastDisplayLen = -1;
+    private int _lastCounterMaxLength = -1;
     private bool _isShiftActive = true;
     private bool _isInitialized;
     private float _caretTimer;
@@ -41,6 +43,7 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
     private bool _imeEnabledByDialog;
     private IMECompositionMode _previousImeMode = IMECompositionMode.Auto;
     private bool _wasComposingLastFrame;
+    private Func<string> _randomTextGenerator;
 
     /// <summary>
     /// 指定されたCanvas配下に仮想キーボードプレハブを表示し、入力結果（確定有無と文字列）を返す汎用メソッド
@@ -52,7 +55,8 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
         int maxLength = DefaultMaxLength,
         LobbyVirtualKeyboardUI prefab = null,
         bool showPresets = true,
-        string[] customPresets = null)
+        string[] customPresets = null,
+        Func<string> randomTextGenerator = null)
     {
         if (parentCanvas == null)
         {
@@ -73,7 +77,7 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
             instance.name = prefab.name;
         }
 
-        return await instance.OpenDialogAsync(initialText, title, maxLength, showPresets, customPresets);
+        return await instance.OpenDialogAsync(initialText, title, maxLength, showPresets, customPresets, randomTextGenerator);
     }
 
     /// <summary>
@@ -84,10 +88,12 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
         string title = "テキストを入力",
         int maxLength = DefaultMaxLength,
         bool showPresets = true,
-        string[] customPresets = null)
+        string[] customPresets = null,
+        Func<string> randomTextGenerator = null)
     {
         _maxLength = Mathf.Max(1, maxLength);
         _currentText = TrimToMaxLength(initialText ?? string.Empty);
+        _randomTextGenerator = randomTextGenerator;
 
         if (!_isInitialized)
         {
@@ -307,9 +313,12 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
     {
         if (_previewText == null) return;
         Vector3 worldPos = _previewText.rectTransform.position;
-        Canvas rootCanvas = GetComponentInParent<Canvas>()?.rootCanvas;
-        Camera cam = (rootCanvas != null && rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
-            ? rootCanvas.worldCamera
+        if (_cachedRootCanvas == null)
+        {
+            _cachedRootCanvas = GetComponentInParent<Canvas>()?.rootCanvas;
+        }
+        Camera cam = (_cachedRootCanvas != null && _cachedRootCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            ? _cachedRootCanvas.worldCamera
             : null;
         Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, worldPos);
         Input.compositionCursorPos = new Vector2(screenPos.x, Screen.height - screenPos.y + 32f);
@@ -371,8 +380,10 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
                 }
                 else
                 {
-                    _presetButtons.Add(btn);
-                    BindPresetButton(btn);
+                    Text label = btn.GetComponentInChildren<Text>();
+                    string defaultText = label != null ? label.text : btn.name.Replace("Preset_", string.Empty);
+                    _presetButtons.Add((btn, label, defaultText));
+                    BindPresetButton(btn, label, defaultText);
                 }
             }
         }
@@ -396,11 +407,12 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
         }
     }
 
-    private void BindPresetButton(Button btn)
+    private void BindPresetButton(Button btn, Text label, string presetText)
     {
-        Text label = btn.GetComponentInChildren<Text>();
-        string presetText = label != null ? label.text : btn.name.Replace("Preset_", string.Empty);
-
+        if (label != null)
+        {
+            label.text = presetText;
+        }
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() => SetPresetText(presetText));
     }
@@ -470,22 +482,29 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
         if (_presetRowObj == null) return;
 
         _presetRowObj.SetActive(showPresets);
-        if (!showPresets || customPresets == null) return;
+        if (!showPresets) return;
+
+        if (customPresets == null)
+        {
+            for (int i = 0; i < _presetButtons.Count; i++)
+            {
+                var (btn, label, defaultText) = _presetButtons[i];
+                if (btn == null) continue;
+                btn.gameObject.SetActive(true);
+                BindPresetButton(btn, label, defaultText);
+            }
+            return;
+        }
 
         for (int i = 0; i < _presetButtons.Count; i++)
         {
-            Button btn = _presetButtons[i];
+            var (btn, label, _) = _presetButtons[i];
+            if (btn == null) continue;
             if (i < customPresets.Length && !string.IsNullOrEmpty(customPresets[i]))
             {
                 string preset = customPresets[i];
                 btn.gameObject.SetActive(true);
-                Text label = btn.GetComponentInChildren<Text>();
-                if (label != null)
-                {
-                    label.text = preset;
-                }
-                btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => SetPresetText(preset));
+                BindPresetButton(btn, label, preset);
             }
             else
             {
@@ -595,8 +614,10 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
 
     private void SetRandomRoomName()
     {
-        int num = UnityEngine.Random.Range(1000, 9999);
-        _currentText = TrimToMaxLength($"Room-{num}");
+        string generated = _randomTextGenerator != null
+            ? _randomTextGenerator()
+            : $"Room-{UnityEngine.Random.Range(1000, 10000)}";
+        _currentText = TrimToMaxLength(generated);
         ResetCaretBlink();
         RefreshPreview();
     }
@@ -681,7 +702,12 @@ public class LobbyVirtualKeyboardUI : LobbyModalDialogBase<(bool Confirmed, stri
         if (_counterText != null)
         {
             int displayLen = _currentText.Length + composition.Length;
-            _counterText.text = $"{displayLen} / {_maxLength}";
+            if (displayLen != _lastDisplayLen || _maxLength != _lastCounterMaxLength)
+            {
+                _lastDisplayLen = displayLen;
+                _lastCounterMaxLength = _maxLength;
+                _counterText.text = $"{displayLen} / {_maxLength}";
+            }
         }
     }
 

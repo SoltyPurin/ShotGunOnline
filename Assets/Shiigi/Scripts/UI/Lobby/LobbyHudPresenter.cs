@@ -5,9 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
-/// ロビー画面左上の常設HUDボタン（メニュー開閉・フォールバック用プレイヤー名変更）の動的構築、
-/// アイコン・ラベル表示更新、およびハンバーガーメニューの状態同期のみを担当するクラス (SRP)。
-/// LobbyUIManager の肥大化（God Class化）を解消します。
+/// ロビー画面左上の常設HUDボタンの構築・表示更新・ハンバーガーメニュー状態同期を行う。
 /// </summary>
 public sealed class LobbyHudPresenter : IDisposable
 {

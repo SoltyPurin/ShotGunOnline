@@ -15,8 +15,10 @@ public class LoadingOverlayController : LobbyViewBase
 
     private GameObject _blocker;
     private string _baseContextText = "通信中";
+    private readonly string[] _cachedDotTexts = new string[3];
     private float _dotsTimer;
     private int _dotCount = 3;
+    private int _transitionVersion;
 
     protected override void Awake()
     {
@@ -26,6 +28,7 @@ public class LoadingOverlayController : LobbyViewBase
         {
             _baseContextText = StripTrailingDots(_loadingContext.text);
         }
+        RebuildDotTextsCache();
     }
 
     protected override void Update()
@@ -40,7 +43,7 @@ public class LoadingOverlayController : LobbyViewBase
         float interval = Mathf.Max(0.1f, _dotsStepInterval);
         if (_dotsTimer >= interval)
         {
-            _dotsTimer -= interval;
+            _dotsTimer %= interval;
             _dotCount = (_dotCount % 3) + 1;
             ApplyContextText();
         }
@@ -51,15 +54,15 @@ public class LoadingOverlayController : LobbyViewBase
 
     public void SetLoadingState(bool isLoading, string context, bool immediate)
     {
-        if (_loadingContext != null && context != null)
+        int version = ++_transitionVersion;
+
+        if (_loadingContext != null && (context != null || isLoading))
         {
-            _baseContextText = StripTrailingDots(context);
-            _dotsTimer = 0f;
-            _dotCount = 1;
-            ApplyContextText();
-        }
-        else if (isLoading && _loadingContext != null)
-        {
+            if (context != null)
+            {
+                _baseContextText = StripTrailingDots(context);
+                RebuildDotTextsCache();
+            }
             _dotsTimer = 0f;
             _dotCount = 1;
             ApplyContextText();
@@ -93,29 +96,37 @@ public class LoadingOverlayController : LobbyViewBase
         }
         else
         {
-            CloseAsync().Forget();
+            CloseAsync(version).Forget();
         }
     }
 
-    private async UniTaskVoid CloseAsync()
+    private async UniTaskVoid CloseAsync(int version)
     {
-        if (_blocker != null)
+        try
         {
-            _blocker.SetActive(false);
+            await HideAsync();
         }
-        await HideAsync();
+        finally
+        {
+            if (this != null && version == _transitionVersion && _blocker != null)
+            {
+                _blocker.SetActive(false);
+            }
+        }
+    }
+
+    private void RebuildDotTextsCache()
+    {
+        _cachedDotTexts[0] = _baseContextText + ".";
+        _cachedDotTexts[1] = _baseContextText + "..";
+        _cachedDotTexts[2] = _baseContextText + "...";
     }
 
     private void ApplyContextText()
     {
         if (_loadingContext == null) return;
-        string dots = _dotCount switch
-        {
-            1 => ".",
-            2 => "..",
-            _ => "..."
-        };
-        _loadingContext.text = _baseContextText + dots;
+        int index = Mathf.Clamp(_dotCount - 1, 0, 2);
+        _loadingContext.text = _cachedDotTexts[index];
     }
 
     private static string StripTrailingDots(string text)

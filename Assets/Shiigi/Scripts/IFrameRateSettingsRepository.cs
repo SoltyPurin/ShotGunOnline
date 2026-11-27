@@ -1,5 +1,5 @@
 /// <summary>
-/// フレームレートおよび垂直同期(VSync)設定の永続化先を抽象化するリポジトリインターフェース (DIP / SRP)。
+/// フレームレート・VSync設定の保存/読み込みインターフェース。
 /// </summary>
 public interface IFrameRateSettingsRepository
 {

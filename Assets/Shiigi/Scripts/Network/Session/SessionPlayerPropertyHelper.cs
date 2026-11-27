@@ -9,12 +9,12 @@ public enum RoomAvailabilityStatus
 {
     Waiting,
     Full,
-    InGame
+    InGame,
+    Locked
 }
 
 /// <summary>
-/// セッション内のプロパティ（通信プロトコル・Ready状態・Relay接続状態など）と開始・参加条件判定のドメインルールを集約するヘルパークラス (SRP)。
-/// UI層や通信層に文字列キーや判定ロジックが散在するのを防ぎます。
+/// セッション・プレイヤーのプロパティ変換および参加/開始条件判定のヘルパー。
 /// </summary>
 public static class SessionPlayerPropertyHelper
 {
@@ -28,14 +28,6 @@ public static class SessionPlayerPropertyHelper
     public const string SkinIdPropertyKey = "SkinId";
     private const string TrueValue = "true";
     private const string FalseValue = "false";
-
-    /// <summary>
-    /// ルーム作成時に公開する通信プロトコル・ゲーム状態のセッションプロパティ辞書を生成する
-    /// </summary>
-    public static Dictionary<string, SessionProperty> CreateSessionProtocolProperties(RelayProtocol protocol)
-    {
-        return CreateSessionProperties(protocol, isInGame: false);
-    }
 
     /// <summary>
     /// ルーム作成時に公開するセッションプロパティ辞書を生成する
@@ -80,7 +72,9 @@ public static class SessionPlayerPropertyHelper
     public static RoomAvailabilityStatus GetRoomAvailabilityStatus(ISessionInfo sessionInfo)
     {
         if (IsSessionInGame(sessionInfo)) return RoomAvailabilityStatus.InGame;
-        if (sessionInfo == null || sessionInfo.AvailableSlots <= 0) return RoomAvailabilityStatus.Full;
+        if (sessionInfo == null) return RoomAvailabilityStatus.Full;
+        if (sessionInfo.IsLocked) return RoomAvailabilityStatus.Locked;
+        if (sessionInfo.AvailableSlots <= 0) return RoomAvailabilityStatus.Full;
         return RoomAvailabilityStatus.Waiting;
     }
 
@@ -104,6 +98,7 @@ public static class SessionPlayerPropertyHelper
         return status switch
         {
             RoomAvailabilityStatus.InGame => "試合中",
+            RoomAvailabilityStatus.Locked => "ロック中",
             RoomAvailabilityStatus.Full => "満員",
             _ => "待機中"
         };
@@ -141,7 +136,7 @@ public static class SessionPlayerPropertyHelper
     {
         if (player?.Properties != null && player.Properties.TryGetValue(ReadyPropertyKey, out var prop))
         {
-            return prop.Value == TrueValue;
+            return prop?.Value == TrueValue;
         }
         return false;
     }
@@ -166,21 +161,9 @@ public static class SessionPlayerPropertyHelper
         if (isHost) return true;
         if (player?.Properties != null && player.Properties.TryGetValue(RelayConnectedPropertyKey, out var prop))
         {
-            return prop.Value == TrueValue;
+            return prop?.Value == TrueValue;
         }
         return false;
-    }
-
-    /// <summary>
-    /// Relay接続完了状態の更新用プロパティ辞書を生成する
-    /// </summary>
-    public static Dictionary<string, PlayerProperty> CreateRelayConnectedProperties(bool isConnected)
-    {
-        var value = isConnected ? TrueValue : FalseValue;
-        return new Dictionary<string, PlayerProperty>
-        {
-            { RelayConnectedPropertyKey, new PlayerProperty(value, VisibilityPropertyOptions.Member) }
-        };
     }
 
     /// <summary>

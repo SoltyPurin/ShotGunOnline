@@ -4,15 +4,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 /// <summary>
-/// 開始ムービー中にプレイヤーを単一のTimeline再生時間に合わせて自動制御するコンポーネント (SRP: パターンB)。
-/// Playerプレハブのルートに付与します。
-/// 
-/// 【タイムライン（12.5秒）に同期する自動演出】
-/// ・0.0s 〜 8.667s: 倒れ状態（各スキン固有のDownスプライト）、銃(Burrel)/照準線/UIを非表示
-/// ・8.0s 〜 8.6s: 震え演出（PlayerSpritesが小刻みに横揺れ）
-/// ・8.667s 〜 9.167s: 起き上がり演出（KnockBackスプライト、銃が出現し垂直ホップ）
-/// ・9.167s 〜 12.5s: 立ち状態（Idleスプライト）
-/// ・12.5s（終了時）: 照準線/UI解禁、Animator再開、物理/同期復帰、シームレスに操作開始
+/// 開始ムービー（12.5秒）の再生時間に合わせてプレイヤーの演出ポーズを制御する。
 /// </summary>
 [DisallowMultipleComponent]
 public class CutsceneControlledPlayer : MonoBehaviour
@@ -40,18 +32,24 @@ public class CutsceneControlledPlayer : MonoBehaviour
     [SerializeField] private SpriteRenderer _backSpriteRenderer;
     [SerializeField] private Animator _frontSpriteAnimator;
 
+    private const float ShakeStartTime = 8.0f;
+    private const float WakeUpStartTime = 8.6667f;
+    private const float StandUpTime = 9.1667f;
+    private const float UiActivationTime = 12.4833f;
+    private const float ShakeFrequency = 30f;
+    private const float ShakeAmplitude = 0.05f;
+    private const float HopHeight = 0.5f;
+
     private NetworkObject _networkObject;
     private NetworkTransform[] _networkTransforms;
     private NetworkAnimator[] _networkAnimators;
     private Animator[] _allAnimators;
     private Rigidbody2D _rigidbody2D;
-    private Rigidbody _rigidbody;
 
     private bool[] _networkTransformEnabledCache;
     private bool[] _networkAnimatorEnabledCache;
     private bool[] _animatorEnabledCache;
     private bool _rigidbody2DSimulatedCache;
-    private bool _rigidbodyKinematicCache;
 
     private Vector3 _playerSpritesOriginalLocalPos;
     private Vector3 _burrelOriginalLocalPos;
@@ -64,27 +62,8 @@ public class CutsceneControlledPlayer : MonoBehaviour
     public bool IsInCutscene { get; private set; }
     public ulong OwnerClientId => _networkObject != null ? _networkObject.OwnerClientId : 0;
 
-    [Tooltip("Timeline の Animation Track に割り当てる Animator（ルートの Transform を動かすもの）。未設定ならルートの Animator を使用し、無ければ自動で追加します")]
+    [Tooltip("Timeline の Animation Track に割り当てる Animator（ルートの Transform を動かすもの）")]
     [SerializeField] private Animator _cutsceneAnimator;
-
-    /// <summary>
-    /// Timeline の枠トラックに割り当てる Animator
-    /// </summary>
-    public Animator CutsceneAnimator
-    {
-        get
-        {
-            if (_cutsceneAnimator == null)
-            {
-                _cutsceneAnimator = GetComponent<Animator>();
-                if (_cutsceneAnimator == null)
-                {
-                    _cutsceneAnimator = gameObject.AddComponent<Animator>();
-                }
-            }
-            return _cutsceneAnimator;
-        }
-    }
 
     private void Awake()
     {
@@ -93,7 +72,6 @@ public class CutsceneControlledPlayer : MonoBehaviour
         _networkAnimators = GetComponentsInChildren<NetworkAnimator>(true);
         _allAnimators = GetComponentsInChildren<Animator>(true);
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        _rigidbody = GetComponent<Rigidbody>();
 
         ResolveChildReferences();
         CacheOriginalPositions();
@@ -115,6 +93,10 @@ public class CutsceneControlledPlayer : MonoBehaviour
                 _frontSpriteRenderer = frontObj.GetComponent<SpriteRenderer>();
                 _frontSpriteAnimator = frontObj.GetComponent<Animator>();
             }
+        }
+        else if (_frontSpriteAnimator == null)
+        {
+            _frontSpriteAnimator = _frontSpriteRenderer.GetComponent<Animator>();
         }
 
         if (_backSpriteRenderer == null)
@@ -188,7 +170,20 @@ public class CutsceneControlledPlayer : MonoBehaviour
         ResolveChildReferences();
         CacheOriginalPositions();
 
-        // 物理演算停止
+        SuspendPhysicsAndSync();
+        SuspendAnimators();
+
+        if (_backSpriteRenderer != null)
+        {
+            _backSpriteRenderer.enabled = false;
+        }
+
+        // 先頭フレーム（倒れ状態）を即座に反映
+        UpdateCutscenePose(0f);
+    }
+
+    private void SuspendPhysicsAndSync()
+    {
         if (_rigidbody2D != null)
         {
             _rigidbody2DSimulatedCache = _rigidbody2D.simulated;
@@ -197,18 +192,6 @@ public class CutsceneControlledPlayer : MonoBehaviour
             _rigidbody2D.simulated = false;
         }
 
-        if (_rigidbody != null)
-        {
-            _rigidbodyKinematicCache = _rigidbody.isKinematic;
-            if (!_rigidbody.isKinematic)
-            {
-                _rigidbody.linearVelocity = Vector3.zero;
-                _rigidbody.angularVelocity = Vector3.zero;
-            }
-            _rigidbody.isKinematic = true;
-        }
-
-        // 非オーナー側の NetworkTransform 適用停止
         _networkTransformEnabledCache = new bool[_networkTransforms.Length];
         for (int i = 0; i < _networkTransforms.Length; i++)
         {
@@ -221,7 +204,6 @@ public class CutsceneControlledPlayer : MonoBehaviour
             }
         }
 
-        // ネットワーク経由でのアニメーション強制上書きを防ぐため、NetworkAnimator を停止
         if (_networkAnimators == null || _networkAnimators.Length == 0)
         {
             _networkAnimators = GetComponentsInChildren<NetworkAnimator>(true);
@@ -235,8 +217,10 @@ public class CutsceneControlledPlayer : MonoBehaviour
                 _networkAnimators[i].enabled = false;
             }
         }
+    }
 
-        // 全 Animator を一時停止（スプライトの自動上書き・競合を防ぐ）
+    private void SuspendAnimators()
+    {
         if (_allAnimators == null || _allAnimators.Length == 0)
         {
             _allAnimators = GetComponentsInChildren<Animator>(true);
@@ -248,21 +232,12 @@ public class CutsceneControlledPlayer : MonoBehaviour
             if (anim != null)
             {
                 _animatorEnabledCache[i] = anim.enabled;
-                // TimelineでルートTransformを制御するAnimator以外をすべて停止
                 if (anim != _cutsceneAnimator)
                 {
                     anim.enabled = false;
                 }
             }
         }
-
-        if (_backSpriteRenderer != null)
-        {
-            _backSpriteRenderer.enabled = false;
-        }
-
-        // 先頭フレーム（倒れ状態）を即座に反映
-        UpdateCutscenePose(0f);
     }
 
     /// <summary>
@@ -274,88 +249,97 @@ public class CutsceneControlledPlayer : MonoBehaviour
         if (!IsInCutscene) return;
 
         var skin = GetCurrentSkinSprites();
-
-        const float shakeStartTime = 8.0f;
-        const float wakeUpStartTime = 8.6667f;
-        const float standUpTime = 9.1667f;
-        const float uiActivationTime = 12.4833f;
-
-        if (timelineTime < wakeUpStartTime)
+        if (timelineTime < WakeUpStartTime)
         {
-            // === 倒れフェーズ ===
-            if (_burrelObject != null && _burrelObject.activeSelf) _burrelObject.SetActive(false);
-            if (_lineRendererObject != null && _lineRendererObject.activeSelf) _lineRendererObject.SetActive(false);
-            if (_playerUIObject != null && _playerUIObject.activeSelf) _playerUIObject.SetActive(false);
+            ApplyDownPhase(timelineTime, skin);
+        }
+        else if (timelineTime < StandUpTime)
+        {
+            ApplyWakeUpHopPhase(timelineTime, skin);
+        }
+        else
+        {
+            ApplyStandReadyPhase(timelineTime, skin);
+        }
+    }
 
-            if (_frontSpriteRenderer != null)
-            {
-                if (skin.DownSprite != null)
-                {
-                    _frontSpriteRenderer.sprite = skin.DownSprite;
-                }
-                else if (!_loggedMissingDownSpriteWarning)
-                {
-                    _loggedMissingDownSpriteWarning = true;
-                    Debug.LogWarning($"[CutsceneControlledPlayer] スロット {_assignedSlotIndex} の DownSprite が未設定または Missing です。");
-                }
-            }
-            if (_backSpriteRenderer != null && _backSpriteRenderer.enabled)
-            {
-                _backSpriteRenderer.enabled = false;
-            }
+    private void ApplyFrontSpriteIfChanged(Sprite targetSprite)
+    {
+        if (_frontSpriteRenderer != null && targetSprite != null && _frontSpriteRenderer.sprite != targetSprite)
+        {
+            _frontSpriteRenderer.sprite = targetSprite;
+        }
+    }
 
-            if (timelineTime >= shakeStartTime && _playerSpritesTransform != null)
+    private void ApplyDownPhase(float timelineTime, CutsceneSkinSprites skin)
+    {
+        if (_burrelObject != null && _burrelObject.activeSelf) _burrelObject.SetActive(false);
+        if (_lineRendererObject != null && _lineRendererObject.activeSelf) _lineRendererObject.SetActive(false);
+        if (_playerUIObject != null && _playerUIObject.activeSelf) _playerUIObject.SetActive(false);
+
+        if (_frontSpriteRenderer != null)
+        {
+            if (skin.DownSprite != null)
             {
-                // 震え演出: ±0.05 の周期揺れ
-                float shakeOffset = Mathf.Sin((timelineTime - shakeStartTime) * Mathf.PI * 30f) * 0.05f;
+                ApplyFrontSpriteIfChanged(skin.DownSprite);
+            }
+            else if (!_loggedMissingDownSpriteWarning)
+            {
+                _loggedMissingDownSpriteWarning = true;
+                Debug.LogWarning($"[CutsceneControlledPlayer] スロット {_assignedSlotIndex} の DownSprite が未設定または Missing です。");
+            }
+        }
+        if (_backSpriteRenderer != null && _backSpriteRenderer.enabled)
+        {
+            _backSpriteRenderer.enabled = false;
+        }
+
+        if (_playerSpritesTransform != null)
+        {
+            if (timelineTime >= ShakeStartTime)
+            {
+                float shakeOffset = Mathf.Sin((timelineTime - ShakeStartTime) * Mathf.PI * ShakeFrequency) * ShakeAmplitude;
                 _playerSpritesTransform.localPosition = _playerSpritesOriginalLocalPos + new Vector3(shakeOffset, 0f, 0f);
             }
-            else if (_playerSpritesTransform != null)
+            else
             {
                 _playerSpritesTransform.localPosition = _playerSpritesOriginalLocalPos;
             }
         }
-        else if (timelineTime < standUpTime)
+    }
+
+    private void ApplyWakeUpHopPhase(float timelineTime, CutsceneSkinSprites skin)
+    {
+        if (_burrelObject != null && !_burrelObject.activeSelf) _burrelObject.SetActive(true);
+        if (_lineRendererObject != null && _lineRendererObject.activeSelf) _lineRendererObject.SetActive(false);
+        if (_playerUIObject != null && _playerUIObject.activeSelf) _playerUIObject.SetActive(false);
+
+        ApplyFrontSpriteIfChanged(skin.KnockBackSprite);
+
+        float hopProgress = Mathf.Clamp01((timelineTime - WakeUpStartTime) / (StandUpTime - WakeUpStartTime));
+        float hopY = Mathf.Sin(hopProgress * Mathf.PI) * HopHeight;
+
+        if (_playerSpritesTransform != null)
         {
-            // === 起き上がりホップフェーズ ===
-            if (_burrelObject != null && !_burrelObject.activeSelf) _burrelObject.SetActive(true);
-            if (_lineRendererObject != null && _lineRendererObject.activeSelf) _lineRendererObject.SetActive(false);
-            if (_playerUIObject != null && _playerUIObject.activeSelf) _playerUIObject.SetActive(false);
-
-            if (_frontSpriteRenderer != null && skin.KnockBackSprite != null)
-            {
-                _frontSpriteRenderer.sprite = skin.KnockBackSprite;
-            }
-
-            float hopProgress = Mathf.Clamp01((timelineTime - wakeUpStartTime) / (standUpTime - wakeUpStartTime));
-            float hopY = Mathf.Sin(hopProgress * Mathf.PI) * 0.5f;
-
-            if (_playerSpritesTransform != null)
-            {
-                _playerSpritesTransform.localPosition = _playerSpritesOriginalLocalPos + new Vector3(0f, hopY, 0f);
-            }
-
-            if (_burrelObject != null)
-            {
-                _burrelObject.transform.localPosition = _burrelOriginalLocalPos + new Vector3(0f, hopY, 0f);
-            }
+            _playerSpritesTransform.localPosition = _playerSpritesOriginalLocalPos + new Vector3(0f, hopY, 0f);
         }
-        else
+        if (_burrelObject != null)
         {
-            // === 立ち・準備完了フェーズ ===
-            if (_burrelObject != null && !_burrelObject.activeSelf) _burrelObject.SetActive(true);
-            if (_playerSpritesTransform != null) _playerSpritesTransform.localPosition = _playerSpritesOriginalLocalPos;
-            if (_burrelObject != null) _burrelObject.transform.localPosition = _burrelOriginalLocalPos;
-
-            if (_frontSpriteRenderer != null && skin.IdleSprite != null)
-            {
-                _frontSpriteRenderer.sprite = skin.IdleSprite;
-            }
-
-            bool enableUI = timelineTime >= uiActivationTime;
-            if (_lineRendererObject != null && _lineRendererObject.activeSelf != enableUI) _lineRendererObject.SetActive(enableUI);
-            if (_playerUIObject != null && _playerUIObject.activeSelf != enableUI) _playerUIObject.SetActive(enableUI);
+            _burrelObject.transform.localPosition = _burrelOriginalLocalPos + new Vector3(0f, hopY, 0f);
         }
+    }
+
+    private void ApplyStandReadyPhase(float timelineTime, CutsceneSkinSprites skin)
+    {
+        if (_burrelObject != null && !_burrelObject.activeSelf) _burrelObject.SetActive(true);
+        if (_playerSpritesTransform != null) _playerSpritesTransform.localPosition = _playerSpritesOriginalLocalPos;
+        if (_burrelObject != null) _burrelObject.transform.localPosition = _burrelOriginalLocalPos;
+
+        ApplyFrontSpriteIfChanged(skin.IdleSprite);
+
+        bool enableUI = timelineTime >= UiActivationTime;
+        if (_lineRendererObject != null && _lineRendererObject.activeSelf != enableUI) _lineRendererObject.SetActive(enableUI);
+        if (_playerUIObject != null && _playerUIObject.activeSelf != enableUI) _playerUIObject.SetActive(enableUI);
     }
 
     /// <summary>
@@ -366,22 +350,29 @@ public class CutsceneControlledPlayer : MonoBehaviour
         if (!IsInCutscene) return;
         IsInCutscene = false;
 
-        // 全オブジェクトの表示と座標を復旧
+        RestoreVisualObjects();
+        RestoreAnimatorsAndSync();
+        RestorePhysics();
+        SyncFinalTeleportIfOwner();
+    }
+
+    private void RestoreVisualObjects()
+    {
         if (_burrelObject != null)
         {
             _burrelObject.SetActive(true);
             _burrelObject.transform.localPosition = _burrelOriginalLocalPos;
         }
-
         if (_lineRendererObject != null) _lineRendererObject.SetActive(true);
         if (_playerUIObject != null) _playerUIObject.SetActive(true);
-
         if (_playerSpritesTransform != null)
         {
             _playerSpritesTransform.localPosition = _playerSpritesOriginalLocalPos;
         }
+    }
 
-        // Animator を再開（PlayerAnimation / PlayerSkinSync へ制御を戻す）
+    private void RestoreAnimatorsAndSync()
+    {
         if (_allAnimators != null && _animatorEnabledCache != null)
         {
             for (int i = 0; i < _allAnimators.Length; i++)
@@ -397,7 +388,6 @@ public class CutsceneControlledPlayer : MonoBehaviour
             _frontSpriteAnimator.enabled = true;
         }
 
-        // NetworkAnimator を復旧
         if (_networkAnimators != null && _networkAnimatorEnabledCache != null)
         {
             for (int i = 0; i < _networkAnimators.Length; i++)
@@ -409,54 +399,46 @@ public class CutsceneControlledPlayer : MonoBehaviour
             }
         }
 
-        // NetworkTransform を復旧
         if (_networkTransforms != null)
         {
             for (int i = 0; i < _networkTransforms.Length; i++)
             {
                 var nt = _networkTransforms[i];
                 if (nt == null) continue;
-                if (_networkTransformEnabledCache != null && i < _networkTransformEnabledCache.Length)
-                {
-                    nt.enabled = _networkTransformEnabledCache[i];
-                }
-                else
-                {
-                    nt.enabled = true;
-                }
+                nt.enabled = (_networkTransformEnabledCache != null && i < _networkTransformEnabledCache.Length)
+                    ? _networkTransformEnabledCache[i]
+                    : true;
             }
         }
+    }
 
-        // 物理演算復旧
+    private void RestorePhysics()
+    {
         if (_rigidbody2D != null)
         {
             _rigidbody2D.simulated = _rigidbody2DSimulatedCache;
             _rigidbody2D.linearVelocity = Vector2.zero;
         }
+    }
 
-        if (_rigidbody != null)
-        {
-            _rigidbody.isKinematic = _rigidbodyKinematicCache;
-        }
-
-        // オーナー端末が最終位置へ Teleport して全端末の位置を同期確定（シャットダウン・破棄中は送信しない）
+    private void SyncFinalTeleportIfOwner()
+    {
         var networkManager = NetworkManager.Singleton;
         bool canTeleport = _networkTransforms != null &&
                            networkManager != null &&
                            networkManager.IsListening &&
                            !networkManager.ShutdownInProgress &&
                            gameObject.activeInHierarchy;
-        if (canTeleport)
+        if (!canTeleport) return;
+
+        foreach (var nt in _networkTransforms)
         {
-            foreach (var nt in _networkTransforms)
+            if (nt != null && nt.enabled && nt.IsSpawned && nt.CanCommitToTransform)
             {
-                if (nt != null && nt.enabled && nt.IsSpawned && nt.CanCommitToTransform)
-                {
-                    var t = nt.transform;
-                    var pos = nt.InLocalSpace ? t.localPosition : t.position;
-                    var rot = nt.InLocalSpace ? t.localRotation : t.rotation;
-                    nt.Teleport(pos, rot, t.localScale);
-                }
+                var t = nt.transform;
+                var pos = nt.InLocalSpace ? t.localPosition : t.position;
+                var rot = nt.InLocalSpace ? t.localRotation : t.rotation;
+                nt.Teleport(pos, rot, t.localScale);
             }
         }
     }

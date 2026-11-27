@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// インゲームの進行状態（IGameStateProvider）を購読し、ローディングUI Canvasの表示を切り替えるクラス (SRP / DIP)
+/// ゲーム進行状態に応じてローディングUI Canvasの表示を切り替える。
 /// </summary>
 public class LoadingUIManager : MonoBehaviour
 {
@@ -43,8 +43,9 @@ public class LoadingUIManager : MonoBehaviour
         if (_isSubscribed && _gameStateProvider != null)
         {
             _gameStateProvider.StateChanged -= OnStateChanged;
-            _isSubscribed = false;
         }
+        _isSubscribed = false;
+        _gameStateProvider = null;
     }
 
     private void OnStateChanged(MP_GameManager.GameState previous, MP_GameManager.GameState current)

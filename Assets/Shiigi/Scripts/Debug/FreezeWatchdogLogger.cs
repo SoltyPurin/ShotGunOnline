@@ -8,12 +8,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Unity Editor / Standalone のフリーズ状況をリアルタイムでテキストファイルに強制記録する診断クラス。
-/// 自動起動し、メインスレッド停止（フリーズ）を別スレッドで検知してtxtに出力します。
-/// Update 内での文字列生成を排除し、通常フレームのGCアロケーションをゼロに抑えています。
+/// メインスレッドのフリーズを別スレッドで検知し、ログをテキスト出力する診断コンポーネント。
 /// </summary>
 public class FreezeWatchdogLogger : MonoBehaviour
 {
+    /// <summary>
+    /// コードの各重要ポイントで通過チェックポイントを記録できるメソッド（本番ビルドでは空スタブ）
+    /// </summary>
+    public static void Checkpoint(string tag)
+    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        _lastCheckpoint = tag;
+        LogDirect($"[Checkpoint] {tag}");
+#endif
+    }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
     private static FreezeWatchdogLogger _instance;
     private static string _realtimeLogPath;
     private static string _freezeDumpPath;
@@ -43,17 +53,25 @@ public class FreezeWatchdogLogger : MonoBehaviour
     private static volatile bool _netIsClient;
     private static volatile int _netConnectedCount;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        ShutdownWatchdog();
+        _instance = null;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
-#if !(UNITY_EDITOR || DEVELOPMENT_BUILD)
-        return;
-#else
         if (_instance != null) return;
 
-        string projectRoot = Directory.GetCurrentDirectory();
-        _realtimeLogPath = Path.Combine(projectRoot, "EditorRealtimeLog.txt");
-        _freezeDumpPath = Path.Combine(projectRoot, "FreezeDump.txt");
+#if UNITY_EDITOR
+        string logDir = Directory.GetCurrentDirectory();
+#else
+        string logDir = Application.persistentDataPath;
+#endif
+        _realtimeLogPath = Path.Combine(logDir, "EditorRealtimeLog.txt");
+        _freezeDumpPath = Path.Combine(logDir, "FreezeDump.txt");
 
         try
         {
@@ -70,8 +88,11 @@ public class FreezeWatchdogLogger : MonoBehaviour
             Debug.LogError($"[FreezeWatchdog] ログファイル作成失敗: {ex.Message}");
         }
 
+        _freezeDumped = false;
         _currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
+        Application.logMessageReceivedThreaded -= OnLogReceived;
         Application.logMessageReceivedThreaded += OnLogReceived;
 
         GameObject go = new GameObject("[FreezeWatchdogLogger]");
@@ -88,7 +109,6 @@ public class FreezeWatchdogLogger : MonoBehaviour
         _watchdogThread.Start();
 
         Debug.Log($"[FreezeWatchdog] 監視開始: ログ出力先 => {_realtimeLogPath}");
-#endif
     }
 
     private static void OnActiveSceneChanged(Scene previous, Scene next)
@@ -127,24 +147,20 @@ public class FreezeWatchdogLogger : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// コードの各重要ポイントで通過チェックポイントを記録できるメソッド
-    /// </summary>
-    public static void Checkpoint(string tag)
-    {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        _lastCheckpoint = tag;
-        LogDirect($"[Checkpoint] {tag}");
-#endif
-    }
-
     private static void LogDirect(string message)
     {
         string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
         string line = $"[{timestamp}][TRACE] {message}";
         lock (_fileLock)
         {
-            _logWriter?.WriteLine(line);
+            try
+            {
+                _logWriter?.WriteLine(line);
+            }
+            catch
+            {
+                // ストリーム破棄・I/O例外時は無視
+            }
         }
     }
 
@@ -192,6 +208,7 @@ public class FreezeWatchdogLogger : MonoBehaviour
         while (_isRunning)
         {
             Thread.Sleep(200);
+            if (!_isRunning) break;
 
             long lastTicks = Interlocked.Read(ref _lastHeartbeatTicks);
             double elapsedSeconds = (DateTime.UtcNow.Ticks - lastTicks) / (double)TimeSpan.TicksPerSecond;
@@ -261,8 +278,24 @@ public class FreezeWatchdogLogger : MonoBehaviour
         SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         Application.logMessageReceivedThreaded -= OnLogReceived;
 
+        var thread = _watchdogThread;
+        _watchdogThread = null;
+        if (thread != null && thread.IsAlive && thread != Thread.CurrentThread)
+        {
+            try
+            {
+                thread.Join(500);
+            }
+            catch
+            {
+                // スレッド終了待機例外は無視
+            }
+        }
+
         lock (_fileLock)
         {
+            _recentLogs.Clear();
+            _freezeDumped = false;
             if (_logWriter != null)
             {
                 try
@@ -295,4 +328,5 @@ public class FreezeWatchdogLogger : MonoBehaviour
     {
         ShutdownWatchdog();
     }
+#endif
 }

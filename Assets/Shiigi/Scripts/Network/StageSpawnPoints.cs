@@ -45,8 +45,10 @@ public class StageSpawnPoints : MonoBehaviour, ISpawnPointProvider
             return transform;
         }
 
-        // 人数がスポーン地点数を超えた場合はループ
-        return _spawnPoints[playerIndex % _spawnPoints.Length];
+        // 人数がスポーン地点数を超えた場合はループ（負値も安全に正規化）
+        int len = _spawnPoints.Length;
+        int index = ((playerIndex % len) + len) % len;
+        return _spawnPoints[index];
     }
 
     /// <summary>
@@ -55,7 +57,7 @@ public class StageSpawnPoints : MonoBehaviour, ISpawnPointProvider
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        if (_spawnPoints != null)
+        if (_spawnPoints != null && _spawnPoints.Length > 0)
         {
             foreach (var point in _spawnPoints)
             {

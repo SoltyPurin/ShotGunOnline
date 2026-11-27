@@ -8,8 +8,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 
 /// <summary>
-/// NGO (NetworkManager) と UnityTransport (Relay) の起動・疎通検証・停止のみを担当するクラス
-/// LobbySessionService からトランスポート層の制御やポーリング待機ロジックを分離
+/// NetworkManager と UnityTransport (Relay) の起動・疎通検証・停止を管理する。
 /// </summary>
 public class RelayConnectionHandler
 {
@@ -47,14 +46,6 @@ public class RelayConnectionHandler
             transport.MaxConnectAttempts = MaxConnectAttempts;
             transport.MaxPacketQueueSize = 1024;
         }
-    }
-
-    /// <summary>
-    /// UnityTransport を WebSocket (WSS) モードに設定する
-    /// </summary>
-    public void ConfigureWebSocketTransport()
-    {
-        ConfigureTransport(RelayProtocol.WSS);
     }
 
     /// <summary>

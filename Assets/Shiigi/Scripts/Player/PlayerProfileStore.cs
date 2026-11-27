@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 /// <summary>
 /// ゲーム全体でローカルプレイヤーのプロフィール（プレイヤー名等）を保持・更新通知するストア。
@@ -11,18 +12,33 @@ public static class PlayerProfileStore
     /// <summary>プロフィールが更新されたときに発火するイベント</summary>
     public static event Action<PlayerProfile> OnProfileChanged;
 
-    /// <summary>現在のローカルプレイヤープロフィール（初回アクセス時に自動ロード）</summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        OnProfileChanged = null;
+        _current = null;
+        _repository = new PlayerPrefsProfileRepository();
+    }
+
+    /// <summary>現在のローカルプレイヤープロフィール（コピーを返す）</summary>
     public static PlayerProfile Current
     {
         get
         {
             EnsureLoaded();
-            return _current;
+            return _current.Clone();
         }
     }
 
     /// <summary>現在のローカルプレイヤー名</summary>
-    public static string PlayerName => Current.PlayerName;
+    public static string PlayerName
+    {
+        get
+        {
+            EnsureLoaded();
+            return _current.PlayerName;
+        }
+    }
 
     /// <summary>
     /// プレイヤー名を更新して永続化する。空文字や変更なしの場合は false を返す。
@@ -64,6 +80,21 @@ public static class PlayerProfileStore
     private static void EnsureLoaded()
     {
         if (_current != null) return;
-        _current = _repository.Load() ?? new PlayerProfile(PlayerProfile.GenerateDefaultPlayerName());
+
+        var loaded = _repository.Load();
+        if (loaded != null)
+        {
+            loaded.PlayerName = PlayerProfile.SanitizePlayerName(loaded.PlayerName);
+        }
+
+        if (loaded == null || string.IsNullOrEmpty(loaded.PlayerName))
+        {
+            _current = new PlayerProfile(PlayerProfile.GenerateDefaultPlayerName());
+            _repository.Save(_current);
+        }
+        else
+        {
+            _current = loaded;
+        }
     }
 }

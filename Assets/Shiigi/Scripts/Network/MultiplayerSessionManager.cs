@@ -6,8 +6,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 
 /// <summary>
-/// マルチプレイセッション関連機能のエントリポイント（ファサード）クラス。
-/// 認証初期化・ルーム管理・ハートビート監視・シーン遷移・切断エラーハンドリングの各単一責務クラスを統合・調整します。
+/// マルチプレイセッション関連機能（認証・ルーム管理・ハートビート・シーン遷移・切断処理）のエントリポイント。
 /// </summary>
 public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
 {
@@ -102,11 +101,23 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
             onHostTimeout: () => _disconnectHandler.NotifyUnexpectedDisconnect());
     }
 
-    private async void Start()
+    private void Start()
     {
-        EnsureSubsystemsInitialized();
-        _disconnectHandler?.TryCacheDialogFromScene();
-        await _servicesInitializer.InitializeAsync();
+        InitializeOnStartAsync().Forget();
+    }
+
+    private async UniTaskVoid InitializeOnStartAsync()
+    {
+        try
+        {
+            EnsureSubsystemsInitialized();
+            _disconnectHandler?.TryCacheDialogFromScene();
+            await _servicesInitializer.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[MSM] 起動時初期化でエラーが発生しました: {ex.Message}");
+        }
     }
 
     private void OnDestroy()
@@ -116,6 +127,9 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
             PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
             PlayerSkinSync.OnLocalPlayerSkinChanged -= HandleLocalPlayerSkinChanged;
             UnsubscribeNetworkEvents();
+            (_sessionService as IDisposable)?.Dispose();
+            _sceneTransitionHandler?.Dispose();
+            _disconnectHandler?.Dispose();
             Instance = null;
         }
     }
