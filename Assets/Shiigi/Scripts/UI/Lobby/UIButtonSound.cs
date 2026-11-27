@@ -16,7 +16,7 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
     [SerializeField] private UIButtonType _buttonType = UIButtonType.Default;
 
     [Tooltip("true の場合、タイプ設定ではなく下記のカスタム設定を優先します")]
-    [SerializeField] private bool _overrideCustom = false;
+    [SerializeField] private bool _overrideCustom;
 
     [Header("個別カスタム設定（_overrideCustom または Custom 時に有効）")]
     [SerializeField] private ButtonTypeStyle _customStyle = ButtonTypeStyle.CreateDefault(UISoundType.Enter);
@@ -60,9 +60,35 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
         }
     }
 
+    /// <summary>
+    /// 指定されたボタンに UIButtonSound を付与（既存なら取得）してボタン種別を設定する共通メソッド (DRY)
+    /// </summary>
+    public static UIButtonSound EnsureAttached(Button button, UIButtonType buttonType = UIButtonType.Default)
+    {
+        if (button == null) return null;
+        if (!button.TryGetComponent<UIButtonSound>(out var sound))
+        {
+            sound = button.gameObject.AddComponent<UIButtonSound>();
+        }
+        sound.ButtonType = buttonType;
+        return sound;
+    }
+
+    /// <summary>
+    /// 指定されたボタンに効果音および金属光沢ビジュアルを一括セットアップするヘルパー
+    /// </summary>
+    public static void ConfigureButton(Button button, UIButtonType buttonType, bool attachMetallicVisual = true)
+    {
+        if (button == null) return;
+        EnsureAttached(button, buttonType);
+        if (attachMetallicVisual)
+        {
+            UIButtonMetallicVisual.Attach(button);
+        }
+    }
+
     private void Reset()
     {
-        // コンポーネント追加時にボタン名からタイプを自動推論
         _buttonType = InferTypeFromName(name);
         _customStyle = ButtonTypeStyle.CreateDefault(
             _buttonType == UIButtonType.Cancel ? UISoundType.Cancel : UISoundType.Enter);
@@ -127,7 +153,6 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
         Vector3 pressedScale = _originalScale * style.PressedScale;
         float halfDuration = Mathf.Max(0.01f, style.BounceDuration * 0.5f);
 
-        // 縮小 (1.0 -> pressedScale)
         float elapsed = 0f;
         while (elapsed < halfDuration)
         {
@@ -138,7 +163,6 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
             await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
 
-        // 復元 (pressedScale -> 1.0)
         elapsed = 0f;
         while (elapsed < halfDuration)
         {
@@ -157,6 +181,7 @@ public class UIButtonSound : MonoBehaviour, ISelectHandler, IPointerClickHandler
         if (_animCts != null)
         {
             _animCts.Cancel();
+            _animCts.Dispose();
             _animCts = null;
         }
 

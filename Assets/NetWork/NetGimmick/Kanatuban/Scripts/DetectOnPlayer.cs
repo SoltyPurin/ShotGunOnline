@@ -10,9 +10,9 @@ public class DetectOnPlayer : NetworkBehaviour
 
     private SpriteRenderer _spriteRenderer = default;
 
-    [SerializeField, Header("“¥‚Ü‚ê‚Ä‚È‚¢‚ÌƒXƒvƒ‰ƒCƒg")]
+    [SerializeField, Header("è¸ã¾ã‚Œã¦ãªã„æ™‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ")]
     private Sprite _notSteppedOnSprite = default;
-    [SerializeField, Header("“¥‚Ü‚ê‚Ä‚é‚ÌƒXƒvƒ‰ƒCƒg")]
+    [SerializeField, Header("è¸ã¾ã‚Œã¦ã‚‹æ™‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ")]
     private Sprite _steppedOnSprite = default;
 
     private NetworkVariable<bool> _isStepped = new NetworkVariable<bool>(false);
@@ -46,18 +46,18 @@ public class DetectOnPlayer : NetworkBehaviour
     }
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (_isCleared.Value)
+        if (!enabled || _isCleared.Value)
         {
             return;
         }
-        Debug.Log("‚È‚É‚©‚ªG‚ê‚½‚æ");
+        Debug.Log("ãªã«ã‹ãŒè§¦ã‚ŒãŸã‚ˆ");
         RequestChangeState(true);
     }
 
     public virtual void OnTriggerExit2D(Collider2D collision)
     {
 
-        if (_isCleared.Value)
+        if (!enabled || _isCleared.Value)
         {
             return;
         }
@@ -65,12 +65,12 @@ public class DetectOnPlayer : NetworkBehaviour
     }
     private void RequestChangeState(bool state)
     {
-        Debug.Log("ŠÖ”ŒÄ‚Ño‚µ");
-        if (!IsSpawned || _isCleared.Value)
+        Debug.Log("é–¢æ•°å‘¼ã³å‡ºã—");
+        if (!enabled || !IsSpawned || _isCleared.Value)
         {
             return;
         }
-        Debug.Log("ƒXƒe[ƒg•ÏX‚ªŒÄ‚Ño‚³‚ê‚½");
+        Debug.Log("ã‚¹ãƒ†ãƒ¼ãƒˆå¤‰æ›´ãŒå‘¼ã³å‡ºã•ã‚ŒãŸ");
         if (IsServer)
         {
             SetStateOnServer(state);
@@ -101,7 +101,7 @@ public class DetectOnPlayer : NetworkBehaviour
         }
 
         _isStepped.Value = state;
-        Debug.Log("Œ»İ‚ÌƒXƒe[ƒg‚Í" +  _isStepped.Value);
+        Debug.Log("ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã¯" +  _isStepped.Value);
     }
     private void OnSteppedChanged(bool previous, bool current)
     {
@@ -119,8 +119,8 @@ public class DetectOnPlayer : NetworkBehaviour
         {
             return;
         }
-        Debug.Log("Œ©‚½–Ú•ÏX");
-        // ƒNƒŠƒAÏ‚İ‚È‚ç—£‚ê‚Ä‚à“¥‚Ü‚ê‚½•\¦‚ğˆÛ
+        Debug.Log("è¦‹ãŸç›®å¤‰æ›´");
+        // ã‚¯ãƒªã‚¢æ¸ˆã¿ãªã‚‰é›¢ã‚Œã¦ã‚‚è¸ã¾ã‚ŒãŸè¡¨ç¤ºã‚’ç¶­æŒ
         if (_isCleared.Value || _isStepped.Value)
         {
             _spriteRenderer.sprite = _steppedOnSprite;

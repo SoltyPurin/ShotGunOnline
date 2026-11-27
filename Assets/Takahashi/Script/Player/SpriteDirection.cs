@@ -2,31 +2,31 @@ using UnityEngine;
 using Unity.Netcode;
 
 /// <summary>
-/// ƒvƒŒƒCƒ„[ƒXƒvƒ‰ƒCƒg‚ğA‰EƒXƒeƒBƒbƒN‚Ì“ü—Í‚É‚æ‚Á‚Ä•ÏX‚·‚é—p‚ÌƒNƒ‰ƒX
+/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’ã€å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›ã«ã‚ˆã£ã¦å¤‰æ›´ã™ã‚‹ç”¨ã®ã‚¯ãƒ©ã‚¹
 /// </summary>
 public class SpriteDirection : Unity.Netcode.NetworkBehaviour
 {
-    //‰EŒü‚«‚©A¶Œü‚«‚©‚ğ•Û‘¶‚·‚éenum
+    //å³å‘ãã‹ã€å·¦å‘ãã‹ã‚’ä¿å­˜ã™ã‚‹enum
     private enum Direction
     {
         Right,
         Left,
     }
 
-    //‰ñ“]²‚ğ‚Ç‚¤‚·‚é‚©
+    //å›è»¢è»¸ã‚’ã©ã†ã™ã‚‹ã‹
     private enum Shaft
     {
         X,
         Y,
     }
 
-    [SerializeField, Header("æ“¾Œn")]
+    [SerializeField, Header("å–å¾—ç³»")]
     private PlayerAiming _playerAiming = default;
 
-    [SerializeField, Header("³–Ê")]
+    [SerializeField, Header("æ­£é¢")]
     private SpriteRenderer _frontSprite = default;
 
-    [SerializeField, Header("”w–Ê")]
+    [SerializeField, Header("èƒŒé¢")]
     private SpriteRenderer _backSprite = default;
 
     [SerializeField]
@@ -44,7 +44,7 @@ public class SpriteDirection : Unity.Netcode.NetworkBehaviour
     
     void Start()
     {
-        //‰ñ“]²‚Ì•ÏX
+        //å›è»¢è»¸ã®å¤‰æ›´
         switch (_shaft)
         {
             case Shaft.X:
@@ -56,18 +56,18 @@ public class SpriteDirection : Unity.Netcode.NetworkBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         SpriteTurnThink();
     }
 
     private void SpriteTurnThink()
     {
-        if(_playerAiming == null)
+        if (_playerAiming == null || _frontSprite == null || _backSprite == null)
         {
             return;
         }
-        //ƒGƒCƒ€•ûŒü‚ğæ“¾
+        //ã‚¨ã‚¤ãƒ æ–¹å‘ã‚’å–å¾—
         float direction = _playerAiming.Direction.x;
         float verticalDirection = _playerAiming.Direction.y;
 
@@ -84,7 +84,7 @@ public class SpriteDirection : Unity.Netcode.NetworkBehaviour
             TurnBack();
         }
 
-        //ƒGƒCƒ€•ûŒü‚ªŒ»İ‚Æ”½‘Î‚ğŒü‚¢‚½‚Ì‚İƒXƒvƒ‰ƒCƒg‚ğ”½“]‚·‚éB
+        //ã‚¨ã‚¤ãƒ æ–¹å‘ãŒç¾åœ¨ã¨åå¯¾ã‚’å‘ã„ãŸæ™‚ã®ã¿ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åè»¢ã™ã‚‹ã€‚
 
         if (direction < 0)
         {
@@ -112,7 +112,7 @@ public class SpriteDirection : Unity.Netcode.NetworkBehaviour
     }
 
     /// <summary>
-    /// ‰E‚ğŒü‚­—p‚Ìƒƒ\ƒbƒh
+    /// å³ã‚’å‘ãç”¨ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void TurnFrontRight(bool isFront)
     {
@@ -127,7 +127,7 @@ public class SpriteDirection : Unity.Netcode.NetworkBehaviour
     }
 
     /// <summary>
-    /// ¶‚ğŒü‚­—p‚Ìƒƒ\ƒbƒh
+    /// å·¦ã‚’å‘ãç”¨ã®ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void TurnFrontLeft(bool isFront)
     {

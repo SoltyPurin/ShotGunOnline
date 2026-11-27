@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class MuzzleFlash : MonoBehaviour
 {
-    //‚È‚¢
+    //ãªã„
     private GameObject _flashObject = default;
-    //‚È‚¢
+    //ãªã„
     private Animator _flashAnimator = default;
-    //‚È‚¢
+    //ãªã„
     private Animator _ultAnitamtor = default;
-    [SerializeField, Header("ƒ}ƒYƒ‹‚ÌƒIƒuƒWƒFƒNƒg“o˜^")]
+    [SerializeField, Header("ãƒã‚ºãƒ«ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç™»éŒ²")]
     private GameObject _muzzleObject = default;
-    [SerializeField,Header("ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg“o˜^")]
+    [SerializeField,Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç™»éŒ²")]
     private GameObject _playerObject = default;
 
 
@@ -20,26 +20,34 @@ public class MuzzleFlash : MonoBehaviour
     {
         if(_flashObject == null)
         {
-            _flashObject = GameObject.Find("FlashObject");
-            _flashAnimator = _flashObject.transform.Find("Flash").GetComponent<Animator>();
-            _ultAnitamtor = _flashObject.transform.Find("Flash_2").GetComponent <Animator>();
+            var childFlash = transform.Find("FlashObject");
+            _flashObject = childFlash != null ? childFlash.gameObject : GameObject.Find("FlashObject");
+            if (_flashObject != null)
+            {
+                var f1 = _flashObject.transform.Find("Flash");
+                if (f1 != null) _flashAnimator = f1.GetComponent<Animator>();
+                var f2 = _flashObject.transform.Find("Flash_2");
+                if (f2 != null) _ultAnitamtor = f2.GetComponent<Animator>();
+            }
         }
     }
     /// <summary>
-    /// ƒ}ƒYƒ‹ƒtƒ‰ƒbƒVƒ…‚ÌÀ•W‚ğƒoƒŒƒ‹‚ÉˆÚ“®A‰ñ“]‚ğƒvƒŒƒCƒ„[‚É‡‚í‚¹‚ÄƒGƒtƒFƒNƒg‚ğÄ¶
+    /// ãƒã‚ºãƒ«ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã®åº§æ¨™ã‚’ãƒãƒ¬ãƒ«ã«ç§»å‹•ã€å›è»¢ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«åˆã‚ã›ã¦ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿ
     /// </summary>
     public void PlayTheMuzzleFlash()
     {
+        if (_flashObject == null || _flashAnimator == null || _muzzleObject == null || _playerObject == null) return;
         _flashObject.transform.position = _muzzleObject.transform.position;
         _flashObject.transform.rotation = _playerObject.transform.rotation;
         _flashAnimator.SetTrigger("Flash");
     }
 
     /// <summary>
-    /// ƒ}ƒYƒ‹ƒtƒ‰ƒbƒVƒ…‚Æ“¯‚¶ˆ—‚Åˆá‚¤ƒGƒtƒFƒNƒg‚ğÄ¶
+    /// ãƒã‚ºãƒ«ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã¨åŒã˜å‡¦ç†ã§é•ã†ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿ
     /// </summary>
     public void PlayTheUltFlash()
     {
+        if (_flashObject == null || _ultAnitamtor == null || _muzzleObject == null || _playerObject == null) return;
         _flashObject.transform.position = _muzzleObject.transform.position;
         _flashObject.transform.rotation = _playerObject.transform.rotation;
         _ultAnitamtor.SetTrigger("Flash");

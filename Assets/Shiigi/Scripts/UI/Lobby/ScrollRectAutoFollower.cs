@@ -11,6 +11,9 @@ public class ScrollRectAutoFollower : MonoBehaviour
     [SerializeField] private float _padding = 16f;
     [SerializeField] private float _smoothSpeed = 14f;
 
+    private readonly Vector3[] _targetCorners = new Vector3[4];
+    private readonly Vector3[] _viewportCorners = new Vector3[4];
+
     private ScrollRect _scrollRect;
     private GameObject _lastSelected;
     private float _targetNormalizedY;
@@ -35,7 +38,8 @@ public class ScrollRectAutoFollower : MonoBehaviour
             _lastSelected = current;
             if (current != null && current.transform.IsChildOf(_scrollRect.content))
             {
-                if (TryComputeTargetNormalizedY(current.GetComponent<RectTransform>(), out float nextY))
+                RectTransform itemRoot = ResolveContentItemRect(current.transform);
+                if (TryComputeTargetNormalizedY(itemRoot, out float nextY))
                 {
                     _targetNormalizedY = nextY;
                     _isAutoScrolling = true;
@@ -59,6 +63,18 @@ public class ScrollRectAutoFollower : MonoBehaviour
         }
     }
 
+    private RectTransform ResolveContentItemRect(Transform selected)
+    {
+        if (selected == null || _scrollRect == null || _scrollRect.content == null) return null;
+
+        Transform current = selected;
+        while (current.parent != null && current.parent != _scrollRect.content)
+        {
+            current = current.parent;
+        }
+        return current.GetComponent<RectTransform>();
+    }
+
     private bool TryComputeTargetNormalizedY(RectTransform target, out float normalizedY)
     {
         normalizedY = _scrollRect.verticalNormalizedPosition;
@@ -69,17 +85,15 @@ public class ScrollRectAutoFollower : MonoBehaviour
         float scrollableHeight = contentHeight - viewportHeight;
         if (scrollableHeight <= 1f) return false;
 
-        Vector3[] targetCorners = new Vector3[4];
-        Vector3[] viewportCorners = new Vector3[4];
-        target.GetWorldCorners(targetCorners);
-        _scrollRect.viewport.GetWorldCorners(viewportCorners);
+        target.GetWorldCorners(_targetCorners);
+        _scrollRect.viewport.GetWorldCorners(_viewportCorners);
 
-        float targetBottom = targetCorners[0].y;
-        float targetTop = targetCorners[1].y;
-        float viewBottom = viewportCorners[0].y;
-        float viewTop = viewportCorners[1].y;
+        float targetBottom = _targetCorners[0].y;
+        float targetTop = _targetCorners[1].y;
+        float viewBottom = _viewportCorners[0].y;
+        float viewTop = _viewportCorners[1].y;
 
-        float deltaWorld = 0f;
+        float deltaWorld;
         if (targetTop > viewTop - _padding)
         {
             deltaWorld = targetTop - (viewTop - _padding);
@@ -93,7 +107,6 @@ public class ScrollRectAutoFollower : MonoBehaviour
             return false;
         }
 
-        // ワールド差分をローカルのスクロール比率に変換
         float lossyY = _scrollRect.viewport.lossyScale.y;
         float deltaLocal = Mathf.Abs(lossyY) > 0.0001f ? deltaWorld / lossyY : deltaWorld;
         normalizedY = Mathf.Clamp01(_scrollRect.verticalNormalizedPosition + deltaLocal / scrollableHeight);

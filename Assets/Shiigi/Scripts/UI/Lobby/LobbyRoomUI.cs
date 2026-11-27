@@ -23,87 +23,106 @@ public class LobbyRoomUI : LobbyViewBase
     public event Action OnReadyToggleRequested;
     public event Action OnStartGameRequested;
 
-    private readonly List<LobbyPlayerEntryUI> _spawnedEntries = new List<LobbyPlayerEntryUI>();
+    private readonly List<LobbyPlayerEntryUI> _spawnedEntries = new();
     private bool _localIsReady;
+    private bool _isLocalHost;
+    private bool _canHostStartGame;
 
     protected override void Awake()
     {
         _viewType = UIViewType.DefaultWindow;
         base.Awake();
 
-        _leaveButton.onClick.AddListener(() => OnLeaveRequested?.Invoke());
-        _readyButton.onClick.AddListener(() => OnReadyToggleRequested?.Invoke());
-        _startButton.onClick.AddListener(() =>
+        if (_roomNameText != null)
         {
-            if (_startButton != null)
-            {
-                _startButton.interactable = false;
-            }
-            OnStartGameRequested?.Invoke();
-        });
-
-        EnsureButtonSound(_leaveButton, UIButtonType.Cancel);
-        EnsureButtonSound(_readyButton, UIButtonType.Default);
-        EnsureButtonSound(_startButton, UIButtonType.Default);
-
-        LobbyModernTheme.AttachMetallicVisual(_leaveButton);
-        LobbyModernTheme.AttachMetallicVisual(_readyButton);
-        LobbyModernTheme.AttachMetallicVisual(_startButton);
-    }
-
-    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
-    {
-        if (button == null) return;
-        var s = button.GetComponent<UIButtonSound>();
-        if (s == null)
-        {
-            s = button.gameObject.AddComponent<UIButtonSound>();
+            _roomNameText.supportRichText = false;
         }
-        s.ButtonType = buttonType;
+
+        if (_leaveButton != null)
+        {
+            _leaveButton.onClick.AddListener(() => OnLeaveRequested?.Invoke());
+            UIButtonSound.ConfigureButton(_leaveButton, UIButtonType.Cancel);
+        }
+        if (_readyButton != null)
+        {
+            _readyButton.onClick.AddListener(() => OnReadyToggleRequested?.Invoke());
+            UIButtonSound.ConfigureButton(_readyButton, UIButtonType.Default);
+        }
+        if (_startButton != null)
+        {
+            _startButton.onClick.AddListener(() =>
+            {
+                if (_startButton != null)
+                {
+                    _startButton.interactable = false;
+                }
+                OnStartGameRequested?.Invoke();
+            });
+            UIButtonSound.ConfigureButton(_startButton, UIButtonType.Default);
+        }
     }
 
     public void Refresh(ISession session)
     {
         if (session == null) return;
 
-        // ルーム名・プレイヤー数表示
-        _roomNameText.text = $"{session.Name}";
-        _playerCountText.text = $"{session.Players.Count} / {session.MaxPlayers}";
+        if (_roomNameText != null) _roomNameText.text = session.Name;
+        if (_playerCountText != null) _playerCountText.text = $"{session.Players.Count} / {session.MaxPlayers}";
 
-        // リストクリア＆プレイヤー一覧描画
         ClearPlayerList();
-        foreach (var player in session.Players)
+        var players = session.Players;
+        for (int i = 0; i < players.Count; i++)
         {
+            var player = players[i];
             var entry = Instantiate(_playerEntryPrefab, _playerContainer);
-            var isHost = session.Host == player.Id;
+            bool isHost = session.Host == player.Id;
+            int fallbackSkinId = isHost ? 0 : i;
 
-            entry.Setup(player, isHost);
+            entry.Setup(player, isHost, fallbackSkinId);
             _spawnedEntries.Add(entry);
         }
 
-        // ローカルプレイヤーがホストかどうかでボタンの出し分け
-        var isLocalHost = session.IsHost;
-        _startButton.gameObject.SetActive(isLocalHost);
-        _readyButton.gameObject.SetActive(!isLocalHost);
+        _isLocalHost = session.IsHost;
+        if (_startButton != null) _startButton.gameObject.SetActive(_isLocalHost);
+        if (_readyButton != null) _readyButton.gameObject.SetActive(!_isLocalHost);
 
-        if (isLocalHost)
+        if (_isLocalHost)
         {
-            // ゲーム開始可能判定はドメインヘルパーへ委譲
-            _startButton.interactable = SessionPlayerPropertyHelper.CanHostStartGame(session);
+            _canHostStartGame = SessionPlayerPropertyHelper.CanHostStartGame(session);
+            if (_startButton != null)
+            {
+                _startButton.interactable = _canHostStartGame && (_canvasGroup == null || _canvasGroup.interactable);
+            }
         }
         else
         {
-            // ゲストの場合は自身の準備状況を取得してテキスト更新
+            _canHostStartGame = false;
             _localIsReady = SessionPlayerPropertyHelper.IsPlayerReady(session.CurrentPlayer);
-            _readyButtonText.text = _localIsReady ? "取り消し" : "準備完了";
+            if (_readyButtonText != null)
+            {
+                _readyButtonText.text = _localIsReady ? "取り消し" : "準備完了";
+            }
         }
 
-        RebuildControllerNavigation(isLocalHost);
+        RebuildControllerNavigation(_isLocalHost);
     }
 
-    /// <summary>
-    /// コントローラー／キーボード操作向けにデフォルトの選択要素へフォーカスを当てる
-    /// </summary>
+    protected override void OnShowCompleted()
+    {
+        RebuildControllerNavigation(_isLocalHost);
+    }
+
+    protected override void OnActiveInteractableChanged(bool interactable)
+    {
+        if (_leaveButton != null) _leaveButton.interactable = interactable;
+        if (_readyButton != null) _readyButton.interactable = interactable;
+        if (_startButton != null) _startButton.interactable = interactable && _canHostStartGame;
+        if (interactable)
+        {
+            RebuildControllerNavigation(_isLocalHost);
+        }
+    }
+
     public void FocusDefaultElement()
     {
         if (EventSystem.current == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
@@ -135,35 +154,39 @@ public class LobbyRoomUI : LobbyViewBase
     private void RebuildControllerNavigation(bool isLocalHost)
     {
         Button primary = isLocalHost ? _startButton : _readyButton;
-        if (primary != null && _leaveButton != null)
-        {
-            var primaryNav = new Navigation { mode = Navigation.Mode.Explicit };
-            primaryNav.selectOnUp = _leaveButton;
-            primaryNav.selectOnDown = _leaveButton;
-            primaryNav.selectOnLeft = _leaveButton;
-            primaryNav.selectOnRight = _leaveButton;
-            primary.navigation = primaryNav;
+        if (primary == null || _leaveButton == null) return;
 
-            var leaveNav = new Navigation { mode = Navigation.Mode.Explicit };
-            leaveNav.selectOnUp = primary.IsInteractable() ? primary : null;
-            leaveNav.selectOnDown = primary.IsInteractable() ? primary : null;
-            leaveNav.selectOnLeft = primary.IsInteractable() ? primary : null;
-            leaveNav.selectOnRight = primary.IsInteractable() ? primary : null;
-            _leaveButton.navigation = leaveNav;
-        }
+        primary.navigation = new Navigation
+        {
+            mode = Navigation.Mode.Explicit,
+            selectOnUp = _leaveButton,
+            selectOnDown = _leaveButton,
+            selectOnLeft = _leaveButton,
+            selectOnRight = _leaveButton
+        };
+
+        _leaveButton.navigation = new Navigation
+        {
+            mode = Navigation.Mode.Explicit,
+            selectOnUp = primary,
+            selectOnDown = primary,
+            selectOnLeft = primary,
+            selectOnRight = primary
+        };
     }
 
     private void ClearPlayerList()
     {
-        foreach (var entry in _spawnedEntries)
+        for (int i = 0; i < _spawnedEntries.Count; i++)
         {
-            if (entry != null)
+            if (_spawnedEntries[i] != null)
             {
-                Destroy(entry.gameObject);
+                Destroy(_spawnedEntries[i].gameObject);
             }
         }
         _spawnedEntries.Clear();
 
+        if (_playerContainer == null) return;
         for (int i = 0; i < _playerContainer.childCount; i++)
         {
             Destroy(_playerContainer.GetChild(i).gameObject);

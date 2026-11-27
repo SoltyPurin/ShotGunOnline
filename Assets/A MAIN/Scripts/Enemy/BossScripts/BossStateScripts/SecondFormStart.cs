@@ -22,7 +22,7 @@ public class SecondFormStart : NetworkBehaviour
 
     //---int,float‚È‚Ç‚Ì”’l---------------------------------
     private Color _secondColor = new Color(1, 0.47f, 0.47f);
-    [SerializeField]
+    [SerializeField,Header("‘æ“ñ’iŠK‚É‚È‚Á‚½‚É‰ÁZ‚·‚é’l")]
     private float _secondSpeed = 15.0f;
 
     #endregion
@@ -42,7 +42,7 @@ public class SecondFormStart : NetworkBehaviour
         {
             _secondEffect.SetActive(true);
         }
-        _agent._moveSpeed = _secondSpeed;
+        _agent.SpeedUp(_secondSpeed);
 
     }
 }

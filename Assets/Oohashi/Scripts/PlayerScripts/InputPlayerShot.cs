@@ -1,7 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public enum ShootState
 {
@@ -93,9 +96,11 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
     );
+    public bool IsLocalControl => IsOwner || !IsSpawned;
+
     public bool IsPushShotButton
     {
-        get { return _netIsPushShootButton.Value; }
+        get { return IsLocalControl ? _localPushShootButton : _netIsPushShootButton.Value; }
         //get { return _isPushShootButton; }
     }
 
@@ -137,7 +142,11 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     private bool _isKeyboardShootDown = false;
     private float _lastShotRpcTime = 0f;
     private const float MIN_SHOT_RPC_INTERVAL = 0.05f;
+    private float _lastNormalShotTime = -999f;
+    private const float MIN_NORMAL_SHOT_INTERVAL = 0.22f;
     private bool _localPushShootButton = false;
+    private bool _suppressMouseFireUntilRelease = false;
+    private bool _ultShootRequested = false;
 
     private void Start()
     {
@@ -183,9 +192,16 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         // 死んでたら処理は行わない
         if (!_isAlive) return;
 
-        // ★操作しているプレイヤー（IsOwner）のみが自身の入力を検出して同期する
-        if (this.IsOwner && IsSpawned)
+        // ★操作しているプレイヤー（Owner、またはオフライン未スポーン時）のみが自身の入力を検出して同期する
+        if (IsLocalControl)
         {
+            if (LobbyMovement.IsInputBlocked || LobbyViewBase.TopActiveView != null)
+            {
+                IsShootButtonPressed = false;
+                CancelCharge();
+                return;
+            }
+
             if (Gamepad.current != null)
             {
                 _rightTriggerValue = Gamepad.current.rightTrigger.ReadValue();
@@ -198,10 +214,28 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             // キーボード・マウスの射撃入力を取得
             _isKeyboardShootPressed = false;
             _isKeyboardShootDown = false;
+            bool isPointerOverUI = IsPointerOverBlockingUI();
             if (Mouse.current != null)
             {
-                _isKeyboardShootPressed |= Mouse.current.leftButton.isPressed;
-                _isKeyboardShootDown |= Mouse.current.leftButton.wasPressedThisFrame;
+                if (Mouse.current.leftButton.wasPressedThisFrame && isPointerOverUI)
+                {
+                    _suppressMouseFireUntilRelease = true;
+                }
+                if (!Mouse.current.leftButton.isPressed)
+                {
+                    _suppressMouseFireUntilRelease = false;
+                }
+
+                // UI上のクリック開始による暴発を防止
+                if (!_suppressMouseFireUntilRelease && (_localPushShootButton || !isPointerOverUI))
+                {
+                    _isKeyboardShootPressed |= Mouse.current.leftButton.isPressed;
+                    _isKeyboardShootDown |= Mouse.current.leftButton.wasPressedThisFrame;
+                }
+            }
+            else
+            {
+                _suppressMouseFireUntilRelease = false;
             }
             if (Keyboard.current != null)
             {
@@ -209,10 +243,14 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 _isKeyboardShootDown |= Keyboard.current.spaceKey.wasPressedThisFrame;
             }
 
-            // 入力判定
+            // 入力判定（旧Input Managerの"Fire"にもマウス左クリックが割り当たるため、UI上クリック時は抑止する）
+            bool blockLegacyFire = _suppressMouseFireUntilRelease || (!_localPushShootButton && isPointerOverUI);
+            bool isLegacyFirePressed = !blockLegacyFire && Input.GetButton(FIREBUTTONNAME);
+            bool isLegacyFireDown = !blockLegacyFire && Input.GetButtonDown(FIREBUTTONNAME);
+
             bool isrightTriggerInput = _rightTriggerValue >= 0.9f;
-            bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || Input.GetButton(FIREBUTTONNAME);
-            bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || Input.GetButtonDown(FIREBUTTONNAME);
+            bool isShootPressed = isrightTriggerInput || _isKeyboardShootPressed || isLegacyFirePressed;
+            bool isShootDown = isrightTriggerInput || _isKeyboardShootDown || isLegacyFireDown;
 
             IsShootButtonPressed = isShootPressed;
 
@@ -221,12 +259,17 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             switch (_stateManager.PlayerState)
             {
                 case PlayerState.Normal:
-                    // デバッグ連射中はその間の通常チャージ入力を抑制する
-                    currentPushState = !IsRapidFireActive && isShootPressed && !_isDecChargeTime;
+                    // デバッグ連射中・連射クールタイム中・チャージ減算中は通常チャージ入力を抑制する
+                    bool isNormalShotCooldown = (Time.time - _lastNormalShotTime) < MIN_NORMAL_SHOT_INTERVAL;
+                    currentPushState = !IsRapidFireActive && !isNormalShotCooldown && isShootPressed && !_isDecChargeTime;
                     break;
 
                 case PlayerState.Ultimate:
                     currentPushState = isShootPressed || isShootDown;
+                    if (currentPushState && !_hasShotUltimate)
+                    {
+                        _ultShootRequested = true;
+                    }
                     break;
 
                 case PlayerState.DamageKnockBack:
@@ -239,11 +282,42 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _localPushShootButton = currentPushState;
 
             // 変化時のみネットワーク変数へ書き込み（毎フレーム送信を防止）
-            if (_netIsPushShootButton.Value != currentPushState)
+            if (IsSpawned && _netIsPushShootButton.Value != currentPushState)
             {
                 _netIsPushShootButton.Value = currentPushState;
             }
         }
+    }
+
+    private static readonly List<RaycastResult> _uiRaycastResults = new List<RaycastResult>();
+
+    private static bool IsPointerOverBlockingUI()
+    {
+        if (Mouse.current == null || EventSystem.current == null) return false;
+        var pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Mouse.current.position.ReadValue()
+        };
+        _uiRaycastResults.Clear();
+        EventSystem.current.RaycastAll(pointerData, _uiRaycastResults);
+        for (int i = 0; i < _uiRaycastResults.Count; i++)
+        {
+            var go = _uiRaycastResults[i].gameObject;
+            if (go == null) continue;
+
+            var canvas = go.GetComponentInParent<Canvas>();
+            if (canvas != null && canvas.renderMode == RenderMode.WorldSpace)
+            {
+                continue;
+            }
+
+            var selectable = go.GetComponentInParent<Selectable>();
+            if (selectable != null && selectable.IsInteractable())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     //private void PadShot()
@@ -307,6 +381,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         }
 
         _localPushShootButton = false;
+        _ultShootRequested = false;
 
         if (this.IsOwner && IsSpawned && _netIsPushShootButton.Value)
         {
@@ -354,8 +429,10 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     {
         if (_bulletPool == null)
         {
-            _bulletPool = GameObject.Find("BulletPool").GetComponent<BulletPool>();
-            return;
+            var poolObj = GameObject.Find("BulletPool");
+            if (poolObj != null) _bulletPool = poolObj.GetComponent<BulletPool>();
+            if (_bulletPool == null) _bulletPool = FindAnyObjectByType<BulletPool>();
+            if (_bulletPool == null) return;
         }
 
         // ウルト以外のステートになった場合、ウルトチャージエフェクト（青い丸）を確実に非表示にする
@@ -386,7 +463,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _isDecChargeTime = false;//チャージ減算終了
         }
 
-        bool isPushing = IsOwner ? _localPushShootButton : _netIsPushShootButton.Value;
+        bool isPushing = IsLocalControl ? _localPushShootButton : _netIsPushShootButton.Value;
 
         switch (_stateManager.PlayerState)
         {
@@ -411,7 +488,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
                 //撃つボタンを離して、なおかつ現在チャージ中で落下中でなかったら解放可能
                 else if (!isPushing && _isCharge && _stateManager.PlayerState != PlayerState.Fall)
                 {
-                    if (IsOwner)
+                    if (IsLocalControl)
                     {
                         float shotCharge = _chargeTime;
                         bool isCrit = _canCriticalShoot;
@@ -444,30 +521,32 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             case PlayerState.Ultimate:
 
                 //ウルト使用可能かつウルトチャージエフェクトが非表示なら表示させる。
-                if (!_hasShotUltimate && !_showUltCharge)
+                if (IsLocalControl && !_hasShotUltimate && !_showUltCharge)
                 {
-                    _inputChengeState.ShowUltCharge(true);
+                    if (_inputChengeState != null) _inputChengeState.ShowUltCharge(true);
                     _showUltCharge = true;
                 }
 
                 //ウルトの当たり判定を表示
-                _shootShape.UltShape(_playerAiming.Direction);
-                //撃つ判定を検知
-                //射撃ボタンを押してなおかつウルトを撃ってない時にウルト発射可能
-                if (isPushing && !_hasShotUltimate)
+                if (_shootShape != null && _playerAiming != null)
                 {
-                    //ウルト発射状態に切り替え
-                    _hasShotUltimate = true;
-                    //ウルトの処理を行うコルーチンを呼び出す
-                    StartCoroutine(UltProtocolWithDelay());
-                    //マズルフラッシュを再生するメソッドを呼び出す
-                    _muzzleFlashAnimation.PlayTheUltFlash();
-                    //銃弾のプールにアクティブ化する
-                    _bulletPool.ActiveUltBullet(_playerAiming.Direction, this.transform.position);
+                    _shootShape.UltShape(_playerAiming.Direction);
+                }
 
-                    //ウルトチャージエフェクトを非表示
-                    _inputChengeState.ShowUltCharge(false);
-                    _showUltCharge = false;
+                // 操作プレイヤーのみ発射判定を行い、非OwnerへRPCで確実に演出同期（短押し取りこぼし・ステートずれ防止）
+                if (IsLocalControl && (isPushing || _ultShootRequested) && !_hasShotUltimate)
+                {
+                    _ultShootRequested = false;
+                    _hasShotUltimate = true;
+                    Vector3 aimDir = _playerAiming != null ? _playerAiming.Direction : Vector3.right;
+
+                    StartCoroutine(UltProtocolWithDelay());
+                    PlayLocalUltVisuals(aimDir);
+
+                    if (IsSpawned && IsOwner)
+                    {
+                        PlayUltShotEffectsRpc(aimDir);
+                    }
                 }
 
                 break;
@@ -513,6 +592,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         _canDecChargeValue = false;
         _canCriticalShoot = false;
         _isCharge = false;
+        _lastNormalShotTime = Time.time;
 
         // オーバーヒート加算
         if (!ignoreOverheat && _overHeat != null)
@@ -520,8 +600,8 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
             _overHeat.ShotCountPlus();
         }
 
-        // 当たり判定・反動・画面エフェクト・振動は撃った本人（Owner）のみ実行する（複数端末からの2重ダメージ防止）
-        if (this.IsOwner)
+        // 当たり判定・反動・画面エフェクト・振動は撃った本人（Owner、またはオフライン未スポーン時）のみ実行する（複数端末からの2重ダメージ防止）
+        if (IsLocalControl)
         {
             if (_bloom == null)
             {
@@ -587,7 +667,7 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
     /// </summary>
     public void FireShotDebug(float chargeTime, bool isCrit, bool isMaxCharge, bool ignoreKnockback, bool ignoreOverheat)
     {
-        if (!_isAlive || !this.IsOwner) return;
+        if (!_isAlive || !IsLocalControl) return;
         if (_stateManager != null && (_stateManager.PlayerState == PlayerState.DamageKnockBack ||
                                       _stateManager.PlayerState == PlayerState.Fall ||
                                       _stateManager.PlayerState == PlayerState.Movie))
@@ -616,7 +696,35 @@ public class InputPlayerShot : Unity.Netcode.NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.NotOwner, Delivery = RpcDelivery.Unreliable)]
+    private void PlayLocalUltVisuals(Vector3 aimDirection)
+    {
+        if (_muzzleFlashAnimation != null)
+        {
+            _muzzleFlashAnimation.PlayTheUltFlash();
+        }
+
+        if (_bulletPool != null)
+        {
+            Vector3 dir = aimDirection.sqrMagnitude > 0.001f
+                ? aimDirection
+                : (_playerAiming != null ? _playerAiming.Direction : Vector3.right);
+            _bulletPool.ActiveUltBullet(dir, this.transform.position);
+        }
+
+        if (_inputChengeState != null)
+        {
+            _inputChengeState.ShowUltCharge(false);
+        }
+        _showUltCharge = false;
+    }
+
+    [Rpc(SendTo.NotOwner, InvokePermission = RpcInvokePermission.Owner)]
+    private void PlayUltShotEffectsRpc(Vector3 aimDirection)
+    {
+        PlayLocalUltVisuals(aimDirection);
+    }
+
+    [Rpc(SendTo.NotOwner, Delivery = RpcDelivery.Unreliable, InvokePermission = RpcInvokePermission.Owner)]
     private void PlayShotEffectsRpc(float chargeTime, bool isCrit, bool isMaxCharge, Vector3 aimDirection)
     {
         if (_muzzleFlashAnimation != null)

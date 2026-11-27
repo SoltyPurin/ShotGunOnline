@@ -67,16 +67,27 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
 
 
 
+    private bool IsLocalControl => IsOwner || !IsSpawned;
+
     private void Awake()
     {
         _innerMesh = new Mesh();
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        bool show = IsLocalControl;
+        if (_lenderer != null) _lenderer.enabled = show;
+        if (_meshRenderer != null) _meshRenderer.enabled = show;
+    }
 
     private void Update()
     {
-        if (this.IsOwner)
+        if (IsLocalControl)
         {
+            if (_lenderer != null && !_lenderer.enabled) _lenderer.enabled = true;
+            if (_meshRenderer != null && !_meshRenderer.enabled) _meshRenderer.enabled = true;
 
             if (_playerState.PlayerState == PlayerState.Ultimate)
         {
@@ -174,7 +185,7 @@ public class ShootShape : Unity.Netcode.NetworkBehaviour
 
     public void UltShape(Vector3 direction)
     {
-        if (IsOwner)
+        if (IsLocalControl)
         {
             //プレイヤーの向いてる方に回転
             Quaternion rotation = Quaternion.FromToRotation(Vector3.up, _notShootTimeDirection);

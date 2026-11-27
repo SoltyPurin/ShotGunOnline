@@ -153,7 +153,6 @@ public class ScoreData : MonoBehaviour
             {
                 waveIndex = waveManager.WaveIndex;
             }
-            Debug.Log("取得したウェーブのインデックスは" + waveIndex);
             if (_scoreUIManager == null)
             {
                 _scoreUIManager = FindAnyObjectByType<ScoreUIManager>();

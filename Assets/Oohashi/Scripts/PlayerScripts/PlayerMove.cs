@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -60,6 +61,12 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
     }
 
     private bool _canPlayWait = true;
+    private float _localAnimSpeed = 0f;
+
+    public static event System.Action<PlayerMove> LocalPlayerSpawned;
+    public static event System.Action<PlayerMove> LocalPlayerDespawned;
+
+    public bool IsLocalControl => IsOwner || !IsSpawned;
 
     //操作してる側から書き込める変数
     private NetworkVariable<float> _netAnimSpeed = new NetworkVariable<float>(
@@ -67,13 +74,38 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
     );
+
+    private NetworkVariable<FixedString64Bytes> _netPlayerName = new NetworkVariable<FixedString64Bytes>(
+        default,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
+
+    public string PlayerName => IsLocalControl ? PlayerProfileStore.PlayerName : _netPlayerName.Value.ToString();
+    public event System.Action<string> OnPlayerNameChanged;
+
     private void Start()
     {
+        if (_rigidbody == null)
+        {
+            _rigidbody = GetComponent<Rigidbody2D>();
+        }
         if (Gamepad.current != null)
         {
             _gamePad = Gamepad.current;//現在のコントローラーを代入
         }
         _originPlayerMoveSpeed = _playerMoveSpeed;
+
+        // ロビー等のゲーム外シーンではプレイヤー配下のCanvasがロビーUIのクリックを遮らないようにする
+        if (MP_GameManager.Instance == null)
+        {
+            foreach (var raycaster in GetComponentsInChildren<UnityEngine.UI.GraphicRaycaster>(true))
+            {
+                raycaster.enabled = false;
+            }
+        }
+
+        PlayerNameplateUI.EnsureAttached(gameObject);
     }
 
     public override void OnNetworkSpawn()
@@ -90,8 +122,18 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             _rigidbody.linearVelocity = Vector2.zero;
         }
 
+        _netPlayerName.OnValueChanged += HandleNetPlayerNameChanged;
+        if (!IsOwner)
+        {
+            OnPlayerNameChanged?.Invoke(_netPlayerName.Value.ToString());
+        }
+
         if (IsOwner)
         {
+            _netPlayerName.Value = new FixedString64Bytes(PlayerProfileStore.PlayerName);
+            PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
+            OnPlayerNameChanged?.Invoke(PlayerProfileStore.PlayerName);
+
             // 開始ムービー・待機中等の場合はMovieState（操作ロック）を維持し、それ以外ならNormalStateにする
             bool isOpeningCutscene = false;
             if (MP_GameManager.Instance != null)
@@ -121,6 +163,48 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             {
                 cam.SetTargetPlayer(this.gameObject);
             }
+
+            LocalPlayerSpawned?.Invoke(this);
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        _netPlayerName.OnValueChanged -= HandleNetPlayerNameChanged;
+        if (IsOwner)
+        {
+            PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
+            LocalPlayerDespawned?.Invoke(this);
+        }
+        base.OnNetworkDespawn();
+    }
+
+    private void HandleLocalProfileChanged(PlayerProfile profile)
+    {
+        if (!IsSpawned || !IsOwner || profile == null) return;
+        _netPlayerName.Value = new FixedString64Bytes(profile.PlayerName);
+        OnPlayerNameChanged?.Invoke(profile.PlayerName);
+    }
+
+    private void HandleNetPlayerNameChanged(FixedString64Bytes previousValue, FixedString64Bytes newValue)
+    {
+        OnPlayerNameChanged?.Invoke(newValue.ToString());
+    }
+
+    public void Teleport(Vector2 position)
+    {
+        Vector3 pos3 = new Vector3(position.x, position.y, transform.position.z);
+        if (IsSpawned &&
+            TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTransform) &&
+            netTransform.CanCommitToTransform)
+        {
+            netTransform.Teleport(pos3, transform.rotation, transform.localScale);
+        }
+        transform.position = pos3;
+        if (_rigidbody != null)
+        {
+            _rigidbody.position = position;
+            _rigidbody.linearVelocity = Vector2.zero;
         }
     }
 
@@ -140,7 +224,7 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             return;
         }
         //結局アップデートで常に値を計算し続けてアニメーションを再生させる処理にした
-        float animSpeed = _netAnimSpeed.Value;
+        float animSpeed = IsLocalControl ? _localAnimSpeed : _netAnimSpeed.Value;
         if (animSpeed > 0.01f)
         {
             if (_playerAnimation != null)
@@ -183,8 +267,8 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             return;
         }
 
-        // 自分のキャラクター（Owner）のみが入力と移動をローカルで行う
-        if (this.IsOwner)
+        // 自分のキャラクター（Owner、またはオフライン未スポーン時）のみが入力と移動をローカルで行う
+        if (IsLocalControl)
         {
             if (_inputPlayerShot != null && _inputPlayerShot.IsPushShotButton)
             {
@@ -196,33 +280,41 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             }
 
             Vector2 input = Vector2.zero;
-            if (_gamePad != null)
+            bool isInputBlocked = LobbyMovement.IsInputBlocked || LobbyViewBase.TopActiveView != null;
+            if (!isInputBlocked)
             {
-                input = _gamePad.leftStick.ReadValue();
-            }
+                if (_gamePad == null && Gamepad.current != null)
+                {
+                    _gamePad = Gamepad.current;
+                }
+                if (_gamePad != null)
+                {
+                    input = _gamePad.leftStick.ReadValue();
+                }
 
-            // コントローラーの入力がない場合、キーボード入力を取得する
-            if (input.sqrMagnitude < 0.01f)
-            {
-                float x = 0;
-                float y = 0;
-                if (Keyboard.current != null)
+                // コントローラーの入力がない場合、キーボード入力を取得する
+                if (input.sqrMagnitude < 0.01f)
                 {
-                    if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) y += 1f;
-                    if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) y -= 1f;
-                    if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) x -= 1f;
-                    if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) x += 1f;
-                }
-                else
-                {
-                    x = Input.GetAxisRaw("Horizontal");
-                    y = Input.GetAxisRaw("Vertical");
-                }
-                input = new Vector2(x, y);
-                // 斜め移動で速くならないように正規化する（キーボード入力のみ）
-                if (input.sqrMagnitude > 1f)
-                {
-                    input.Normalize();
+                    float x = 0;
+                    float y = 0;
+                    if (Keyboard.current != null)
+                    {
+                        if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) y += 1f;
+                        if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) y -= 1f;
+                        if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) x -= 1f;
+                        if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) x += 1f;
+                    }
+                    else
+                    {
+                        x = Input.GetAxisRaw("Horizontal");
+                        y = Input.GetAxisRaw("Vertical");
+                    }
+                    input = new Vector2(x, y);
+                    // 斜め移動で速くならないように正規化する（キーボード入力のみ）
+                    if (input.sqrMagnitude > 1f)
+                    {
+                        input.Normalize();
+                    }
                 }
             }
 
@@ -230,7 +322,8 @@ public class PlayerMove : Unity.Netcode.NetworkBehaviour
             _moveDirection = new Vector3(input.x, input.y);
 
             float currentInputSpeed = Mathf.Max(Mathf.Abs(_input.x), Mathf.Abs(_input.y));
-            if (Mathf.Abs(_netAnimSpeed.Value - currentInputSpeed) > 0.02f || (currentInputSpeed == 0f && _netAnimSpeed.Value != 0f))
+            _localAnimSpeed = currentInputSpeed;
+            if (IsSpawned && (Mathf.Abs(_netAnimSpeed.Value - currentInputSpeed) > 0.02f || (currentInputSpeed == 0f && _netAnimSpeed.Value != 0f)))
             {
                 _netAnimSpeed.Value = currentInputSpeed;
             }

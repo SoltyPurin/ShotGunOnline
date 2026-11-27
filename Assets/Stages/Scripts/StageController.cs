@@ -51,6 +51,7 @@ public class StageController : MonoBehaviour, ISpawnPointProvider
 
     private readonly List<NetworkObject> _spawnedStageNetworkObjects = new List<NetworkObject>();
     private bool _networkGimmicksSpawned;
+    private bool _suppressDespawnOnDestroy;
 
     public Grid TerrainGrid => _terrainGrid;
     public StageSpawnPoints InitialPlayerSpawns => _initialPlayerSpawns;
@@ -70,9 +71,20 @@ public class StageController : MonoBehaviour, ISpawnPointProvider
         TrySpawnNetworkGimmicks();
     }
 
+    /// <summary>
+    /// シーン遷移時のアンロード中に Despawn/Destroy を起こさないよう事後破棄を抑止する
+    /// </summary>
+    public void PrepareForSceneTransition()
+    {
+        _suppressDespawnOnDestroy = true;
+    }
+
     private void OnDestroy()
     {
-        DespawnNetworkGimmicks();
+        if (!_suppressDespawnOnDestroy && gameObject.scene.isLoaded)
+        {
+            DespawnNetworkGimmicks();
+        }
 
         if (ActiveStage == this)
         {

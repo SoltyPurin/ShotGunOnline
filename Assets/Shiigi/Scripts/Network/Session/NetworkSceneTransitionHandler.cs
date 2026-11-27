@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Unity.Collections;
 using Unity.Netcode;
@@ -6,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// ホストによるマルチプレイゲーム開始通知（CustomMessage）とネットワークシーン遷移のみを担当するクラス (SRP)
+/// ホストによるマルチプレイゲーム開始通知（CustomMessage）とネットワークシーン遷移のみを担当するクラス (SRP)。
 /// </summary>
 public class NetworkSceneTransitionHandler
 {
@@ -14,6 +15,9 @@ public class NetworkSceneTransitionHandler
     private const string GameStartingMessageName = "GameStarting";
 
     private readonly string _gameSceneName;
+    private readonly List<NetworkObject> _despawnBuffer = new();
+    private bool _isTransitioning;
+    private bool _hasNotifiedGameStarting;
 
     public event Action OnGameStarting;
 
@@ -29,14 +33,12 @@ public class NetworkSceneTransitionHandler
         _isTransitioning = false;
         _hasNotifiedGameStarting = false;
 
-        // NGOシーンイベントの監視（フォールバック用）
         if (networkManager.SceneManager != null)
         {
             networkManager.SceneManager.OnSceneEvent -= HandleSceneEvent;
             networkManager.SceneManager.OnSceneEvent += HandleSceneEvent;
         }
 
-        // CustomMessageの監視（即時性用）
         if (networkManager.CustomMessagingManager != null)
         {
             networkManager.CustomMessagingManager.UnregisterNamedMessageHandler(GameStartingMessageName);
@@ -62,9 +64,6 @@ public class NetworkSceneTransitionHandler
         }
     }
 
-    private bool _isTransitioning;
-    private bool _hasNotifiedGameStarting;
-
     /// <summary>
     /// ホストがゲームを開始し、全クライアントへ通知した上でゲームシーンへ遷移する
     /// </summary>
@@ -83,45 +82,51 @@ public class NetworkSceneTransitionHandler
         {
             Debug.Log("[MSM] ホストがゲームを開始: 即時通知を送信し、シーン遷移を実行します");
 
-            // ゲーム開始をリモートクライアントへ通知（ホスト自身へは送らない）
             if (networkManager.CustomMessagingManager != null)
             {
-                using (var writer = new FastBufferWriter(0, Allocator.Temp))
+                using var writer = new FastBufferWriter(0, Allocator.Temp);
+                var clientIds = networkManager.ConnectedClientsIds;
+                for (int i = 0; i < clientIds.Count; i++)
                 {
-                    foreach (var clientId in networkManager.ConnectedClientsIds)
-                    {
-                        if (clientId == networkManager.LocalClientId) continue;
+                    ulong clientId = clientIds[i];
+                    if (clientId == networkManager.LocalClientId) continue;
 
-                        networkManager.CustomMessagingManager.SendNamedMessage(
-                            GameStartingMessageName,
-                            clientId,
-                            writer,
-                            NetworkDelivery.ReliableSequenced);
-                    }
+                    networkManager.CustomMessagingManager.SendNamedMessage(
+                        GameStartingMessageName,
+                        clientId,
+                        writer,
+                        NetworkDelivery.ReliableSequenced);
                 }
             }
 
-            // カメラやアバター管理が破棄中オブジェクトを参照しないよう事前にターゲット解除
             if (Camera.main != null && Camera.main.TryGetComponent<LobbyCameraFollow>(out var camFollow))
             {
                 camFollow.SetTarget(null);
             }
 
-            // シーン遷移前にロビー用のプレイヤーオブジェクトを明示的にデスポーンし、
-            // NGOのシングルシーン遷移（MoveObjectsToDontDestroyOnLoad）でのサーバー権限Despawn競合を防止する
+            // シーン遷移前にロビー用のプレイヤーオブジェクトを明示的にデスポーン（再利用バッファ＋値型EnumeratorでゼロGC）
             if (networkManager.SpawnManager != null)
             {
-                var spawnedList = new System.Collections.Generic.List<NetworkObject>(networkManager.SpawnManager.SpawnedObjectsList);
-                foreach (var netObj in spawnedList)
+                _despawnBuffer.Clear();
+                foreach (var netObj in networkManager.SpawnManager.SpawnedObjectsList)
                 {
-                    if (netObj != null && netObj.IsSpawned && netObj.GetComponent<LobbyNetworkPlayer>() != null)
+                    if (netObj != null && netObj.IsSpawned && NetworkPlayerSpawner.IsLobbyPlayerObject(netObj))
+                    {
+                        _despawnBuffer.Add(netObj);
+                    }
+                }
+
+                for (int i = 0; i < _despawnBuffer.Count; i++)
+                {
+                    var netObj = _despawnBuffer[i];
+                    if (netObj != null && netObj.IsSpawned)
                     {
                         netObj.Despawn(true);
                     }
                 }
+                _despawnBuffer.Clear();
             }
 
-            // Despawn によるオブジェクト破棄とネットワークキュー処理が完了するまで1フレーム待機してから LoadScene を実行する
             await UniTask.Yield(PlayerLoopTiming.Update);
 
             if (networkManager != null && networkManager.IsHost && networkManager.SceneManager != null)
@@ -148,8 +153,13 @@ public class NetworkSceneTransitionHandler
 
     private void OnGameStartingMessageReceived(ulong senderClientId, FastBufferReader reader)
     {
-        // サーバー（ホスト）自身はStartMultiplayGameで直接開始しているため無視
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer) return;
+
+        if (senderClientId != NetworkManager.ServerClientId)
+        {
+            Debug.LogWarning($"[MSM] ホスト以外からのゲーム開始通知を破棄しました (Sender: {senderClientId})");
+            return;
+        }
 
         Debug.Log($"[MSM] ホストからのゲーム開始通知を受信しました (Sender: {senderClientId})");
         NotifyGameStartingOnce();
@@ -162,8 +172,6 @@ public class NetworkSceneTransitionHandler
             _isTransitioning = false;
         }
 
-        // ホストがゲームシーンの読み込みを開始した瞬間、全クライアントにイベントが届く
-        // （ホスト自身は二重処理を防ぐためスキップ）
         if (sceneEvent.SceneEventType == SceneEventType.Load && sceneEvent.SceneName == _gameSceneName)
         {
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer) return;
@@ -180,4 +188,3 @@ public class NetworkSceneTransitionHandler
         OnGameStarting?.Invoke();
     }
 }
-

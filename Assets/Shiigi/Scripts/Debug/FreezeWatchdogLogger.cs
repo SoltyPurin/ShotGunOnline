@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -9,8 +8,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Unity Editor / Standalone のフリーズ状況をリアルタイムでテキストファイルに強制記録する診断クラス
+/// Unity Editor / Standalone のフリーズ状況をリアルタイムでテキストファイルに強制記録する診断クラス。
 /// 自動起動し、メインスレッド停止（フリーズ）を別スレッドで検知してtxtに出力します。
+/// Update 内での文字列生成を排除し、通常フレームのGCアロケーションをゼロに抑えています。
 /// </summary>
 public class FreezeWatchdogLogger : MonoBehaviour
 {
@@ -21,29 +21,34 @@ public class FreezeWatchdogLogger : MonoBehaviour
     private static readonly object _fileLock = new object();
 
     // 直近のログリングバッファ
-    private static readonly Queue<string> _recentLogs = new Queue<string>();
-    private const int MAX_RECENT_LOGS = 60;
+    private static readonly Queue<string> _recentLogs = new Queue<string>(MaxRecentLogs);
+    private const int MaxRecentLogs = 60;
 
     // ウォッチドッグ用スレッド
     private static Thread _watchdogThread;
-    private static volatile bool _isRunning = false;
-    private static long _lastHeartbeatTicks = 0;
-    private static readonly double FREEZE_THRESHOLD_SECONDS = 1.5;
-    private static bool _freezeDumped = false;
+    private static volatile bool _isRunning;
+    private static long _lastHeartbeatTicks;
+    private const double FreezeThresholdSeconds = 1.5;
+    private static volatile bool _freezeDumped;
 
-    // メインスレッドの情報
-    private static string _currentSceneName = "Unknown";
-    private static int _currentFrame = 0;
-    private static float _currentTimeScale = 1.0f;
-    private static string _lastCheckpoint = "Initialized";
-    private static volatile string _networkStatusSummary = "[NetworkManager] Singleton is NULL";
+    // メインスレッドのプリミティブ状態スナップショット（毎フレームの文字列アロケーションを回避）
+    private static volatile string _currentSceneName = "Unknown";
+    private static volatile int _currentFrame;
+    private static volatile float _currentTimeScale = 1.0f;
+    private static volatile string _lastCheckpoint = "Initialized";
+
+    private static volatile bool _netHasSingleton;
+    private static volatile bool _netIsListening;
+    private static volatile bool _netIsServer;
+    private static volatile bool _netIsClient;
+    private static volatile int _netConnectedCount;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
 #if !(UNITY_EDITOR || DEVELOPMENT_BUILD)
         return;
-#endif
+#else
         if (_instance != null) return;
 
         string projectRoot = Directory.GetCurrentDirectory();
@@ -52,7 +57,6 @@ public class FreezeWatchdogLogger : MonoBehaviour
 
         try
         {
-            // 起動時に既存ログをリセット
             File.WriteAllText(_realtimeLogPath, $"=== Session Started at {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} ===\n", Encoding.UTF8);
             File.WriteAllText(_freezeDumpPath, $"=== Freeze Watchdog Initialized at {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} ===\n", Encoding.UTF8);
 
@@ -66,15 +70,14 @@ public class FreezeWatchdogLogger : MonoBehaviour
             Debug.LogError($"[FreezeWatchdog] ログファイル作成失敗: {ex.Message}");
         }
 
-        // ログコールバック登録（マルチスレッド対応・バッファリングなし即時書き込み）
+        _currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.activeSceneChanged += OnActiveSceneChanged;
         Application.logMessageReceivedThreaded += OnLogReceived;
 
-        // 常駐GameObject生成
         GameObject go = new GameObject("[FreezeWatchdogLogger]");
         DontDestroyOnLoad(go);
         _instance = go.AddComponent<FreezeWatchdogLogger>();
 
-        // ウォッチドッグ監視スレッド開始
         _isRunning = true;
         _lastHeartbeatTicks = DateTime.UtcNow.Ticks;
         _watchdogThread = new Thread(WatchdogLoop)
@@ -85,6 +88,12 @@ public class FreezeWatchdogLogger : MonoBehaviour
         _watchdogThread.Start();
 
         Debug.Log($"[FreezeWatchdog] 監視開始: ログ出力先 => {_realtimeLogPath}");
+#endif
+    }
+
+    private static void OnActiveSceneChanged(Scene previous, Scene next)
+    {
+        _currentSceneName = string.IsNullOrEmpty(next.name) ? "Unknown" : next.name;
     }
 
     private static void OnLogReceived(string condition, string stackTrace, LogType type)
@@ -94,7 +103,7 @@ public class FreezeWatchdogLogger : MonoBehaviour
 
         lock (_fileLock)
         {
-            if (_recentLogs.Count >= MAX_RECENT_LOGS)
+            if (_recentLogs.Count >= MaxRecentLogs)
             {
                 _recentLogs.Dequeue();
             }
@@ -110,7 +119,10 @@ public class FreezeWatchdogLogger : MonoBehaviour
                         _logWriter.WriteLine(stackTrace);
                     }
                 }
-                catch { }
+                catch
+                {
+                    // ログストリーム競合・破棄時の例外は無視
+                }
             }
         }
     }
@@ -138,26 +150,31 @@ public class FreezeWatchdogLogger : MonoBehaviour
 
     private void Update()
     {
-        // メインスレッド生存確認（毎フレーム更新）
         Interlocked.Exchange(ref _lastHeartbeatTicks, DateTime.UtcNow.Ticks);
 
         _currentFrame = Time.frameCount;
         _currentTimeScale = Time.timeScale;
-        _currentSceneName = SceneManager.GetActiveScene().name;
 
         var netMgr = NetworkManager.Singleton;
         if (netMgr != null)
         {
-            _networkStatusSummary =
-                $"[NetworkManager] IsListening: {netMgr.IsListening}, IsServer: {netMgr.IsServer}, IsClient: {netMgr.IsClient}\n" +
-                $"[NetworkManager] ConnectedClients: {netMgr.ConnectedClientsList.Count}";
+            _netHasSingleton = true;
+            _netIsListening = netMgr.IsListening;
+            _netIsServer = netMgr.IsServer;
+            _netIsClient = netMgr.IsClient;
+            _netConnectedCount = netMgr.IsListening && netMgr.ConnectedClientsIds != null
+                ? netMgr.ConnectedClientsIds.Count
+                : 0;
         }
         else
         {
-            _networkStatusSummary = "[NetworkManager] Singleton is NULL";
+            _netHasSingleton = false;
+            _netIsListening = false;
+            _netIsServer = false;
+            _netIsClient = false;
+            _netConnectedCount = 0;
         }
 
-        // 一度フリーズダンプを出力したが復帰した場合
         if (_freezeDumped)
         {
             _freezeDumped = false;
@@ -179,7 +196,7 @@ public class FreezeWatchdogLogger : MonoBehaviour
             long lastTicks = Interlocked.Read(ref _lastHeartbeatTicks);
             double elapsedSeconds = (DateTime.UtcNow.Ticks - lastTicks) / (double)TimeSpan.TicksPerSecond;
 
-            if (elapsedSeconds >= FREEZE_THRESHOLD_SECONDS && !_freezeDumped)
+            if (elapsedSeconds >= FreezeThresholdSeconds && !_freezeDumped)
             {
                 _freezeDumped = true;
                 WriteFreezeDump(elapsedSeconds);
@@ -191,7 +208,7 @@ public class FreezeWatchdogLogger : MonoBehaviour
     {
         try
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder(2048);
             sb.AppendLine("================================================================================");
             sb.AppendLine($"【FREEZE DETECTED】メインスレッドの停止を検知しました！ (停止時間: {frozenDuration:F2}秒)");
             sb.AppendLine($"検知時刻: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
@@ -201,11 +218,18 @@ public class FreezeWatchdogLogger : MonoBehaviour
             sb.AppendLine($"最終チェックポイント: {_lastCheckpoint}");
             sb.AppendLine("================================================================================");
 
-            // ネットワーク状態（メインスレッドでキャッシュした値を出力）
-            sb.AppendLine(_networkStatusSummary);
+            if (_netHasSingleton)
+            {
+                sb.AppendLine($"[NetworkManager] IsListening: {_netIsListening}, IsServer: {_netIsServer}, IsClient: {_netIsClient}");
+                sb.AppendLine($"[NetworkManager] ConnectedClients: {_netConnectedCount}");
+            }
+            else
+            {
+                sb.AppendLine("[NetworkManager] Singleton is NULL");
+            }
 
             sb.AppendLine("--------------------------------------------------------------------------------");
-            sb.AppendLine("【直前に出力されたログ（最新 30 件）】");
+            sb.AppendLine($"【直前に出力されたログ（最新 {MaxRecentLogs} 件）】");
             lock (_fileLock)
             {
                 foreach (var log in _recentLogs)
@@ -216,8 +240,6 @@ public class FreezeWatchdogLogger : MonoBehaviour
             sb.AppendLine("================================================================================");
 
             File.WriteAllText(_freezeDumpPath, sb.ToString(), Encoding.UTF8);
-
-            // リアルタイムログ側にも書き込み
             LogDirect($"★★★ 【FREEZE DUMP GENERATED】停止時間: {frozenDuration:F2}秒 (詳細は FreezeDump.txt を参照) ★★★");
         }
         catch (Exception ex)
@@ -226,31 +248,51 @@ public class FreezeWatchdogLogger : MonoBehaviour
             {
                 File.WriteAllText(_freezeDumpPath, $"FreezeDump 書き込み例外: {ex}", Encoding.UTF8);
             }
-            catch { }
+            catch
+            {
+                // 二重例外は無視
+            }
+        }
+    }
+
+    private static void ShutdownWatchdog()
+    {
+        _isRunning = false;
+        SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+        Application.logMessageReceivedThreaded -= OnLogReceived;
+
+        lock (_fileLock)
+        {
+            if (_logWriter != null)
+            {
+                try
+                {
+                    _logWriter.Flush();
+                    _logWriter.Close();
+                }
+                catch
+                {
+                    // クローズ時例外は無視
+                }
+                finally
+                {
+                    _logWriter = null;
+                }
+            }
         }
     }
 
     private void OnDestroy()
     {
-        _isRunning = false;
-        Application.logMessageReceivedThreaded -= OnLogReceived;
-        if (_logWriter != null)
+        ShutdownWatchdog();
+        if (_instance == this)
         {
-            _logWriter.Flush();
-            _logWriter.Close();
-            _logWriter = null;
+            _instance = null;
         }
     }
 
     private void OnApplicationQuit()
     {
-        _isRunning = false;
-        Application.logMessageReceivedThreaded -= OnLogReceived;
-        if (_logWriter != null)
-        {
-            _logWriter.Flush();
-            _logWriter.Close();
-            _logWriter = null;
-        }
+        ShutdownWatchdog();
     }
 }

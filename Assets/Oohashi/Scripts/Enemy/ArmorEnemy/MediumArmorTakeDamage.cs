@@ -43,16 +43,15 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     {
         if (!IsServer || _isDead) return;
 
-        // プレイヤーステートがウルトならウルトダメージに切り替え
+        // プレイヤーステートがウルトならウルトダメージに切り替え（ガード貫通）
         if (state == PlayerState.Ultimate)
         {
             _damage = _ultDamage;
+            TakeDamageEffectClientRpc(false);
         }
-
-        bool isGuard = _armorKnockbackScript.IsFromFlont;
-        // ガード時の処理
-        if (isGuard)
+        else if (_armorKnockbackScript != null && _armorKnockbackScript.IsFromFlont)
         {
+            // ガード時の処理
             _damage = chargeTime * _guardMultiplier;
             _damage = Mathf.Max(_damage, _guardMinDamage);
             TakeDamageEffectClientRpc(true);
@@ -66,7 +65,7 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
 
         // HPからダメージを減算しHPバー更新
         _enemyHP.Value = (_enemyHP.Value - (int)_damage);
-        _hpUI.UpdateHP(_enemyHP.Value);
+        if (_hpUI != null) _hpUI.UpdateHP(_enemyHP.Value);
         if (_enemyHP.Value <= 0)
         {
             _isDead = true;
@@ -78,17 +77,17 @@ public class MediumArmorTakeDamage : ArmorTakeDamage
     /// 被弾時の演出を再生するメソッド
     /// </summary>
     /// <param name="isGuard">ガード成功か</param>
-    [ClientRpc]
+    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
     private void TakeDamageEffectClientRpc(bool isGuard)
     {
         if (isGuard)
         {
-            _guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            if (_guardEffect != null) _guardEffect.SetTrigger(DAMAGEEFFECTTRIGERNAME);
         }
         else
         {
-            _damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
-            _damageMaterial.Damage();
+            if (_damageAnimator != null) _damageAnimator.SetTrigger(DAMAGEEFFECTTRIGERNAME);
+            if (_damageMaterial != null) _damageMaterial.Damage();
         }
     }
 

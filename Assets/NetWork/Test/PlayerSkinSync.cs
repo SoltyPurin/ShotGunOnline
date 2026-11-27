@@ -1,8 +1,13 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerSkinSync : NetworkBehaviour
 {
+    public static int LocalPlayerSkinId { get; private set; } = 0;
+    public static event Action<int> OnLocalPlayerSkinChanged;
+
+    public int SkinId => _skinId.Value;
     [SerializeField, Header("正面方向の置き換え対象のアニメーター")]
     private Animator _flontPlayerAnimator = default;
 
@@ -21,6 +26,14 @@ public class PlayerSkinSync : NetworkBehaviour
     );
 
     private PlayerNumberSave _numberSave = default;
+
+    private void Start()
+    {
+        if (!IsSpawned)
+        {
+            ApplySkin(0);
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -82,11 +95,23 @@ public class PlayerSkinSync : NetworkBehaviour
         {
             _numberSave.SetPlayerNumber(skinId);
         }
+
+        if (IsSpawned && IsOwner)
+        {
+            LocalPlayerSkinId = skinId;
+            OnLocalPlayerSkinChanged?.Invoke(skinId);
+        }
     }
 
     public override void OnNetworkDespawn()
     {
         // イベントの登録解除（メモリリーク防止）
         _skinId.OnValueChanged -= OnSkinIdChanged;
+
+        if (IsOwner)
+        {
+            LocalPlayerSkinId = 0;
+            OnLocalPlayerSkinChanged?.Invoke(0);
+        }
     }
 }

@@ -26,6 +26,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     private NetworkSceneTransitionHandler _sceneTransitionHandler;
     private SessionDisconnectHandler _disconnectHandler;
     private bool _isDisconnecting;
+    private UniTask? _disconnectTask;
 
     public ISession CurrentSession => _sessionService?.CurrentSession;
     public bool IsInitialized => _servicesInitializer != null && _servicesInitializer.IsInitialized;
@@ -70,6 +71,8 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
             Instance = this;
             DontDestroyOnLoad(gameObject);
             EnsureSubsystemsInitialized();
+            PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
+            PlayerSkinSync.OnLocalPlayerSkinChanged += HandleLocalPlayerSkinChanged;
         }
         else
         {
@@ -110,6 +113,8 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     {
         if (Instance == this)
         {
+            PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
+            PlayerSkinSync.OnLocalPlayerSkinChanged -= HandleLocalPlayerSkinChanged;
             UnsubscribeNetworkEvents();
             Instance = null;
         }
@@ -127,19 +132,52 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     }
 
     /// <summary>
-    /// ルームおよびRelay(NetworkManager)接続が存在する場合に切断し、ネットワーク関連オブジェクトをクリーンアップする
+    /// シーン遷移時（タイトル画面など）に、残存しているセッションまたは NetworkManager を安全に切断・破棄する共通エントリポイント。
+    /// TitleManager 等に NetworkManager 破棄ロジックが重複するのを防ぎます。
     /// </summary>
-    public async UniTask DisconnectAndCleanupAsync()
+    public static void CleanupOrShutdownStatic()
     {
-        if (_isDisconnecting) return;
+        if (Instance != null)
+        {
+            Instance.DisconnectAndCleanupAsync().Forget();
+            return;
+        }
+
+        var netManager = NetworkManager.Singleton;
+        if (netManager != null)
+        {
+            if (netManager.IsListening || netManager.IsServer || netManager.IsClient)
+            {
+                netManager.Shutdown();
+            }
+            Destroy(netManager.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// ルームおよびRelay(NetworkManager)接続が存在する場合に切断し、ネットワーク関連オブジェクトをクリーンアップする。
+    /// 既にクリーンアップ中の場合は、進行中の処理が完了するまで待機してから戻る。
+    /// </summary>
+    public UniTask DisconnectAndCleanupAsync()
+    {
+        // 多重呼び出し時に即座に return すると、呼び出し側がクリーンアップ完了前にシーン遷移等を行ってしまうため進行中タスクを共有する
+        if (_isDisconnecting && _disconnectTask.HasValue)
+        {
+            return _disconnectTask.Value;
+        }
 
         var hasActiveSession = CurrentSession != null;
         var hasNetworkManager = NetworkManager.Singleton != null;
-
-        if (!hasActiveSession && !hasNetworkManager) return;
+        if (!hasActiveSession && !hasNetworkManager) return UniTask.CompletedTask;
 
         _isDisconnecting = true;
+        var task = DisconnectAndCleanupCoreAsync(hasActiveSession).Preserve();
+        _disconnectTask = task;
+        return task;
+    }
 
+    private async UniTask DisconnectAndCleanupCoreAsync(bool hasActiveSession)
+    {
         try
         {
             EnsureSubsystemsInitialized();
@@ -177,6 +215,7 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
         finally
         {
             _isDisconnecting = false;
+            _disconnectTask = null;
         }
     }
 
@@ -252,11 +291,51 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     }
 
     /// <summary>
+    /// 現在のセッションにローカルプレイヤー名を反映する
+    /// </summary>
+    public UniTask UpdatePlayerNameAsync(string playerName)
+    {
+        EnsureSubsystemsInitialized();
+        return _sessionService.UpdatePlayerNameAsync(playerName);
+    }
+
+    /// <summary>
+    /// 現在のセッションにローカルプレイヤーのスキンIDを反映する
+    /// </summary>
+    public UniTask UpdatePlayerSkinIdAsync(int skinId)
+    {
+        EnsureSubsystemsInitialized();
+        return _sessionService.UpdatePlayerSkinIdAsync(skinId);
+    }
+
+    private void HandleLocalProfileChanged(PlayerProfile profile)
+    {
+        if (profile == null || CurrentSession == null) return;
+        UpdatePlayerNameAsync(profile.PlayerName).Forget();
+    }
+
+    private void HandleLocalPlayerSkinChanged(int skinId)
+    {
+        if (CurrentSession == null) return;
+        UpdatePlayerSkinIdAsync(skinId).Forget();
+    }
+
+    /// <summary>
+    /// セッションのゲーム状態（待機中 / 試合中）を更新する
+    /// </summary>
+    public UniTask UpdateSessionGameStatusAsync(bool isInGame)
+    {
+        EnsureSubsystemsInitialized();
+        return _sessionService.UpdateSessionGameStatusAsync(isInGame);
+    }
+
+    /// <summary>
     /// ホストがゲームを開始する
     /// </summary>
     public void StartMultiplayGame()
     {
         EnsureSubsystemsInitialized();
+        _sessionService.UpdateSessionGameStatusAsync(true).Forget();
         _sceneTransitionHandler.StartMultiplayGame(NetworkManager.Singleton);
     }
 }

@@ -89,6 +89,8 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
             _cutsceneCoroutine = null;
         }
 
+        _localPlayerLocker?.Dispose();
+
         if (Instance == this)
         {
             Instance = null;
@@ -169,7 +171,7 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
             SpawnAllPlayers();
         }
 
-        _localPlayerLocker.TryFindAndLockLocalPlayer();
+        _localPlayerLocker.TryFindAndLockLocalPlayer(forceImmediateSearch: true);
         PrepareCutscenePlayers();
 
         if (_cutsceneCoroutine != null)
@@ -202,9 +204,13 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         }
         else
         {
-            var clientIds = new List<ulong>();
-            foreach (var p in players) clientIds.Add(p.OwnerClientId);
-            assignment = PlayerSlotAssignment.CreateSorted(clientIds);
+            var clientIds = new ulong[players.Count];
+            for (int i = 0; i < players.Count; i++)
+            {
+                clientIds[i] = players[i].OwnerClientId;
+            }
+            Array.Sort(clientIds);
+            assignment = new PlayerSlotAssignment(clientIds);
         }
 
         Debug.Log($"[MP_GameManager] 開始ムービーに {players.Count} 人のプレイヤーを同期します。{assignment}");
@@ -251,6 +257,9 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         SetState(GameState.Playing);
         Debug.Log("[MP_GameManager] ムービー終了。ゲーム開始！");
 
+        // 自プレイヤーの操作を先に解禁（後続のウェーブ開始処理で例外が起きても操作不能のまま残らないようにする）
+        _localPlayerLocker.FindAndUnlockLocalPlayer();
+
         // ホスト/サーバー側のみウェーブ開始を実行
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
         {
@@ -266,9 +275,6 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
                 Debug.LogWarning("[MP_GameManager] WaveManager が見つかりません。");
             }
         }
-
-        // 自プレイヤーの操作を解禁
-        _localPlayerLocker.FindAndUnlockLocalPlayer();
     }
 
     public void OnWaitingForPlayers()

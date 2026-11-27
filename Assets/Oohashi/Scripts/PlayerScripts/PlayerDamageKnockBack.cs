@@ -90,6 +90,11 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     private PlayerKnockBack _knockBack = default;
     private PlayerSEControlScript _playerSE = default;
     private InputPlayerShot _inputPlayerShot = default;
+
+    // ロビー等でのダメージ・被弾アニメなしの簡易ノックバック用
+    private bool _isMildKnockBacking = false;
+    private float _mildKnockBackForce = 0f;
+    private Vector2 _mildKnockBackDirection = Vector2.zero;
     #endregion
 
     #region 定数
@@ -107,6 +112,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     #endregion
 
     private Coroutine _hitStopCoroutine = null;
+    private bool IsLocalControl => IsOwner || !IsSpawned;
+
     private void Start()
     {
         //タグで探して登録
@@ -155,7 +162,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!IsOwner) return;
+        if (!IsLocalControl || MP_GameManager.Instance == null) return;
         if (collision.gameObject.CompareTag(STONETAGNAME))
         {
             return;
@@ -285,6 +292,27 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             _playerState.DamageKnockBackState();
         }
+    }
+
+    /// <summary>
+    /// サーバー側で敵の爆発等が命中した際、対象プレイヤーのOwner端末へ確実に被弾ノックバックを適用する
+    /// </summary>
+    public void ApplyServerExplosionHit(Vector3 direction, float power)
+    {
+        if (IsOwner || !IsSpawned)
+        {
+            SetDirection(direction, power, null);
+        }
+        else if (IsServer)
+        {
+            TakeDamageOwnerRpc(direction, power);
+        }
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void TakeDamageOwnerRpc(Vector3 direction, float power)
+    {
+        SetDirection(direction, power, null);
     }
 
     /// <summary>
@@ -441,6 +469,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     public void CollisionWall()
     {
         _force = 0;
+        _mildKnockBackForce = 0f;
+        _isMildKnockBacking = false;
     }
 
     /// <summary>
@@ -454,6 +484,31 @@ public class PlayerDamageKnockBack : NetworkBehaviour
     public void SetWarpDirection(Vector2 direction)
     {
         _contactNormal = direction;
+    }
+
+    /// <summary>
+    /// ロビー等で他プレイヤーのショットガンを受けた際のダメージなしノックバック要求（Owner権限で実行）
+    /// </summary>
+    [Rpc(SendTo.Owner)]
+    public void RequestShotgunKnockBackOwnerRpc(Vector2 shooterPos, float chargeTime, bool isCritical)
+    {
+        ApplyShotgunKnockBackLocal(shooterPos, chargeTime, isCritical);
+    }
+
+    /// <summary>
+    /// ダメージや無敵・被弾アニメーションを伴わず、チャージ度合いに応じて軽く押し出すノックバックを適用する
+    /// </summary>
+    public void ApplyShotgunKnockBackLocal(Vector2 shooterPos, float chargeTime, bool isCritical)
+    {
+        if (!IsLocalControl) return;
+        if (_playerState != null && _playerState.PlayerState == PlayerState.Fall) return;
+
+        Vector2 diff = (Vector2)transform.position - shooterPos;
+        _mildKnockBackDirection = diff.sqrMagnitude > 0.0001f ? diff.normalized : Vector2.right;
+
+        float chargeRatio = Mathf.Clamp01(chargeTime / 2f);
+        _mildKnockBackForce = isCritical ? 11.0f : Mathf.Lerp(4.0f, 9.0f, chargeRatio);
+        _isMildKnockBacking = true;
     }
 
     /// <summary>
@@ -560,6 +615,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         }
         _force = 0;
         _isKnockBacking = false;
+        _mildKnockBackForce = 0f;
+        _isMildKnockBacking = false;
     }
 
     /// <summary>
@@ -574,6 +631,8 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         }
         _force = 0f;
         _isKnockBacking = false;
+        _mildKnockBackForce = 0f;
+        _isMildKnockBacking = false;
     }
 
     private void FixedUpdate()
@@ -583,6 +642,17 @@ public class PlayerDamageKnockBack : NetworkBehaviour
         {
             return;
         }
+        // ロビー等でのダメージ・被弾アニメなしの簡易ノックバック
+        if (_isMildKnockBacking)
+        {
+            transform.position += (Vector3)_mildKnockBackDirection * _mildKnockBackForce * Time.fixedDeltaTime;
+            _mildKnockBackForce -= 28f * Time.fixedDeltaTime;
+            if (_mildKnockBackForce <= 0f)
+            {
+                _mildKnockBackForce = 0f;
+                _isMildKnockBacking = false;
+            }
+        }
         //ノックバック中だったら処理
         if (_isKnockBacking)
         {
@@ -590,7 +660,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
             //吹き飛び方向に移動させる
             transform.position += (Vector3)_contactNormal * _force * Time.fixedDeltaTime;
             //ステートをダメージノックバックにする
-            if (IsOwner)
+            if (IsLocalControl)
             {
                 _playerState.DamageKnockBackState();
             }
@@ -604,7 +674,7 @@ public class PlayerDamageKnockBack : NetworkBehaviour
                 _force = _originForce;
                 //ノックバックのフラグをOFFにする
                 _isKnockBacking = false;
-                if (IsOwner)
+                if (IsLocalControl)
                 {
                     //前のステートがウルトだった場合実行
                     if (_oldState == PlayerState.Ultimate)

@@ -33,6 +33,19 @@ public class EnemyShotBullet : NetworkBehaviour
     private Vector2 _pendingDirection;
     private bool _hasPendingRpc = false;
 
+    protected virtual void Awake()
+    {
+        if (TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTrans))
+        {
+            netTrans.UseUnreliableDeltas = true;
+        }
+    }
+
+    protected void ResetLifetime()
+    {
+        _lifetime = 0f;
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();

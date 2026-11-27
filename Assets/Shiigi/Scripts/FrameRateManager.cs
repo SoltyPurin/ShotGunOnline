@@ -3,12 +3,11 @@ using UnityEngine;
 
 /// <summary>
 /// ゲーム全体のフレームレートおよび垂直同期(VSync)を一括管理するマネージャー。
-/// PlayerPrefsに保存し、ゲーム起動時やシーン遷移時にも自動で設定を維持します。
+/// 永続化責務は IFrameRateSettingsRepository に委譲し (SRP / DIP)、起動時やシーン遷移時にも設定を維持します。
 /// </summary>
 public static class FrameRateManager
 {
-    private const string PREF_KEY_TARGET_FPS = "Settings_TargetFPS";
-    private const string PREF_KEY_VSYNC = "Settings_VSyncCount";
+    private const int DefaultTargetFps = 120;
 
     public enum FrameRateMode
     {
@@ -25,7 +24,7 @@ public static class FrameRateManager
     /// <summary>
     /// オプション画面で選択可能なFPS一覧 (-1は無制限)
     /// </summary>
-    public static readonly int[] SelectableFpsList = new int[]
+    public static readonly int[] SelectableFpsList =
     {
         30,
         60,
@@ -36,7 +35,7 @@ public static class FrameRateManager
         -1
     };
 
-    public static readonly FrameRateMode[] AvailableModes = new FrameRateMode[]
+    public static readonly FrameRateMode[] AvailableModes =
     {
         FrameRateMode.FPS_60,
         FrameRateMode.FPS_120,
@@ -46,9 +45,10 @@ public static class FrameRateManager
         FrameRateMode.FPS_30
     };
 
-    private static int _targetFps = 120;
-    private static bool _isVSyncEnabled = false;
-    private static bool _isInitialized = false;
+    private static IFrameRateSettingsRepository _repository = new PlayerPrefsFrameRateRepository();
+    private static int _targetFps = DefaultTargetFps;
+    private static bool _isVSyncEnabled;
+    private static bool _isInitialized;
 
     /// <summary>
     /// 現在選択されている目標FPS (-1は無制限)
@@ -98,6 +98,18 @@ public static class FrameRateManager
         LoadSettings();
     }
 
+    /// <summary>
+    /// 設定保存先リポジトリを差し替える（テストや将来のクラウド設定保存用）
+    /// </summary>
+    public static void SetRepository(IFrameRateSettingsRepository repository, bool reloadImmediately = true)
+    {
+        _repository = repository ?? new PlayerPrefsFrameRateRepository();
+        if (reloadImmediately)
+        {
+            LoadSettings();
+        }
+    }
+
     private static void EnsureInitialized()
     {
         if (!_isInitialized)
@@ -112,14 +124,10 @@ public static class FrameRateManager
     public static void LoadSettings()
     {
         _isInitialized = true;
-        _targetFps = PlayerPrefs.GetInt(PREF_KEY_TARGET_FPS, 120);
-        if (Array.IndexOf(SelectableFpsList, _targetFps) < 0)
-        {
-            _targetFps = 120;
-        }
-
-        _isVSyncEnabled = PlayerPrefs.GetInt(PREF_KEY_VSYNC, 0) > 0;
-        ApplyCurrentSettings(saveToPrefs: false);
+        var (loadedFps, loadedVSync) = _repository.Load(DefaultTargetFps, defaultVSync: false);
+        _targetFps = NormalizeTargetFps(loadedFps);
+        _isVSyncEnabled = loadedVSync;
+        ApplyCurrentSettings(saveToRepository: false, notifyListeners: true);
     }
 
     /// <summary>
@@ -128,13 +136,12 @@ public static class FrameRateManager
     public static void SetTargetFps(int fps, bool saveToPrefs = true)
     {
         EnsureInitialized();
-        if (Array.IndexOf(SelectableFpsList, fps) < 0)
-        {
-            fps = 120;
-        }
+        int normalized = NormalizeTargetFps(fps);
+        if (_targetFps == normalized && !saveToPrefs) return;
 
-        _targetFps = fps;
-        ApplyCurrentSettings(saveToPrefs);
+        bool changed = _targetFps != normalized;
+        _targetFps = normalized;
+        ApplyCurrentSettings(saveToPrefs && changed, notifyListeners: changed);
     }
 
     /// <summary>
@@ -169,8 +176,9 @@ public static class FrameRateManager
     public static void SetVSync(bool enabled, bool saveToPrefs = true)
     {
         EnsureInitialized();
+        bool changed = _isVSyncEnabled != enabled;
         _isVSyncEnabled = enabled;
-        ApplyCurrentSettings(saveToPrefs);
+        ApplyCurrentSettings(saveToPrefs && changed, notifyListeners: changed);
     }
 
     /// <summary>
@@ -189,42 +197,14 @@ public static class FrameRateManager
     public static void SetMode(FrameRateMode mode, bool saveToPrefs = true)
     {
         EnsureInitialized();
-        if (mode == FrameRateMode.VSync)
-        {
-            _isVSyncEnabled = true;
-        }
-        else
-        {
-            _isVSyncEnabled = false;
-            _targetFps = (int)mode;
-        }
+        bool nextVSync = mode == FrameRateMode.VSync;
+        int nextFps = nextVSync ? _targetFps : NormalizeTargetFps((int)mode);
+        bool changed = (_isVSyncEnabled != nextVSync) || (_targetFps != nextFps);
 
-        ApplyCurrentSettings(saveToPrefs);
-    }
+        _isVSyncEnabled = nextVSync;
+        _targetFps = nextFps;
 
-    private static void ApplyCurrentSettings(bool saveToPrefs)
-    {
-        if (_isVSyncEnabled)
-        {
-            QualitySettings.vSyncCount = 1;
-            Application.targetFrameRate = -1;
-        }
-        else
-        {
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = _targetFps;
-        }
-
-        if (saveToPrefs)
-        {
-            PlayerPrefs.SetInt(PREF_KEY_TARGET_FPS, _targetFps);
-            PlayerPrefs.SetInt(PREF_KEY_VSYNC, _isVSyncEnabled ? 1 : 0);
-            PlayerPrefs.Save();
-        }
-
-        Debug.Log($"[FrameRateManager] 設定適用: TargetFPS={GetTargetFpsDisplayString()}, VSync={(_isVSyncEnabled ? "ON" : "OFF")} (actual targetFrameRate={Application.targetFrameRate}, vSyncCount={QualitySettings.vSyncCount})");
-        OnFrameRateModeChanged?.Invoke(CurrentMode);
-        OnSettingsChanged?.Invoke();
+        ApplyCurrentSettings(saveToPrefs && changed, notifyListeners: changed);
     }
 
     /// <summary>
@@ -262,6 +242,43 @@ public static class FrameRateManager
     public static void RefreshCurrentSettings()
     {
         EnsureInitialized();
-        ApplyCurrentSettings(saveToPrefs: false);
+        ApplyToUnityEngine();
+    }
+
+    private static int NormalizeTargetFps(int fps)
+    {
+        return Array.IndexOf(SelectableFpsList, fps) >= 0 ? fps : DefaultTargetFps;
+    }
+
+    private static void ApplyToUnityEngine()
+    {
+        int desiredVSync = _isVSyncEnabled ? 1 : 0;
+        int desiredTargetFps = _isVSyncEnabled ? -1 : _targetFps;
+
+        if (QualitySettings.vSyncCount != desiredVSync)
+        {
+            QualitySettings.vSyncCount = desiredVSync;
+        }
+        if (Application.targetFrameRate != desiredTargetFps)
+        {
+            Application.targetFrameRate = desiredTargetFps;
+        }
+    }
+
+    private static void ApplyCurrentSettings(bool saveToRepository, bool notifyListeners)
+    {
+        ApplyToUnityEngine();
+
+        if (saveToRepository)
+        {
+            _repository.Save(_targetFps, _isVSyncEnabled);
+        }
+
+        if (notifyListeners)
+        {
+            Debug.Log($"[FrameRateManager] 設定適用: TargetFPS={GetTargetFpsDisplayString()}, VSync={GetVSyncDisplayString()} (actual targetFrameRate={Application.targetFrameRate}, vSyncCount={QualitySettings.vSyncCount})");
+            OnFrameRateModeChanged?.Invoke(CurrentMode);
+            OnSettingsChanged?.Invoke();
+        }
     }
 }

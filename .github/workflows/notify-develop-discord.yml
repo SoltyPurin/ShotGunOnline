@@ -1,0 +1,80 @@
+name: Notify Discord on develop update
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "::error::DISCORD_WEBHOOK_URL secret is not set."
+            exit 1
+          fi
+
+          python3 - << 'EOF' > payload.json
+          import json
+          import os
+
+          event_path = os.environ["GITHUB_EVENT_PATH"]
+          with open(event_path, "r", encoding="utf-8") as f:
+              event = json.load(f)
+
+          repo = event.get("repository", {}).get("full_name", "repository")
+          pusher = event.get("pusher", {}).get("name") or event.get("sender", {}).get("login", "unknown")
+          compare_url = event.get("compare", "")
+          commits = event.get("commits", [])
+          head_commit = event.get("head_commit") or {}
+
+          lines = []
+          max_commits = 10
+          for c in commits[:max_commits]:
+              sha = c.get("id", "")[:7]
+              url = c.get("url", "")
+              msg = (c.get("message") or "").splitlines()[0]
+              author = c.get("author", {}).get("name") or c.get("author", {}).get("username") or pusher
+              if len(msg) > 80:
+                  msg = msg[:77] + "..."
+              lines.append(f"- [`{sha}`]({url}) {msg} (*{author}*)")
+
+          if len(commits) > max_commits:
+              lines.append(f"...他 {len(commits) - max_commits} 件のコミット")
+
+          if not lines:
+              if event.get("forced"):
+                  lines.append("Force push が実行されました。")
+              else:
+                  lines.append("コミット情報なし（ブランチの更新）")
+
+          description = "\n".join(lines)
+          if len(description) > 3800:
+              description = description[:3800] + "\n..."
+
+          embed = {
+              "title": f"🚀 {repo} の develop が更新されました（{len(commits)} 件）",
+              "url": compare_url,
+              "description": description,
+              "color": 3066993,
+              "footer": {
+                  "text": f"Pushed by {pusher}"
+              }
+          }
+          if head_commit.get("timestamp"):
+              embed["timestamp"] = head_commit["timestamp"]
+
+          payload = {
+              "embeds": [embed]
+          }
+          print(json.dumps(payload, ensure_ascii=False))
+          EOF
+
+          curl -sS --fail-with-body -X POST \
+            -H "Content-Type: application/json" \
+            -d @payload.json \
+            "$DISCORD_WEBHOOK_URL"

@@ -1,49 +1,57 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
 /// 確認・エラー表示用のモーダルダイアログUI。
-/// LobbyViewBase を継承し、ModalDialog タイプのポップ演出とSE自動再生機能を提供します。
-/// 表示時に全画面ブロック用UIを生成し、背後UIのボタン押下を遮断します。
+/// LobbyModalDialogBase を継承し、ブロッカー制御と結果待機ライフサイクルを共通化しています (OCP / DRY)。
 /// </summary>
-public class ConfirmDialogUI : LobbyViewBase
+public class ConfirmDialogUI : LobbyModalDialogBase<bool>
 {
     [SerializeField] private Text _messageText;
     [SerializeField] private Button _yesButton;
     [SerializeField] private Button _noButton;
     [SerializeField] private Color _blockerColor = new Color(0f, 0f, 0f, 0.5f);
 
-    private UniTaskCompletionSource<bool> _utcs;
-    private GameObject _blocker;
+    private const int TopmostSortingOrder = 500;
+
+    private Canvas _overrideCanvas;
+    private Text _yesButtonLabel;
+    private string _defaultYesButtonText;
 
     protected override void Awake()
     {
-        _viewType = UIViewType.ModalDialog;
         base.Awake();
 
-        EnsureButtonSound(_yesButton, UIButtonType.Default);
-        EnsureButtonSound(_noButton, UIButtonType.Cancel);
+        if (_messageText != null)
+        {
+            _messageText.supportRichText = false;
+        }
 
-        LobbyModernTheme.AttachMetallicVisual(_yesButton);
-        LobbyModernTheme.AttachMetallicVisual(_noButton);
+        if (_yesButton != null)
+        {
+            _yesButtonLabel = _yesButton.GetComponentInChildren<Text>(true);
+            if (_yesButtonLabel != null)
+            {
+                _defaultYesButtonText = _yesButtonLabel.text;
+            }
+        }
+
+        UIButtonSound.ConfigureButton(_yesButton, UIButtonType.Default);
+        UIButtonSound.ConfigureButton(_noButton, UIButtonType.Cancel);
     }
 
-    private void Update()
+    protected override void Update()
     {
-        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
+        base.Update();
+        if (!IsAwaitingResult || !gameObject.activeInHierarchy || !IsTopActiveView) return;
 
-        bool cancelPressed =
-            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
-            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame);
-
-        if (cancelPressed)
+        if (LobbyUIInputHelper.WasCancelPressedThisFrame())
         {
             UISound.Play(UISoundType.Cancel);
             bool hasNo = _noButton != null && _noButton.gameObject.activeSelf;
-            CloseAndSetResult(!hasNo).Forget();
+            CloseModalWithResultAsync(!hasNo).Forget();
         }
     }
 
@@ -56,102 +64,114 @@ public class ConfirmDialogUI : LobbyViewBase
         return _noButton != null && _noButton.gameObject.activeInHierarchy ? _noButton.gameObject : null;
     }
 
-    private static void EnsureButtonSound(Button button, UIButtonType type)
-    {
-        if (button == null) return;
-        var sound = button.GetComponent<UIButtonSound>();
-        if (sound == null)
-        {
-            sound = button.gameObject.AddComponent<UIButtonSound>();
-        }
-        sound.ButtonType = type;
-    }
-
     public async UniTask<bool> ShowAsync(string message, bool showNoButton = true, string yesButtonText = null)
     {
-        _utcs?.TrySetCanceled();
+        var utcs = BeginResultWait();
 
-        EnsureBlocker();
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+        EnsureTopmostSorting();
+        EnsureModalBlocker(_blockerColor);
 
         if (_messageText != null)
         {
             _messageText.text = message;
         }
 
+        ConfigureDialogButtons(showNoButton, yesButtonText);
+        FocusYesButton();
+
+        await ShowModalAnimatedSafelyAsync(() =>
+        {
+            EnsureTopmostSorting();
+            FocusYesButton();
+        });
+
+        FocusYesButton();
+        return await utcs.Task;
+    }
+
+    private void ConfigureDialogButtons(bool showNoButton, string yesButtonText)
+    {
         if (_yesButton != null)
         {
             _yesButton.onClick.RemoveAllListeners();
+            _yesButton.onClick.AddListener(() => CloseModalWithResultAsync(true).Forget());
 
-            if (!string.IsNullOrEmpty(yesButtonText))
+            if (_yesButtonLabel == null)
             {
-                var textComp = _yesButton.GetComponentInChildren<Text>();
-                if (textComp != null)
+                _yesButtonLabel = _yesButton.GetComponentInChildren<Text>(true);
+                if (_yesButtonLabel != null && string.IsNullOrEmpty(_defaultYesButtonText))
                 {
-                    textComp.text = yesButtonText;
+                    _defaultYesButtonText = _yesButtonLabel.text;
                 }
             }
+            if (_yesButtonLabel != null)
+            {
+                _yesButtonLabel.text = !string.IsNullOrEmpty(yesButtonText)
+                    ? yesButtonText
+                    : _defaultYesButtonText;
+            }
 
-            // 背後UIや他ボタンへのキーボード/ゲームパッドのフォーカス移動を防止
-            var nav = _yesButton.navigation;
-            nav.mode = showNoButton ? Navigation.Mode.Automatic : Navigation.Mode.None;
-            _yesButton.navigation = nav;
+            _yesButton.navigation = (showNoButton && _noButton != null)
+                ? new Navigation
+                {
+                    mode = Navigation.Mode.Explicit,
+                    selectOnLeft = _noButton,
+                    selectOnRight = _noButton
+                }
+                : new Navigation { mode = Navigation.Mode.None };
         }
 
         if (_noButton != null)
         {
             _noButton.onClick.RemoveAllListeners();
+            _noButton.onClick.AddListener(() => CloseModalWithResultAsync(false).Forget());
             _noButton.gameObject.SetActive(showNoButton);
-        }
 
-        if (EventSystem.current != null && _yesButton != null)
+            if (showNoButton && _yesButton != null)
+            {
+                _noButton.navigation = new Navigation
+                {
+                    mode = Navigation.Mode.Explicit,
+                    selectOnLeft = _yesButton,
+                    selectOnRight = _yesButton
+                };
+            }
+        }
+    }
+
+    private void FocusYesButton()
+    {
+        if (EventSystem.current != null && _yesButton != null && _yesButton.gameObject.activeInHierarchy)
         {
             EventSystem.current.SetSelectedGameObject(_yesButton.gameObject);
         }
-
-        _utcs = new UniTaskCompletionSource<bool>();
-
-        if (_yesButton != null)
-        {
-            _yesButton.onClick.AddListener(() =>
-            {
-                CloseAndSetResult(true).Forget();
-            });
-        }
-
-        if (_noButton != null)
-        {
-            _noButton.onClick.AddListener(() =>
-            {
-                CloseAndSetResult(false).Forget();
-            });
-        }
-
-        // ポップ演出＆フェードイン
-        await base.ShowAsync();
-
-        return await _utcs.Task;
     }
 
-    private async UniTaskVoid CloseAndSetResult(bool result)
+    private void EnsureTopmostSorting()
     {
-        if (_blocker != null)
-        {
-            _blocker.SetActive(false);
-        }
-        await HideAsync();
-        _utcs?.TrySetResult(result);
-    }
+        transform.SetAsLastSibling();
 
-    private void EnsureBlocker()
-    {
-        if (_blocker == null)
+        if (_overrideCanvas == null && !TryGetComponent(out _overrideCanvas))
         {
-            _blocker = UIBlockerHelper.EnsureBlocker(transform, _blockerColor);
+            _overrideCanvas = gameObject.AddComponent<Canvas>();
         }
-        else
+
+        var rootCanvas = transform.parent != null ? transform.parent.GetComponentInParent<Canvas>()?.rootCanvas : null;
+        if (rootCanvas != null)
         {
-            _blocker.SetActive(true);
-            _blocker.transform.SetAsFirstSibling();
+            _overrideCanvas.sortingLayerID = rootCanvas.sortingLayerID;
+        }
+
+        _overrideCanvas.overrideSorting = true;
+        _overrideCanvas.sortingOrder = TopmostSortingOrder;
+
+        if (!TryGetComponent<GraphicRaycaster>(out _))
+        {
+            gameObject.AddComponent<GraphicRaycaster>();
         }
     }
 }

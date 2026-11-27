@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine;
 /// 位置同期は ClientNetworkTransform（オーナー権限）に任せ、ここでは入力・移動・向き・アニメ速度の同期を担当します。
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
-public class LobbyNetworkPlayer : NetworkBehaviour
+public class LobbyNetworkPlayer : NetworkBehaviour, IPlayerNameSource
 {
     /// <summary>自端末のプレイヤーがスポーンした時に通知（カメラ追従・分身との入れ替え用）</summary>
     public static event Action<LobbyNetworkPlayer> LocalPlayerSpawned;
@@ -34,48 +35,85 @@ public class LobbyNetworkPlayer : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+    private readonly NetworkVariable<FixedString64Bytes> _netPlayerName = new NetworkVariable<FixedString64Bytes>(
+        default,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
     private Rigidbody2D _rigidbody;
+    private NetworkTransform _networkTransform;
     private Vector2 _input;
     private Vector2? _pendingTeleport;
+    private string _cachedRemotePlayerName = string.Empty;
+    private byte _lastAppliedFacingMask = byte.MaxValue;
+    private float _lastAppliedAnimSpeed = -1f;
 
     public byte FacingMask => _netFacingMask.Value;
+
+    // IPlayerNameSource 実装（キャッシュ済みの文字列を返すことで毎フレームの FixedString.ToString() アロケーションを防止）
+    public string PlayerName => IsLocalControl ? PlayerProfileStore.PlayerName : _cachedRemotePlayerName;
+    public bool IsLocalControl => IsOwner || !IsSpawned;
+    public bool IsNameplateVisible => true;
+    public event Action<string> OnPlayerNameChanged;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _networkTransform = GetComponent<NetworkTransform>();
         _rigidbody.gravityScale = 0f;
         _rigidbody.freezeRotation = true;
 
         LobbyMovement.AutoResolveVisuals(transform, ref _playerAnimation, ref _frontSprite, ref _backSprite);
-        LobbyMovement.ApplyFacing(_frontSprite, _backSprite, 0);
+        ApplyFacingIfChanged(0);
+        PlayerNameplateUI.EnsureAttached(gameObject);
     }
 
     public override void OnNetworkSpawn()
     {
-        LobbyMovement.ApplyFacing(_frontSprite, _backSprite, _netFacingMask.Value);
+        ApplyFacingIfChanged(_netFacingMask.Value);
+        _netPlayerName.OnValueChanged += HandleNetPlayerNameChanged;
 
-        // 他プレイヤーの物理は動かさず、同期された位置に任せる
         if (!IsOwner)
         {
             _rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody.linearVelocity = Vector2.zero;
+            _cachedRemotePlayerName = _netPlayerName.Value.ToString();
+            OnPlayerNameChanged?.Invoke(_cachedRemotePlayerName);
             return;
         }
+
+        _netPlayerName.Value = new FixedString64Bytes(PlayerProfileStore.PlayerName);
+        PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
+        OnPlayerNameChanged?.Invoke(PlayerProfileStore.PlayerName);
 
         LocalPlayerSpawned?.Invoke(this);
     }
 
     public override void OnNetworkDespawn()
     {
+        _netPlayerName.OnValueChanged -= HandleNetPlayerNameChanged;
         if (IsOwner)
         {
+            PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
             LocalPlayerDespawned?.Invoke(this);
         }
     }
 
+    private void HandleLocalProfileChanged(PlayerProfile profile)
+    {
+        if (!IsSpawned || !IsOwner || profile == null) return;
+        _netPlayerName.Value = new FixedString64Bytes(profile.PlayerName);
+        OnPlayerNameChanged?.Invoke(profile.PlayerName);
+    }
+
+    private void HandleNetPlayerNameChanged(FixedString64Bytes previousValue, FixedString64Bytes newValue)
+    {
+        _cachedRemotePlayerName = newValue.ToString();
+        OnPlayerNameChanged?.Invoke(_cachedRemotePlayerName);
+    }
+
     /// <summary>
     /// オフライン分身の位置と向きを引き継ぐ（オーナーのみ有効）
-    /// OnNetworkSpawn 中は NetworkTransform の初期化前の可能性があるため、次の Update で反映する
     /// </summary>
     public void Teleport(Vector2 position, byte facingMask = 0)
     {
@@ -83,7 +121,7 @@ public class LobbyNetworkPlayer : NetworkBehaviour
 
         _pendingTeleport = position;
         _netFacingMask.Value = facingMask;
-        LobbyMovement.ApplyFacing(_frontSprite, _backSprite, facingMask);
+        ApplyFacingIfChanged(facingMask);
     }
 
     private void ApplyPendingTeleport()
@@ -97,10 +135,14 @@ public class LobbyNetworkPlayer : NetworkBehaviour
         _rigidbody.position = position;
         _rigidbody.linearVelocity = Vector2.zero;
 
-        // 補間せず瞬間移動として他端末に同期する
-        if (TryGetComponent(out NetworkTransform networkTransform) && networkTransform.CanCommitToTransform)
+        if (_networkTransform == null)
         {
-            networkTransform.Teleport(target, transform.rotation, transform.localScale);
+            TryGetComponent(out _networkTransform);
+        }
+
+        if (_networkTransform != null && _networkTransform.CanCommitToTransform)
+        {
+            _networkTransform.Teleport(target, transform.rotation, transform.localScale);
         }
         else
         {
@@ -130,8 +172,14 @@ public class LobbyNetworkPlayer : NetworkBehaviour
             }
         }
 
-        LobbyMovement.ApplyFacing(_frontSprite, _backSprite, _netFacingMask.Value);
-        LobbyMovement.ApplyAnimation(_playerAnimation, _netAnimSpeed.Value);
+        ApplyFacingIfChanged(_netFacingMask.Value);
+
+        float syncedAnimSpeed = _netAnimSpeed.Value;
+        if (Mathf.Abs(syncedAnimSpeed - _lastAppliedAnimSpeed) > 0.005f || (syncedAnimSpeed == 0f && _lastAppliedAnimSpeed != 0f))
+        {
+            _lastAppliedAnimSpeed = syncedAnimSpeed;
+            LobbyMovement.ApplyAnimation(_playerAnimation, syncedAnimSpeed);
+        }
     }
 
     private void FixedUpdate()
@@ -139,5 +187,12 @@ public class LobbyNetworkPlayer : NetworkBehaviour
         if (!IsSpawned || !IsOwner) return;
 
         _rigidbody.linearVelocity = _input * _moveSpeed;
+    }
+
+    private void ApplyFacingIfChanged(byte mask)
+    {
+        if (_lastAppliedFacingMask == mask) return;
+        _lastAppliedFacingMask = mask;
+        LobbyMovement.ApplyFacing(_frontSprite, _backSprite, mask);
     }
 }

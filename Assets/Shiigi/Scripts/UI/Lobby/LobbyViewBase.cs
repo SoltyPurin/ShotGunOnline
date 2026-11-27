@@ -7,8 +7,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// ロビー画面の各UIパネル・ダイアログの基底クラス。
-/// UISettingsConfig に基づくフェード＆ポップアニメーションとSE自動再生機能を提供します。
+/// ロビー画面の各UIパネル・ダイアログの基底クラス (SRP / OCP)。
+/// UISettingsConfig に基づくフェード＆ポップアニメーション、アクティブビュースタック管理、フォーカス保護を提供します。
+/// InputModule設定やD-Padリピート制御は単一責務クラス（LobbyUIInputModuleConfigurator / DPadRepeatNavigator）へ委譲しています。
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 public abstract class LobbyViewBase : MonoBehaviour
@@ -18,7 +19,7 @@ public abstract class LobbyViewBase : MonoBehaviour
     [SerializeField] protected UIViewType _viewType = UIViewType.DefaultWindow;
 
     [Tooltip("true の場合、タイプ設定ではなく下記の個別カスタム設定を優先します")]
-    [SerializeField] protected bool _overrideCustom = false;
+    [SerializeField] protected bool _overrideCustom;
 
     [Header("個別カスタム設定（_overrideCustom または Custom 時に有効）")]
     [Tooltip("表示アニメーションの時間（秒）")]
@@ -68,8 +69,12 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     public static event Action OnActiveViewStackChanged;
 
+    private DPadRepeatNavigator _dpadNavigator;
+    private Func<Transform, bool> _cachedOwnershipPredicate;
+    private Func<GameObject> _cachedDefaultFocusFunc;
     private CancellationTokenSource _animCts;
     private bool _isVisible;
+    private bool _hasAwakened;
 
     public bool IsVisible => _isVisible;
     public bool IsTopActiveView => TopActiveView == this;
@@ -108,6 +113,19 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     protected virtual void Awake()
     {
+        if (!_hasAwakened)
+        {
+            _hasAwakened = true;
+            LobbyUIInputModuleConfigurator.RegisterViewInstance();
+        }
+        else
+        {
+            LobbyUIInputModuleConfigurator.ConfigureCurrentEventSystem();
+        }
+
+        _cachedOwnershipPredicate ??= IsOwnedByThisView;
+        _cachedDefaultFocusFunc ??= GetDefaultFocusTarget;
+
         EnsureComponents();
 
         if (_autoAttachButtonSounds)
@@ -132,6 +150,25 @@ public abstract class LobbyViewBase : MonoBehaviour
     {
         CancelCurrentAnimation();
         RemoveActiveView(this);
+
+        if (_hasAwakened)
+        {
+            _hasAwakened = false;
+            LobbyUIInputModuleConfigurator.UnregisterViewInstance();
+        }
+    }
+
+    protected virtual void Update()
+    {
+        ProcessDPadNavigation();
+    }
+
+    protected void ProcessDPadNavigation()
+    {
+        bool canNavigate = _isVisible && IsTopActiveView && _canvasGroup != null && _canvasGroup.interactable;
+        _cachedOwnershipPredicate ??= IsOwnedByThisView;
+        _cachedDefaultFocusFunc ??= GetDefaultFocusTarget;
+        _dpadNavigator.Process(canNavigate, _cachedOwnershipPredicate, _cachedDefaultFocusFunc);
     }
 
     protected virtual void LateUpdate()
@@ -142,8 +179,7 @@ public abstract class LobbyViewBase : MonoBehaviour
         var selected = EventSystem.current.currentSelectedGameObject;
         if (selected != null && !IsOwnedByThisView(selected.transform))
         {
-            var fallback = GetDefaultFocusTarget();
-            EventSystem.current.SetSelectedGameObject(fallback);
+            EventSystem.current.SetSelectedGameObject(GetDefaultFocusTarget());
         }
     }
 
@@ -168,7 +204,6 @@ public abstract class LobbyViewBase : MonoBehaviour
         gameObject.SetActive(true);
         PushActiveView(this);
 
-        // 表示アニメーション中は誤操作を防ぐため入力を遮断
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = true;
 
@@ -188,7 +223,6 @@ public abstract class LobbyViewBase : MonoBehaviour
 
                 elapsed += Time.unscaledDeltaTime;
                 float t = Mathf.Clamp01(elapsed / style.ShowDuration);
-                // EaseOutQuad (1 - (1-t)^2) で滑らかに開く
                 float eased = 1f - (1f - t) * (1f - t);
 
                 _canvasGroup.alpha = eased;
@@ -230,7 +264,6 @@ public abstract class LobbyViewBase : MonoBehaviour
         var ct = _animCts.Token;
 
         _isVisible = false;
-        // 非表示開始時点で直ちに入力受付を遮断し、アクティブUIスタックから外す
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
         OnActiveInteractableChanged(false);
@@ -253,7 +286,6 @@ public abstract class LobbyViewBase : MonoBehaviour
 
                 elapsed += Time.unscaledDeltaTime;
                 float t = Mathf.Clamp01(elapsed / style.HideDuration);
-                // EaseInQuad (t^2) でスッと消える
                 float eased = t * t;
 
                 _canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, eased);
@@ -305,28 +337,24 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     /// <summary>
     /// 子階層にある全Buttonを検索し、UIButtonSoundが未アタッチなら自動付与する
-    /// （ボタン名からUIButtonTypeを自動設定）
     /// </summary>
     public void AutoAttachButtonSounds()
     {
         var buttons = GetComponentsInChildren<Button>(true);
-        foreach (var btn in buttons)
+        for (int i = 0; i < buttons.Length; i++)
         {
-            if (btn == null) continue;
-            if (btn.GetComponent<UIButtonSound>() != null) continue;
-
-            var soundComp = btn.gameObject.AddComponent<UIButtonSound>();
-            soundComp.ButtonType = UIButtonSound.InferTypeFromName(btn.name);
+            var btn = buttons[i];
+            if (btn == null || btn.TryGetComponent<UIButtonSound>(out _)) continue;
+            UIButtonSound.EnsureAttached(btn, UIButtonSound.InferTypeFromName(btn.name));
         }
     }
 
     private void CancelCurrentAnimation()
     {
-        if (_animCts != null)
-        {
-            _animCts.Cancel();
-            _animCts = null;
-        }
+        if (_animCts == null) return;
+        _animCts.Cancel();
+        _animCts.Dispose();
+        _animCts = null;
     }
 
     public void RestoreDefaultFocus()
@@ -344,7 +372,7 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     private static void PruneDestroyedViews()
     {
-        _activeViews.RemoveAll(v => v == null);
+        _activeViews.RemoveAll(static v => v == null);
     }
 
     private static void PushActiveView(LobbyViewBase view)
@@ -369,8 +397,9 @@ public abstract class LobbyViewBase : MonoBehaviour
     {
         PruneDestroyedViews();
         var top = _activeViews.Count > 0 ? _activeViews[_activeViews.Count - 1] : null;
-        foreach (var v in _activeViews)
+        for (int i = 0; i < _activeViews.Count; i++)
         {
+            var v = _activeViews[i];
             bool isTop = (v == top);
             v.EnsureComponents();
             v._canvasGroup.interactable = isTop && v._isVisible;

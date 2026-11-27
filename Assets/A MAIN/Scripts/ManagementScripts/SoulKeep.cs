@@ -126,7 +126,7 @@ public class SoulKeep : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
     public void RequestAdditionCoinServerRpc()
     {
         AdditionCoin();
@@ -207,7 +207,7 @@ public class SoulKeep : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
     public void RequestUseUltimateServerRpc()
     {
         ConsumeUltimate();

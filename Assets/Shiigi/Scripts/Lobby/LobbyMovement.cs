@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,19 +14,37 @@ public static class LobbyMovement
     /// </summary>
     public static bool IsInputBlocked { get; set; }
 
+    /// <summary>
+    /// UI層などの外部モジュールが追加の入力ブロック条件を注入するためのデリゲート (DIP)。
+    /// LobbyMovement が具体的なUIクラスに直接依存するのを防ぎます。
+    /// </summary>
+    public static Func<bool> ExternalInputBlockCheck { get; set; }
+
     private const float StickDeadZoneSqr = 0.01f;
     private const float FacingThreshold = 0.05f;
+    private static readonly Quaternion FlippedRotation = Quaternion.Euler(0f, 180f, 0f);
+    private static readonly List<SpriteRenderer> s_spriteBuffer = new();
 
     // 向きビットフラグ（ネットワーク同期用 1byte）
     public const byte FacingBackBit = 1 << 0;
     public const byte FacingLeftBit = 1 << 1;
 
     /// <summary>
+    /// 現在プレイヤー操作入力がブロックされているかどうかを判定する
+    /// </summary>
+    public static bool IsCurrentlyInputBlocked()
+    {
+        if (IsInputBlocked) return true;
+        if (ExternalInputBlockCheck != null && ExternalInputBlockCheck()) return true;
+        return LobbyViewBase.TopActiveView != null;
+    }
+
+    /// <summary>
     /// 移動入力を取得する（PlayerMove と同じく 左スティック → WASD/矢印キー の順で参照）
     /// </summary>
     public static Vector2 ReadMoveInput()
     {
-        if (IsInputBlocked || LobbyViewBase.TopActiveView != null) return Vector2.zero;
+        if (IsCurrentlyInputBlocked()) return Vector2.zero;
 
         Vector2 input = Vector2.zero;
 
@@ -90,7 +110,7 @@ public static class LobbyMovement
     {
         bool isBack = (facingMask & FacingBackBit) != 0;
         bool isLeft = (facingMask & FacingLeftBit) != 0;
-        Quaternion rot = isLeft ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.identity;
+        Quaternion rot = isLeft ? FlippedRotation : Quaternion.identity;
 
         if (frontSprite != null)
         {
@@ -123,7 +143,7 @@ public static class LobbyMovement
     }
 
     /// <summary>
-    /// 子階層から PlayerAnimation / FrontSprite / BackSprite を自動検索して補完する
+    /// 子階層から PlayerAnimation / FrontSprite / BackSprite を自動検索して補完する（再利用バッファでゼロGC）
     /// </summary>
     public static void AutoResolveVisuals(
         Transform root,
@@ -131,6 +151,8 @@ public static class LobbyMovement
         ref SpriteRenderer frontSprite,
         ref SpriteRenderer backSprite)
     {
+        if (root == null) return;
+
         if (animation == null)
         {
             animation = root.GetComponentInChildren<PlayerAnimation>(true);
@@ -138,11 +160,16 @@ public static class LobbyMovement
 
         if (frontSprite == null || backSprite == null)
         {
-            foreach (var sr in root.GetComponentsInChildren<SpriteRenderer>(true))
+            s_spriteBuffer.Clear();
+            root.GetComponentsInChildren(true, s_spriteBuffer);
+            for (int i = 0; i < s_spriteBuffer.Count; i++)
             {
+                var sr = s_spriteBuffer[i];
+                if (sr == null) continue;
                 if (frontSprite == null && sr.name == "FrontSprite") frontSprite = sr;
                 else if (backSprite == null && sr.name == "BackSprite") backSprite = sr;
             }
+            s_spriteBuffer.Clear();
         }
     }
 }

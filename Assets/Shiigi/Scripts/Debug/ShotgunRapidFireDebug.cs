@@ -1,10 +1,9 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// 【デバッグ用】ショットガン連射（ラピッドファイア）機能およびデバッグUI
+/// 【デバッグ用】ショットガン連射（ラピッドファイア）機能およびデバッグUI。
 /// UnityエディタまたはDevelopment Buildの場合のみ動作。
 /// リリースビルドでは自動的に無効化・破棄されます。
 /// </summary>
@@ -24,7 +23,7 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
     [Header("連射設定")]
     [Tooltip("連射モードのON/OFF（ONの場合、通常射撃ボタン長押しで連射）")]
-    [SerializeField] private bool _isRapidFireMode = false;
+    [SerializeField] private bool _isRapidFireMode;
 
     [Tooltip("連射間隔（秒）。0.1なら毎秒10発")]
     [Range(0.03f, 0.5f)]
@@ -37,7 +36,7 @@ public class ShotgunRapidFireDebug : MonoBehaviour
     [SerializeField] private bool _ignoreOverheat = true;
 
     [Tooltip("連射中にノックバック（反動）を無効化するか（定点で撃ち続けたい場合など）")]
-    [SerializeField] private bool _ignoreKnockback = false;
+    [SerializeField] private bool _ignoreKnockback;
 
     [Header("ショートカットキー設定")]
     [Tooltip("連射モードON/OFF切り替えキー")]
@@ -51,15 +50,15 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
     [Header("UI設定")]
     [Tooltip("デバッグUIを表示するか（デフォルトOFF。F8キーでいつでも表示/非表示を切り替え可能）")]
-    [SerializeField] private bool _showUI = false;
-    [SerializeField] private bool _isMinimized = false;
+    [SerializeField] private bool _showUI;
+    [SerializeField] private bool _isMinimized;
 
-    // 内部タイマーとステート
-    private float _rapidFireTimer = 0f;
-    private bool _wasHoldingFire = false;
-    private bool _isUIButtonHolding = false;
+    private OverHeat _cachedOverHeat;
+    private float _rapidFireTimer;
+    private bool _wasHoldingFire;
+    private bool _isUIButtonHolding;
 
-    // GUIスタイル
+    // GUIスタイルと動的生成テクスチャ（OnDestroyで破棄してリークを防止）
     private GUIStyle _windowStyle;
     private GUIStyle _headerStyle;
     private GUIStyle _toggleActiveStyle;
@@ -67,13 +66,16 @@ public class ShotgunRapidFireDebug : MonoBehaviour
     private GUIStyle _fireButtonStyle;
     private GUIStyle _labelStyle;
     private GUIStyle _miniButtonStyle;
-    private bool _stylesInitialized = false;
+    private GUIStyle _guideStyle;
+    private Texture2D _bgTex;
+    private Texture2D _activeTex;
+    private Texture2D _fireTex;
+    private bool _stylesInitialized;
 
     private Rect _windowRect = new Rect(0, 0, 310, 390);
 
     private void Awake()
     {
-        // エディタおよびDevelopment Build以外では即座に自身を破棄
         if (!Debug.isDebugBuild && !Application.isEditor)
         {
             Destroy(this);
@@ -84,54 +86,50 @@ public class ShotgunRapidFireDebug : MonoBehaviour
         {
             _playerShot = GetComponent<InputPlayerShot>();
         }
+        if (_playerShot != null)
+        {
+            _cachedOverHeat = _playerShot.GetComponent<OverHeat>();
+        }
     }
 
     private void Start()
     {
-        // 画面右下に初期配置
         float posX = Mathf.Max(10f, Screen.width - _windowRect.width - 20f);
         float posY = Mathf.Max(10f, Screen.height - _windowRect.height - 20f);
         _windowRect = new Rect(posX, posY, _windowRect.width, _windowRect.height);
     }
 
+    private void OnDestroy()
+    {
+        if (_bgTex != null) Destroy(_bgTex);
+        if (_activeTex != null) Destroy(_activeTex);
+        if (_fireTex != null) Destroy(_fireTex);
+    }
+
     private void Update()
     {
-        if (_playerShot == null) return;
+        if (_playerShot == null || !_playerShot.IsOwner) return;
 
-        // 自身が操作するプレイヤー（Owner）でなければ動作させない
-        if (!_playerShot.IsOwner) return;
-
-        // UI表示切替キー (F8)
         if (IsKeyDownLegacyOrNew(_toggleUIKey, Key.F8))
         {
             _showUI = !_showUI;
             Debug.Log($"<color=#00ff88>[ShotgunDebug]</color> デバッグUI: {(_showUI ? "表示 (ON)" : "非表示 (OFF)")}");
         }
 
-        // 連射モード切替キー (F6)
         if (IsKeyDownLegacyOrNew(_toggleModeKey, Key.F6))
         {
             _isRapidFireMode = !_isRapidFireMode;
             Debug.Log($"<color=#00ff88>[ShotgunDebug]</color> 連射モード: {(_isRapidFireMode ? "ON" : "OFF")}");
         }
 
-        // 長押し入力の判定
-        // 1. 連射モードON時の通常射撃ボタン長押し
         bool isNormalFireHolding = _isRapidFireMode && _playerShot.IsShootButtonPressed;
-        // 2. 専用連射キー（Rキー）の長押し
         bool isDedicatedKeyHolding = IsKeyHeldLegacyOrNew(_holdFireKey, Key.R);
-        // 3. UIの連射ボタン長押し
-        bool isUIHolding = _isUIButtonHolding;
+        bool isHoldingFire = isNormalFireHolding || isDedicatedKeyHolding || _isUIButtonHolding;
 
-        bool isHoldingFire = isNormalFireHolding || isDedicatedKeyHolding || isUIHolding;
-
-        // InputPlayerShotに連射中であることを通知（通常チャージの干渉を防止）
         _playerShot.IsRapidFireActive = isHoldingFire;
 
-        // 連射実行処理
         if (isHoldingFire)
         {
-            // 押された瞬間（立ち上がり）に初弾を即座に発射
             if (!_wasHoldingFire)
             {
                 TriggerRapidShot();
@@ -162,44 +160,39 @@ public class ShotgunRapidFireDebug : MonoBehaviour
     {
         if (_playerShot == null) return;
 
-        float charge = 0f;
-        bool isCrit = false;
-        bool isMax = false;
-
-        switch (_chargeType)
+        (float charge, bool isCrit, bool isMax) = _chargeType switch
         {
-            case RapidChargeType.Min:
-                charge = 0.0f;
-                break;
-            case RapidChargeType.Medium:
-                charge = 1.0f;
-                break;
-            case RapidChargeType.Max:
-                charge = 2.0f;
-                isMax = true;
-                break;
-            case RapidChargeType.Critical:
-                charge = 2.4f;
-                isCrit = true;
-                break;
-        }
+            RapidChargeType.Min => (0.0f, false, false),
+            RapidChargeType.Medium => (1.0f, false, false),
+            RapidChargeType.Max => (2.0f, false, true),
+            RapidChargeType.Critical => (2.4f, true, false),
+            _ => (1.0f, false, false)
+        };
 
         _playerShot.FireShotDebug(charge, isCrit, isMax, _ignoreKnockback, _ignoreOverheat);
+    }
+
+    private static Texture2D CreateSolidTexture(Color color)
+    {
+        var tex = new Texture2D(1, 1) { hideFlags = HideFlags.HideAndDontSave };
+        tex.SetPixel(0, 0, color);
+        tex.Apply();
+        return tex;
     }
 
     private void InitStyles()
     {
         if (_stylesInitialized) return;
 
+        _bgTex = CreateSolidTexture(new Color(0.08f, 0.1f, 0.14f, 0.92f));
+        _activeTex = CreateSolidTexture(new Color(0.2f, 1f, 0.4f, 1f));
+        _fireTex = CreateSolidTexture(new Color(0.85f, 0.25f, 0.2f, 0.95f));
+
         _windowStyle = new GUIStyle(GUI.skin.box)
         {
             padding = new RectOffset(10, 10, 10, 10)
         };
-
-        Texture2D bgTex = new Texture2D(1, 1);
-        bgTex.SetPixel(0, 0, new Color(0.08f, 0.1f, 0.14f, 0.92f));
-        bgTex.Apply();
-        _windowStyle.normal.background = bgTex;
+        _windowStyle.normal.background = _bgTex;
 
         _headerStyle = new GUIStyle(GUI.skin.label)
         {
@@ -222,10 +215,7 @@ public class ShotgunRapidFireDebug : MonoBehaviour
             fontStyle = FontStyle.Bold
         };
         _toggleActiveStyle.normal.textColor = Color.black;
-        Texture2D activeTex = new Texture2D(1, 1);
-        activeTex.SetPixel(0, 0, new Color(0.2f, 1f, 0.4f, 1f));
-        activeTex.Apply();
-        _toggleActiveStyle.normal.background = activeTex;
+        _toggleActiveStyle.normal.background = _activeTex;
 
         _toggleNormalStyle = new GUIStyle(GUI.skin.button)
         {
@@ -239,16 +229,20 @@ public class ShotgunRapidFireDebug : MonoBehaviour
             fontStyle = FontStyle.Bold
         };
         _fireButtonStyle.normal.textColor = Color.white;
-        Texture2D fireTex = new Texture2D(1, 1);
-        fireTex.SetPixel(0, 0, new Color(0.85f, 0.25f, 0.2f, 0.95f));
-        fireTex.Apply();
-        _fireButtonStyle.normal.background = fireTex;
+        _fireButtonStyle.normal.background = _fireTex;
 
         _miniButtonStyle = new GUIStyle(GUI.skin.button)
         {
             fontSize = 10,
             padding = new RectOffset(4, 4, 2, 2)
         };
+
+        _guideStyle = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 9,
+            wordWrap = true
+        };
+        _guideStyle.normal.textColor = new Color(0.7f, 0.7f, 0.7f);
 
         _stylesInitialized = true;
     }
@@ -259,33 +253,30 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
         InitStyles();
 
-        // 最小化表示の場合
         if (_isMinimized)
         {
-            float miniW = 160;
-            float miniH = 34;
-            float miniX = Mathf.Clamp(_windowRect.x, 10, Screen.width - miniW - 10);
-            float miniY = Mathf.Clamp(_windowRect.y, 10, Screen.height - miniH - 10);
+            const float miniW = 160f;
+            const float miniH = 34f;
+            float miniX = Mathf.Clamp(_windowRect.x, 10f, Screen.width - miniW - 10f);
+            float miniY = Mathf.Clamp(_windowRect.y, 10f, Screen.height - miniH - 10f);
             Rect miniRect = new Rect(miniX, miniY, miniW, miniH);
 
-            string miniTitle = _isRapidFireMode ? "連射: [ON]" : "連射: [OFF]";
+            string miniTitle = _isRapidFireMode ? "連射: [ON] (展開)" : "連射: [OFF] (展開)";
             GUIStyle miniStyle = _isRapidFireMode ? _toggleActiveStyle : _toggleNormalStyle;
-            if (GUI.Button(miniRect, $"{miniTitle} (展開)", miniStyle))
+            if (GUI.Button(miniRect, miniTitle, miniStyle))
             {
                 _isMinimized = false;
             }
             return;
         }
 
-        // ウィンドウ表示
-        _windowRect.x = Mathf.Clamp(_windowRect.x, 5, Screen.width - _windowRect.width - 5);
-        _windowRect.y = Mathf.Clamp(_windowRect.y, 5, Screen.height - _windowRect.height - 5);
-        _windowRect = GUI.Window(987654, _windowRect, DrawWindow, "", _windowStyle);
+        _windowRect.x = Mathf.Clamp(_windowRect.x, 5f, Screen.width - _windowRect.width - 5f);
+        _windowRect.y = Mathf.Clamp(_windowRect.y, 5f, Screen.height - _windowRect.height - 5f);
+        _windowRect = GUI.Window(987654, _windowRect, DrawWindow, string.Empty, _windowStyle);
     }
 
     private void DrawWindow(int windowId)
     {
-        // ヘッダー
         GUILayout.BeginHorizontal();
         GUILayout.Label("[デバッグ] ショットガン連射", _headerStyle);
         if (GUILayout.Button("━", _miniButtonStyle, GUILayout.Width(22), GUILayout.Height(18)))
@@ -300,7 +291,6 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
         GUILayout.Space(6);
 
-        // 連射モードトグルボタン
         string toggleText = _isRapidFireMode
             ? "【連射モード: ON】(F6で切替)"
             : "【連射モード: OFF】(F6で切替)";
@@ -313,19 +303,14 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
         GUILayout.Space(6);
 
-        // UIからの長押し連射ボタン
-        // RepeatButtonは押されているフレーム間ずっとtrueを返す
-        bool isPressedThisFrame = GUILayout.RepeatButton("連射ボタン(長押し)", _fireButtonStyle, GUILayout.Height(36));
-        _isUIButtonHolding = isPressedThisFrame;
+        _isUIButtonHolding = GUILayout.RepeatButton("連射ボタン(長押し)", _fireButtonStyle, GUILayout.Height(36));
 
         GUILayout.Space(6);
 
-        // 連射間隔設定
         float rps = 1.0f / Mathf.Max(0.01f, _fireInterval);
         GUILayout.Label($"連射間隔: {_fireInterval:F2}秒 (秒間 {rps:F1}発)", _labelStyle);
         _fireInterval = GUILayout.HorizontalSlider(_fireInterval, 0.04f, 0.35f);
 
-        // 間隔プリセット
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("超高速(0.06s)", _miniButtonStyle)) _fireInterval = 0.06f;
         if (GUILayout.Button("標準(0.12s)", _miniButtonStyle)) _fireInterval = 0.12f;
@@ -334,7 +319,6 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
         GUILayout.Space(6);
 
-        // チャージ威力プリセット
         GUILayout.Label($"チャージ威力: {_chargeType}", _labelStyle);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("最小(0.0)", _chargeType == RapidChargeType.Min ? _toggleActiveStyle : _miniButtonStyle))
@@ -349,32 +333,23 @@ public class ShotgunRapidFireDebug : MonoBehaviour
 
         GUILayout.Space(6);
 
-        // デバッグトグル群
         _ignoreOverheat = GUILayout.Toggle(_ignoreOverheat, "オーバーヒート無効化", GUI.skin.toggle);
         _ignoreKnockback = GUILayout.Toggle(_ignoreKnockback, "ノックバック(反動)無効化", GUI.skin.toggle);
 
         GUILayout.Space(4);
 
-        // オバヒ即時リセットボタン
         if (GUILayout.Button("オーバーヒート即時解除", _miniButtonStyle, GUILayout.Height(20)))
         {
-            var overHeat = _playerShot.GetComponent<OverHeat>();
-            if (overHeat != null)
+            if (_cachedOverHeat == null && _playerShot != null)
             {
-                overHeat.ResetOverHeat();
+                _cachedOverHeat = _playerShot.GetComponent<OverHeat>();
             }
+            _cachedOverHeat?.ResetOverHeat();
         }
 
         GUILayout.Space(6);
 
-        // ガイド
-        GUIStyle guideStyle = new GUIStyle(GUI.skin.label)
-        {
-            fontSize = 9,
-            wordWrap = true
-        };
-        guideStyle.normal.textColor = new Color(0.7f, 0.7f, 0.7f);
-        GUILayout.Label("【操作方法】\n・F6: 連射モードON/OFF (ON時は左クリック/Space長押しで連射)\n・Rキー長押し: いつでも即座に連射\n・F8: このUIの表示/非表示", guideStyle);
+        GUILayout.Label("【操作方法】\n・F6: 連射モードON/OFF (ON時は左クリック/Space長押しで連射)\n・Rキー長押し: いつでも即座に連射\n・F8: このUIの表示/非表示", _guideStyle);
 
         GUI.DragWindow(new Rect(0, 0, _windowRect.width, 24));
     }

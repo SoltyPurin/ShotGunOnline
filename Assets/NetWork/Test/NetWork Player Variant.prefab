@@ -71,6 +71,9 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: 8682099845083446549}
     - targetCorrespondingSourceObject: {fileID: 7818330625537861996, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: -2623377433967547032}
+    - targetCorrespondingSourceObject: {fileID: 7818330625537861996, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
       insertIndex: -1
       addedObject: {fileID: -427055168508731884}
     - targetCorrespondingSourceObject: {fileID: 7818330625537861996, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}
@@ -504,6 +507,18 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &-2623377433967547032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7250050344265823419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5b1e52cd6e8be47a337df3403781d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHP
 --- !u!114 &-427055168508731884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,6 +615,14 @@ MonoBehaviour:
   - DownSprite: {fileID: -8560152775907755022, guid: b03f4715185cb9640b8184ae979c3f5e, type: 3}
     KnockBackSprite: {fileID: -8209726490841238937, guid: 2cbe84aff2bfeda408439f9700fb640c, type: 3}
     IdleSprite: {fileID: -6268037493484981051, guid: e86d30af9fbba43438a11ede285f1b9f, type: 3}
+  _playerSpritesTransform: {fileID: 0}
+  _burrelObject: {fileID: 0}
+  _lineRendererObject: {fileID: 0}
+  _playerUIObject: {fileID: 0}
+  _frontSpriteRenderer: {fileID: 0}
+  _backSpriteRenderer: {fileID: 0}
+  _frontSpriteAnimator: {fileID: 0}
+  _cutsceneAnimator: {fileID: 0}
 --- !u!1 &7506001819700656733 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6933217705799788426, guid: 9ea8b252ebf2bee4c9ead9d0ddb0f5df, type: 3}

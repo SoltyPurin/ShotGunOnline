@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -71,7 +72,17 @@ public class BossHP : EnemyTakeDamage
     internal bool _isInvincible = true;
     private bool _isAnimeGot = false;
 
+    public event Action<bool> IsBossDead;
+
     #endregion
+
+    private void Awake()
+    {
+        if (TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTrans))
+        {
+            netTrans.UseUnreliableDeltas = true;
+        }
+    }
 
     public override void Start()
     {
@@ -120,13 +131,14 @@ public class BossHP : EnemyTakeDamage
     {
         if (!IsServer || _isDead) return;
 
+        BossTakeDamageEffectClientRpc();
         float damage = chargeTime * _damageMultiplier;
         damage = Mathf.Max(damage, _minDamage);
         _enemyHP.Value = (_enemyHP.Value - (int)damage);
-        _playTheSEManager.PlayEnemyDamageSound();
+        if (_playTheSEManager != null) _playTheSEManager.PlayEnemyDamageSound();
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
     public override void SetTakeDamege(float chargeTime, PlayerState state)
@@ -141,7 +153,7 @@ public class BossHP : EnemyTakeDamage
 
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
 
@@ -164,12 +176,19 @@ public class BossHP : EnemyTakeDamage
     }
     public override void FallDamage()
     {
-        _collider.isTrigger = true;
-        _enemyMove.EnemyState = EnemyState.fall;
+        if (!IsServer || _isDead) return;
+
+        if (_collider != null) _collider.isTrigger = true;
+        if (_enemyMove != null) _enemyMove.EnemyState = EnemyState.fall;
         _enemyHP.Value -= _fallDamage;
+        if (_enemyHP.Value <= 0)
+        {
+            DeadBossProcess(true);
+            return;
+        }
         if (this.gameObject.activeInHierarchy)
         {
-            _playTheSEManager.PlayDropSound();
+            if (_playTheSEManager != null) _playTheSEManager.PlayDropSound();
             StartCoroutine(ReturnStage());
         }
     }
@@ -190,7 +209,7 @@ public class BossHP : EnemyTakeDamage
 
         if (_enemyHP.Value <= 0)
         {
-            DeadBossProcess();
+            DeadBossProcess(true);
         }
     }
 
@@ -219,8 +238,8 @@ public class BossHP : EnemyTakeDamage
         }
         float timeLeftUntilDeath = chargeTime / _deathTimeMultiplier;
         yield return new WaitForSeconds(timeLeftUntilDeath);
-        _playTheSEManager.PlayBossDeathSound();
-        _coinKeep.AdditionCoin();
+        if (_playTheSEManager != null) _playTheSEManager.PlayBossDeathSound();
+        if (_coinKeep != null) _coinKeep.AdditionCoin();
         _enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         _enemyObjects2 = GameObject.FindGameObjectsWithTag("Armor");
         foreach (GameObject enemy in _enemyObjects)
@@ -249,17 +268,32 @@ public class BossHP : EnemyTakeDamage
     [ClientRpc]
     private void DeathObjectClientRpc()
     {
-        _deathExplosion = GameObject.FindWithTag("ExplosionManager").GetComponent<PlayBossDeadExplosion>();
-        Instantiate(_deathObject, transform.position, Quaternion.identity);
-        _deathExplosion.Explosion(this.transform.position);
+        GameObject expMgr = GameObject.FindWithTag("ExplosionManager");
+        if (expMgr != null)
+        {
+            _deathExplosion = expMgr.GetComponent<PlayBossDeadExplosion>();
+        }
+        if (_deathObject != null)
+        {
+            Instantiate(_deathObject, transform.position, Quaternion.identity);
+        }
+        if (_deathExplosion != null)
+        {
+            _deathExplosion.Explosion(this.transform.position);
+        }
     }
 
     public override void ContactStoneMethod()
     {
+        if (!IsServer || _isDead) return;
+
         float damage = _stoneDamage;
         _enemyHP.Value = (_enemyHP.Value - (int)damage);
-        _playTheSEManager.PlayRoadKill();
-
+        if (_playTheSEManager != null) _playTheSEManager.PlayRoadKill();
+        if (_enemyHP.Value <= 0)
+        {
+            DeadBossProcess(true);
+        }
     }
     [ClientRpc]
     private void DeactivateBossClientRpc()
@@ -285,10 +319,15 @@ public class BossHP : EnemyTakeDamage
         if (_bossAnimator != null) _bossAnimator.SetBool("isDead", true);
     }
 
-    private void DeadBossProcess()
+    /// <summary>
+    /// ボスの死亡処理、渡す値はtrueでいい
+    /// </summary>
+    /// <param name="isDead"></param>
+    private void DeadBossProcess(bool isDead)
     {
         if (_isDead) return;
         _isDead = true;
+        IsBossDead?.Invoke(_isDead);
         FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: 開始");
 
         if (TryGetComponent<Unity.Netcode.Components.NetworkTransform>(out var netTrans))
@@ -313,5 +352,26 @@ public class BossHP : EnemyTakeDamage
         if (_shadow != null) _shadow.SetActive(false);
         FreezeWatchdogLogger.Checkpoint("BossHP.DeadBossProcess: DeathProtocol 開始");
         StartCoroutine(DeathProtocol(1.0f));
+    }
+
+    public void EnhanceBossHP(float addHP)
+    {
+        _maxHP.Value += addHP;
+        _enemyHP.Value += addHP;
+        ShowBossHPUIClientRpc();
+    }
+
+    [ClientRpc]
+    private void ShowBossHPUIClientRpc()
+    {
+        BossHPUI hpui = FindAnyObjectByType<BossHPUI>();
+        if (hpui != null)
+        {
+            hpui.FindBoss();
+        }
+        else
+        {
+            Debug.Log("hpUIが見当たらない");
+        }
     }
 }

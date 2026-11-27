@@ -88,6 +88,15 @@ public class SceneTransitionManager : MonoBehaviour
         _sceneLoadTransition = false;
         _despawnFrame = -1;
         _state = TransitionState.FadeOut;
+
+        // 遷移待機中に回復床の新規 Spawn / Despawn(true) が起きないよう停止する
+        foreach (FloorOasis oasis in FindObjectsByType<FloorOasis>(FindObjectsInactive.Include))
+        {
+            if (oasis != null)
+            {
+                oasis.PrepareForSceneTransition();
+            }
+        }
     }
 
     /// <summary>
@@ -150,9 +159,9 @@ public class SceneTransitionManager : MonoBehaviour
             // Despawn 後に数フレーム待機してから LoadScene する (破棄キューのフラッシュと非同期シーンロードの競合対策)
             if (_sceneLoadTransition)
             {
-                if (Time.frameCount < _despawnFrame + 3)
+                if (Time.frameCount < _despawnFrame + 6)
                 {
-                    // 破棄処理完了から最低3フレーム待機してUnityのDelayedCallManagerを安全に完了させる
+                    // 破棄処理・RPC処理完了から最低6フレーム待機してUnityのDelayedCallManagerを安全に完了させる
                     _timer = _sceneTransitionTime;
                     return;
                 }
@@ -162,14 +171,21 @@ public class SceneTransitionManager : MonoBehaviour
             }
             _sceneLoadTransition = true;
             _despawnFrame = Time.frameCount;
-            Debug.Log("[SceneTransition] 遷移開始: 残存ネットワークオブジェクトの同期解除を開始します");
+            Debug.Log("[SceneTransition] 遷移開始: 全端末の描画停止と残存ネットワークオブジェクトの同期解除を開始します");
 
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
-                // 1. 動的スポーンされた残存オブジェクト（敵・弾など）のネットワーク追跡のみ安全に解除
+                // まず全クライアント・ホストの SpriteRenderer / コルーチン / アンロード時破棄処理を一括停止する
+                if (_waveUIManager != null && _waveUIManager.IsSpawned)
+                {
+                    _waveUIManager.PrepareAllClientsForSceneUnloadClientRpc();
+                }
+                DisableAllSceneRenderersAndBehaviours();
+
+                // 1. 動的スポーンされた残存オブジェクト（プレイヤー・敵・弾・ソウル等）のネットワーク追跡のみ安全に解除
                 // ※ netObj.Despawn(false) を使用し、手動 Destroy は行わない（旧シーン破棄時に自動回収）
-                // ※ 手動 Destroy を行うと、Unityの DelayedCallManager (SpriteRenderer::MainThreadCleanup) と
-                //    非同期シーンロードの PersistentManager::Lock が衝突してデッドロックするため
+                // ※ プレイヤー（IsPlayerObject）も DestroyWithScene=true のため、事前に Despawn(false) しておかないと
+                //    LoadScene 内部の MoveObjectsToDontDestroyOnLoad() で Despawn(true) (=Destroy) が同一フレーム実行されデッドロックする
                 if (NetworkManager.Singleton.SpawnManager != null)
                 {
                     var spawnedList = new System.Collections.Generic.List<NetworkObject>(NetworkManager.Singleton.SpawnManager.SpawnedObjectsList);
@@ -177,38 +193,20 @@ public class SceneTransitionManager : MonoBehaviour
                     {
                         if (netObj == null || !netObj.IsSpawned) continue;
 
-                        // プレイヤー本体は絶対にDespawnしない（切断やNullRefフリーズを防止）
-                        if (netObj.IsPlayerObject) continue;
-
                         // DontDestroyOnLoad 内のオブジェクト（NetworkManager自身やセッション管理等）は維持
                         if (netObj.gameObject.scene.name == "DontDestroyOnLoad") continue;
 
                         // シーン配置オブジェクトはDespawnしない
                         if (netObj.IsSceneObject == true) continue;
 
-                        // SpriteRenderer があれば事前に非アクティブ化してアセットロック競合を防止
-                        SpriteRenderer[] renderers = netObj.GetComponentsInChildren<SpriteRenderer>(true);
-                        foreach (var sr in renderers)
-                        {
-                            if (sr != null) sr.enabled = false;
-                        }
-
                         // Destroy(true) ではなく Despawn(false) で同期のみ安全に解除
                         netObj.Despawn(false);
                     }
                 }
-
-                // 2. ローカルのコインや演出オブジェクトも手動 Destroy せず、非表示化のみ行う
-                // (GameObject 自体は LoadSceneMode.Single による旧シーンアンロードで自動的かつ安全に一括破棄される)
-                MoveCoin[] remainingCoins = Object.FindObjectsByType<MoveCoin>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-                foreach (MoveCoin coin in remainingCoins)
-                {
-                    if (coin != null)
-                    {
-                        SpriteRenderer sr = coin.GetComponent<SpriteRenderer>();
-                        if (sr != null) sr.enabled = false;
-                    }
-                }
+            }
+            else
+            {
+                DisableAllSceneRenderersAndBehaviours();
             }
 
             Debug.Log("[SceneTransition] 同期解除完了: 破棄キューフラッシュ後に LoadScene します");
@@ -218,6 +216,117 @@ public class SceneTransitionManager : MonoBehaviour
         }
 
         _timer += Time.unscaledDeltaTime;
+    }
+
+    /// <summary>
+    /// フェードアウト開始時にプレイヤーの操作・当たり判定とギミック・コインの動作を停止し、
+    /// シーン遷移直前の新規生成や点滅コルーチン起動を防ぐ
+    /// </summary>
+    public static void FreezeGameplayBeforeSceneUnload()
+    {
+        foreach (FloorOasis oasis in FindObjectsByType<FloorOasis>(FindObjectsInactive.Include))
+        {
+            if (oasis != null) oasis.PrepareForSceneTransition();
+        }
+
+        // プレイヤーの Collider を無効化する前に感圧板と連動床を停止し、OnTriggerExit2D 発火を防ぐ
+        DisableBehavioursAndCoroutines<DetectOnPlayer>();
+        DisableBehavioursAndCoroutines<ClearFunctionBaseClass>();
+        DisableBehavioursAndCoroutines<CandleTakeFire>();
+        DisableBehavioursAndCoroutines<MoveCoin>();
+        DisableBehavioursAndCoroutines<CoinControl>();
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            if (player == null) continue;
+
+            DisableBehaviourOnObject<PlayerMove>(player);
+            DisableBehaviourOnObject<InputPlayerShot>(player);
+            DisableBehaviourOnObject<PlayerAiming>(player);
+            DisableBehaviourOnObject<InputChangeState>(player);
+            DisableBehaviourOnObject<PlayerKnockBack>(player);
+
+            foreach (Collider2D col in player.GetComponentsInChildren<Collider2D>(true))
+            {
+                if (col != null) col.enabled = false;
+            }
+
+            foreach (Rigidbody2D rb in player.GetComponentsInChildren<Rigidbody2D>(true))
+            {
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector2.zero;
+                    rb.simulated = false;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// LoadScene 実行前に、現在シーン内の全 SpriteRenderer・演出・アンロード時 Destroy 処理を一括停止する
+    /// </summary>
+    public static void DisableAllSceneRenderersAndBehaviours()
+    {
+        FreezeGameplayBeforeSceneUnload();
+
+        foreach (Wave wave in FindObjectsByType<Wave>(FindObjectsInactive.Include))
+        {
+            if (wave != null) wave.PrepareForSceneTransition();
+        }
+
+        foreach (StageController stage in FindObjectsByType<StageController>(FindObjectsInactive.Include))
+        {
+            if (stage != null) stage.PrepareForSceneTransition();
+        }
+
+        DisableBehavioursAndCoroutines<FollowingCameraToBurrel>();
+
+        foreach (ParticleSystem ps in FindObjectsByType<ParticleSystem>(FindObjectsInactive.Include))
+        {
+            if (ps == null || ps.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+
+        foreach (SpriteRenderer sr in FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Include))
+        {
+            if (sr == null || sr.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            sr.enabled = false;
+        }
+
+        foreach (LineRenderer lr in FindObjectsByType<LineRenderer>(FindObjectsInactive.Include))
+        {
+            if (lr == null || lr.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            lr.enabled = false;
+        }
+
+        foreach (TrailRenderer tr in FindObjectsByType<TrailRenderer>(FindObjectsInactive.Include))
+        {
+            if (tr == null || tr.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            tr.enabled = false;
+        }
+    }
+
+    private static void DisableBehavioursAndCoroutines<T>() where T : MonoBehaviour
+    {
+        foreach (T behaviour in FindObjectsByType<T>(FindObjectsInactive.Include))
+        {
+            if (behaviour == null || behaviour.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            behaviour.StopAllCoroutines();
+            behaviour.enabled = false;
+        }
+    }
+
+    private static void DisableBehaviourOnObject<T>(GameObject target) where T : MonoBehaviour
+    {
+        foreach (T behaviour in target.GetComponentsInChildren<T>(true))
+        {
+            if (behaviour != null)
+            {
+                behaviour.StopAllCoroutines();
+                behaviour.enabled = false;
+            }
+        }
     }
 
     /// <summary>

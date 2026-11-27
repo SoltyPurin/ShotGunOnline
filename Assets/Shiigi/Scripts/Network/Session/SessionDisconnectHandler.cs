@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// ホストとの通信切断検知（NGOイベント）および通信エラーダイアログ表示・タイトルへの遷移を担当するクラス (SRP)
+/// ホストとの通信切断検知（NGOイベント）および通信エラーダイアログ表示・タイトルへの遷移を担当するクラス (SRP / DIP)。
+/// インゲームの入力遮断処理は IGameInputBlocker へ委譲します。
 /// </summary>
 public class SessionDisconnectHandler
 {
@@ -16,6 +17,7 @@ public class SessionDisconnectHandler
 
     private readonly Transform _persistentRoot;
     private readonly Func<UniTask> _cleanupSessionAsync;
+    private readonly IGameInputBlocker _gameInputBlocker;
     private readonly string _titleSceneName;
     private readonly string _errorMessage;
 
@@ -36,10 +38,12 @@ public class SessionDisconnectHandler
         Func<UniTask> cleanupSessionAsync,
         ConfirmDialogUI dialogPrefab = null,
         string titleSceneName = DefaultTitleSceneName,
-        string errorMessage = DefaultErrorMessage)
+        string errorMessage = DefaultErrorMessage,
+        IGameInputBlocker gameInputBlocker = null)
     {
         _persistentRoot = persistentRoot;
         _cleanupSessionAsync = cleanupSessionAsync ?? throw new ArgumentNullException(nameof(cleanupSessionAsync));
+        _gameInputBlocker = gameInputBlocker ?? new SceneGameInputBlocker();
         _titleSceneName = string.IsNullOrWhiteSpace(titleSceneName) ? DefaultTitleSceneName : titleSceneName;
         _errorMessage = string.IsNullOrWhiteSpace(errorMessage) ? DefaultErrorMessage : errorMessage;
 
@@ -102,7 +106,6 @@ public class SessionDisconnectHandler
         if (_isApplicationQuitting || !Application.isPlaying || !_isMonitoring || _isHandlingDisconnect) return;
 
         var networkManager = NetworkManager.Singleton;
-        // クライアント側で自身またはサーバーの切断コールバックが発火した場合はホストとの接続切断を意味する
         if (networkManager != null &&
             !networkManager.IsServer &&
             (clientId == networkManager.LocalClientId || clientId == NetworkManager.ServerClientId))
@@ -128,17 +131,20 @@ public class SessionDisconnectHandler
 
         try
         {
-            // 既にタイトル画面にいる場合は処理しない
             if (SceneManager.GetActiveScene().name == _titleSceneName)
             {
                 return;
             }
 
-            // 各種ゲーム入力を無効化し、時間を停止してダイアログ表示する
-            DisableAllGameInputs();
+            _gameInputBlocker.BlockAllGameInputs();
             Time.timeScale = 0f;
             TryCacheDialogFromScene();
             await _cleanupSessionAsync();
+
+            if (_isApplicationQuitting || SceneManager.GetActiveScene().name == _titleSceneName)
+            {
+                return;
+            }
 
             if (_canvasObj != null)
             {
@@ -154,30 +160,12 @@ public class SessionDisconnectHandler
                 Debug.LogWarning("[MSM]: ConfirmDialogUI が見つからないため、そのままタイトルへ遷移します。");
             }
 
-            // ダイアログ終了後、時間を復元してタイトルへ遷移
-            if (_canvasObj != null)
-            {
-                _canvasObj.SetActive(false);
-            }
-            Time.timeScale = 1.0f;
-
-            if (!_isApplicationQuitting && SceneManager.GetActiveScene().name != _titleSceneName)
-            {
-                SceneManager.LoadScene(_titleSceneName);
-            }
+            ReturnToTitleSceneSafely();
         }
         catch (Exception ex)
         {
             Debug.LogError($"[MSM]: 通信エラー切断処理中に例外が発生しました: {ex.Message}");
-            if (_canvasObj != null)
-            {
-                _canvasObj.SetActive(false);
-            }
-            Time.timeScale = 1.0f;
-            if (!_isApplicationQuitting && SceneManager.GetActiveScene().name != _titleSceneName)
-            {
-                SceneManager.LoadScene(_titleSceneName);
-            }
+            ReturnToTitleSceneSafely();
         }
         finally
         {
@@ -186,67 +174,17 @@ public class SessionDisconnectHandler
         }
     }
 
-    /// <summary>
-    /// シーン内のすべてのプレイヤー操作およびポーズメニュー入力を停止する
-    /// </summary>
-    private static void DisableAllGameInputs()
+    private void ReturnToTitleSceneSafely()
     {
-        try
+        if (_canvasObj != null)
         {
-            // プレイヤーの操作スクリプトおよび物理移動を遮断
-            var playerObjs = GameObject.FindGameObjectsWithTag("Player");
-            foreach (var player in playerObjs)
-            {
-                if (player == null) continue;
-
-                var stateManager = player.GetComponent<PlayerStateManager>();
-                if (stateManager != null)
-                {
-                    try
-                    {
-                        if (stateManager.IsOwner)
-                        {
-                            stateManager.MovieState();
-                        }
-                    }
-                    catch
-                    {
-                        // 切断時のNetworkVariable書き込み例外を安全に吸収
-                    }
-                }
-
-                var move = player.GetComponent<PlayerMove>();
-                if (move != null) move.enabled = false;
-
-                var shot = player.GetComponent<InputPlayerShot>();
-                if (shot != null) shot.enabled = false;
-
-                var aiming = player.GetComponent<PlayerAiming>();
-                if (aiming != null) aiming.enabled = false;
-
-                var ult = player.GetComponent<InputChangeState>();
-                if (ult != null) ult.enabled = false;
-
-                var rb = player.GetComponent<Rigidbody2D>();
-                if (rb != null)
-                {
-                    rb.linearVelocity = Vector2.zero;
-                }
-            }
-
-            // ポーズメニューのキー・ボタン入力を無効化
-            var pauseInputs = UnityEngine.Object.FindObjectsByType<InputPause>(FindObjectsSortMode.None);
-            foreach (var pause in pauseInputs)
-            {
-                if (pause != null)
-                {
-                    pause.enabled = false;
-                }
-            }
+            _canvasObj.SetActive(false);
         }
-        catch (Exception ex)
+        Time.timeScale = 1.0f;
+
+        if (!_isApplicationQuitting && SceneManager.GetActiveScene().name != _titleSceneName)
         {
-            Debug.LogWarning($"[MSM]: ゲーム入力無効化中に警告: {ex.Message}");
+            SceneManager.LoadScene(_titleSceneName);
         }
     }
 
@@ -254,7 +192,6 @@ public class SessionDisconnectHandler
     {
         if (_isApplicationQuitting || !Application.isPlaying || sourceDialog == null || _persistentRoot == null || _dialogInstance != null) return;
 
-        // 最前面に表示するための専用Canvasを構築
         var canvasObj = new GameObject("DisconnectErrorCanvas");
         canvasObj.transform.SetParent(_persistentRoot, false);
 
@@ -269,21 +206,6 @@ public class SessionDisconnectHandler
 
         canvasObj.AddComponent<GraphicRaycaster>();
 
-        // 全画面ブロッカー (黒半透明で背後のクリックを防ぐオーバーレイ)
-        var blockerObj = new GameObject("ScreenBlocker", typeof(RectTransform), typeof(Image));
-        blockerObj.transform.SetParent(canvasObj.transform, false);
-        var blockerRect = blockerObj.GetComponent<RectTransform>();
-        blockerRect.anchorMin = Vector2.zero;
-        blockerRect.anchorMax = Vector2.one;
-        blockerRect.sizeDelta = Vector2.zero;
-        blockerRect.anchoredPosition = Vector2.zero;
-        blockerRect.pivot = new Vector2(0.5f, 0.5f);
-
-        var blockerImage = blockerObj.GetComponent<Image>();
-        blockerImage.color = new Color(0f, 0f, 0f, 0.6f);
-        blockerImage.raycastTarget = true;
-
-        // MultiplayerLobbyScene の LobbyUIManager と同じレイアウト枠 (SizeDelta: -300, -100) を再現
         var frameObj = new GameObject("DialogFrame", typeof(RectTransform));
         var frameRect = frameObj.GetComponent<RectTransform>();
         frameRect.SetParent(canvasObj.transform, false);
@@ -298,6 +220,6 @@ public class SessionDisconnectHandler
         _dialogInstance.gameObject.SetActive(false);
 
         _canvasObj = canvasObj;
-        _canvasObj.SetActive(false); // エラー発生時まで非表示にしておく
+        _canvasObj.SetActive(false);
     }
 }

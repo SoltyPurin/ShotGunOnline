@@ -567,6 +567,7 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
         //ボスウェーブだった場合、BOSSと表示しBGMを変える。
         if (waveMeta._waveType == Wave.WaveEnemyType.Boss)
         {
+            Debug.Log("ボスウェーブ開始");
             _isBossWave = true;
             _uiManager.TextChangeClientRpc("BOSS", 0);
             _uiManager.HiddenText(0);
@@ -652,7 +653,6 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
     /// </summary>
     private void NextWave()
     {
-        Debug.Log("ウェーブの数更新");
         //ウェーブがまだ残っているなら次のウェーブへ
         if (_waveIndex.Value < (TotalWaveCount - 1))
         {
@@ -702,6 +702,7 @@ public class WaveManager : Unity.Netcode.NetworkBehaviour
 
     public void BossWaveEnd()
     {
+        Debug.Log("ボスのウェーブ終了");
         _listEnd = true;
         _scoreManager.TextAlpha(true);
         FreezeWatchdogLogger.Checkpoint("WaveManager.BossWaveEnd: 開始");

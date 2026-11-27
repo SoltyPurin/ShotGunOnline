@@ -138,7 +138,7 @@ public class PlayerHoleFall : EntityFall
         if (_respawn == null)
         {
             Unity.Netcode.Components.NetworkTransform netTransform = GetComponent<Unity.Netcode.Components.NetworkTransform>();
-            if (netTransform != null)
+            if (netTransform != null && netObj != null && netObj.IsSpawned)
             {
                 netTransform.Teleport(targetPos, Quaternion.identity, transform.localScale);
             }
@@ -197,7 +197,7 @@ public class PlayerHoleFall : EntityFall
     {
         // マルチプレイ時、自機（所有権を持つローカルプレイヤー）のみ落下・画面エフェクト・リスポーンを実行
         NetworkObject netObj = GetComponent<NetworkObject>();
-        if (netObj != null && !netObj.IsOwner)
+        if (netObj != null && netObj.IsSpawned && !netObj.IsOwner)
         {
             return;
         }
@@ -219,7 +219,7 @@ public class PlayerHoleFall : EntityFall
         _knockBack.Fall();
         _damageKnockBack.Fall();
 
-        if (!_damageKnockBack.IsInvincible)
+        if (!_damageKnockBack.IsInvincible && MP_GameManager.Instance != null)
         {
             // 無敵時間中でなければコイン減らす・被弾演出
             StartCoroutine(_damageKnockBack.DamagePerformance());

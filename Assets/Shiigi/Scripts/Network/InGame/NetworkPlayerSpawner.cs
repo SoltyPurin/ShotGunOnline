@@ -1,12 +1,16 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// ネットワーク上のプレイヤー生成（スポーン）およびスポーン済みプレイヤー一覧の管理のみを担当するクラス (SRP)
+/// ネットワーク上のプレイヤー生成（スポーン）、識別ルール、およびスポーン済みプレイヤー一覧の管理を担当するクラス (SRP)。
 /// </summary>
 public class NetworkPlayerSpawner
 {
+    public const string LobbyPlayerObjectName = "NetWork Player Variant (Lobby)";
+    private const string LobbyPlayerMarker = "(Lobby)";
+
     private readonly GameObject _playerPrefab;
     private readonly List<NetworkObject> _players = new();
 
@@ -18,7 +22,28 @@ public class NetworkPlayerSpawner
     }
 
     /// <summary>
-    /// 自端末に出現しているプレイヤーオブジェクトを OwnerClientId の昇順で取得する（ホスト・クライアントどちらでも使用可）
+    /// 指定された NetworkObject がロビー用プレイヤーかどうかを判定する（識別ロジックの一元化）
+    /// </summary>
+    public static bool IsLobbyPlayerObject(NetworkObject netObj)
+    {
+        if (netObj == null) return false;
+        return netObj.TryGetComponent<LobbyNetworkPlayer>(out _) ||
+               netObj.gameObject.name.IndexOf(LobbyPlayerMarker, StringComparison.Ordinal) >= 0;
+    }
+
+    /// <summary>
+    /// 指定された NetworkObject がインゲーム本編用プレイヤーかどうかを判定する
+    /// </summary>
+    public static bool IsInGamePlayerObject(NetworkObject netObj)
+    {
+        return netObj != null &&
+               netObj.IsPlayerObject &&
+               !IsLobbyPlayerObject(netObj) &&
+               netObj.TryGetComponent<PlayerStateManager>(out _);
+    }
+
+    /// <summary>
+    /// 自端末に出現している本編プレイヤーオブジェクトを OwnerClientId の昇順で取得する（ホスト・クライアントどちらでも使用可）
     /// </summary>
     public static List<NetworkObject> CollectSpawnedPlayerObjects(NetworkManager networkManager)
     {
@@ -26,21 +51,22 @@ public class NetworkPlayerSpawner
         var spawnManager = networkManager != null ? networkManager.SpawnManager : null;
         if (spawnManager == null) return result;
 
+        // HashSet<NetworkObject> の foreach は値型 Enumerator のためアロケーションなし
         foreach (var netObj in spawnManager.SpawnedObjectsList)
         {
-            // 本編用プレイヤー（PlayerStateManager所持）のみを対象とする（ロビー用プレイヤー等の残骸を除外）
-            if (netObj != null && netObj.IsPlayerObject && netObj.GetComponent<PlayerStateManager>() != null)
+            if (IsInGamePlayerObject(netObj))
             {
                 result.Add(netObj);
             }
         }
 
-        result.Sort((a, b) => a.OwnerClientId.CompareTo(b.OwnerClientId));
+        result.Sort(static (a, b) => a.OwnerClientId.CompareTo(b.OwnerClientId));
         return result;
     }
 
     public void RegisterPlayer(NetworkObject player)
     {
+        _players.RemoveAll(static p => p == null || !p.IsSpawned);
         if (player != null && !_players.Contains(player))
         {
             _players.Add(player);
@@ -65,25 +91,23 @@ public class NetworkPlayerSpawner
             return;
         }
 
+        _players.RemoveAll(static p => p == null || !p.IsSpawned);
+
         var clients = networkManager.ConnectedClientsList;
         int index = 0;
 
-        foreach (var client in clients)
+        for (int i = 0; i < clients.Count; i++)
         {
+            var client = clients[i];
             int spawnIndex = index++;
 
-            // 本編用プレイヤー（PlayerStateManager所持）が既に存在するか確認
-            bool hasValidInGamePlayer = client.PlayerObject != null &&
-                                        client.PlayerObject.GetComponent<PlayerStateManager>() != null;
-
-            if (hasValidInGamePlayer)
+            if (IsInGamePlayerObject(client.PlayerObject))
             {
                 Debug.Log($"[MP_GameManager] ClientId {client.ClientId} の本編プレイヤーは既にスポーン済みです。");
                 RegisterPlayer(client.PlayerObject);
                 continue;
             }
 
-            // ロビー用の古いPlayerObject（LobbyNetworkPlayer等）が残っている場合はデスポーンして除去
             if (client.PlayerObject != null && client.PlayerObject.IsSpawned)
             {
                 Debug.Log($"[MP_GameManager] ClientId {client.ClientId} のロビー用プレイヤーをデスポーンします。");
@@ -94,10 +118,14 @@ public class NetworkPlayerSpawner
             Vector3 pos = spawnPoint != null ? spawnPoint.position : Vector3.zero;
             Quaternion rot = spawnPoint != null ? spawnPoint.rotation : Quaternion.identity;
 
-            GameObject playerObj = Object.Instantiate(_playerPrefab, pos, rot);
-            var netObj = playerObj.GetComponent<NetworkObject>();
+            GameObject playerObj = UnityEngine.Object.Instantiate(_playerPrefab, pos, rot);
+            if (!playerObj.TryGetComponent<NetworkObject>(out var netObj))
+            {
+                Debug.LogError("[MP_GameManager] _playerPrefab に NetworkObject コンポーネントが付いていません！");
+                UnityEngine.Object.Destroy(playerObj);
+                continue;
+            }
 
-            // クライアントの所有権を付与してネットワーク上にスポーン
             netObj.SpawnAsPlayerObject(client.ClientId, destroyWithScene: true);
             RegisterPlayer(netObj);
 
@@ -105,4 +133,3 @@ public class NetworkPlayerSpawner
         }
     }
 }
-

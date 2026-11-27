@@ -43,46 +43,73 @@ public class RealTimeScoreCircle : MonoBehaviour
 
     private float _penalty = 0;
 
+    private bool _isSurvivalMode = false;
+
+    private float _enemySpawnInterval = 0;
+
     public void SetValue(float sRankRatio, float aRankRatio, int difficulty, float penalty)
     {
-        _rankText.text = "S";
-        _sRankTime = sRankRatio;
-        _aRankTime = aRankRatio - sRankRatio;
-        _decSpeed = _sRankTime;
-        _penalty = penalty;
-        _initTimeRank = 3;
-        _rankState = RankState.S;
-        CancelTimer();
+            _rankText.text = "S";
+            _sRankTime = sRankRatio;
+            _aRankTime = aRankRatio - sRankRatio;
+            _decSpeed = _sRankTime;
+            _penalty = penalty;
+            _initTimeRank = 3;
+            _rankState = RankState.S;
+            CancelTimer();        
         //StartTimer();
+    }
+
+    public void SetTimerOnSurvivalMode(float spawnInterval)
+    {
+        _isSurvivalMode = true;
+        _enemySpawnInterval = spawnInterval;
+        _rankText.text = "NextEnemyInterval";
+        _progressRing.fillAmount = 1f;
+        CancelTimer();
     }
 
     private void FixedUpdate()
     {
         if (!progress) return;
-
         float currentTime = _createTime.CurrentWaveTime;
 
-        switch (_rankState)
+        if (_isSurvivalMode)
         {
-            case RankState.S:
-                _progressRing.fillAmount = Mathf.Clamp01(1f - (currentTime / _sRankTime));
-                if (currentTime >= _sRankTime)
-                {
-                    HandleRankTransition();
-                }
-                break;
+            float assignmentValue = Mathf.Clamp01(1f - (currentTime / _enemySpawnInterval));
+            //Debug.Log("currentTime‚Í" + currentTime);
+            _progressRing.fillAmount = assignmentValue;
+            if(currentTime > _enemySpawnInterval)
+            {
+                _progressRing.fillAmount = 1;
+                currentTime = 0;
+            }
+        }
+        else
+        {
 
-            case RankState.A:
-                _progressRing.fillAmount = Mathf.Clamp01(1f - ((currentTime - _sRankTime) / _aRankTime));
-                if (currentTime >= _sRankTime + _aRankTime)
-                {
-                    HandleRankTransition();
-                }
-                break;
+            switch (_rankState)
+            {
+                case RankState.S:
+                    _progressRing.fillAmount = Mathf.Clamp01(1f - (currentTime / _sRankTime));
+                    if (currentTime >= _sRankTime)
+                    {
+                        HandleRankTransition();
+                    }
+                    break;
 
-            case RankState.B:
-                _progressRing.fillAmount = 0f;
-                break;
+                case RankState.A:
+                    _progressRing.fillAmount = Mathf.Clamp01(1f - ((currentTime - _sRankTime) / _aRankTime));
+                    if (currentTime >= _sRankTime + _aRankTime)
+                    {
+                        HandleRankTransition();
+                    }
+                    break;
+
+                case RankState.B:
+                    _progressRing.fillAmount = 0f;
+                    break;
+            }
         }
     }
 
@@ -142,6 +169,10 @@ public class RealTimeScoreCircle : MonoBehaviour
 
     public void Trenble()
     {
+        if (_isSurvivalMode)
+        {
+            return;
+        }
         transform.DOKill();
         transform.DOShakePosition(duration: 1,
         strength: 50,

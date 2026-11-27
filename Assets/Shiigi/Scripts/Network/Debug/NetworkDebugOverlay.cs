@@ -88,11 +88,12 @@ public class NetworkDebugOverlay : MonoBehaviour
     private FieldInfo _packetLossValueField;
     private bool _reflectionInitialized;
 
-    // GUI スタイルキャッシュ
+    // GUI スタイルキャッシュ（動的生成テクスチャはOnDestroyで破棄）
     private GUIStyle _boxStyle;
     private GUIStyle _labelStyle;
     private GUIStyle _buttonStyle;
     private GUIStyle _titleStyle;
+    private Texture2D _bgTex;
     private bool _stylesInitialized;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -148,6 +149,19 @@ public class NetworkDebugOverlay : MonoBehaviour
     private void OnDisable()
     {
         UnregisterMessageHandlers();
+    }
+
+    private void OnDestroy()
+    {
+        if (_bgTex != null)
+        {
+            Destroy(_bgTex);
+            _bgTex = null;
+        }
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     private void Update()
@@ -303,6 +317,12 @@ public class NetworkDebugOverlay : MonoBehaviour
     /// </summary>
     private void OnReceivePingOnServer(ulong senderClientId, FastBufferReader reader)
     {
+        var netManager = NetworkManager.Singleton;
+        if (netManager == null || !netManager.IsServer || netManager.CustomMessagingManager == null || senderClientId == NetworkManager.ServerClientId)
+        {
+            return;
+        }
+
         if (!reader.TryBeginRead(sizeof(int) + sizeof(float))) return;
 
         reader.ReadValueSafe(out int sequenceId);
@@ -313,7 +333,7 @@ public class NetworkDebugOverlay : MonoBehaviour
         writer.WriteValueSafe(sequenceId);
         writer.WriteValueSafe(clientSendTime);
 
-        NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
+        netManager.CustomMessagingManager.SendNamedMessage(
             MsgPong,
             senderClientId,
             writer,
@@ -326,13 +346,14 @@ public class NetworkDebugOverlay : MonoBehaviour
     /// </summary>
     private void OnReceivePongOnClient(ulong senderClientId, FastBufferReader reader)
     {
+        if (senderClientId != NetworkManager.ServerClientId) return;
         if (!reader.TryBeginRead(sizeof(int) + sizeof(float))) return;
 
         reader.ReadValueSafe(out int sequenceId);
         reader.ReadValueSafe(out float clientSendTime);
 
         float now = Time.realtimeSinceStartup;
-        float rtt = (now - clientSendTime) * 1000f; // ms
+        float rtt = Mathf.Max(0f, (now - clientSendTime) * 1000f); // ms
 
         for (int i = 0; i < _packetHistory.Count; i++)
         {
@@ -522,10 +543,10 @@ public class NetworkDebugOverlay : MonoBehaviour
 
         // 背景ボックススタイル (半透明の黒)
         _boxStyle = new GUIStyle(GUI.skin.box);
-        var bgTex = new Texture2D(1, 1);
-        bgTex.SetPixel(0, 0, new Color(0.08f, 0.08f, 0.1f, 0.88f));
-        bgTex.Apply();
-        _boxStyle.normal.background = bgTex;
+        _bgTex = new Texture2D(1, 1) { hideFlags = HideFlags.HideAndDontSave };
+        _bgTex.SetPixel(0, 0, new Color(0.08f, 0.08f, 0.1f, 0.88f));
+        _bgTex.Apply();
+        _boxStyle.normal.background = _bgTex;
         _boxStyle.padding = new RectOffset(10, 10, 8, 8);
 
         // ラベルスタイル

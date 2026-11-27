@@ -4,43 +4,90 @@ using UnityEngine.UI;
 
 public class LobbyPlayerEntryUI : MonoBehaviour
 {
+    private static readonly Color MemberRoleColor = new Color(0.74f, 0.62f, 0.40f, 1f);
+
     [SerializeField] private Text _playerNameText;
     [SerializeField] private Image _statusImage;
+    [SerializeField] private Text _statusLabelText;
+    [SerializeField] private Text _roleTagText;
+    [SerializeField] private Graphic _leftSpineImage;
+    [SerializeField] private Image _portraitImage;
+    [SerializeField] private Sprite[] _skinPortraits;
 
-    [SerializeField] private Color _hostColor;
-    [SerializeField] private Color _readyColor;
-    [SerializeField] private Color _waitingColor;
+    [SerializeField] private Color _hostColor = new Color(0.98f, 0.83f, 0.43f, 1f);
+    [SerializeField] private Color _readyColor = new Color(0.36f, 0.92f, 0.80f, 1f);
+    [SerializeField] private Color _waitingColor = new Color(0.83f, 0.62f, 0.36f, 1f);
 
-    public void Setup(IReadOnlyPlayer player, bool isHost)
+    public void Setup(IReadOnlyPlayer player, bool isHost, int fallbackSkinId = 0)
     {
-        // Relay接続が完了しているか確認（ホストは常に接続済み扱い）
+        int skinId = SessionPlayerPropertyHelper.GetPlayerSkinId(player, fallbackSkinId);
+        ApplyPortraitSprite(skinId);
+
+        if (_roleTagText != null)
+        {
+            _roleTagText.text = isHost ? "HOST // ホスト" : "MEMBER // 参加メンバー";
+            _roleTagText.color = isHost ? _hostColor : MemberRoleColor;
+        }
+
         bool isRelayConnected = SessionPlayerPropertyHelper.IsPlayerRelayConnected(player, isHost);
 
         if (!isRelayConnected)
         {
-            _playerNameText.text = "接続中...";
-            _statusImage.color = _waitingColor;
+            if (_playerNameText != null)
+            {
+                _playerNameText.supportRichText = false;
+                _playerNameText.text = "接続中...";
+            }
+            ApplyStatusVisual("接続中...", _waitingColor);
             return;
         }
 
-        // プレイヤーIDの簡易表示(名前システム作るまでのプレースホルダ)
-        string playerName = player.Id;
-        if (playerName.Length > 8)
+        if (_playerNameText != null)
         {
-            playerName = playerName.Substring(0, 8) + "...";
+            _playerNameText.supportRichText = false;
+            _playerNameText.text = SessionPlayerPropertyHelper.GetPlayerName(player);
         }
-        _playerNameText.text = playerName;
 
-        // 準備状況の取得（ドメインヘルパーへ委譲）
-        var isReady = SessionPlayerPropertyHelper.IsPlayerReady(player);
+        bool isReady = SessionPlayerPropertyHelper.IsPlayerReady(player);
 
         if (isHost)
         {
-            _statusImage.color = _hostColor;
+            ApplyStatusVisual("ホスト", _hostColor);
+        }
+        else if (isReady)
+        {
+            ApplyStatusVisual("準備完了", _readyColor);
         }
         else
         {
-            _statusImage.color = isReady ? _readyColor : _waitingColor;
+            ApplyStatusVisual("準備中", _waitingColor);
+        }
+    }
+
+    private void ApplyPortraitSprite(int skinId)
+    {
+        if (_portraitImage == null) return;
+        Sprite portrait = LobbyUIInputHelper.SelectCyclicSprite(_skinPortraits, skinId);
+        if (portrait != null)
+        {
+            _portraitImage.sprite = portrait;
+        }
+    }
+
+    private void ApplyStatusVisual(string label, Color color)
+    {
+        if (_statusImage != null)
+        {
+            _statusImage.color = color;
+        }
+        if (_leftSpineImage != null)
+        {
+            _leftSpineImage.color = color;
+        }
+        if (_statusLabelText != null)
+        {
+            _statusLabelText.text = label;
+            _statusLabelText.color = color;
         }
     }
 }

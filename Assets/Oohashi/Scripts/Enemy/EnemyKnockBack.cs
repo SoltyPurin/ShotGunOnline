@@ -54,6 +54,46 @@ public class EnemyKnockBack : NetworkBehaviour
     }
 
     /// <summary>
+    /// ノックバックとダメージ計算を1パケットに統合してサーバーへ送信するRPC（通信回数半減・順序保証）
+    /// </summary>
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void RequestHitServerRpc(Vector2 playerPos, float chargeTime, PlayerState state, bool isCrit, bool isUlt, RpcParams rpcParams = default)
+    {
+        ulong senderId = rpcParams.Receive.SenderClientId;
+        _attackerClientId = senderId;
+        SetDirectionAndForce(playerPos, chargeTime, state, isCrit, isUlt);
+
+        EnemyTakeDamage takeDamage = GetComponent<EnemyTakeDamage>();
+        if (takeDamage != null)
+        {
+            takeDamage.ApplyDamageFromServerHit(chargeTime, state, senderId);
+        }
+    }
+
+    public virtual void SetDirectionAndForce(Vector2 playerPos, float chargeTime, PlayerState state, bool isCrit, bool isUlt)
+    {
+        SetDirectionAndForce(playerPos, chargeTime, isCrit, isUlt);
+    }
+
+    /// <summary>
+    /// クライアント側で命中瞬間にノックバック速度またはヒットストップ静止をローカル予測する
+    /// </summary>
+    public virtual void PredictLocalKnockBack(Vector2 playerPos, float chargeTime, PlayerState state, bool isCrit, bool isUlt)
+    {
+        if (IsServer || _enemyMove == null) return;
+
+        Vector2 blowDir = ((playerPos - (Vector2)transform.position) * -1f).normalized;
+        float predictedForce = 0f;
+        if (!isCrit && !isUlt)
+        {
+            float powVal = Mathf.Pow(chargeTime, _forceMultiplier);
+            predictedForce = Mathf.Lerp(_minForce, powVal, 0.5f);
+        }
+
+        _enemyMove.OnKnockBackPredicted(blowDir, predictedForce, _decelerationValue);
+    }
+
+    /// <summary>
     /// 吹き飛ぶ方向と加える力を設定するメソッド
     /// </summary>
     /// <param name="playerPos">プレイヤーの座標</param>
@@ -121,7 +161,7 @@ public class EnemyKnockBack : NetworkBehaviour
     /// <summary>
     /// 全クライアント端末上で敵の震え演出とダメージエフェクトを再生するRPC
     /// </summary>
-    [ClientRpc]
+    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
     protected void PlayKnockBackEffectsClientRpc(bool isCrit, bool isUlt, float chargeTime, ulong attackerClientId)
     {
         if (IsServer) return; // サーバー（ホスト）側では SetDirectionAndForce 内で既に再生済み

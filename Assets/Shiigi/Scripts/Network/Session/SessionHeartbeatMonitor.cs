@@ -7,22 +7,34 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 
 /// <summary>
-/// ホスト・クライアント間のハートビート送受信とタイムアウト検知を担当するクラス (SRP)
+/// ホスト・クライアント間のハートビート送受信とタイムアウト検知を担当するクラス (SRP)。
+/// 毎フレーム走るサーバー側の生存チェックで再利用バッファを使用し、GCアロケーションをゼロに保ちます。
 /// </summary>
 public class SessionHeartbeatMonitor
 {
     private const string HeartbeatMessageName = "PlayerHeartbeat";
     private const string ServerHeartbeatMessageName = "ServerHeartbeat";
     private const float MaxDeltaTimeStep = 0.5f;
+    private const int MaxPlayerIdLength = 128;
+    private const int HeartbeatWriterInitialSize = 128;
+    private const int HeartbeatWriterMaxSize = 1024;
 
     private readonly float _heartbeatInterval;
     private readonly float _heartbeatTimeout;
     private readonly Func<ISession> _sessionProvider;
     private readonly Action _onHostTimeout;
 
-    private readonly Dictionary<string, float> _lastHeartbeatByPlayerId = new Dictionary<string, float>();
-    private readonly Dictionary<string, ulong> _clientIdByPlayerId = new Dictionary<string, ulong>();
-    private readonly HashSet<string> _playersBeingRemoved = new HashSet<string>();
+    private readonly Dictionary<string, float> _lastHeartbeatByPlayerId = new();
+    private readonly Dictionary<string, ulong> _clientIdByPlayerId = new();
+    private readonly Dictionary<ulong, string> _playerIdByClientId = new();
+    private readonly HashSet<string> _playersBeingRemoved = new();
+
+    // 毎フレームのGCアロケーションを防ぐ再利用バッファ
+    private readonly HashSet<string> _activePlayerIdsBuffer = new();
+    private readonly List<string> _stalePlayerIdsBuffer = new();
+    private readonly List<string> _timedOutPlayerIdsBuffer = new();
+    private readonly List<string> _removedCleanupBuffer = new();
+
     private float _nextHeartbeatTime;
     private float _clientSilenceTimer;
     private bool _hasTriggeredHostTimeout;
@@ -60,7 +72,12 @@ public class SessionHeartbeatMonitor
     {
         _lastHeartbeatByPlayerId.Clear();
         _clientIdByPlayerId.Clear();
+        _playerIdByClientId.Clear();
         _playersBeingRemoved.Clear();
+        _activePlayerIdsBuffer.Clear();
+        _stalePlayerIdsBuffer.Clear();
+        _timedOutPlayerIdsBuffer.Clear();
+        _removedCleanupBuffer.Clear();
         _nextHeartbeatTime = 0f;
         _clientSilenceTimer = 0f;
         _hasTriggeredHostTimeout = false;
@@ -106,28 +123,24 @@ public class SessionHeartbeatMonitor
     {
         if (messagingManager == null) return;
 
-        using (var writer = new FastBufferWriter(1, Allocator.Temp))
-        {
-            messagingManager.SendNamedMessageToAll(
-                ServerHeartbeatMessageName,
-                writer,
-                NetworkDelivery.Unreliable);
-        }
+        using var writer = new FastBufferWriter(1, Allocator.Temp);
+        messagingManager.SendNamedMessageToAll(
+            ServerHeartbeatMessageName,
+            writer,
+            NetworkDelivery.Unreliable);
     }
 
     private void SendHeartbeat(ISession currentSession, CustomMessagingManager messagingManager)
     {
         if (currentSession?.CurrentPlayer == null || messagingManager == null) return;
 
-        using (var writer = new FastBufferWriter(128, Allocator.Temp))
-        {
-            writer.WriteValueSafe(currentSession.CurrentPlayer.Id);
-            messagingManager.SendNamedMessage(
-                HeartbeatMessageName,
-                NetworkManager.ServerClientId,
-                writer,
-                NetworkDelivery.Unreliable);
-        }
+        using var writer = new FastBufferWriter(HeartbeatWriterInitialSize, Allocator.Temp, HeartbeatWriterMaxSize);
+        writer.WriteValueSafe(currentSession.CurrentPlayer.Id);
+        messagingManager.SendNamedMessage(
+            HeartbeatMessageName,
+            NetworkManager.ServerClientId,
+            writer,
+            NetworkDelivery.Unreliable);
     }
 
     private void OnHeartbeatReceived(ulong senderClientId, FastBufferReader reader)
@@ -135,11 +148,22 @@ public class SessionHeartbeatMonitor
         var currentSession = _sessionProvider();
         var networkManager = NetworkManager.Singleton;
         if (networkManager == null || !networkManager.IsServer || currentSession == null) return;
+        if (senderClientId == NetworkManager.ServerClientId) return;
 
-        reader.ReadValueSafe(out string playerId);
-        if (string.IsNullOrWhiteSpace(playerId) || currentSession.GetPlayer(playerId) == null) return;
+        string playerId;
+        try
+        {
+            reader.ReadValueSafe(out playerId);
+        }
+        catch (Exception)
+        {
+            return;
+        }
 
-        // 既に別の接続中ClientIdに紐付いているplayerIdのなりすましを防止
+        if (string.IsNullOrWhiteSpace(playerId) || playerId.Length > MaxPlayerIdLength) return;
+        if (currentSession.GetPlayer(playerId) == null) return;
+        if (playerId == currentSession.CurrentPlayer?.Id) return;
+
         if (_clientIdByPlayerId.TryGetValue(playerId, out var existingClientId) &&
             existingClientId != senderClientId &&
             networkManager.ConnectedClients.ContainsKey(existingClientId))
@@ -147,72 +171,112 @@ public class SessionHeartbeatMonitor
             return;
         }
 
+        if (_playerIdByClientId.TryGetValue(senderClientId, out var boundPlayerId) && boundPlayerId != playerId)
+        {
+            return;
+        }
+
         _clientIdByPlayerId[playerId] = senderClientId;
+        _playerIdByClientId[senderClientId] = playerId;
         _lastHeartbeatByPlayerId[playerId] = Time.unscaledTime;
     }
 
     private void OnServerHeartbeatReceived(ulong senderClientId, FastBufferReader reader)
     {
+        if (senderClientId != NetworkManager.ServerClientId) return;
         _clientSilenceTimer = 0f;
+    }
+
+    private void RemovePlayerBinding(string playerId)
+    {
+        if (_clientIdByPlayerId.TryGetValue(playerId, out var clientId))
+        {
+            _clientIdByPlayerId.Remove(playerId);
+            if (_playerIdByClientId.TryGetValue(clientId, out var boundPlayerId) && boundPlayerId == playerId)
+            {
+                _playerIdByClientId.Remove(clientId);
+            }
+        }
     }
 
     private void CheckPlayerHeartbeats(float now, ISession currentSession)
     {
-        if (currentSession == null || !(currentSession is IHostSession)) return;
+        if (currentSession is not IHostSession) return;
 
         var hostPlayerId = currentSession.CurrentPlayer?.Id;
-        var activePlayerIds = new HashSet<string>();
-        foreach (var player in currentSession.Players)
-        {
-            if (player.Id == hostPlayerId) continue;
+        _activePlayerIdsBuffer.Clear();
 
-            activePlayerIds.Add(player.Id);
-            if (!_lastHeartbeatByPlayerId.ContainsKey(player.Id) && !_playersBeingRemoved.Contains(player.Id))
+        var players = currentSession.Players;
+        for (int i = 0; i < players.Count; i++)
+        {
+            string playerId = players[i].Id;
+            if (playerId == hostPlayerId) continue;
+
+            _activePlayerIdsBuffer.Add(playerId);
+            if (!_lastHeartbeatByPlayerId.ContainsKey(playerId) && !_playersBeingRemoved.Contains(playerId))
             {
-                _lastHeartbeatByPlayerId[player.Id] = now;
+                _lastHeartbeatByPlayerId[playerId] = now;
             }
         }
 
-        _playersBeingRemoved.RemoveWhere(playerId => !activePlayerIds.Contains(playerId));
+        if (_playersBeingRemoved.Count > 0)
+        {
+            _removedCleanupBuffer.Clear();
+            foreach (var removingId in _playersBeingRemoved)
+            {
+                if (!_activePlayerIdsBuffer.Contains(removingId))
+                {
+                    _removedCleanupBuffer.Add(removingId);
+                }
+            }
+            for (int i = 0; i < _removedCleanupBuffer.Count; i++)
+            {
+                _playersBeingRemoved.Remove(_removedCleanupBuffer[i]);
+            }
+        }
 
-        var stalePlayerIds = new List<string>();
-        var timedOutPlayerIds = new List<string>();
+        _stalePlayerIdsBuffer.Clear();
+        _timedOutPlayerIdsBuffer.Clear();
+
         foreach (var heartbeat in _lastHeartbeatByPlayerId)
         {
-            if (!activePlayerIds.Contains(heartbeat.Key))
+            if (!_activePlayerIdsBuffer.Contains(heartbeat.Key))
             {
-                stalePlayerIds.Add(heartbeat.Key);
+                _stalePlayerIdsBuffer.Add(heartbeat.Key);
             }
             else if (now - heartbeat.Value >= _heartbeatTimeout)
             {
-                timedOutPlayerIds.Add(heartbeat.Key);
+                _timedOutPlayerIdsBuffer.Add(heartbeat.Key);
             }
         }
 
-        foreach (var playerId in stalePlayerIds)
+        for (int i = 0; i < _stalePlayerIdsBuffer.Count; i++)
         {
+            string playerId = _stalePlayerIdsBuffer[i];
             _lastHeartbeatByPlayerId.Remove(playerId);
-            _clientIdByPlayerId.Remove(playerId);
+            RemovePlayerBinding(playerId);
         }
 
-        foreach (var playerId in timedOutPlayerIds)
+        for (int i = 0; i < _timedOutPlayerIdsBuffer.Count; i++)
         {
-            RemoveTimedOutPlayerAsync(playerId).Forget();
+            RemoveTimedOutPlayerAsync(_timedOutPlayerIdsBuffer[i]).Forget();
         }
     }
 
     private async UniTaskVoid RemoveTimedOutPlayerAsync(string playerId)
     {
         var currentSession = _sessionProvider();
-        if (!(currentSession is IHostSession hostSession) || !_playersBeingRemoved.Add(playerId)) return;
+        if (currentSession is not IHostSession hostSession || !_playersBeingRemoved.Add(playerId)) return;
 
         try
         {
             Debug.Log($"[MSM] プレイヤータイムアウト: {playerId}");
             await hostSession.RemovePlayerAsync(playerId);
+
+            if (!ReferenceEquals(_sessionProvider(), currentSession)) return;
+
             _lastHeartbeatByPlayerId.Remove(playerId);
 
-            // UGSセッションから削除したプレイヤーのNGO接続も切断してゴースト化を防ぐ
             var networkManager = NetworkManager.Singleton;
             if (networkManager != null &&
                 networkManager.IsServer &&
@@ -222,12 +286,15 @@ public class SessionHeartbeatMonitor
             {
                 networkManager.DisconnectClient(clientId);
             }
-            _clientIdByPlayerId.Remove(playerId);
+            RemovePlayerBinding(playerId);
         }
         catch (Exception ex)
         {
-            _lastHeartbeatByPlayerId[playerId] = Time.unscaledTime;
-            _playersBeingRemoved.Remove(playerId);
+            if (ReferenceEquals(_sessionProvider(), currentSession))
+            {
+                _lastHeartbeatByPlayerId[playerId] = Time.unscaledTime;
+                _playersBeingRemoved.Remove(playerId);
+            }
             Debug.LogError($"[MSM] タイムアウトしたプレイヤーの削除に失敗: {ex.Message}");
         }
     }

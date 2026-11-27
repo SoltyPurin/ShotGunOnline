@@ -1,0 +1,99 @@
+using UnityEngine;
+using System.Collections.Generic;
+using Unity.Netcode;
+
+public class BossCharacterSpawn : MiddleBossCharacterSpawner
+{
+    [System.Serializable]
+    public struct BossEnhancedValues
+    {
+        //NavMesh2DAgentに渡す
+        [Tooltip("増やす速度")]
+        public float speed;
+        //BossStateManagementに渡す
+        [Tooltip("減らす後隙")]
+        public float decInterval;
+        //BossHPに渡す
+        [Tooltip("増やす体力")]
+        public int addHP;
+    }
+
+    [SerializeField,Header("ボスの強化値(出現するたびに上から足されていきます)")]
+    private List<BossEnhancedValues> _bossEnhancedValue = new List<BossEnhancedValues>();
+
+    private int _currentSpawnCount = 0;
+
+    private  ZombiModeSummonEnemy[] _summoners = new ZombiModeSummonEnemy[0];
+
+    public override void SpawnBoss()
+    {
+        if (NetworkManager.Singleton == null ||!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+        base.SpawnBoss();
+        _currentSpawnCount = Mathf.Clamp(_currentSpawnCount, 0, _bossEnhancedValue.Count-1);
+        BossEnhance();
+        ZakoSpawnStop();
+        _currentSpawnCount++;
+    }
+
+    private void ZakoSpawnStop()
+    {
+        _summoners = FindObjectsByType<ZombiModeSummonEnemy>();
+
+        foreach (ZombiModeSummonEnemy summonEnemy in _summoners)
+        {
+            // 実際にネットワークスポーンされているスポナーだけを停止
+            if (summonEnemy.IsSpawned && summonEnemy.IsServer)
+            {
+                summonEnemy.SpawnStop();
+            }
+        }
+
+    }
+
+    private void BossEnhance()
+    {
+        Debug.Log("ボス強化");
+        NavMesh2DAgent nav = _spawnBoss.GetComponent<NavMesh2DAgent>();
+        BossStateManagement bossState = _spawnBoss.GetComponent<BossStateManagement>();
+        BossHP bossHP = _spawnBoss.GetComponent<BossHP>();
+        if(nav != null)
+        {
+            nav.SpeedUp(_bossEnhancedValue[_currentSpawnCount].speed);
+        }
+        if(bossState != null)
+        {
+            bossState.EnhanceInterval(_bossEnhancedValue[_currentSpawnCount].decInterval);
+        }
+        if(bossHP != null)
+        {
+            bossHP.EnhanceBossHP(_bossEnhancedValue[_currentSpawnCount].addHP);
+            bossHP.IsBossDead += ZakoSpawnRestart;
+        }
+
+    }
+
+    private void ZakoSpawnRestart(bool isDead)
+    {
+        BossHP bossHP = _spawnBoss.GetComponent<BossHP>();
+        if (bossHP != null)
+        {
+            bossHP.IsBossDead -= ZakoSpawnRestart;
+        }
+        if (!isDead)
+        {
+            return;
+        }
+        Debug.Log("死亡処理");
+        foreach (ZombiModeSummonEnemy summonEnemy in _summoners)
+        {
+            // 実際にネットワークスポーンされているスポナーだけに再開指示を送る
+            if (summonEnemy.IsSpawned && summonEnemy.IsServer)
+            {
+                summonEnemy.SpawnRestart();
+            }
+        }
+    }
+}
