@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// ゲーム全体の状態遷移オーケストレーションを行うファサードクラス。
-/// UI表示・単一ムービー再生・プレイヤースポーン・ローカル入力ロックの各単一責務クラスへ処理を委譲します。
+/// インゲームの進行状態（ロード待機・開始ムービー・プレイ中）を管理する。
 /// </summary>
 public class MP_GameManager : MonoBehaviour, IGameStateProvider
 {
@@ -43,13 +42,11 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
     [Tooltip("マルチプレイ用のPlayerプレハブ（NetWork Player Variantなど）")]
     [SerializeField] private GameObject _playerPrefab;
 
-    // 各単一責務サブシステム
     private InGameUIStateBinder _uiStateBinder;
     private OpeningCutsceneController _cutsceneController;
     private NetworkPlayerSpawner _playerSpawner;
     private LocalPlayerStateLocker _localPlayerLocker;
     private Coroutine _cutsceneCoroutine;
-    private readonly List<CutsceneControlledPlayer> _cutscenePlayers = new();
 
     public IReadOnlyList<NetworkObject> Players
     {
@@ -81,19 +78,45 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         EnsureSubsystemsInitialized();
     }
 
+    private void OnEnable()
+    {
+        if (Instance != this) return;
+        MP_GameSyncManager.GlobalPhaseChanged -= HandleSyncPhaseChanged;
+        MP_GameSyncManager.GlobalPhaseChanged += HandleSyncPhaseChanged;
+    }
+
+    private void OnDisable()
+    {
+        MP_GameSyncManager.GlobalPhaseChanged -= HandleSyncPhaseChanged;
+    }
+
     private void OnDestroy()
     {
+        MP_GameSyncManager.GlobalPhaseChanged -= HandleSyncPhaseChanged;
         if (_cutsceneCoroutine != null)
         {
             StopCoroutine(_cutsceneCoroutine);
             _cutsceneCoroutine = null;
         }
 
+        _cutsceneController?.ReleasePlayers();
         _localPlayerLocker?.Dispose();
 
         if (Instance == this)
         {
             Instance = null;
+        }
+    }
+
+    private void HandleSyncPhaseChanged(MP_GameSyncManager.GamePhase phase)
+    {
+        if (phase == MP_GameSyncManager.GamePhase.Waiting)
+        {
+            OnWaitingForPlayers();
+        }
+        else if (phase == MP_GameSyncManager.GamePhase.Playing)
+        {
+            OnGameStart();
         }
     }
 
@@ -128,13 +151,22 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         _starterCanvas = _uiStateBinder.StarterCanvas;
         _uiStateBinder.ApplyStateToUI(_currentState);
 
-        // Play On Awake をOFFにした Timeline の初期状態を再生せずに反映
-        _cutsceneController.EvaluateInitialState();
+        // Play On Awake をOFFにした Timeline の初期状態を再生せずに反映（既に開始済みなら上書きしない）
+        if (_currentState == GameState.WaitingForPlayers)
+        {
+            _cutsceneController.EvaluateInitialState();
+        }
 
         // WaveManagerのフォールバック
         if (_waveManager == null)
         {
             _waveManager = FindAnyObjectByType<WaveManager>();
+        }
+
+        // 既に MP_GameSyncManager がスポーン済みであれば現在フェーズを同期適用
+        if (MP_GameSyncManager.Instance != null && MP_GameSyncManager.Instance.IsSpawned)
+        {
+            HandleSyncPhaseChanged(MP_GameSyncManager.Instance.CurrentPhase.Value);
         }
     }
 
@@ -155,7 +187,7 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
     {
         EnsureSubsystemsInitialized();
 
-        if (_currentState == GameState.OpeningMovie || _currentState == GameState.Playing)
+        if (_currentState != GameState.WaitingForPlayers)
         {
             Debug.Log($"[MP_GameManager] OnGameStart が呼ばれましたが、既に {_currentState} 状態のためスキップします。");
             return;
@@ -172,7 +204,7 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         }
 
         _localPlayerLocker.TryFindAndLockLocalPlayer(forceImmediateSearch: true);
-        PrepareCutscenePlayers();
+        _cutsceneController.PreparePlayers(NetworkManager.Singleton, MP_OpeningSyncManager.Instance);
 
         if (_cutsceneCoroutine != null)
         {
@@ -181,79 +213,10 @@ public class MP_GameManager : MonoBehaviour, IGameStateProvider
         _cutsceneCoroutine = StartCoroutine(_cutsceneController.PlaySequenceRoutine(StartGamePlay));
     }
 
-    /// <summary>
-    /// 単一の開始ムービーに合わせて、実機プレイヤー（1〜4人）をムービー制御状態に設定する
-    /// </summary>
-    private void PrepareCutscenePlayers()
-    {
-        _cutscenePlayers.Clear();
-
-        var players = NetworkPlayerSpawner.CollectSpawnedPlayerObjects(NetworkManager.Singleton);
-        if (players.Count == 0)
-        {
-            Debug.LogWarning("[MP_GameManager] 割り当てるプレイヤーが見つかりません。");
-            return;
-        }
-
-        // ホストが配布したスロット対応表（またはOwnerClientId昇順）でスロット番号を決定
-        var openingSync = MP_OpeningSyncManager.Instance;
-        PlayerSlotAssignment assignment;
-        if (openingSync != null && openingSync.HasAssignment)
-        {
-            assignment = openingSync.CurrentAssignment;
-        }
-        else
-        {
-            var clientIds = new ulong[players.Count];
-            for (int i = 0; i < players.Count; i++)
-            {
-                clientIds[i] = players[i].OwnerClientId;
-            }
-            Array.Sort(clientIds);
-            assignment = new PlayerSlotAssignment(clientIds);
-        }
-
-        Debug.Log($"[MP_GameManager] 開始ムービーに {players.Count} 人のプレイヤーを同期します。{assignment}");
-
-        for (int i = 0; i < players.Count; i++)
-        {
-            var netObj = players[i];
-            if (netObj == null) continue;
-
-            var cutsceneComp = netObj.GetComponent<CutsceneControlledPlayer>();
-            if (cutsceneComp == null)
-            {
-                cutsceneComp = netObj.gameObject.AddComponent<CutsceneControlledPlayer>();
-            }
-
-            if (!assignment.TryGetSlot(netObj.OwnerClientId, out int slot))
-            {
-                slot = i;
-            }
-
-            cutsceneComp.EnterCutscene(slot);
-            _cutscenePlayers.Add(cutsceneComp);
-        }
-
-        _cutsceneController.SetCutscenePlayers(_cutscenePlayers);
-    }
-
-    /// <summary>
-    /// 開始ムービー終了時、プレイヤーの制御を解放して通常操作へ移行する
-    /// </summary>
-    private void ReleaseCutscenePlayers()
-    {
-        foreach (var player in _cutscenePlayers)
-        {
-            if (player != null) player.ExitCutscene();
-        }
-        _cutscenePlayers.Clear();
-    }
-
     private void StartGamePlay()
     {
         _cutsceneCoroutine = null;
-        ReleaseCutscenePlayers();
+        _cutsceneController.ReleasePlayers();
         SetState(GameState.Playing);
         Debug.Log("[MP_GameManager] ムービー終了。ゲーム開始！");
 

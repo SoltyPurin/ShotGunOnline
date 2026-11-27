@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// NGO標準の NetworkVariable と NetworkSceneManager イベントを用いたシンプルな進行同期クラス (SRP)
+/// NetworkVariable と NetworkSceneManager を用いてゲーム開始フェーズを全端末で同期する。
 /// </summary>
 public class MP_GameSyncManager : NetworkBehaviour
 {
@@ -23,9 +23,21 @@ public class MP_GameSyncManager : NetworkBehaviour
     );
 
     /// <summary>
-    /// フェーズ変更時に外部リスナーへ通知するイベント (OCP / DIP)
+    /// フェーズ変更通知イベント
     /// </summary>
     public event Action<GamePhase> PhaseChanged;
+
+    /// <summary>
+    /// スポーン順によらず購読可能なグローバルフェーズ変更イベント
+    /// </summary>
+    public static event Action<GamePhase> GlobalPhaseChanged;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        GlobalPhaseChanged = null;
+        Instance = null;
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -52,15 +64,16 @@ public class MP_GameSyncManager : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        UnsubscribeAllEvents();
-
-        if (Instance == this)
-        {
-            Instance = null;
-        }
+        CleanupInstanceAndSubscriptions();
     }
 
     public override void OnDestroy()
+    {
+        CleanupInstanceAndSubscriptions();
+        base.OnDestroy();
+    }
+
+    private void CleanupInstanceAndSubscriptions()
     {
         UnsubscribeAllEvents();
 
@@ -68,8 +81,6 @@ public class MP_GameSyncManager : NetworkBehaviour
         {
             Instance = null;
         }
-
-        base.OnDestroy();
     }
 
     private void UnsubscribeAllEvents()
@@ -82,12 +93,6 @@ public class MP_GameSyncManager : NetworkBehaviour
         }
     }
 
-    private void Awake()
-    {
-        // バックグラウンドでも処理が停止しないように設定
-        Application.runInBackground = true;
-    }
-
     /// <summary>
     /// バックグラウンドで止まってた時の処理
     /// </summary>
@@ -97,11 +102,8 @@ public class MP_GameSyncManager : NetworkBehaviour
         {
             // バックグラウンド復帰時にホストの現在のフェーズと同期を取る
             Debug.Log($"[MP_GameSyncManager] ウィンドウ復帰を検知。現在のフェーズ: {CurrentPhase.Value}");
-            if (CurrentPhase.Value == GamePhase.Playing &&
-                MP_GameManager.Instance != null &&
-                MP_GameManager.Instance.CurrentState == MP_GameManager.GameState.WaitingForPlayers)
+            if (CurrentPhase.Value == GamePhase.Playing)
             {
-                Debug.Log("[MP_GameSyncManager] ホストはプレイ中のため、遅れてゲーム開始処理を実行します。");
                 NotifyPhase(GamePhase.Playing);
             }
         }
@@ -153,22 +155,11 @@ public class MP_GameSyncManager : NetworkBehaviour
 
     private void NotifyPhase(GamePhase phase)
     {
+        if (phase == GamePhase.Playing)
+        {
+            Debug.Log("[MP_GameSyncManager] GamePhase.Playing を受信。開始フェーズを通知します。");
+        }
         PhaseChanged?.Invoke(phase);
-
-        if (phase == GamePhase.Waiting)
-        {
-            if (MP_GameManager.Instance != null)
-            {
-                MP_GameManager.Instance.OnWaitingForPlayers();
-            }
-        }
-        else if (phase == GamePhase.Playing)
-        {
-            Debug.Log("[MP_GameSyncManager] GamePhase.Playing を受信。ゲーム本編を開始します。");
-            if (MP_GameManager.Instance != null)
-            {
-                MP_GameManager.Instance.OnGameStart();
-            }
-        }
+        GlobalPhaseChanged?.Invoke(phase);
     }
 }

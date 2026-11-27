@@ -3,8 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// 自端末のローカルプレイヤー（PlayerStateManager）を追跡し、ゲーム進行状態に応じて操作ロック/解除を行う責務クラス (SRP)。
-/// スポーンイベント購読とスロットリングにより、待機中の毎フレーム FindGameObjectsWithTag アロケーションを防ぎます。
+/// ローカルプレイヤーを追跡し、ゲーム進行状態に応じて操作ロック/解除を行う。
 /// </summary>
 public class LocalPlayerStateLocker : IDisposable
 {

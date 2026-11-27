@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// ネットワーク上のプレイヤー生成（スポーン）、識別ルール、およびスポーン済みプレイヤー一覧の管理を担当するクラス (SRP)。
+/// ネットワークプレイヤーの生成・識別・スポーン済み一覧を管理する。
 /// </summary>
 public class NetworkPlayerSpawner
 {
@@ -87,7 +87,7 @@ public class NetworkPlayerSpawner
 
         if (_playerPrefab == null)
         {
-            Debug.LogError("[MP_GameManager] _playerPrefab がインスペクターで設定されていません！");
+            Debug.LogError("[NetworkPlayerSpawner] _playerPrefab がインスペクターで設定されていません！");
             return;
         }
 
@@ -103,14 +103,14 @@ public class NetworkPlayerSpawner
 
             if (IsInGamePlayerObject(client.PlayerObject))
             {
-                Debug.Log($"[MP_GameManager] ClientId {client.ClientId} の本編プレイヤーは既にスポーン済みです。");
+                Debug.Log($"[NetworkPlayerSpawner] ClientId {client.ClientId} の本編プレイヤーは既にスポーン済みです。");
                 RegisterPlayer(client.PlayerObject);
                 continue;
             }
 
             if (client.PlayerObject != null && client.PlayerObject.IsSpawned)
             {
-                Debug.Log($"[MP_GameManager] ClientId {client.ClientId} のロビー用プレイヤーをデスポーンします。");
+                Debug.Log($"[NetworkPlayerSpawner] ClientId {client.ClientId} のロビー用プレイヤーをデスポーンします。");
                 client.PlayerObject.Despawn(true);
             }
 
@@ -121,7 +121,7 @@ public class NetworkPlayerSpawner
             GameObject playerObj = UnityEngine.Object.Instantiate(_playerPrefab, pos, rot);
             if (!playerObj.TryGetComponent<NetworkObject>(out var netObj))
             {
-                Debug.LogError("[MP_GameManager] _playerPrefab に NetworkObject コンポーネントが付いていません！");
+                Debug.LogError("[NetworkPlayerSpawner] _playerPrefab に NetworkObject コンポーネントが付いていません！");
                 UnityEngine.Object.Destroy(playerObj);
                 continue;
             }
@@ -129,7 +129,7 @@ public class NetworkPlayerSpawner
             netObj.SpawnAsPlayerObject(client.ClientId, destroyWithScene: true);
             RegisterPlayer(netObj);
 
-            Debug.Log($"[MP_GameManager] ClientId {client.ClientId} の本編プレイヤーをスポーンしました (位置: {pos})");
+            Debug.Log($"[NetworkPlayerSpawner] ClientId {client.ClientId} の本編プレイヤーをスポーンしました (位置: {pos})");
         }
     }
 }

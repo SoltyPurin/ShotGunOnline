@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// インゲームの進行状態（GameState）に応じて開始演出CanvasとHUD Canvasの表示・非表示を切り替えるクラス (SRP)
+/// ゲーム進行状態に応じて開始演出CanvasとHUD Canvasの表示を切り替える。
 /// </summary>
 public class InGameUIStateBinder
 {

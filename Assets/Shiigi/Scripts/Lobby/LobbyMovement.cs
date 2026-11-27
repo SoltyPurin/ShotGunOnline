@@ -15,8 +15,7 @@ public static class LobbyMovement
     public static bool IsInputBlocked { get; set; }
 
     /// <summary>
-    /// UI層などの外部モジュールが追加の入力ブロック条件を注入するためのデリゲート (DIP)。
-    /// LobbyMovement が具体的なUIクラスに直接依存するのを防ぎます。
+    /// 追加の入力ブロック条件コールバック
     /// </summary>
     public static Func<bool> ExternalInputBlockCheck { get; set; }
 
@@ -143,7 +142,7 @@ public static class LobbyMovement
     }
 
     /// <summary>
-    /// 子階層から PlayerAnimation / FrontSprite / BackSprite を自動検索して補完する（再利用バッファでゼロGC）
+    /// 子階層から PlayerAnimation / FrontSprite / BackSprite を自動検索して補完する
     /// </summary>
     public static void AutoResolveVisuals(
         Transform root,

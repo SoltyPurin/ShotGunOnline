@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 
 /// <summary>
-/// 開始ムービーにおける「枠番号 → clientId」の対応表。
-/// ホストが作成し RPC で全クライアントへ配布することで、全端末で同じ枠に同じプレイヤーを割り当てる (SRP)
+/// 開始ムービーにおけるスロット番号と clientId の対応表。
 /// </summary>
 public struct PlayerSlotAssignment : INetworkSerializable
 {

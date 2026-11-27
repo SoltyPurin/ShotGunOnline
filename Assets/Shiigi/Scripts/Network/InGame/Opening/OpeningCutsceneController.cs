@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// ゲーム開始時の単一Timeline（PlayableDirector）の初期フレーム評価と時間同期再生を担当するクラス (SRP: パターンB)
-/// ・PlayableDirectorは1本のみで動作します
-/// ・再生時間（director.time）に合わせて、登録されたすべての実プレイヤー（1〜4人）の演出ポーズを同時に更新します
+/// 開始ムービーの Timeline 再生と全プレイヤーの演出同期を制御する。
 /// </summary>
 public class OpeningCutsceneController
 {
@@ -19,21 +18,70 @@ public class OpeningCutsceneController
         _startDirectors = startDirectors;
     }
 
-    public OpeningCutsceneController(PlayableDirector director)
+    /// <summary>
+    /// 出現中の実機プレイヤーを収集してスロットを割り当て、ムービー制御状態へ移行する
+    /// </summary>
+    public void PreparePlayers(NetworkManager networkManager, MP_OpeningSyncManager openingSync)
     {
-        _startDirectors = director != null ? new[] { director } : Array.Empty<PlayableDirector>();
+        _cutscenePlayers.Clear();
+
+        var players = NetworkPlayerSpawner.CollectSpawnedPlayerObjects(networkManager);
+        if (players.Count == 0)
+        {
+            Debug.LogWarning("[OpeningCutsceneController] 割り当てるプレイヤーが見つかりません。");
+            return;
+        }
+
+        PlayerSlotAssignment assignment;
+        if (openingSync != null && openingSync.HasAssignment)
+        {
+            assignment = openingSync.CurrentAssignment;
+        }
+        else
+        {
+            var clientIds = new ulong[players.Count];
+            for (int i = 0; i < players.Count; i++)
+            {
+                clientIds[i] = players[i].OwnerClientId;
+            }
+            assignment = PlayerSlotAssignment.CreateSorted(clientIds);
+        }
+
+        Debug.Log($"[OpeningCutsceneController] 開始ムービーに {players.Count} 人のプレイヤーを同期します。{assignment}");
+
+        for (int i = 0; i < players.Count; i++)
+        {
+            var netObj = players[i];
+            if (netObj == null) continue;
+
+            if (!netObj.TryGetComponent<CutsceneControlledPlayer>(out var cutsceneComp))
+            {
+                cutsceneComp = netObj.gameObject.AddComponent<CutsceneControlledPlayer>();
+            }
+
+            if (!assignment.TryGetSlot(netObj.OwnerClientId, out int slot))
+            {
+                slot = i;
+            }
+
+            cutsceneComp.EnterCutscene(slot);
+            _cutscenePlayers.Add(cutsceneComp);
+        }
     }
 
     /// <summary>
-    /// ムービー制御対象の実機プレイヤー一覧を設定する
+    /// 開始ムービー終了時、登録済みプレイヤーの制御を解放して通常操作へ移行する
     /// </summary>
-    public void SetCutscenePlayers(IEnumerable<CutsceneControlledPlayer> players)
+    public void ReleasePlayers()
     {
-        _cutscenePlayers.Clear();
-        if (players != null)
+        for (int i = 0; i < _cutscenePlayers.Count; i++)
         {
-            _cutscenePlayers.AddRange(players);
+            if (_cutscenePlayers[i] != null)
+            {
+                _cutscenePlayers[i].ExitCutscene();
+            }
         }
+        _cutscenePlayers.Clear();
     }
 
     /// <summary>
@@ -93,7 +141,10 @@ public class OpeningCutsceneController
 
         // 最終フレーム評価
         TickPlayers(duration);
-        mainDirector.Stop();
+        if (mainDirector != null)
+        {
+            mainDirector.Stop();
+        }
 
         onComplete?.Invoke();
     }

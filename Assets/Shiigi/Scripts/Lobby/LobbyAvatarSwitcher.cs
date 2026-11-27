@@ -64,6 +64,7 @@ public class LobbyAvatarSwitcher : MonoBehaviour
     private void OnDestroy()
     {
         UnsubscribeNetworkManager();
+        DestroyAvatar();
     }
 
     private void EnsureNetworkManagerSubscribed()
@@ -91,20 +92,14 @@ public class LobbyAvatarSwitcher : MonoBehaviour
 
     private void Update()
     {
-        EnsureNetworkManagerSubscribed();
+        if (_networkManager != NetworkManager.Singleton)
+        {
+            EnsureNetworkManagerSubscribed();
+        }
 
         if (_localNetworkPlayer == null && TryGetSpawnedLocalPlayer(out var spawnedPlayer))
         {
             HandleLocalPlayerSpawned(spawnedPlayer);
-        }
-
-        if (_localNetworkPlayer != null)
-        {
-            CapturePose(_localNetworkPlayer.transform, _localNetworkAiming);
-        }
-        else if (_avatar != null)
-        {
-            CapturePose(_avatar.transform, _avatarAiming);
         }
     }
 
@@ -182,6 +177,11 @@ public class LobbyAvatarSwitcher : MonoBehaviour
     private void HandleClientStopped(bool wasHost)
     {
         if (this == null || !isActiveAndEnabled || !gameObject.scene.isLoaded) return;
+
+        if (_localNetworkPlayer != null)
+        {
+            CapturePose(_localNetworkPlayer.transform, _localNetworkAiming);
+        }
 
         _localNetworkPlayer = null;
         _localNetworkAiming = null;
