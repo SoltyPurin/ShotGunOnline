@@ -6,10 +6,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// ホストとの通信切断検知（NGOイベント）および通信エラーダイアログ表示・タイトルへの遷移を担当するクラス (SRP / DIP)。
-/// インゲームの入力遮断処理は IGameInputBlocker へ委譲します。
+/// ホストとの通信切断検知・エラーダイアログ表示・タイトル画面への遷移を処理する。
 /// </summary>
-public class SessionDisconnectHandler
+public class SessionDisconnectHandler : IDisposable
 {
     private const string DefaultTitleSceneName = "Title";
     private const string DefaultErrorMessage = "通信エラーが発生しました。\nホストとの接続が切断されました。";
@@ -23,9 +22,22 @@ public class SessionDisconnectHandler
 
     private GameObject _canvasObj;
     private ConfirmDialogUI _dialogInstance;
+    private Scene _lastSearchedScene;
+    private bool _hasSearchedScene;
     private bool _isMonitoring;
     private bool _isHandlingDisconnect;
     private bool _isApplicationQuitting;
+
+    public void Dispose()
+    {
+        _isMonitoring = false;
+        if (_canvasObj != null)
+        {
+            UnityEngine.Object.Destroy(_canvasObj);
+            _canvasObj = null;
+        }
+        _dialogInstance = null;
+    }
 
     public void NotifyApplicationQuitting()
     {
@@ -63,6 +75,11 @@ public class SessionDisconnectHandler
     public void TryCacheDialogFromScene()
     {
         if (_isApplicationQuitting || !Application.isPlaying || _dialogInstance != null) return;
+
+        var activeScene = SceneManager.GetActiveScene();
+        if (_hasSearchedScene && _lastSearchedScene == activeScene) return;
+        _hasSearchedScene = true;
+        _lastSearchedScene = activeScene;
 
         var sceneDialog = UnityEngine.Object.FindAnyObjectByType<ConfirmDialogUI>(FindObjectsInactive.Include);
         if (sceneDialog != null)
@@ -180,7 +197,6 @@ public class SessionDisconnectHandler
         {
             _canvasObj.SetActive(false);
         }
-        Time.timeScale = 1.0f;
 
         if (!_isApplicationQuitting && SceneManager.GetActiveScene().name != _titleSceneName)
         {

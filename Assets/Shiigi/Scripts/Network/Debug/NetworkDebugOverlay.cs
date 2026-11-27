@@ -48,8 +48,10 @@ public class NetworkDebugOverlay : MonoBehaviour
     public static NetworkDebugOverlay Instance { get; private set; }
 
     [Header("表示設定")]
-    [Tooltip("開発ビルドまたはエディタ実行時のみ動作するか (falseにするとリリースでも動作)")]
+    [Tooltip("開発ビルドまたはエディタ実行時のみ動作するか（リリースビルドではプリプロセッサにより自動除外されます）")]
+#pragma warning disable CS0414
     [SerializeField] private bool _onlyInDevelopmentBuild = true;
+#pragma warning restore CS0414
 
     [Tooltip("初期の表示モード")]
     [SerializeField] private DisplayMode _displayMode = DisplayMode.Full;
@@ -88,6 +90,12 @@ public class NetworkDebugOverlay : MonoBehaviour
     private FieldInfo _packetLossValueField;
     private bool _reflectionInitialized;
 
+    // 接続状態遷移検知＆表示値キャッシュ（OnGUI の毎イベント計算・リフレクション抑制）
+    private bool _wasListening;
+    private float _nextMetricsCacheTime;
+    private float? _cachedUtpLossPercent;
+    private const float MetricsCacheInterval = 0.25f;
+
     // GUI スタイルキャッシュ（動的生成テクスチャはOnDestroyで破棄）
     private GUIStyle _boxStyle;
     private GUIStyle _labelStyle;
@@ -118,13 +126,6 @@ public class NetworkDebugOverlay : MonoBehaviour
 
     private void Awake()
     {
-        // 開発ビルド限定チェック
-        if (_onlyInDevelopmentBuild && !Debug.isDebugBuild && !Application.isEditor)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -170,10 +171,18 @@ public class NetworkDebugOverlay : MonoBehaviour
         HandleInput();
 
         var netManager = NetworkManager.Singleton;
-        if (netManager == null || !netManager.IsListening)
+        bool isListening = netManager != null && netManager.IsListening;
+        if (!isListening)
         {
+            if (_wasListening)
+            {
+                _wasListening = false;
+                ResetPingStats();
+            }
             return;
         }
+
+        _wasListening = true;
 
         // メッセージハンドラが未登録なら登録を試みる（NetworkManager起動遅延対応）
         EnsureHandlersRegistered();
@@ -183,6 +192,29 @@ public class NetworkDebugOverlay : MonoBehaviour
         {
             UpdatePingAndPacketLoss();
         }
+
+        // UTP メトリクスのキャッシュ更新（OnGUI 毎イベントでのリフレクション回避）
+        if (Time.realtimeSinceStartup >= _nextMetricsCacheTime)
+        {
+            _nextMetricsCacheTime = Time.realtimeSinceStartup + MetricsCacheInterval;
+            _cachedUtpLossPercent = GetUtpPacketLossPercent();
+        }
+    }
+
+    private void ResetPingStats()
+    {
+        _packetHistory.Clear();
+        _nextSequenceId = 1;
+        _lastPingSendTime = 0f;
+        _appRttMs = 0f;
+        _appRttMin = 0f;
+        _appRttMax = 0f;
+        _appRttAvg = 0f;
+        _jitterMs = 0f;
+        _packetLossPercent = 0f;
+        _lostPacketsCount = 0;
+        _evaluatedPacketsCount = 0;
+        _cachedUtpLossPercent = null;
     }
 
     private void HandleInput()
@@ -193,9 +225,13 @@ public class NetworkDebugOverlay : MonoBehaviour
         try
         {
             var keyboard = UnityEngine.InputSystem.Keyboard.current;
-            if (keyboard != null && keyboard.f3Key.wasPressedThisFrame)
+            if (keyboard != null && TryMapKeyCodeToInputSystemKey(_toggleKey, out var mappedKey))
             {
-                keyPressed = true;
+                var keyControl = keyboard[mappedKey];
+                if (keyControl != null && keyControl.wasPressedThisFrame)
+                {
+                    keyPressed = true;
+                }
             }
         }
         catch
@@ -216,6 +252,19 @@ public class NetworkDebugOverlay : MonoBehaviour
             CycleDisplayMode();
         }
     }
+
+#if ENABLE_INPUT_SYSTEM
+    private static bool TryMapKeyCodeToInputSystemKey(KeyCode keyCode, out UnityEngine.InputSystem.Key key)
+    {
+        if (Enum.TryParse(keyCode.ToString(), ignoreCase: true, out key) && key != UnityEngine.InputSystem.Key.None)
+        {
+            return true;
+        }
+
+        key = UnityEngine.InputSystem.Key.F3;
+        return true;
+    }
+#endif
 
     public void CycleDisplayMode()
     {
@@ -599,7 +648,8 @@ public class NetworkDebugOverlay : MonoBehaviour
         }
 
         float displayRtt = isClient ? (_appRttMs > 0 ? _appRttMs : transportRtt) : 0;
-        float utpLoss = GetUtpPacketLossPercent() ?? 0f;
+        float? utpLossNullable = _cachedUtpLossPercent;
+        float utpLoss = utpLossNullable ?? 0f;
         float displayLoss = isClient ? Mathf.Max(_packetLossPercent, utpLoss) : 0f;
 
         if (_displayMode == DisplayMode.Mini)
@@ -608,7 +658,7 @@ public class NetworkDebugOverlay : MonoBehaviour
         }
         else if (_displayMode == DisplayMode.Full)
         {
-            DrawFullOverlay(netManager, isListening, isHost, isServer, isClient, transportRtt, displayRtt, displayLoss, scale);
+            DrawFullOverlay(netManager, isListening, isHost, isServer, isClient, transportRtt, displayRtt, displayLoss, utpLossNullable, scale);
         }
     }
 
@@ -643,7 +693,7 @@ public class NetworkDebugOverlay : MonoBehaviour
         GUILayout.EndArea();
     }
 
-    private void DrawFullOverlay(NetworkManager netManager, bool isListening, bool isHost, bool isServer, bool isClient, ulong transportRtt, float appRtt, float loss, float scale)
+    private void DrawFullOverlay(NetworkManager netManager, bool isListening, bool isHost, bool isServer, bool isClient, ulong transportRtt, float appRtt, float loss, float? utpLossVal, float scale)
     {
         float width = 300f * scale;
         float height = isHost ? 260f * scale : 230f * scale;
@@ -690,7 +740,6 @@ public class NetworkDebugOverlay : MonoBehaviour
             GUILayout.Label($"  Min: {(_appRttMin > 9999 ? 0 : _appRttMin):F0}ms / Max: {_appRttMax:F0}ms / Jitter: ±{_jitterMs:F1}ms", _labelStyle);
             GUILayout.Label($"Packet Loss: <color={lossColor}><b>{loss:F1} %</b></color> ({_lostPacketsCount}/{_evaluatedPacketsCount} lost)", _labelStyle);
 
-            var utpLossVal = GetUtpPacketLossPercent();
             if (utpLossVal.HasValue)
             {
                 GUILayout.Label($"  (UTP Transport Loss: {utpLossVal.Value:F1}%)", _labelStyle);
@@ -704,8 +753,9 @@ public class NetworkDebugOverlay : MonoBehaviour
             GUILayout.Label($"Connected Clients: <b>{clients.Count}</b>", _labelStyle);
 
             int displayed = 0;
-            foreach (var client in clients)
+            for (int i = 0; i < clients.Count; i++)
             {
+                var client = clients[i];
                 if (client.ClientId == netManager.LocalClientId) continue; // ホスト自身はスキップ
 
                 ulong clientRtt = netManager.NetworkConfig?.NetworkTransport != null
@@ -718,7 +768,11 @@ public class NetworkDebugOverlay : MonoBehaviour
                 displayed++;
                 if (displayed >= 4)
                 {
-                    GUILayout.Label($"  ... and {clients.Count - 1 - displayed} more", _labelStyle);
+                    int remaining = clients.Count - 1 - displayed;
+                    if (remaining > 0)
+                    {
+                        GUILayout.Label($"  ... and {remaining} more", _labelStyle);
+                    }
                     break;
                 }
             }

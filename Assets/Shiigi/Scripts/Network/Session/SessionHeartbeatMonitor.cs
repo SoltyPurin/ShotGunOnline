@@ -7,14 +7,14 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 
 /// <summary>
-/// ホスト・クライアント間のハートビート送受信とタイムアウト検知を担当するクラス (SRP)。
-/// 毎フレーム走るサーバー側の生存チェックで再利用バッファを使用し、GCアロケーションをゼロに保ちます。
+/// ホスト・クライアント間のハートビート送受信とタイムアウト検知を行う。
 /// </summary>
 public class SessionHeartbeatMonitor
 {
     private const string HeartbeatMessageName = "PlayerHeartbeat";
     private const string ServerHeartbeatMessageName = "ServerHeartbeat";
     private const float MaxDeltaTimeStep = 0.5f;
+    private const float ServerCheckInterval = 0.5f;
     private const int MaxPlayerIdLength = 128;
     private const int HeartbeatWriterInitialSize = 128;
     private const int HeartbeatWriterMaxSize = 1024;
@@ -36,6 +36,7 @@ public class SessionHeartbeatMonitor
     private readonly List<string> _removedCleanupBuffer = new();
 
     private float _nextHeartbeatTime;
+    private float _nextServerCheckTime;
     private float _clientSilenceTimer;
     private bool _hasTriggeredHostTimeout;
 
@@ -63,6 +64,7 @@ public class SessionHeartbeatMonitor
 
     public void UnsubscribeMessaging(CustomMessagingManager messagingManager)
     {
+        Reset();
         if (messagingManager == null) return;
         messagingManager.UnregisterNamedMessageHandler(HeartbeatMessageName);
         messagingManager.UnregisterNamedMessageHandler(ServerHeartbeatMessageName);
@@ -79,6 +81,7 @@ public class SessionHeartbeatMonitor
         _timedOutPlayerIdsBuffer.Clear();
         _removedCleanupBuffer.Clear();
         _nextHeartbeatTime = 0f;
+        _nextServerCheckTime = 0f;
         _clientSilenceTimer = 0f;
         _hasTriggeredHostTimeout = false;
     }
@@ -90,7 +93,11 @@ public class SessionHeartbeatMonitor
 
         if (networkManager.IsServer)
         {
-            CheckPlayerHeartbeats(now, currentSession);
+            if (now >= _nextServerCheckTime)
+            {
+                CheckPlayerHeartbeats(now, currentSession);
+                _nextServerCheckTime = now + ServerCheckInterval;
+            }
 
             if (now >= _nextHeartbeatTime)
             {
@@ -123,7 +130,7 @@ public class SessionHeartbeatMonitor
     {
         if (messagingManager == null) return;
 
-        using var writer = new FastBufferWriter(1, Allocator.Temp);
+        using var writer = new FastBufferWriter(0, Allocator.Temp);
         messagingManager.SendNamedMessageToAll(
             ServerHeartbeatMessageName,
             writer,

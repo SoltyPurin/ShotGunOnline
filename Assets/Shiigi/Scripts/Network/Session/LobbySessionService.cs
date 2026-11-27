@@ -6,10 +6,9 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 
 /// <summary>
-/// UGSのMultiplayerServiceを用いたルームの作成・検索・参加・退出・Ready属性更新のみを担当するクラス
-/// トランスポート設定およびNGO/Relayの接続確立待機はRelayConnectionHandlerから取得
+/// UGS MultiplayerService を用いたルームの作成・検索・参加・退出・属性更新を管理する。
 /// </summary>
-public class LobbySessionService : ILobbySessionService
+public class LobbySessionService : ILobbySessionService, IDisposable
 {
     private const int MaxRoomNameLength = 32;
     private const int MinPlayers = 2;
@@ -47,14 +46,33 @@ public class LobbySessionService : ILobbySessionService
         _onUnexpectedDisconnect = onUnexpectedDisconnect;
     }
 
-    public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers, RelayProtocol protocol = RelayProtocol.DTLS)
+    public void Dispose()
+    {
+        CancelPendingConnectionAttempt();
+        UnsubscribeSessionEvents(_currentSession);
+        _currentSession = null;
+        _isSessionConnected = false;
+    }
+
+    private bool CanStartConnectionAttempt(string operationName)
     {
         if (!EnsureServicesInitialized()) return false;
         if (_isConnecting || _isLeaving)
         {
-            Debug.LogWarning("[MSM]: 既に接続または退出処理が進行中のため、ルーム作成をスキップしました。");
+            Debug.LogWarning($"[MSM]: 既に接続または退出処理が進行中のため、{operationName}をスキップしました。");
             return false;
         }
+        if (_currentSession != null)
+        {
+            Debug.LogWarning($"[MSM]: 既にルームに参加中のため、{operationName}をスキップしました。");
+            return false;
+        }
+        return true;
+    }
+
+    public async UniTask<bool> CreateRoomSessionAsync(string roomName, int maxPlayers, RelayProtocol protocol = RelayProtocol.DTLS)
+    {
+        if (!CanStartConnectionAttempt("ルーム作成")) return false;
 
         // 入力値の検証（不正な名前・人数でのAPI呼び出しや想定外の人数でのゲーム開始を防止）
         roomName = roomName?.Trim();
@@ -68,12 +86,6 @@ public class LobbySessionService : ILobbySessionService
             roomName = roomName.Substring(0, MaxRoomNameLength);
         }
         maxPlayers = Mathf.Clamp(maxPlayers, MinPlayers, MaxPlayers);
-
-        if (_currentSession != null)
-        {
-            Debug.LogWarning("[MSM]: 既にルームに参加中のため、ルーム作成をスキップしました。");
-            return false;
-        }
 
         _isConnecting = true;
         var cancellationToken = BeginConnectionAttempt(protocol);
@@ -134,7 +146,7 @@ public class LobbySessionService : ILobbySessionService
         }
         catch (Exception ex)
         {
-            Debug.LogError($"ルーム作成失敗: {ex.Message}");
+            Debug.LogError($"[MSM]: ルーム作成失敗: {ex.Message}");
             await LeaveRoomSessionAsync();
             return false;
         }
@@ -155,33 +167,25 @@ public class LobbySessionService : ILobbySessionService
         {
             var queryOptions = new QuerySessionsOptions();
             QuerySessionsResults queryResponse = await MultiplayerService.Instance.QuerySessionsAsync(queryOptions);
-            return new List<ISessionInfo>(queryResponse.Sessions);
+            return queryResponse?.Sessions != null
+                ? new List<ISessionInfo>(queryResponse.Sessions)
+                : new List<ISessionInfo>();
         }
         catch (Exception ex)
         {
-            Debug.LogError($"ルーム検索失敗: {ex.Message}");
+            Debug.LogError($"[MSM]: ルーム検索失敗: {ex.Message}");
             return new List<ISessionInfo>();
         }
     }
 
     public async UniTask<bool> JoinRoomSessionAsync(ISessionInfo targetRoom)
     {
-        if (!EnsureServicesInitialized()) return false;
         if (targetRoom == null || string.IsNullOrEmpty(targetRoom.Id))
         {
             Debug.LogWarning("[MSM]: 参加対象のルーム情報が不正なため、ルーム参加をスキップしました。");
             return false;
         }
-        if (_isConnecting || _isLeaving)
-        {
-            Debug.LogWarning("[MSM]: 既に接続または退出処理が進行中のため、ルーム参加をスキップしました。");
-            return false;
-        }
-        if (_currentSession != null)
-        {
-            Debug.LogWarning("[MSM]: 既にルームに参加中のため、ルーム参加をスキップしました。");
-            return false;
-        }
+        if (!CanStartConnectionAttempt("ルーム参加")) return false;
 
         // 試合中・ロック中・満員のルームへ途中参加すると、プレイヤーが生成されない／開始同期が崩れるため参加させない
         if (!SessionPlayerPropertyHelper.CanJoinSession(targetRoom))
@@ -233,7 +237,7 @@ public class LobbySessionService : ILobbySessionService
         }
         catch (Exception ex)
         {
-            Debug.LogError($"ルームに参加失敗: {ex.Message}");
+            Debug.LogError($"[MSM]: ルーム参加失敗: {ex.Message}");
             await LeaveRoomSessionAsync();
             return false;
         }
@@ -271,7 +275,7 @@ public class LobbySessionService : ILobbySessionService
         }
         catch (Exception ex)
         {
-            Debug.LogError($"ルーム退出処理でエラーが発生しました: {ex.Message}");
+            Debug.LogError($"[MSM]: ルーム退出処理でエラーが発生しました: {ex.Message}");
         }
         finally
         {
@@ -286,7 +290,7 @@ public class LobbySessionService : ILobbySessionService
     {
         if (_currentSession?.CurrentPlayer == null)
         {
-            Debug.LogError("セッションまたはプレイヤーが存在しません");
+            Debug.LogError("[MSM]: セッションまたはプレイヤーが存在しません");
             return;
         }
 
@@ -297,7 +301,7 @@ public class LobbySessionService : ILobbySessionService
         }
         catch (Exception ex)
         {
-            Debug.LogError($"準備状態の更新に失敗しました: {ex.Message}");
+            Debug.LogError($"[MSM]: 準備状態の更新に失敗しました: {ex.Message}");
         }
     }
 
@@ -334,7 +338,7 @@ public class LobbySessionService : ILobbySessionService
     private bool EnsureServicesInitialized()
     {
         if (_servicesInitializer.IsInitialized) return true;
-        Debug.LogError("Servicesが初期化されていません");
+        Debug.LogError("[MSM]: Servicesが初期化されていません");
         return false;
     }
 

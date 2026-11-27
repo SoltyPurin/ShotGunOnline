@@ -6,8 +6,8 @@ using Unity.Services.Core.Environments;
 using UnityEngine;
 
 /// <summary>
-/// Unity Gaming Services の初期化と匿名サインインのみを担当するクラス (SRP)
-/// ビルド種別（Editor/Development Build か Release か）に応じて UGS の環境（development / product）を自動分離します。
+/// Unity Gaming Services の初期化と匿名サインインを行う。
+/// ビルド種別に応じて UGS 環境（development / production）を切り替える。
 /// </summary>
 public class UnityServicesInitializer : IUnityServicesInitializer
 {
@@ -29,7 +29,10 @@ public class UnityServicesInitializer : IUnityServicesInitializer
         }
 
         var task = InitializeCoreAsync().Preserve();
-        _initializeTask = task;
+        if (task.Status == UniTaskStatus.Pending)
+        {
+            _initializeTask = task;
+        }
         return task;
     }
 
@@ -58,7 +61,7 @@ public class UnityServicesInitializer : IUnityServicesInitializer
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Unity Servicesの初期化に失敗: {ex.Message}");
+            Debug.LogError($"[UGS] Unity Servicesの初期化に失敗: {ex.Message}");
             return false;
         }
         finally

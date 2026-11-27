@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Services.Multiplayer;
 
 /// <summary>
-/// ルーム検索・作成・参加のマッチング操作を担うインターフェース (ISP)。
+/// ルーム検索・作成・参加のマッチング操作インターフェース。
 /// </summary>
 public interface IRoomMatchmakingService
 {
@@ -14,7 +14,7 @@ public interface IRoomMatchmakingService
 }
 
 /// <summary>
-/// 参加中ルームセッションの参照・退出・準備完了操作を担うインターフェース (ISP)。
+/// 参加中ルームセッションの参照・退出・準備完了操作インターフェース。
 /// </summary>
 public interface IRoomSessionControl
 {
@@ -26,7 +26,7 @@ public interface IRoomSessionControl
 }
 
 /// <summary>
-/// セッション内のプレイヤー属性・ルーム状態の同期を担うインターフェース (ISP)。
+/// セッション内のプレイヤー属性・ルーム状態の同期インターフェース。
 /// </summary>
 public interface ISessionMetadataUpdater
 {
@@ -36,7 +36,7 @@ public interface ISessionMetadataUpdater
 }
 
 /// <summary>
-/// ロビーセッション機能全体を統合するファサードインターフェース (ISP / DIP)。
+/// ロビーセッション機能の統合インターフェース。
 /// </summary>
 public interface ILobbySessionService : IRoomMatchmakingService, IRoomSessionControl, ISessionMetadataUpdater
 {
