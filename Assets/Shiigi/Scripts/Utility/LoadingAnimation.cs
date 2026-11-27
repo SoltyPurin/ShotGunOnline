@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -28,6 +28,7 @@ public class LoadingAnimation : MonoBehaviour
 
     private RectTransform _selfRect;
     private Image[] _runes;
+    private RectTransform[] _runeRects;
     private Color[] _baseColors;
     private Image _centerCoreImage;
     private Color _centerCoreBaseColor = Color.white;
@@ -61,14 +62,27 @@ public class LoadingAnimation : MonoBehaviour
         if (_initialized) return;
 
         _selfRect = GetComponent<RectTransform>();
-        _runes = GetComponentsInChildren<Image>(true);
+        Image[] allImages = GetComponentsInChildren<Image>(true);
+        var filteredRunes = new System.Collections.Generic.List<Image>(allImages.Length);
+        for (int i = 0; i < allImages.Length; i++)
+        {
+            Image img = allImages[i];
+            if (img == null || img.gameObject == gameObject) continue;
+            RectTransform rt = img.rectTransform;
+            if (rt == _outerRingA || rt == _outerRingB || rt == _centerOuter || rt == _centerCore) continue;
+            filteredRunes.Add(img);
+        }
+
+        _runes = filteredRunes.ToArray();
+        _runeRects = new RectTransform[_runes.Length];
         _baseColors = new Color[_runes.Length];
 
         for (int i = 0; i < _runes.Length; i++)
         {
             if (_runes[i] == null) continue;
+            _runeRects[i] = _runes[i].rectTransform;
             float angle = -2f * Mathf.PI * i / Mathf.Max(1, _runes.Length);
-            _runes[i].rectTransform.anchoredPosition = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * _orbitRadius;
+            _runeRects[i].anchoredPosition = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * _orbitRadius;
             Color c = _runes[i].color;
             _baseColors[i] = new Color(c.r, c.g, c.b, 1f);
         }
@@ -126,7 +140,7 @@ public class LoadingAnimation : MonoBehaviour
                 rune.color = c;
 
                 float scale = Mathf.Lerp(_minRuneScale, _maxRuneScale, intensity);
-                rune.rectTransform.localScale = new Vector3(scale, scale, 1f);
+                _runeRects[i].localScale = new Vector3(scale, scale, 1f);
             }
         }
 

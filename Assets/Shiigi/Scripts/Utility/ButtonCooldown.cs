@@ -6,6 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// ボタンにクールダウンを追加するスクリプト(通信が発生するボタンなどに)
 /// </summary>
+[RequireComponent(typeof(Button))]
 public class ButtonCooldown : MonoBehaviour
 {
     [SerializeField] private float _cooldownTime = 1f;
@@ -19,6 +20,14 @@ public class ButtonCooldown : MonoBehaviour
         if (_button != null)
         {
             _button.onClick.AddListener(StartCooldown);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_button != null)
+        {
+            _button.onClick.RemoveListener(StartCooldown);
         }
     }
 
@@ -49,7 +58,12 @@ public class ButtonCooldown : MonoBehaviour
     {
         bool wasSelected = EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject;
         _button.interactable = false;
-        yield return new WaitForSecondsRealtime(_cooldownTime);
+        float elapsed = 0f;
+        while (elapsed < _cooldownTime)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
         _button.interactable = true;
         _cooldownCoroutine = null;
 

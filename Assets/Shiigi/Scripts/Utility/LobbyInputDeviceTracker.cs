@@ -25,6 +25,7 @@ public static class LobbyInputDeviceTracker
         if (_isInitialized)
         {
             InputSystem.onEvent -= HandleInputEvent;
+            Application.quitting -= HandleApplicationQuitting;
             _isInitialized = false;
         }
         IsUsingGamepad = false;
@@ -55,6 +56,7 @@ public static class LobbyInputDeviceTracker
 
         if (device is Gamepad gamepad)
         {
+            if (IsUsingGamepad) return;
             if (HasMeaningfulGamepadInput(gamepad, eventPtr))
             {
                 SetUsingGamepad(true);
@@ -64,6 +66,7 @@ public static class LobbyInputDeviceTracker
 
         if (device is Keyboard keyboard)
         {
+            if (!IsUsingGamepad) return;
             if (HasMeaningfulKeyboardInput(keyboard, eventPtr))
             {
                 SetUsingGamepad(false);
@@ -73,6 +76,7 @@ public static class LobbyInputDeviceTracker
 
         if (device is Mouse mouse)
         {
+            if (!IsUsingGamepad) return;
             if (HasMeaningfulMouseInput(mouse, eventPtr))
             {
                 SetUsingGamepad(false);

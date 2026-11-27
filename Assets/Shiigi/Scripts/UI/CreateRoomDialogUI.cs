@@ -65,6 +65,7 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
     };
 
     private bool _isOpeningVirtualKeyboard;
+    private bool _isButtonsBound;
     private Dropdown _lastAutoFollowerAttachedDropdown;
 
     private bool ShouldUseVirtualKeyboard => _enableVirtualKeyboard && LobbyInputDeviceTracker.ShouldUseVirtualKeyboard;
@@ -79,6 +80,7 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
         UIButtonSound.ConfigureButton(_confirmCreateButton, UIButtonType.Default);
         UIButtonSound.ConfigureButton(_cancelDialogButton, UIButtonType.Cancel);
         UIButtonSound.ConfigureButton(_advancedSettingsButton, UIButtonType.SubAction);
+        BindButtonsIfNeeded();
 
         if (_roomNameInputField != null && _roomNameInputField.textComponent != null)
         {
@@ -92,7 +94,7 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
     protected override void Update()
     {
         base.Update();
-        if (!IsAwaitingResult || !gameObject.activeInHierarchy || !IsTopActiveView || _isOpeningVirtualKeyboard) return;
+        if (!CanProcessModalInput || _isOpeningVirtualKeyboard) return;
 
         if (ShouldUseVirtualKeyboard && _roomNameInputField != null)
         {
@@ -187,7 +189,7 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
 
     public override GameObject GetDefaultFocusTarget()
     {
-        if (LobbyInputDeviceTracker.ShouldUseVirtualKeyboard && _confirmCreateButton != null && _confirmCreateButton.gameObject.activeInHierarchy)
+        if (ShouldUseVirtualKeyboard && _confirmCreateButton != null && _confirmCreateButton.gameObject.activeInHierarchy)
         {
             return _confirmCreateButton.gameObject;
         }
@@ -204,12 +206,19 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
     public async UniTask<CreateRoomResult> ShowAsync()
     {
         EnsureModalBlocker(_blockerColor);
+        BindButtonsIfNeeded();
 
-        _roomNameInputField.text = string.Empty;
+        if (_roomNameInputField != null)
+        {
+            _roomNameInputField.text = string.Empty;
+        }
         ApplyRoomNameInputMode();
 
         SetMaxPlayersDropdownOptions();
-        _maxPlayersDropDown.value = 0;
+        if (_maxPlayersDropDown != null)
+        {
+            _maxPlayersDropDown.value = 0;
+        }
 
         SetProtocolDropdownOptions();
         if (_protocolDropdown != null)
@@ -228,34 +237,7 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
         }
         RebuildNavigation();
 
-        _confirmCreateButton.onClick.RemoveAllListeners();
-        _cancelDialogButton.onClick.RemoveAllListeners();
-        if (_advancedSettingsButton != null)
-        {
-            _advancedSettingsButton.onClick.RemoveAllListeners();
-            _advancedSettingsButton.onClick.AddListener(ToggleAdvancedSettings);
-        }
-
         var utcs = BeginResultWait();
-
-        _confirmCreateButton.onClick.AddListener(() =>
-        {
-            CloseModalWithResultAsync(new CreateRoomResult
-            {
-                IsCanceled = false,
-                RoomName = _roomNameInputField.text,
-                MaxPlayers = GetMaxPlayersFromDropdown(_maxPlayersDropDown.value),
-                AdvancedSettings = new RoomAdvancedSettings
-                {
-                    Protocol = GetProtocolFromDropdown(_protocolDropdown != null ? _protocolDropdown.value : 0)
-                }
-            }).Forget();
-        });
-
-        _cancelDialogButton.onClick.AddListener(() =>
-        {
-            CloseModalWithResultAsync(new CreateRoomResult { IsCanceled = true }).Forget();
-        });
 
         await ShowModalAnimatedSafelyAsync();
 
@@ -271,8 +253,63 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
         return await utcs.Task;
     }
 
+    private void BindButtonsIfNeeded()
+    {
+        if (_isButtonsBound) return;
+        _isButtonsBound = true;
+
+        if (_confirmCreateButton != null)
+        {
+            _confirmCreateButton.onClick.AddListener(HandleConfirmClicked);
+        }
+        if (_cancelDialogButton != null)
+        {
+            _cancelDialogButton.onClick.AddListener(HandleCancelClicked);
+        }
+        if (_advancedSettingsButton != null)
+        {
+            _advancedSettingsButton.onClick.AddListener(ToggleAdvancedSettings);
+        }
+    }
+
+    private void HandleConfirmClicked()
+    {
+        CloseModalWithResultAsync(new CreateRoomResult
+        {
+            IsCanceled = false,
+            RoomName = _roomNameInputField != null ? _roomNameInputField.text : string.Empty,
+            MaxPlayers = GetMaxPlayersFromDropdown(_maxPlayersDropDown != null ? _maxPlayersDropDown.value : 0),
+            AdvancedSettings = new RoomAdvancedSettings
+            {
+                Protocol = GetProtocolFromDropdown(_protocolDropdown != null ? _protocolDropdown.value : 0)
+            }
+        }).Forget();
+    }
+
+    private void HandleCancelClicked()
+    {
+        CloseModalWithResultAsync(new CreateRoomResult { IsCanceled = true }).Forget();
+    }
+
     protected override void OnDestroy()
     {
+        if (_isButtonsBound)
+        {
+            if (_confirmCreateButton != null)
+            {
+                _confirmCreateButton.onClick.RemoveListener(HandleConfirmClicked);
+            }
+            if (_cancelDialogButton != null)
+            {
+                _cancelDialogButton.onClick.RemoveListener(HandleCancelClicked);
+            }
+            if (_advancedSettingsButton != null)
+            {
+                _advancedSettingsButton.onClick.RemoveListener(ToggleAdvancedSettings);
+            }
+            _isButtonsBound = false;
+        }
+
         LobbyInputDeviceTracker.OnInputModeChanged -= HandleInputModeChanged;
         base.OnDestroy();
     }
@@ -430,6 +467,8 @@ public class CreateRoomDialogUI : LobbyModalDialogBase<CreateRoomResult>
 
     private void SetMaxPlayersDropdownOptions()
     {
+        if (_maxPlayersDropDown == null) return;
+
         _maxPlayersDropDown.ClearOptions();
         var options = new List<string>(_maxPlayerOptions.Count);
         for (int i = 0; i < _maxPlayerOptions.Count; i++)

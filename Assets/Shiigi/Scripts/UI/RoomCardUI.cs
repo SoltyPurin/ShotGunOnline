@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -220,6 +220,8 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
     public void Setup(ISessionInfo sessionInfo)
     {
         _sessionInfo = sessionInfo;
+        if (sessionInfo == null) return;
+
         if (_roomNameText != null)
         {
             _roomNameText.text = sessionInfo.Name;
@@ -236,6 +238,7 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
         Color statusColor = status switch
         {
             RoomAvailabilityStatus.InGame => _inGameStatusColor,
+            RoomAvailabilityStatus.Locked => _inGameStatusColor,
             RoomAvailabilityStatus.Full => _fullStatusColor,
             _ => _waitingStatusColor
         };
