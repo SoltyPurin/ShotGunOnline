@@ -14,6 +14,7 @@ public class NetworkSceneTransitionHandler : IDisposable
 {
     private const string DefaultGameSceneName = "MP_GameScene";
     private const string GameStartingMessageName = "GameStarting";
+    private const int PreLoadFlushFrames = 6;
 
     private readonly string _gameSceneName;
     private readonly List<NetworkObject> _despawnBuffer = new();
@@ -104,6 +105,7 @@ public class NetworkSceneTransitionHandler : IDisposable
         try
         {
             Debug.Log("[MSM] ホストがゲームを開始: 即時通知を送信し、シーン遷移を実行します");
+            FreezeWatchdogLogger.Checkpoint("NetworkSceneTransitionHandler: ゲーム開始通知送信");
 
             if (networkManager.CustomMessagingManager != null)
             {
@@ -122,22 +124,20 @@ public class NetworkSceneTransitionHandler : IDisposable
                 }
             }
 
-            var mainCam = Camera.main;
-            if (mainCam != null && mainCam.TryGetComponent<LobbyCameraFollow>(out var camFollow))
-            {
-                camFollow.SetTarget(null);
-            }
+            // シーン遷移時の SpriteRenderer::MainThreadCleanup と PersistentManager::Lock のデッドロックを防ぐため、
+            // 事前に描画・演出コンポーネントを停止し、動的 NetworkObject は手動 Destroy を伴わない Despawn(false) で同期解除する
+            PrepareSceneForUnload();
 
-            // シーン遷移前にロビー用のプレイヤーオブジェクトをデスポーン
             if (networkManager.SpawnManager != null)
             {
                 _despawnBuffer.Clear();
                 foreach (var netObj in networkManager.SpawnManager.SpawnedObjectsList)
                 {
-                    if (netObj != null && netObj.IsSpawned && NetworkPlayerSpawner.IsLobbyPlayerObject(netObj))
-                    {
-                        _despawnBuffer.Add(netObj);
-                    }
+                    if (netObj == null || !netObj.IsSpawned) continue;
+                    if (netObj.gameObject.scene.name == "DontDestroyOnLoad") continue;
+                    if (netObj.IsSceneObject == true) continue;
+
+                    _despawnBuffer.Add(netObj);
                 }
 
                 for (int i = 0; i < _despawnBuffer.Count; i++)
@@ -145,21 +145,26 @@ public class NetworkSceneTransitionHandler : IDisposable
                     var netObj = _despawnBuffer[i];
                     if (netObj != null && netObj.IsSpawned)
                     {
-                        netObj.Despawn(true);
+                        netObj.Despawn(false);
                     }
                 }
                 _despawnBuffer.Clear();
             }
 
-            bool canceled = await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow();
-            if (canceled)
+            // 破棄キュー・RPC キューが確実にフラッシュされるまで数フレーム待機してから LoadScene する
+            for (int frame = 0; frame < PreLoadFlushFrames; frame++)
             {
-                _isTransitioning = false;
-                return;
+                bool canceled = await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow();
+                if (canceled)
+                {
+                    _isTransitioning = false;
+                    return;
+                }
             }
 
             if (networkManager != null && networkManager.IsHost && networkManager.SceneManager != null)
             {
+                FreezeWatchdogLogger.Checkpoint($"NetworkSceneTransitionHandler: LoadScene({_gameSceneName}) 実行");
                 Debug.Log($"[MSM] LoadScene({_gameSceneName}) を実行します");
                 var status = networkManager.SceneManager.LoadScene(_gameSceneName, LoadSceneMode.Single);
                 if (status != SceneEventProgressStatus.Started)
@@ -192,7 +197,74 @@ public class NetworkSceneTransitionHandler : IDisposable
         }
 
         Debug.Log($"[MSM] ホストからのゲーム開始通知を受信しました (Sender: {senderClientId})");
+        PrepareSceneForUnload();
         NotifyGameStartingOnce();
+    }
+
+    private static void PrepareSceneForUnload()
+    {
+        var mainCam = Camera.main;
+        if (mainCam != null && mainCam.TryGetComponent<LobbyCameraFollow>(out var camFollow))
+        {
+            camFollow.SetTarget(null);
+        }
+
+        // 待機フレーム中に Animator やプレイヤー制御が SpriteRenderer を再有効化するのを防ぐ
+        DisableSceneBehaviours<PlayerMove>();
+        DisableSceneBehaviours<PlayerAiming>();
+        DisableSceneBehaviours<InputPlayerShot>();
+
+        var animators = UnityEngine.Object.FindObjectsByType<Animator>(FindObjectsInactive.Include);
+        for (int i = 0; i < animators.Length; i++)
+        {
+            var anim = animators[i];
+            if (anim == null || anim.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            anim.enabled = false;
+        }
+
+        var particles = UnityEngine.Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Include);
+        for (int i = 0; i < particles.Length; i++)
+        {
+            var ps = particles[i];
+            if (ps == null || ps.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+
+        var spriteRenderers = UnityEngine.Object.FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Include);
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            var sr = spriteRenderers[i];
+            if (sr == null || sr.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            sr.enabled = false;
+        }
+
+        var lineRenderers = UnityEngine.Object.FindObjectsByType<LineRenderer>(FindObjectsInactive.Include);
+        for (int i = 0; i < lineRenderers.Length; i++)
+        {
+            var lr = lineRenderers[i];
+            if (lr == null || lr.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            lr.enabled = false;
+        }
+
+        var trailRenderers = UnityEngine.Object.FindObjectsByType<TrailRenderer>(FindObjectsInactive.Include);
+        for (int i = 0; i < trailRenderers.Length; i++)
+        {
+            var tr = trailRenderers[i];
+            if (tr == null || tr.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            tr.enabled = false;
+        }
+    }
+
+    private static void DisableSceneBehaviours<T>() where T : MonoBehaviour
+    {
+        var behaviours = UnityEngine.Object.FindObjectsByType<T>(FindObjectsInactive.Include);
+        for (int i = 0; i < behaviours.Length; i++)
+        {
+            var b = behaviours[i];
+            if (b == null || b.gameObject.scene.name == "DontDestroyOnLoad") continue;
+            b.StopAllCoroutines();
+            b.enabled = false;
+        }
     }
 
     private void HandleSceneEvent(SceneEvent sceneEvent)

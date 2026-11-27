@@ -64,7 +64,8 @@ public class LobbyAvatarSwitcher : MonoBehaviour
     private void OnDestroy()
     {
         UnsubscribeNetworkManager();
-        DestroyAvatar();
+        _avatar = null;
+        _avatarAiming = null;
     }
 
     private void EnsureNetworkManagerSubscribed()
