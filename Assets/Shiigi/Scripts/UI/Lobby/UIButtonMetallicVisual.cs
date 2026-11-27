@@ -4,8 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// ボタン選択（コントローラー/キーボード）およびホバー時の演出コンポーネント。
-/// アイドル収束時のマテリアル更新スキップとメッシュ変更時のゼロGCバッファにより、大量のボタン配置時でも低負荷に動作します。
+/// ボタン選択・ホバー時の金属光沢およびスケール演出コンポーネント。
 /// </summary>
 [DisallowMultipleComponent]
 public class UIButtonMetallicVisual : MonoBehaviour,
@@ -27,7 +26,15 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private static readonly int UseLocalUVId = Shader.PropertyToID("_UseLocalUV");
 
     private static readonly List<IMeshModifier> s_modifierBuffer = new(8);
+    private static Shader s_metallicShader;
     private const float RestEpsilon = 0.0005f;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        s_modifierBuffer.Clear();
+        s_metallicShader = null;
+    }
 
     [Header("選択時の外枠・発色設定")]
     [SerializeField] private bool _useOutline = true;
@@ -62,6 +69,9 @@ public class UIButtonMetallicVisual : MonoBehaviour,
     private float _periodicTimer;
     private float _currentRimIntensity;
     private float _currentFocusAdd;
+    private float _clickBounceTimer = -1f;
+    private float _clickBounceDuration = 0.08f;
+    private float _clickBouncePressedScale = 0.96f;
 
     /// <summary>
     /// 指定されたボタンに金属光沢ビジュアルを付与（既存なら取得）する
@@ -118,6 +128,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         _isHovered = false;
         _isPressed = false;
         _shineTimer = -1f;
+        _clickBounceTimer = -1f;
         ResetVisualImmediate();
     }
 
@@ -130,60 +141,43 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         }
     }
 
-    public void ConfigureColors(Color normalColor, Color focusedColor, Color accentColor)
+    /// <summary>
+    /// クリック時のスケールバウンスを本コンポーネントのスケール計算へ統合して再生する（UIButtonSound との競合防止）
+    /// </summary>
+    public void TriggerClickBounce(float pressedScale, float duration)
     {
-        _outlineColor = accentColor;
-        _staticShaderPropsDirty = true;
+        _clickBouncePressedScale = pressedScale;
+        _clickBounceDuration = Mathf.Max(0.02f, duration);
+        _clickBounceTimer = 0f;
         _isVisualAtRest = false;
-        SetMaterialColor(RimColorId, _outlineColor);
+    }
+
+    private Material GetExtraRenderingMaterial()
+    {
+        if (_targetImage == null) return null;
+        var renderingMat = _targetImage.materialForRendering;
+        return renderingMat != null && renderingMat != _runtimeMaterial ? renderingMat : null;
     }
 
     private void SetMaterialFloat(int propertyId, float value)
     {
-        if (_runtimeMaterial != null)
-        {
-            _runtimeMaterial.SetFloat(propertyId, value);
-        }
-        if (_targetImage != null)
-        {
-            var renderingMat = _targetImage.materialForRendering;
-            if (renderingMat != null && renderingMat != _runtimeMaterial)
-            {
-                renderingMat.SetFloat(propertyId, value);
-            }
-        }
+        if (_runtimeMaterial != null) _runtimeMaterial.SetFloat(propertyId, value);
+        var renderingMat = GetExtraRenderingMaterial();
+        if (renderingMat != null) renderingMat.SetFloat(propertyId, value);
     }
 
     private void SetMaterialVector(int propertyId, Vector4 value)
     {
-        if (_runtimeMaterial != null)
-        {
-            _runtimeMaterial.SetVector(propertyId, value);
-        }
-        if (_targetImage != null)
-        {
-            var renderingMat = _targetImage.materialForRendering;
-            if (renderingMat != null && renderingMat != _runtimeMaterial)
-            {
-                renderingMat.SetVector(propertyId, value);
-            }
-        }
+        if (_runtimeMaterial != null) _runtimeMaterial.SetVector(propertyId, value);
+        var renderingMat = GetExtraRenderingMaterial();
+        if (renderingMat != null) renderingMat.SetVector(propertyId, value);
     }
 
     private void SetMaterialColor(int propertyId, Color value)
     {
-        if (_runtimeMaterial != null)
-        {
-            _runtimeMaterial.SetColor(propertyId, value);
-        }
-        if (_targetImage != null)
-        {
-            var renderingMat = _targetImage.materialForRendering;
-            if (renderingMat != null && renderingMat != _runtimeMaterial)
-            {
-                renderingMat.SetColor(propertyId, value);
-            }
-        }
+        if (_runtimeMaterial != null) _runtimeMaterial.SetColor(propertyId, value);
+        var renderingMat = GetExtraRenderingMaterial();
+        if (renderingMat != null) renderingMat.SetColor(propertyId, value);
     }
 
     private void EnsureInitialized()
@@ -206,10 +200,13 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         {
             _useLocalUV = (_targetImage.gameObject == gameObject);
 
-            Shader metallicShader = Shader.Find("UI/ModernMetallicButton");
-            if (metallicShader != null)
+            if (s_metallicShader == null)
             {
-                _runtimeMaterial = new Material(metallicShader)
+                s_metallicShader = Shader.Find("UI/ModernMetallicButton");
+            }
+            if (s_metallicShader != null)
+            {
+                _runtimeMaterial = new Material(s_metallicShader)
                 {
                     name = $"UI_Metallic_{gameObject.name}"
                 };
@@ -305,6 +302,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         transform.localScale = _baseScale;
         _currentRimIntensity = 0f;
         _currentFocusAdd = 0f;
+        _clickBounceTimer = -1f;
         _isVisualAtRest = false;
 
         if (_runtimeMaterial != null)
@@ -327,7 +325,7 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         if (dt <= 0f) return;
 
         bool focused = IsFocused;
-        bool isIdleTarget = !focused && !_isPressed && _shineTimer < 0f;
+        bool isIdleTarget = !focused && !_isPressed && _shineTimer < 0f && _clickBounceTimer < 0f;
 
         // 非フォーカスかつアニメーション完全収束済みなら毎フレームの計算・マテリアル書き込みをスキップ
         if (isIdleTarget && _isVisualAtRest)
@@ -343,6 +341,20 @@ public class UIButtonMetallicVisual : MonoBehaviour,
         {
             if (_isPressed) targetScaleMul = _pressedScale;
             else if (focused) targetScaleMul = _focusedScale;
+        }
+
+        if (_clickBounceTimer >= 0f)
+        {
+            _clickBounceTimer += dt;
+            float t = Mathf.Clamp01(_clickBounceTimer / _clickBounceDuration);
+            float bounceFactor = Mathf.Sin(t * Mathf.PI);
+            float bounceMul = Mathf.Lerp(1f, _clickBouncePressedScale, bounceFactor);
+            targetScaleMul *= bounceMul;
+
+            if (_clickBounceTimer >= _clickBounceDuration)
+            {
+                _clickBounceTimer = -1f;
+            }
         }
 
         float lerpFactor = 1f - Mathf.Exp(-_transitionSpeed * dt);

@@ -16,7 +16,17 @@ public enum UISoundType
 /// </summary>
 public static class UISound
 {
+    private const float SearchRetryCooldown = 1.0f;
+
     private static SEManager _cachedSeManager;
+    private static float _nextSearchTime;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        _cachedSeManager = null;
+        _nextSearchTime = 0f;
+    }
 
     public static void Play(UISoundType soundType)
     {
@@ -41,9 +51,13 @@ public static class UISound
 
     private static void EnsureSeManager()
     {
+        if (_cachedSeManager != null) return;
+        if (Time.unscaledTime < _nextSearchTime) return;
+
+        _cachedSeManager = Object.FindAnyObjectByType<SEManager>();
         if (_cachedSeManager == null)
         {
-            _cachedSeManager = Object.FindAnyObjectByType<SEManager>();
+            _nextSearchTime = Time.unscaledTime + SearchRetryCooldown;
         }
     }
 }

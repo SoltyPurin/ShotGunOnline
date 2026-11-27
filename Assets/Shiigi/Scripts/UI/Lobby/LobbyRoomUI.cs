@@ -27,6 +27,7 @@ public class LobbyRoomUI : LobbyViewBase
     private bool _localIsReady;
     private bool _isLocalHost;
     private bool _canHostStartGame;
+    private bool _isStartRequested;
 
     protected override void Awake()
     {
@@ -52,6 +53,8 @@ public class LobbyRoomUI : LobbyViewBase
         {
             _startButton.onClick.AddListener(() =>
             {
+                if (_isStartRequested) return;
+                _isStartRequested = true;
                 if (_startButton != null)
                 {
                     _startButton.interactable = false;
@@ -62,6 +65,30 @@ public class LobbyRoomUI : LobbyViewBase
         }
     }
 
+    private void OnDisable()
+    {
+        _isStartRequested = false;
+    }
+
+    public override void SetVisibleInstant(bool visible)
+    {
+        if (!visible)
+        {
+            _isStartRequested = false;
+        }
+        base.SetVisibleInstant(visible);
+    }
+
+    protected override void OnShowStarted()
+    {
+        _isStartRequested = false;
+    }
+
+    protected override void OnHideCompleted()
+    {
+        _isStartRequested = false;
+    }
+
     public void Refresh(ISession session)
     {
         if (session == null) return;
@@ -70,16 +97,19 @@ public class LobbyRoomUI : LobbyViewBase
         if (_playerCountText != null) _playerCountText.text = $"{session.Players.Count} / {session.MaxPlayers}";
 
         ClearPlayerList();
-        var players = session.Players;
-        for (int i = 0; i < players.Count; i++)
+        if (_playerEntryPrefab != null && _playerContainer != null)
         {
-            var player = players[i];
-            var entry = Instantiate(_playerEntryPrefab, _playerContainer);
-            bool isHost = session.Host == player.Id;
-            int fallbackSkinId = isHost ? 0 : i;
+            var players = session.Players;
+            for (int i = 0; i < players.Count; i++)
+            {
+                var player = players[i];
+                var entry = Instantiate(_playerEntryPrefab, _playerContainer);
+                bool isHost = session.Host == player.Id;
+                int fallbackSkinId = isHost ? 0 : i;
 
-            entry.Setup(player, isHost, fallbackSkinId);
-            _spawnedEntries.Add(entry);
+                entry.Setup(player, isHost, fallbackSkinId);
+                _spawnedEntries.Add(entry);
+            }
         }
 
         _isLocalHost = session.IsHost;
@@ -91,7 +121,7 @@ public class LobbyRoomUI : LobbyViewBase
             _canHostStartGame = SessionPlayerPropertyHelper.CanHostStartGame(session);
             if (_startButton != null)
             {
-                _startButton.interactable = _canHostStartGame && (_canvasGroup == null || _canvasGroup.interactable);
+                _startButton.interactable = !_isStartRequested && _canHostStartGame && (_canvasGroup == null || _canvasGroup.interactable);
             }
         }
         else
@@ -116,21 +146,10 @@ public class LobbyRoomUI : LobbyViewBase
     {
         if (_leaveButton != null) _leaveButton.interactable = interactable;
         if (_readyButton != null) _readyButton.interactable = interactable;
-        if (_startButton != null) _startButton.interactable = interactable && _canHostStartGame;
+        if (_startButton != null) _startButton.interactable = interactable && _canHostStartGame && !_isStartRequested;
         if (interactable)
         {
             RebuildControllerNavigation(_isLocalHost);
-        }
-    }
-
-    public void FocusDefaultElement()
-    {
-        if (EventSystem.current == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
-
-        var target = GetDefaultFocusTarget();
-        if (target != null)
-        {
-            EventSystem.current.SetSelectedGameObject(target);
         }
     }
 
@@ -185,11 +204,5 @@ public class LobbyRoomUI : LobbyViewBase
             }
         }
         _spawnedEntries.Clear();
-
-        if (_playerContainer == null) return;
-        for (int i = 0; i < _playerContainer.childCount; i++)
-        {
-            Destroy(_playerContainer.GetChild(i).gameObject);
-        }
     }
 }

@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 
 /// <summary>
-/// ロビーUIが存在する間、InputSystemUIInputModule のリピート速度調整および
-/// D-Pad 二重移動防止・ゲームパッド接続時のスティック微小ノイズ遮断を一元管理するクラス (SRP)。
+/// ロビーUI表示中の InputSystemUIInputModule リピート速度調整および D-Pad/スティック入力フィルタを管理する。
 /// </summary>
 public static class LobbyUIInputModuleConfigurator
 {
@@ -19,6 +18,16 @@ public static class LobbyUIInputModuleConfigurator
     private static InputActionAsset _dpadFilteredAsset;
     private static InputAction _dpadFilteredMoveAction;
     private static InputActionReference _dpadFilteredMoveActionRef;
+    private static float _originalMoveRepeatDelay;
+    private static float _originalMoveRepeatRate;
+    private static bool _hasOriginalRepeatSettings;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        RestoreOriginalMoveAction();
+        _activeViewInstanceCount = 0;
+    }
 
     public static void RegisterViewInstance()
     {
@@ -46,9 +55,21 @@ public static class LobbyUIInputModuleConfigurator
         }
         if (uiModule == null) return;
 
+        if (_configuredUiModule != uiModule)
+        {
+            if (_configuredUiModule != null)
+            {
+                RestoreOriginalMoveAction();
+            }
+
+            _originalMoveRepeatDelay = uiModule.moveRepeatDelay;
+            _originalMoveRepeatRate = uiModule.moveRepeatRate;
+            _hasOriginalRepeatSettings = true;
+            ApplyFilteredMoveActionIfNeeded(uiModule);
+        }
+
         uiModule.moveRepeatDelay = DpadRepeatDelay;
         uiModule.moveRepeatRate = DpadRepeatRate;
-        ApplyFilteredMoveActionIfNeeded(uiModule);
     }
 
     private static void ApplyFilteredMoveActionIfNeeded(InputSystemUIInputModule uiModule)
@@ -100,10 +121,19 @@ public static class LobbyUIInputModuleConfigurator
 
     private static void RestoreOriginalMoveAction()
     {
-        if (_configuredUiModule != null && _originalMoveActionRef != null)
+        if (_configuredUiModule != null)
         {
-            _configuredUiModule.move = _originalMoveActionRef;
+            if (_originalMoveActionRef != null)
+            {
+                _configuredUiModule.move = _originalMoveActionRef;
+            }
+            if (_hasOriginalRepeatSettings)
+            {
+                _configuredUiModule.moveRepeatDelay = _originalMoveRepeatDelay;
+                _configuredUiModule.moveRepeatRate = _originalMoveRepeatRate;
+            }
         }
+        _hasOriginalRepeatSettings = false;
 
         if (_dpadFilteredMoveAction != null)
         {

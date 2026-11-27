@@ -4,8 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// ロビーUI全体で共通利用するキーボード／ゲームパッドの入力判定およびUI補助ヘルパー (SRP / DRY)。
-/// 各ダイアログ・画面に散在していた生のデバイス入力条件式を一元化します。
+/// ロビーUI共通のキーボード／ゲームパッド入力判定およびUI補助ヘルパー。
 /// </summary>
 public static class LobbyUIInputHelper
 {
@@ -16,11 +15,13 @@ public static class LobbyUIInputHelper
     /// </summary>
     public static bool WasCancelPressedThisFrame(bool allowKeyboardEscape = true)
     {
-        if (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame)
+        var gamepad = Gamepad.current;
+        if (gamepad != null && gamepad.buttonEast.wasPressedThisFrame)
         {
             return true;
         }
-        return allowKeyboardEscape && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
+        var keyboard = Keyboard.current;
+        return allowKeyboardEscape && keyboard != null && keyboard.escapeKey.wasPressedThisFrame;
     }
 
     /// <summary>
@@ -43,32 +44,22 @@ public static class LobbyUIInputHelper
     /// </summary>
     public static bool WasNavigationInputPressedThisFrame()
     {
-        var gamepad = Gamepad.current;
-        if (gamepad != null)
+        if (WasDirectionalInputPressedThisFrame())
         {
-            if (gamepad.dpad.up.wasPressedThisFrame || gamepad.dpad.down.wasPressedThisFrame ||
-                gamepad.dpad.left.wasPressedThisFrame || gamepad.dpad.right.wasPressedThisFrame ||
-                gamepad.leftStick.ReadValue().sqrMagnitude > StickNavigationThresholdSqr ||
-                gamepad.buttonSouth.wasPressedThisFrame)
-            {
-                return true;
-            }
+            return true;
+        }
+
+        var gamepad = Gamepad.current;
+        if (gamepad != null && gamepad.buttonSouth.wasPressedThisFrame)
+        {
+            return true;
         }
 
         var keyboard = Keyboard.current;
-        if (keyboard != null)
-        {
-            if (keyboard.upArrowKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame ||
-                keyboard.leftArrowKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame ||
-                keyboard.wKey.wasPressedThisFrame || keyboard.sKey.wasPressedThisFrame ||
+        return keyboard != null &&
+               (keyboard.wKey.wasPressedThisFrame || keyboard.sKey.wasPressedThisFrame ||
                 keyboard.aKey.wasPressedThisFrame || keyboard.dKey.wasPressedThisFrame ||
-                keyboard.enterKey.wasPressedThisFrame)
-            {
-                return true;
-            }
-        }
-
-        return false;
+                keyboard.enterKey.wasPressedThisFrame);
     }
 
     /// <summary>

@@ -2,8 +2,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// 現在の入力デバイス（ゲームパッド or キーボード/マウス）に応じて最適なテキスト入力UI
-/// （仮想キーボード または 直接テキスト入力ダイアログ）を選択・起動するファサードクラス (DIP / OCP / SRP)。
+/// 入力デバイスに応じて仮想キーボードまたは直接入力ダイアログを起動する。
 /// </summary>
 public static class LobbyTextInputPrompt
 {
