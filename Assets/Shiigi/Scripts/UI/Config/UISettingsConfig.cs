@@ -110,6 +110,12 @@ public class UISettingsConfig : ScriptableObject
     private const string ResourcePath = "UISettingsConfig";
     private static UISettingsConfig _instance;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        _instance = null;
+    }
+
     [Header("ボタンタイプ別スタイル設定")]
     [SerializeField]
     private ButtonTypeStyle _defaultButtonStyle = ButtonTypeStyle.CreateDefault(UISoundType.Enter, true);

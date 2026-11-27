@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// ResultScene への遷移時に誤って持ち越された可能性のあるソウル等の残留オブジェクトを無効化する単一責務クラス (SRP)。
-/// CanvasResolutionInitializer から異種責務を分離しています。
+/// ResultScene 遷移時に残留したコイン系オブジェクトを無効化する。
 /// </summary>
 public static class ResultSceneOrphanCleaner
 {
@@ -29,38 +28,19 @@ public static class ResultSceneOrphanCleaner
         MoveCoin[] coins = Object.FindObjectsByType<MoveCoin>(FindObjectsInactive.Include);
         for (int i = 0; i < coins.Length; i++)
         {
-            if (coins[i] != null)
+            if (coins[i] != null && coins[i].gameObject.activeSelf)
             {
-                DisableOrphanObject(coins[i].gameObject);
+                coins[i].gameObject.SetActive(false);
             }
         }
 
         CoinControl[] coinCtrls = Object.FindObjectsByType<CoinControl>(FindObjectsInactive.Include);
         for (int i = 0; i < coinCtrls.Length; i++)
         {
-            if (coinCtrls[i] != null)
+            if (coinCtrls[i] != null && coinCtrls[i].gameObject.activeSelf)
             {
-                DisableOrphanObject(coinCtrls[i].gameObject);
+                coinCtrls[i].gameObject.SetActive(false);
             }
         }
-    }
-
-    private static void DisableOrphanObject(GameObject go)
-    {
-        if (go == null) return;
-
-        var renderers = go.GetComponentsInChildren<SpriteRenderer>(true);
-        for (int i = 0; i < renderers.Length; i++)
-        {
-            if (renderers[i] != null) renderers[i].enabled = false;
-        }
-
-        var behaviours = go.GetComponentsInChildren<MonoBehaviour>(true);
-        for (int i = 0; i < behaviours.Length; i++)
-        {
-            if (behaviours[i] != null) behaviours[i].enabled = false;
-        }
-
-        go.SetActive(false);
     }
 }

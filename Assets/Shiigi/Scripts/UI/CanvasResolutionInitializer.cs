@@ -4,14 +4,25 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// FHD(1920x1080)以外の解像度でもUIやアニメーションの位置・サイズが正確に維持されるよう、
-/// すべてのScreenSpace CanvasのCanvasScalerおよびフルスクリーンオーバーレイを自動調整する単一責務クラス (SRP)。
+/// 全 ScreenSpace Canvas の CanvasScaler とフルスクリーンオーバーレイを FHD(1920x1080) 基準に調整する。
 /// </summary>
 public class CanvasResolutionInitializer : MonoBehaviour
 {
     private const string ResultSceneName = "ResultScene";
     private static readonly Vector2 ReferenceResolution = new Vector2(1920f, 1080f);
     private static CanvasResolutionInitializer s_instance;
+
+    private bool _adjustedOnSceneLoad;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        if (s_instance != null)
+        {
+            SceneManager.sceneLoaded -= s_instance.OnSceneLoaded;
+            s_instance = null;
+        }
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
@@ -32,6 +43,7 @@ public class CanvasResolutionInitializer : MonoBehaviour
         }
 
         s_instance = this;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -46,11 +58,15 @@ public class CanvasResolutionInitializer : MonoBehaviour
 
     private void Start()
     {
-        AdjustAllCanvases();
+        if (!_adjustedOnSceneLoad)
+        {
+            AdjustAllCanvases();
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        _adjustedOnSceneLoad = true;
         AdjustAllCanvases();
     }
 

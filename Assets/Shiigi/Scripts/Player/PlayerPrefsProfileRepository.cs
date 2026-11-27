@@ -28,16 +28,13 @@ public class PlayerPrefsProfileRepository : IPlayerProfileRepository
             }
         }
 
-        profile ??= new PlayerProfile();
-        profile.PlayerName = PlayerProfile.SanitizePlayerName(profile.PlayerName);
-
-        if (string.IsNullOrEmpty(profile.PlayerName))
+        if (profile == null)
         {
-            profile.PlayerName = PlayerProfile.GenerateDefaultPlayerName();
-            Save(profile);
+            return null;
         }
 
-        return profile;
+        profile.PlayerName = PlayerProfile.SanitizePlayerName(profile.PlayerName);
+        return string.IsNullOrEmpty(profile.PlayerName) ? null : profile;
     }
 
     public void Save(PlayerProfile profile)

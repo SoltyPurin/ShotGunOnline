@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ゲーム全体のフレームレートおよび垂直同期(VSync)を一括管理するマネージャー。
-/// 永続化責務は IFrameRateSettingsRepository に委譲し (SRP / DIP)、起動時やシーン遷移時にも設定を維持します。
+/// ゲーム全体のフレームレートおよび垂直同期(VSync)を管理する。
 /// </summary>
 public static class FrameRateManager
 {
@@ -21,10 +21,7 @@ public static class FrameRateManager
         FPS_240 = 240
     }
 
-    /// <summary>
-    /// オプション画面で選択可能なFPS一覧 (-1は無制限)
-    /// </summary>
-    public static readonly int[] SelectableFpsList =
+    private static readonly int[] s_selectableFpsArray =
     {
         30,
         60,
@@ -35,7 +32,7 @@ public static class FrameRateManager
         -1
     };
 
-    public static readonly FrameRateMode[] AvailableModes =
+    private static readonly FrameRateMode[] s_availableModesArray =
     {
         FrameRateMode.FPS_60,
         FrameRateMode.FPS_120,
@@ -44,6 +41,13 @@ public static class FrameRateManager
         FrameRateMode.VSync,
         FrameRateMode.FPS_30
     };
+
+    /// <summary>
+    /// オプション画面で選択可能なFPS一覧 (-1は無制限)
+    /// </summary>
+    public static IReadOnlyList<int> SelectableFpsList => s_selectableFpsArray;
+
+    public static IReadOnlyList<FrameRateMode> AvailableModes => s_availableModesArray;
 
     private static IFrameRateSettingsRepository _repository = new PlayerPrefsFrameRateRepository();
     private static int _targetFps = DefaultTargetFps;
@@ -92,6 +96,17 @@ public static class FrameRateManager
     public static event Action<FrameRateMode> OnFrameRateModeChanged;
     public static event Action OnSettingsChanged;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        _repository = new PlayerPrefsFrameRateRepository();
+        _targetFps = DefaultTargetFps;
+        _isVSyncEnabled = false;
+        _isInitialized = false;
+        OnFrameRateModeChanged = null;
+        OnSettingsChanged = null;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void InitializeOnStartup()
     {
@@ -137,11 +152,10 @@ public static class FrameRateManager
     {
         EnsureInitialized();
         int normalized = NormalizeTargetFps(fps);
-        if (_targetFps == normalized && !saveToPrefs) return;
+        if (_targetFps == normalized) return;
 
-        bool changed = _targetFps != normalized;
         _targetFps = normalized;
-        ApplyCurrentSettings(saveToPrefs && changed, notifyListeners: changed);
+        ApplyCurrentSettings(saveToPrefs, notifyListeners: true);
     }
 
     /// <summary>
@@ -150,10 +164,10 @@ public static class FrameRateManager
     public static int NextTargetFps()
     {
         EnsureInitialized();
-        int idx = Array.IndexOf(SelectableFpsList, _targetFps);
+        int idx = Array.IndexOf(s_selectableFpsArray, _targetFps);
         if (idx < 0) idx = 0;
-        idx = (idx + 1) % SelectableFpsList.Length;
-        SetTargetFps(SelectableFpsList[idx]);
+        idx = (idx + 1) % s_selectableFpsArray.Length;
+        SetTargetFps(s_selectableFpsArray[idx]);
         return _targetFps;
     }
 
@@ -163,10 +177,10 @@ public static class FrameRateManager
     public static int PrevTargetFps()
     {
         EnsureInitialized();
-        int idx = Array.IndexOf(SelectableFpsList, _targetFps);
+        int idx = Array.IndexOf(s_selectableFpsArray, _targetFps);
         if (idx < 0) idx = 0;
-        idx = (idx - 1 + SelectableFpsList.Length) % SelectableFpsList.Length;
-        SetTargetFps(SelectableFpsList[idx]);
+        idx = (idx - 1 + s_selectableFpsArray.Length) % s_selectableFpsArray.Length;
+        SetTargetFps(s_selectableFpsArray[idx]);
         return _targetFps;
     }
 
@@ -230,9 +244,9 @@ public static class FrameRateManager
     /// </summary>
     public static FrameRateMode ToggleNextMode()
     {
-        int currentIndex = Array.IndexOf(AvailableModes, CurrentMode);
-        int nextIndex = (currentIndex + 1) % AvailableModes.Length;
-        SetMode(AvailableModes[nextIndex]);
+        int currentIndex = Array.IndexOf(s_availableModesArray, CurrentMode);
+        int nextIndex = (currentIndex + 1) % s_availableModesArray.Length;
+        SetMode(s_availableModesArray[nextIndex]);
         return CurrentMode;
     }
 
@@ -247,7 +261,7 @@ public static class FrameRateManager
 
     private static int NormalizeTargetFps(int fps)
     {
-        return Array.IndexOf(SelectableFpsList, fps) >= 0 ? fps : DefaultTargetFps;
+        return Array.IndexOf(s_selectableFpsArray, fps) >= 0 ? fps : DefaultTargetFps;
     }
 
     private static void ApplyToUnityEngine()
@@ -276,7 +290,9 @@ public static class FrameRateManager
 
         if (notifyListeners)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[FrameRateManager] 設定適用: TargetFPS={GetTargetFpsDisplayString()}, VSync={GetVSyncDisplayString()} (actual targetFrameRate={Application.targetFrameRate}, vSyncCount={QualitySettings.vSyncCount})");
+#endif
             OnFrameRateModeChanged?.Invoke(CurrentMode);
             OnSettingsChanged?.Invoke();
         }

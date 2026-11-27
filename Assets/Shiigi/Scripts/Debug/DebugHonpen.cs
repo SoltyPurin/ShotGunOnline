@@ -2,12 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// インゲームの進行状態（IGameStateProvider）をイベント駆動で購読してテキスト表示するデバッグUI (DIP / ゼロGCポーリング廃止)。
+/// ゲーム進行状態をテキスト表示するデバッグUI。
 /// </summary>
 public class DebugHonpen : MonoBehaviour
 {
     [SerializeField] private Text _gameStateText;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
     private IGameStateProvider _gameStateProvider;
     private bool _isSubscribed;
 
@@ -67,4 +68,14 @@ public class DebugHonpen : MonoBehaviour
             _gameStateText.text = $"Game State: {state}";
         }
     }
+#else
+    private void Awake()
+    {
+        if (_gameStateText != null)
+        {
+            _gameStateText.gameObject.SetActive(false);
+        }
+        Destroy(this);
+    }
+#endif
 }
