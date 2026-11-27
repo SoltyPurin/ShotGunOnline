@@ -27,7 +27,6 @@ public class LobbyNetworkSpawner : MonoBehaviour
         _networkManager.OnServerStarted += HandleServerStarted;
         _networkManager.OnClientConnectedCallback += HandleClientConnected;
 
-        // 既にホストとして起動済みの場合に備えて、未スポーンのクライアント分を生成する
         if (_networkManager.IsServer)
         {
             SpawnForAllClients();
@@ -36,7 +35,6 @@ public class LobbyNetworkSpawner : MonoBehaviour
 
     private void OnDestroy()
     {
-        // NetworkManager は DontDestroyOnLoad のため、シーン破棄時に必ず購読を解除する
         if (_networkManager != null)
         {
             _networkManager.OnServerStarted -= HandleServerStarted;
@@ -82,7 +80,7 @@ public class LobbyNetworkSpawner : MonoBehaviour
         Vector3 pos = spawnPoint != null ? spawnPoint.position : Vector3.zero;
 
         var playerObj = Instantiate(_lobbyPlayerPrefab, pos, Quaternion.identity);
-        playerObj.gameObject.name = "NetWork Player Variant (Lobby)";
+        playerObj.gameObject.name = NetworkPlayerSpawner.LobbyPlayerObjectName;
 
         // destroyWithScene: true → MP_GameScene への遷移時に自動で破棄され、本編のスポーン処理と競合しない
         playerObj.SpawnAsPlayerObject(clientId, destroyWithScene: true);

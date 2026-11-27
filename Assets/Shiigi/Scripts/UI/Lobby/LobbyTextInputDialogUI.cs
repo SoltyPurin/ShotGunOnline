@@ -1,16 +1,14 @@
 using Cysharp.Threading.Tasks;
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
 /// キーボード／マウス操作時に直接テキスト入力（日本語IME対応）を行うコンパクトなモーダルダイアログ。
-/// コントローラー操作時は LobbyVirtualKeyboardUI を開き、キーボード／マウス操作時は本ダイアログを開きます。
+/// LobbyModalDialogBase を継承し、ブロッカー・結果待機処理を共通化しています。
 /// </summary>
-public class LobbyTextInputDialogUI : LobbyViewBase
+public class LobbyTextInputDialogUI : LobbyModalDialogBase<(bool Confirmed, string Text)>
 {
     private const int DefaultMaxLength = 20;
 
@@ -21,8 +19,6 @@ public class LobbyTextInputDialogUI : LobbyViewBase
     [SerializeField] private Button _cancelButton;
     [SerializeField] private Color _blockerColor = new Color(0.02f, 0.013f, 0.007f, 0.78f);
 
-    private UniTaskCompletionSource<(bool Confirmed, string Text)> _utcs;
-    private GameObject _blocker;
     private int _maxLength = DefaultMaxLength;
     private bool _isBound;
 
@@ -57,7 +53,6 @@ public class LobbyTextInputDialogUI : LobbyViewBase
 
     protected override void Awake()
     {
-        _viewType = UIViewType.ModalDialog;
         base.Awake();
         BindButtonsIfNeeded();
     }
@@ -79,15 +74,13 @@ public class LobbyTextInputDialogUI : LobbyViewBase
         if (_confirmButton != null)
         {
             _confirmButton.onClick.AddListener(ConfirmInput);
-            EnsureButtonSound(_confirmButton, UIButtonType.Default);
-            UIButtonMetallicVisual.Attach(_confirmButton);
+            UIButtonSound.ConfigureButton(_confirmButton, UIButtonType.Default);
         }
 
         if (_cancelButton != null)
         {
             _cancelButton.onClick.AddListener(CancelInput);
-            EnsureButtonSound(_cancelButton, UIButtonType.Cancel);
-            UIButtonMetallicVisual.Attach(_cancelButton);
+            UIButtonSound.ConfigureButton(_cancelButton, UIButtonType.Cancel);
         }
     }
 
@@ -117,20 +110,10 @@ public class LobbyTextInputDialogUI : LobbyViewBase
         UpdateCounter(safeInitial);
 
         transform.SetAsLastSibling();
-        EnsureBlocker();
+        EnsureModalBlocker(_blockerColor);
 
-        _utcs?.TrySetCanceled();
-        _utcs = new UniTaskCompletionSource<(bool Confirmed, string Text)>();
-        var utcs = _utcs;
-
-        try
-        {
-            await ShowAsync();
-        }
-        catch (OperationCanceledException)
-        {
-            // 表示演出がキャンセルされても結果待ちは継続する
-        }
+        var utcs = BeginResultWait();
+        await ShowModalAnimatedSafelyAsync();
 
         FocusInputField();
         return await utcs.Task;
@@ -148,27 +131,16 @@ public class LobbyTextInputDialogUI : LobbyViewBase
     protected override void Update()
     {
         base.Update();
-        if (_utcs == null || !gameObject.activeInHierarchy || !IsTopActiveView) return;
-        if (_canvasGroup != null && !_canvasGroup.interactable) return;
+        if (!CanProcessModalInput) return;
 
-        bool cancelPressed =
-            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) ||
-            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame);
-
-        if (cancelPressed)
+        if (LobbyUIInputHelper.WasCancelPressedThisFrame())
         {
             UISound.Play(UISoundType.Cancel);
             CancelInput();
             return;
         }
 
-        // IME変換中でないときの Enter / NumpadEnter で確定
-        bool enterPressed =
-            Keyboard.current != null &&
-            (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.numpadEnterKey.wasPressedThisFrame) &&
-            string.IsNullOrEmpty(Input.compositionString);
-
-        if (enterPressed)
+        if (LobbyUIInputHelper.WasImeSafeEnterPressedThisFrame())
         {
             bool isCancelFocused = EventSystem.current != null &&
                                    _cancelButton != null &&
@@ -208,85 +180,25 @@ public class LobbyTextInputDialogUI : LobbyViewBase
     private void ConfirmInput()
     {
         string text = _inputField != null ? TrimToMaxLength(_inputField.text) : string.Empty;
-        CloseWithResult(confirmed: true, text).Forget();
+        CloseDialog(confirmed: true, text);
     }
 
     private void CancelInput()
     {
         string text = _inputField != null ? _inputField.text : string.Empty;
-        CloseWithResult(confirmed: false, text).Forget();
+        CloseDialog(confirmed: false, text);
     }
 
-    private async UniTaskVoid CloseWithResult(bool confirmed, string resultText)
+    private void CloseDialog(bool confirmed, string resultText)
     {
-        if (_utcs == null) return;
-        var tcs = _utcs;
-        _utcs = null;
-
-        if (_inputField != null)
-        {
-            _inputField.DeactivateInputField();
-        }
-        if (_blocker != null)
-        {
-            _blocker.SetActive(false);
-        }
-
-        try
-        {
-            await HideAsync();
-        }
-        catch (OperationCanceledException)
-        {
-            // 非表示演出がキャンセルされても結果は必ず確定させる
-        }
-        finally
-        {
-            tcs.TrySetResult((confirmed, resultText ?? string.Empty));
-        }
-    }
-
-    protected override void OnDestroy()
-    {
-        _utcs?.TrySetCanceled();
-        _utcs = null;
-        base.OnDestroy();
-    }
-
-    private void EnsureBlocker()
-    {
-        if (_blocker == null)
-        {
-            Transform existing = transform.Find("ScreenBlocker");
-            if (existing != null)
-            {
-                _blocker = existing.gameObject;
-            }
-            else
-            {
-                _blocker = UIBlockerHelper.EnsureBlocker(transform, _blockerColor);
-                return;
-            }
-        }
-
-        _blocker.SetActive(true);
-        _blocker.transform.SetAsFirstSibling();
+        CloseModalWithResultAsync(
+            (confirmed, resultText ?? string.Empty),
+            onBeforeHide: () => _inputField?.DeactivateInputField()).Forget();
     }
 
     private string TrimToMaxLength(string value)
     {
         if (string.IsNullOrEmpty(value)) return string.Empty;
         return value.Length <= _maxLength ? value : value.Substring(0, _maxLength);
-    }
-
-    private static void EnsureButtonSound(Button button, UIButtonType type)
-    {
-        if (button == null) return;
-        var sound = button.GetComponent<UIButtonSound>();
-        if (sound == null)
-        {
-            sound = button.gameObject.AddComponent<UIButtonSound>();
-        }
-        sound.ButtonType = type;
     }
 }

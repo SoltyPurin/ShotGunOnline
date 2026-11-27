@@ -59,6 +59,7 @@ public class CutsceneControlledPlayer : MonoBehaviour
 
     private int _assignedSlotIndex = 0;
     private Sprite _originalFrontSprite;
+    private bool _loggedMissingDownSpriteWarning;
 
     public bool IsInCutscene { get; private set; }
     public ulong OwnerClientId => _networkObject != null ? _networkObject.OwnerClientId : 0;
@@ -292,8 +293,9 @@ public class CutsceneControlledPlayer : MonoBehaviour
                 {
                     _frontSpriteRenderer.sprite = skin.DownSprite;
                 }
-                else
+                else if (!_loggedMissingDownSpriteWarning)
                 {
+                    _loggedMissingDownSpriteWarning = true;
                     Debug.LogWarning($"[CutsceneControlledPlayer] スロット {_assignedSlotIndex} の DownSprite が未設定または Missing です。");
                 }
             }

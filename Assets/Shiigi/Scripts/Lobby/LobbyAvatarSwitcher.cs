@@ -4,9 +4,6 @@ using UnityEngine;
 /// <summary>
 /// ロビーでの「オフライン分身」と「ネットワークプレイヤー」の切り替えを担当するクラス。
 /// プレイシーンと同じプレイヤープレハブ（NetWork Player Variant）をそのまま使用します。
-/// ・シーン開始時（未接続）：オフライン状態でプレイヤープレハブを出現させる
-/// ・自端末のネットワークプレイヤーがスポーン：分身の位置・照準向きを引き継いで分身を破棄
-/// ・ルーム退出/切断（OnClientStopped）：最後の位置・照準向きに分身を再出現させる
 /// </summary>
 public class LobbyAvatarSwitcher : MonoBehaviour
 {
@@ -23,6 +20,7 @@ public class LobbyAvatarSwitcher : MonoBehaviour
     [SerializeField] private LobbyCameraFollow _cameraFollow;
 
     private NetworkManager _networkManager;
+    private BulletPool _cachedBulletPool;
     private GameObject _avatar;
     private PlayerAiming _avatarAiming;
     private PlayerMove _localNetworkPlayer;
@@ -53,14 +51,11 @@ public class LobbyAvatarSwitcher : MonoBehaviour
             _cameraFollow = Camera.main.GetComponent<LobbyCameraFollow>();
         }
 
-        // 未接続ならオフライン分身を出す（接続済みの場合はネットワークプレイヤーのスポーン通知を待つ／既にスポーン済みなら即座に紐付ける）
         if (_networkManager == null || !_networkManager.IsListening)
         {
             SpawnAvatar(GetInitialPosition(), _lastAimDirection, snapCamera: true);
         }
-        else if (_networkManager.LocalClient != null &&
-                 _networkManager.LocalClient.PlayerObject != null &&
-                 _networkManager.LocalClient.PlayerObject.TryGetComponent<PlayerMove>(out var existingPlayer))
+        else if (TryGetSpawnedLocalPlayer(out var existingPlayer))
         {
             HandleLocalPlayerSpawned(existingPlayer);
         }
@@ -68,12 +63,7 @@ public class LobbyAvatarSwitcher : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (_networkManager != null)
-        {
-            _networkManager.OnClientStarted -= HandleClientStarted;
-            _networkManager.OnClientStopped -= HandleClientStopped;
-            _networkManager = null;
-        }
+        UnsubscribeNetworkManager();
     }
 
     private void EnsureNetworkManagerSubscribed()
@@ -81,78 +71,80 @@ public class LobbyAvatarSwitcher : MonoBehaviour
         var current = NetworkManager.Singleton;
         if (_networkManager == current) return;
 
-        if (_networkManager != null)
-        {
-            _networkManager.OnClientStarted -= HandleClientStarted;
-            _networkManager.OnClientStopped -= HandleClientStopped;
-        }
+        UnsubscribeNetworkManager();
 
         _networkManager = current;
         if (_networkManager != null)
         {
-            _networkManager.OnClientStarted -= HandleClientStarted;
             _networkManager.OnClientStarted += HandleClientStarted;
-            _networkManager.OnClientStopped -= HandleClientStopped;
             _networkManager.OnClientStopped += HandleClientStopped;
         }
+    }
+
+    private void UnsubscribeNetworkManager()
+    {
+        if (_networkManager == null) return;
+        _networkManager.OnClientStarted -= HandleClientStarted;
+        _networkManager.OnClientStopped -= HandleClientStopped;
+        _networkManager = null;
     }
 
     private void Update()
     {
         EnsureNetworkManagerSubscribed();
 
-        // 万が一スポーン通知を取りこぼしていた場合でもローカルプレイヤーを検出してカメラ追従を紐付ける
-        if (_localNetworkPlayer == null &&
-            _networkManager != null &&
-            _networkManager.IsListening &&
-            _networkManager.LocalClient != null &&
-            _networkManager.LocalClient.PlayerObject != null &&
-            _networkManager.LocalClient.PlayerObject.TryGetComponent<PlayerMove>(out var spawnedPlayer))
+        if (_localNetworkPlayer == null && TryGetSpawnedLocalPlayer(out var spawnedPlayer))
         {
             HandleLocalPlayerSpawned(spawnedPlayer);
         }
 
-        // 切断時に分身を同じ場所・同じ向きへ戻すため、現在の操作キャラの状態を記録しておく
         if (_localNetworkPlayer != null)
         {
-            _lastPosition = _localNetworkPlayer.transform.position;
-            if (_localNetworkAiming != null && _localNetworkAiming.Direction.sqrMagnitude > 0.0001f)
-            {
-                _lastAimDirection = _localNetworkAiming.Direction;
-            }
-            _hasLastPosition = true;
+            CapturePose(_localNetworkPlayer.transform, _localNetworkAiming);
         }
         else if (_avatar != null)
         {
-            _lastPosition = _avatar.transform.position;
-            if (_avatarAiming != null && _avatarAiming.Direction.sqrMagnitude > 0.0001f)
-            {
-                _lastAimDirection = _avatarAiming.Direction;
-            }
-            _hasLastPosition = true;
+            CapturePose(_avatar.transform, _avatarAiming);
         }
+    }
+
+    private bool TryGetSpawnedLocalPlayer(out PlayerMove player)
+    {
+        player = null;
+        return _networkManager != null &&
+               _networkManager.IsListening &&
+               _networkManager.LocalClient != null &&
+               _networkManager.LocalClient.PlayerObject != null &&
+               _networkManager.LocalClient.PlayerObject.TryGetComponent(out player);
+    }
+
+    private void CapturePose(Transform targetTransform, PlayerAiming aiming)
+    {
+        if (targetTransform == null) return;
+        _lastPosition = targetTransform.position;
+        if (aiming != null && aiming.Direction.sqrMagnitude > 0.0001f)
+        {
+            _lastAimDirection = aiming.Direction;
+        }
+        _hasLastPosition = true;
     }
 
     private void EnsureBulletPool()
     {
-        if (FindAnyObjectByType<BulletPool>() != null) return;
-        if (_bulletPoolPrefab == null) return;
+        if (_cachedBulletPool != null) return;
 
-        BulletPool pool = Instantiate(_bulletPoolPrefab);
-        pool.gameObject.name = "BulletPool";
+        _cachedBulletPool = FindAnyObjectByType<BulletPool>();
+        if (_cachedBulletPool != null || _bulletPoolPrefab == null) return;
+
+        _cachedBulletPool = Instantiate(_bulletPoolPrefab);
+        _cachedBulletPool.gameObject.name = "BulletPool";
     }
 
     private void HandleClientStarted()
     {
-        // ネットワーク開始時にオフライン分身が残っていれば位置・向きを記録して破棄する
         if (_avatar != null)
         {
-            _lastPosition = _avatar.transform.position;
-            if (_avatarAiming != null && _avatarAiming.Direction.sqrMagnitude > 0.0001f)
-            {
-                _lastAimDirection = _avatarAiming.Direction;
-            }
-            _hasLastPosition = true;
+            CapturePose(_avatar.transform, _avatarAiming);
             DestroyAvatar();
         }
     }
@@ -162,46 +154,33 @@ public class LobbyAvatarSwitcher : MonoBehaviour
         _localNetworkPlayer = player;
         _localNetworkAiming = player.GetComponent<PlayerAiming>();
 
-        // 分身がいた場所と向きをネットワークプレイヤーに引き継いでから、分身を消す
-        Vector2 position = _avatar != null ? (Vector2)_avatar.transform.position
-                         : _hasLastPosition ? _lastPosition
-                         : GetInitialPosition();
-        Vector3 aimDir = (_avatar != null && _avatarAiming != null && _avatarAiming.Direction.sqrMagnitude > 0.0001f)
-                         ? _avatarAiming.Direction
-                         : _lastAimDirection;
+        if (_avatar != null)
+        {
+            CapturePose(_avatar.transform, _avatarAiming);
+        }
 
+        Vector2 position = _hasLastPosition ? _lastPosition : GetInitialPosition();
         player.Teleport(position);
         if (_localNetworkAiming != null)
         {
-            _localNetworkAiming.SetDirection(aimDir);
+            _localNetworkAiming.SetDirection(_lastAimDirection);
         }
 
         DestroyAvatar();
-
-        if (_cameraFollow != null)
-        {
-            _cameraFollow.SetTarget(player.transform);
-        }
+        _cameraFollow?.SetTarget(player.transform);
     }
 
     private void HandleLocalPlayerDespawned(PlayerMove player)
     {
         if (_localNetworkPlayer != player) return;
 
-        _lastPosition = player.transform.position;
-        if (_localNetworkAiming != null && _localNetworkAiming.Direction.sqrMagnitude > 0.0001f)
-        {
-            _lastAimDirection = _localNetworkAiming.Direction;
-        }
-        _hasLastPosition = true;
+        CapturePose(player.transform, _localNetworkAiming);
         _localNetworkPlayer = null;
         _localNetworkAiming = null;
-        // 分身の再出現は OnClientStopped で行う（シーン遷移によるデスポーンでは出さないため）
     }
 
     private void HandleClientStopped(bool wasHost)
     {
-        // シーン破棄中や非ロード時は何もしない
         if (this == null || !isActiveAndEnabled || !gameObject.scene.isLoaded) return;
 
         _localNetworkPlayer = null;
@@ -225,15 +204,8 @@ public class LobbyAvatarSwitcher : MonoBehaviour
         _avatar = Instantiate(_playerPrefab, new Vector3(position.x, position.y, 0f), Quaternion.identity);
         _avatar.name = "LobbyOfflinePlayer";
         _avatarAiming = _avatar.GetComponent<PlayerAiming>();
-        if (_avatarAiming != null)
-        {
-            _avatarAiming.SetDirection(aimDirection);
-        }
-
-        if (_cameraFollow != null)
-        {
-            _cameraFollow.SetTarget(_avatar.transform, snapCamera);
-        }
+        _avatarAiming?.SetDirection(aimDirection);
+        _cameraFollow?.SetTarget(_avatar.transform, snapCamera);
     }
 
     private void DestroyAvatar()

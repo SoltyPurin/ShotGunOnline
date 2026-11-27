@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,8 +8,6 @@ using UnityEngine.UI;
 
 /// <summary>
 /// ロビー画面左端からスライド展開するハンバーガーメニュー（サイドドロワー）。
-/// プロフィール表示（名前・ステータス）と、マッチングメニュー／名前変更／タイトルへ戻るの各ボタンを集約し、
-/// コントローラーの上下ナビゲーションだけで完結して操作できます。
 /// </summary>
 public class LobbyHamburgerMenuUI : MonoBehaviour
 {
@@ -54,22 +53,14 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
 
     private void Awake()
     {
-        if (_drawerPanel != null && _drawerCanvasGroup == null)
+        if (_drawerPanel != null && _drawerCanvasGroup == null && !_drawerPanel.TryGetComponent(out _drawerCanvasGroup))
         {
-            _drawerCanvasGroup = _drawerPanel.GetComponent<CanvasGroup>();
-            if (_drawerCanvasGroup == null)
-            {
-                _drawerCanvasGroup = _drawerPanel.gameObject.AddComponent<CanvasGroup>();
-            }
+            _drawerCanvasGroup = _drawerPanel.gameObject.AddComponent<CanvasGroup>();
         }
 
-        if (_dimmerButton != null && _dimmerCanvasGroup == null)
+        if (_dimmerButton != null && _dimmerCanvasGroup == null && !_dimmerButton.TryGetComponent(out _dimmerCanvasGroup))
         {
-            _dimmerCanvasGroup = _dimmerButton.GetComponent<CanvasGroup>();
-            if (_dimmerCanvasGroup == null)
-            {
-                _dimmerCanvasGroup = _dimmerButton.gameObject.AddComponent<CanvasGroup>();
-            }
+            _dimmerCanvasGroup = _dimmerButton.gameObject.AddComponent<CanvasGroup>();
         }
 
         if (_playerNameText != null)
@@ -80,22 +71,19 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         if (_matchingButton != null)
         {
             _matchingButton.onClick.AddListener(() => OnMatchingMenuRequested?.Invoke());
-            EnsureButtonSound(_matchingButton, UIButtonType.Default);
-            UIButtonMetallicVisual.Attach(_matchingButton);
+            UIButtonSound.ConfigureButton(_matchingButton, UIButtonType.Default);
         }
 
         if (_editNameButton != null)
         {
             _editNameButton.onClick.AddListener(() => OnEditNameRequested?.Invoke());
-            EnsureButtonSound(_editNameButton, UIButtonType.SubAction);
-            UIButtonMetallicVisual.Attach(_editNameButton);
+            UIButtonSound.ConfigureButton(_editNameButton, UIButtonType.SubAction);
         }
 
         if (_returnToTitleButton != null)
         {
             _returnToTitleButton.onClick.AddListener(() => OnReturnToTitleRequested?.Invoke());
-            EnsureButtonSound(_returnToTitleButton, UIButtonType.Cancel);
-            UIButtonMetallicVisual.Attach(_returnToTitleButton);
+            UIButtonSound.ConfigureButton(_returnToTitleButton, UIButtonType.Cancel);
         }
 
         if (_dimmerButton != null)
@@ -106,7 +94,7 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         if (_closeButton != null)
         {
             _closeButton.onClick.AddListener(() => OnCloseRequested?.Invoke());
-            EnsureButtonSound(_closeButton, UIButtonType.Cancel);
+            UIButtonSound.EnsureAttached(_closeButton, UIButtonType.Cancel);
         }
 
         CaptureOpenPositionIfNeeded();
@@ -125,15 +113,8 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         _animSequence?.Kill();
     }
 
-    public void Open(bool immediate = false)
-    {
-        SetOpen(true, immediate);
-    }
-
-    public void Close(bool immediate = false)
-    {
-        SetOpen(false, immediate);
-    }
+    public void Open(bool immediate = false) => SetOpen(true, immediate);
+    public void Close(bool immediate = false) => SetOpen(false, immediate);
 
     public void SetOpen(bool open, bool immediate = false)
     {
@@ -153,18 +134,8 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
             {
                 _drawerPanel.anchoredPosition = open ? _openAnchoredPosition : closedPos;
             }
-            if (_drawerCanvasGroup != null)
-            {
-                _drawerCanvasGroup.alpha = open ? 1f : 0f;
-                _drawerCanvasGroup.interactable = open;
-                _drawerCanvasGroup.blocksRaycasts = open;
-            }
-            if (_dimmerCanvasGroup != null)
-            {
-                _dimmerCanvasGroup.alpha = open ? 1f : 0f;
-                _dimmerCanvasGroup.interactable = open;
-                _dimmerCanvasGroup.blocksRaycasts = open;
-            }
+            SetCanvasGroupState(_drawerCanvasGroup, open ? 1f : 0f, open);
+            SetCanvasGroupState(_dimmerCanvasGroup, open ? 1f : 0f, open);
             if (open)
             {
                 FocusDefaultButton();
@@ -177,23 +148,12 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         if (open)
         {
             gameObject.SetActive(true);
-
             if (_drawerPanel != null)
             {
                 _drawerPanel.anchoredPosition = closedPos;
             }
-            if (_drawerCanvasGroup != null)
-            {
-                _drawerCanvasGroup.alpha = 0f;
-                _drawerCanvasGroup.interactable = false;
-                _drawerCanvasGroup.blocksRaycasts = false;
-            }
-            if (_dimmerCanvasGroup != null)
-            {
-                _dimmerCanvasGroup.alpha = 0f;
-                _dimmerCanvasGroup.interactable = false;
-                _dimmerCanvasGroup.blocksRaycasts = false;
-            }
+            SetCanvasGroupState(_drawerCanvasGroup, 0f, interactable: false);
+            SetCanvasGroupState(_dimmerCanvasGroup, 0f, interactable: false);
 
             if (_drawerPanel != null)
             {
@@ -210,31 +170,13 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
 
             _animSequence.OnComplete(() =>
             {
-                if (_drawerCanvasGroup != null)
-                {
-                    _drawerCanvasGroup.interactable = true;
-                    _drawerCanvasGroup.blocksRaycasts = true;
-                }
-                if (_dimmerCanvasGroup != null)
-                {
-                    _dimmerCanvasGroup.interactable = true;
-                    _dimmerCanvasGroup.blocksRaycasts = true;
-                }
+                SetInteractable(true);
                 FocusDefaultButton();
             });
         }
         else
         {
-            if (_drawerCanvasGroup != null)
-            {
-                _drawerCanvasGroup.interactable = false;
-                _drawerCanvasGroup.blocksRaycasts = false;
-            }
-            if (_dimmerCanvasGroup != null)
-            {
-                _dimmerCanvasGroup.interactable = false;
-                _dimmerCanvasGroup.blocksRaycasts = false;
-            }
+            SetInteractable(false);
 
             float closeDuration = _slideDuration * 0.78f;
             if (_drawerPanel != null)
@@ -249,24 +191,30 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
             {
                 _animSequence.Join(_dimmerCanvasGroup.DOFade(0f, closeDuration).SetEase(Ease.InQuad));
             }
-            _animSequence.OnComplete(() =>
-            {
-                gameObject.SetActive(false);
-            });
+            _animSequence.OnComplete(() => gameObject.SetActive(false));
         }
+    }
+
+    private static void SetCanvasGroupState(CanvasGroup group, float alpha, bool interactable)
+    {
+        if (group == null) return;
+        group.alpha = alpha;
+        group.interactable = interactable;
+        group.blocksRaycasts = interactable;
     }
 
     public void SetInteractable(bool interactable)
     {
+        bool canInteract = interactable && _isOpen;
         if (_drawerCanvasGroup != null)
         {
-            _drawerCanvasGroup.interactable = interactable && _isOpen;
-            _drawerCanvasGroup.blocksRaycasts = interactable && _isOpen;
+            _drawerCanvasGroup.interactable = canInteract;
+            _drawerCanvasGroup.blocksRaycasts = canInteract;
         }
         if (_dimmerCanvasGroup != null)
         {
-            _dimmerCanvasGroup.interactable = interactable && _isOpen;
-            _dimmerCanvasGroup.blocksRaycasts = interactable && _isOpen;
+            _dimmerCanvasGroup.interactable = canInteract;
+            _dimmerCanvasGroup.blocksRaycasts = canInteract;
         }
     }
 
@@ -299,23 +247,9 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         RefreshPlayerName(PlayerProfileStore.PlayerName);
         RefreshPlayerSkin(isInRoom ? skinId : 0);
 
-        string statusLabel;
-        Color statusColor;
-        if (isInRoom)
-        {
-            statusLabel = "ルーム参加中";
-            statusColor = _inRoomColor;
-        }
-        else if (isOnline)
-        {
-            statusLabel = "オンライン";
-            statusColor = _onlineColor;
-        }
-        else
-        {
-            statusLabel = "オフライン";
-            statusColor = _offlineColor;
-        }
+        (string statusLabel, Color statusColor) = isInRoom
+            ? ("ルーム参加中", _inRoomColor)
+            : (isOnline ? ("オンライン", _onlineColor) : ("オフライン", _offlineColor));
 
         if (_statusText != null)
         {
@@ -338,13 +272,8 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
 
     public void RefreshPlayerSkin(int skinId)
     {
-        if (_playerPortraitImage == null || _skinPortraits == null || _skinPortraits.Length == 0)
-        {
-            return;
-        }
-
-        int index = ((skinId % _skinPortraits.Length) + _skinPortraits.Length) % _skinPortraits.Length;
-        Sprite portrait = _skinPortraits[index];
+        if (_playerPortraitImage == null) return;
+        Sprite portrait = LobbyUIInputHelper.SelectCyclicSprite(_skinPortraits, skinId);
         if (portrait != null)
         {
             _playerPortraitImage.sprite = portrait;
@@ -377,17 +306,19 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
 
     private void RebuildNavigation()
     {
-        var buttons = new System.Collections.Generic.List<Button>();
+        var buttons = new List<Button>(3);
         if (_matchingButton != null) buttons.Add(_matchingButton);
         if (_editNameButton != null) buttons.Add(_editNameButton);
         if (_returnToTitleButton != null) buttons.Add(_returnToTitleButton);
 
         for (int i = 0; i < buttons.Count; i++)
         {
-            var nav = new Navigation { mode = Navigation.Mode.Explicit };
-            nav.selectOnUp = buttons[(i - 1 + buttons.Count) % buttons.Count];
-            nav.selectOnDown = buttons[(i + 1) % buttons.Count];
-            buttons[i].navigation = nav;
+            buttons[i].navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = buttons[(i - 1 + buttons.Count) % buttons.Count],
+                selectOnDown = buttons[(i + 1) % buttons.Count]
+            };
         }
     }
 
@@ -396,16 +327,5 @@ public class LobbyHamburgerMenuUI : MonoBehaviour
         if (_hasCapturedOpenPos || _drawerPanel == null) return;
         _openAnchoredPosition = _drawerPanel.anchoredPosition;
         _hasCapturedOpenPos = true;
-    }
-
-    private static void EnsureButtonSound(Button button, UIButtonType buttonType)
-    {
-        if (button == null) return;
-        var sound = button.GetComponent<UIButtonSound>();
-        if (sound == null)
-        {
-            sound = button.gameObject.AddComponent<UIButtonSound>();
-        }
-        sound.ButtonType = buttonType;
     }
 }

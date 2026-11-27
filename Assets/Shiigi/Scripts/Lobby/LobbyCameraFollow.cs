@@ -42,7 +42,9 @@ public class LobbyCameraFollow : MonoBehaviour
     {
         if (_target == null) return;
 
-        transform.position = Vector3.Lerp(transform.position, GetTargetPosition(), _followSpeed * Time.deltaTime);
+        // フレームレート非依存の指数平滑補間
+        float t = 1f - Mathf.Exp(-_followSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, GetTargetPosition(), t);
     }
 
     private Vector3 GetTargetPosition()

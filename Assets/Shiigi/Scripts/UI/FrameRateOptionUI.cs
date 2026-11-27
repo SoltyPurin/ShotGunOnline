@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// タイトル画面などのOptionメニュー内で、FPS設定および垂直同期(VSync)設定のUI表示・操作を行うクラス。
-/// 既存のOptionButtons(BGM/SE)からUI要素を自動構築する機能と、Inspectorから個別指定する機能の両方に対応しています。
+/// 効果音再生は UISound に委譲し (DIP / DRY)、SEManager 具象検索への依存を排除しています。
 /// </summary>
 public class FrameRateOptionUI : MonoBehaviour
 {
@@ -22,16 +22,10 @@ public class FrameRateOptionUI : MonoBehaviour
     [SerializeField] private float _firstRowY = 35f;
     [SerializeField] private float _rowSpacing = 115f;
 
-    private SEManager _seManager = default;
-    private bool _isBuilt = false;
+    private bool _isBuilt;
 
     private void Awake()
     {
-        if (_seManager == null)
-        {
-            _seManager = FindFirstObjectByType<SEManager>();
-        }
-
         if (_autoBuildIfMissing && (_fpsValueText == null || _vsyncValueText == null))
         {
             BuildOptionRowsFromTemplate();
@@ -64,7 +58,7 @@ public class FrameRateOptionUI : MonoBehaviour
     public void OnClickFpsRight()
     {
         FrameRateManager.NextTargetFps();
-        PlayClickSE();
+        UISound.Play(UISoundType.Enter);
         RefreshUI();
     }
 
@@ -74,7 +68,7 @@ public class FrameRateOptionUI : MonoBehaviour
     public void OnClickFpsLeft()
     {
         FrameRateManager.PrevTargetFps();
-        PlayClickSE();
+        UISound.Play(UISoundType.Enter);
         RefreshUI();
     }
 
@@ -84,7 +78,7 @@ public class FrameRateOptionUI : MonoBehaviour
     public void OnClickVSyncToggle()
     {
         FrameRateManager.ToggleVSync();
-        PlayClickSE();
+        UISound.Play(UISoundType.Enter);
         RefreshUI();
     }
 
@@ -96,7 +90,6 @@ public class FrameRateOptionUI : MonoBehaviour
         if (_fpsValueText != null)
         {
             _fpsValueText.text = FrameRateManager.GetTargetFpsDisplayString();
-            // VSyncがONの時はモニター同期が優先されるため少し色味を抑えて視覚的に分かりやすくする
             Color c = _fpsValueText.color;
             c.a = FrameRateManager.IsVSyncEnabled ? 0.55f : 1.0f;
             _fpsValueText.color = c;
@@ -108,43 +101,29 @@ public class FrameRateOptionUI : MonoBehaviour
         }
     }
 
-    private void PlayClickSE()
-    {
-        if (_seManager == null)
-        {
-            _seManager = FindFirstObjectByType<SEManager>();
-        }
-        if (_seManager != null)
-        {
-            _seManager.PlayEnterSound();
-        }
-    }
-
     private void BindButtonsIfAssigned()
     {
         if (_isBuilt) return;
         _isBuilt = true;
 
-        if (_fpsLeftButton != null)
+        BindSingleButton(_fpsLeftButton, OnClickFpsLeft, clearExisting: false);
+        BindSingleButton(_fpsRightButton, OnClickFpsRight, clearExisting: false);
+        BindSingleButton(_vsyncLeftButton, OnClickVSyncToggle, clearExisting: false);
+        BindSingleButton(_vsyncRightButton, OnClickVSyncToggle, clearExisting: false);
+    }
+
+    private static void BindSingleButton(Button button, UnityEngine.Events.UnityAction action, bool clearExisting)
+    {
+        if (button == null) return;
+        if (clearExisting)
         {
-            _fpsLeftButton.onClick.RemoveListener(OnClickFpsLeft);
-            _fpsLeftButton.onClick.AddListener(OnClickFpsLeft);
+            button.onClick = new Button.ButtonClickedEvent();
         }
-        if (_fpsRightButton != null)
+        else
         {
-            _fpsRightButton.onClick.RemoveListener(OnClickFpsRight);
-            _fpsRightButton.onClick.AddListener(OnClickFpsRight);
+            button.onClick.RemoveListener(action);
         }
-        if (_vsyncLeftButton != null)
-        {
-            _vsyncLeftButton.onClick.RemoveListener(OnClickVSyncToggle);
-            _vsyncLeftButton.onClick.AddListener(OnClickVSyncToggle);
-        }
-        if (_vsyncRightButton != null)
-        {
-            _vsyncRightButton.onClick.RemoveListener(OnClickVSyncToggle);
-            _vsyncRightButton.onClick.AddListener(OnClickVSyncToggle);
-        }
+        button.onClick.AddListener(action);
     }
 
     /// <summary>
@@ -169,10 +148,7 @@ public class FrameRateOptionUI : MonoBehaviour
                     }
                 }
             }
-            if (found != null)
-            {
-                _optionButtonsRoot = found as RectTransform;
-            }
+            _optionButtonsRoot = found as RectTransform;
         }
 
         if (_optionButtonsRoot == null)
@@ -191,46 +167,19 @@ public class FrameRateOptionUI : MonoBehaviour
             return;
         }
 
-        // 既に生成済みかチェック
-        RectTransform fpsRow = _optionButtonsRoot.Find("FPS") as RectTransform;
-        if (fpsRow == null)
-        {
-            GameObject fpsObj = Instantiate(seRow.gameObject, _optionButtonsRoot);
-            fpsObj.name = "FPS";
-            fpsRow = fpsObj.GetComponent<RectTransform>();
-        }
+        RectTransform fpsRow = EnsureClonedRow("FPS", seRow);
+        RectTransform vsyncRow = EnsureClonedRow("VSync", seRow);
 
-        RectTransform vsyncRow = _optionButtonsRoot.Find("VSync") as RectTransform;
-        if (vsyncRow == null)
-        {
-            GameObject vsyncObj = Instantiate(seRow.gameObject, _optionButtonsRoot);
-            vsyncObj.name = "VSync";
-            vsyncRow = vsyncObj.GetComponent<RectTransform>();
-        }
+        ApplyRowLayout(bgmRow, 0);
+        ApplyRowLayout(seRow, 1);
+        ApplyRowLayout(fpsRow, 2);
+        ApplyRowLayout(vsyncRow, 3);
 
-        // 4行(BGM, SE, FPS, VSync)が画面内に綺麗に収まるよう位置とスケールを整列
-        if (bgmRow != null)
-        {
-            bgmRow.localScale = new Vector3(_rowScale, _rowScale, 1f);
-            bgmRow.anchoredPosition = new Vector2(0f, _firstRowY);
-        }
-
-        seRow.localScale = new Vector3(_rowScale, _rowScale, 1f);
-        seRow.anchoredPosition = new Vector2(0f, _firstRowY - _rowSpacing);
-
-        fpsRow.localScale = new Vector3(_rowScale, _rowScale, 1f);
-        fpsRow.anchoredPosition = new Vector2(0f, _firstRowY - _rowSpacing * 2f);
-
-        vsyncRow.localScale = new Vector3(_rowScale, _rowScale, 1f);
-        vsyncRow.anchoredPosition = new Vector2(0f, _firstRowY - _rowSpacing * 3f);
-
-        // Exitボタンを一番下に配置（ヒエラルキー順も最後に移動）
         if (exitBtn != null)
         {
             exitBtn.SetAsLastSibling();
         }
 
-        // FPS行のセットアップ
         SetupClonedRow(
             fpsRow,
             labelTitle: "Frame Rate",
@@ -239,10 +188,8 @@ public class FrameRateOptionUI : MonoBehaviour
             valueTextName: "FPSSizeText",
             out _fpsLeftButton,
             out _fpsRightButton,
-            out _fpsValueText
-        );
+            out _fpsValueText);
 
-        // VSync行のセットアップ
         SetupClonedRow(
             vsyncRow,
             labelTitle: "VSync",
@@ -251,36 +198,35 @@ public class FrameRateOptionUI : MonoBehaviour
             valueTextName: "VSyncSizeText",
             out _vsyncLeftButton,
             out _vsyncRightButton,
-            out _vsyncValueText
-        );
+            out _vsyncValueText);
 
-        // クリックイベントの再設定（クローン元のAudioVolumeChangeイベントをクリアして差し替え）
-        if (_fpsLeftButton != null)
-        {
-            _fpsLeftButton.onClick = new Button.ButtonClickedEvent();
-            _fpsLeftButton.onClick.AddListener(OnClickFpsLeft);
-        }
-        if (_fpsRightButton != null)
-        {
-            _fpsRightButton.onClick = new Button.ButtonClickedEvent();
-            _fpsRightButton.onClick.AddListener(OnClickFpsRight);
-        }
-        if (_vsyncLeftButton != null)
-        {
-            _vsyncLeftButton.onClick = new Button.ButtonClickedEvent();
-            _vsyncLeftButton.onClick.AddListener(OnClickVSyncToggle);
-        }
-        if (_vsyncRightButton != null)
-        {
-            _vsyncRightButton.onClick = new Button.ButtonClickedEvent();
-            _vsyncRightButton.onClick.AddListener(OnClickVSyncToggle);
-        }
+        BindSingleButton(_fpsLeftButton, OnClickFpsLeft, clearExisting: true);
+        BindSingleButton(_fpsRightButton, OnClickFpsRight, clearExisting: true);
+        BindSingleButton(_vsyncLeftButton, OnClickVSyncToggle, clearExisting: true);
+        BindSingleButton(_vsyncRightButton, OnClickVSyncToggle, clearExisting: true);
 
         _isBuilt = true;
         RefreshUI();
     }
 
-    private void SetupClonedRow(
+    private RectTransform EnsureClonedRow(string rowName, RectTransform templateRow)
+    {
+        RectTransform existing = _optionButtonsRoot.Find(rowName) as RectTransform;
+        if (existing != null) return existing;
+
+        GameObject cloned = Instantiate(templateRow.gameObject, _optionButtonsRoot);
+        cloned.name = rowName;
+        return cloned.GetComponent<RectTransform>();
+    }
+
+    private void ApplyRowLayout(RectTransform row, int rowIndex)
+    {
+        if (row == null) return;
+        row.localScale = new Vector3(_rowScale, _rowScale, 1f);
+        row.anchoredPosition = new Vector2(0f, _firstRowY - _rowSpacing * rowIndex);
+    }
+
+    private static void SetupClonedRow(
         RectTransform row,
         string labelTitle,
         string leftBtnName,
@@ -295,8 +241,9 @@ public class FrameRateOptionUI : MonoBehaviour
         valueText = null;
 
         Button[] buttons = row.GetComponentsInChildren<Button>(true);
-        foreach (var btn in buttons)
+        for (int i = 0; i < buttons.Length; i++)
         {
+            var btn = buttons[i];
             if (btn.name.Contains("Left"))
             {
                 btn.name = leftBtnName;
@@ -310,9 +257,9 @@ public class FrameRateOptionUI : MonoBehaviour
         }
 
         Text[] texts = row.GetComponentsInChildren<Text>(true);
-        foreach (var txt in texts)
+        for (int i = 0; i < texts.Length; i++)
         {
-            // ボタンの子テキスト("<", ">")は除外
+            var txt = texts[i];
             if (txt.transform.parent != row) continue;
 
             if (txt.name.Contains("SizeText") || txt.name.Contains("ValueText"))

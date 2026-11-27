@@ -158,14 +158,30 @@ public class MP_OpeningSyncManager : NetworkBehaviour
 
     private bool AreAllPlayersSpawnedLocally(PlayerSlotAssignment assignment)
     {
-        var spawned = NetworkPlayerSpawner.CollectSpawnedPlayerObjects(NetworkManager);
-        foreach (var clientId in assignment.ClientIdsBySlot)
+        var spawnManager = NetworkManager != null ? NetworkManager.SpawnManager : null;
+        if (spawnManager == null) return false;
+
+        var spawnedList = spawnManager.SpawnedObjectsList;
+        var requiredClientIds = assignment.ClientIdsBySlot;
+
+        for (int i = 0; i < requiredClientIds.Count; i++)
         {
-            if (!spawned.Exists(p => p.OwnerClientId == clientId))
+            ulong targetClientId = requiredClientIds[i];
+            bool found = false;
+
+            // HashSet<NetworkObject> の値型 Enumerator でゼロアロケーション走査
+            foreach (var netObj in spawnedList)
             {
-                return false;
+                if (netObj != null && netObj.OwnerClientId == targetClientId && NetworkPlayerSpawner.IsInGamePlayerObject(netObj))
+                {
+                    found = true;
+                    break;
+                }
             }
+
+            if (!found) return false;
         }
+
         return true;
     }
 

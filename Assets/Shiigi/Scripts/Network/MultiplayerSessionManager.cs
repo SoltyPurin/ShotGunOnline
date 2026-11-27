@@ -132,6 +132,29 @@ public class MultiplayerSessionManager : MonoBehaviour, ILobbySessionService
     }
 
     /// <summary>
+    /// シーン遷移時（タイトル画面など）に、残存しているセッションまたは NetworkManager を安全に切断・破棄する共通エントリポイント。
+    /// TitleManager 等に NetworkManager 破棄ロジックが重複するのを防ぎます。
+    /// </summary>
+    public static void CleanupOrShutdownStatic()
+    {
+        if (Instance != null)
+        {
+            Instance.DisconnectAndCleanupAsync().Forget();
+            return;
+        }
+
+        var netManager = NetworkManager.Singleton;
+        if (netManager != null)
+        {
+            if (netManager.IsListening || netManager.IsServer || netManager.IsClient)
+            {
+                netManager.Shutdown();
+            }
+            Destroy(netManager.gameObject);
+        }
+    }
+
+    /// <summary>
     /// ルームおよびRelay(NetworkManager)接続が存在する場合に切断し、ネットワーク関連オブジェクトをクリーンアップする。
     /// 既にクリーンアップ中の場合は、進行中の処理が完了するまで待機してから戻る。
     /// </summary>

@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 /// <summary>
-/// ロビー画面の各UIパネル・ダイアログの基底クラス。
-/// UISettingsConfig に基づくフェード＆ポップアニメーションとSE自動再生機能を提供します。
+/// ロビー画面の各UIパネル・ダイアログの基底クラス (SRP / OCP)。
+/// UISettingsConfig に基づくフェード＆ポップアニメーション、アクティブビュースタック管理、フォーカス保護を提供します。
+/// InputModule設定やD-Padリピート制御は単一責務クラス（LobbyUIInputModuleConfigurator / DPadRepeatNavigator）へ委譲しています。
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 public abstract class LobbyViewBase : MonoBehaviour
@@ -20,7 +19,7 @@ public abstract class LobbyViewBase : MonoBehaviour
     [SerializeField] protected UIViewType _viewType = UIViewType.DefaultWindow;
 
     [Tooltip("true の場合、タイプ設定ではなく下記の個別カスタム設定を優先します")]
-    [SerializeField] protected bool _overrideCustom = false;
+    [SerializeField] protected bool _overrideCustom;
 
     [Header("個別カスタム設定（_overrideCustom または Custom 時に有効）")]
     [Tooltip("表示アニメーションの時間（秒）")]
@@ -49,17 +48,6 @@ public abstract class LobbyViewBase : MonoBehaviour
     protected RectTransform _rectTransform;
 
     private static readonly List<LobbyViewBase> _activeViews = new();
-    private static int _liveViewCount;
-    private static InputSystemUIInputModule _configuredUiModule;
-    private static InputActionReference _originalMoveActionRef;
-    private static InputActionAsset _dpadFilteredAsset;
-    private static InputAction _dpadFilteredMoveAction;
-    private static InputActionReference _dpadFilteredMoveActionRef;
-
-    private const float DpadRepeatDelay = 0.22f;
-    private const float DpadRepeatRate = 0.06f;
-    private MoveDirection _dpadLastDirection = MoveDirection.None;
-    private float _dpadNextRepeatTime;
 
     public static LobbyViewBase TopActiveView
     {
@@ -81,6 +69,9 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     public static event Action OnActiveViewStackChanged;
 
+    private DPadRepeatNavigator _dpadNavigator;
+    private Func<Transform, bool> _cachedOwnershipPredicate;
+    private Func<GameObject> _cachedDefaultFocusFunc;
     private CancellationTokenSource _animCts;
     private bool _isVisible;
     private bool _hasAwakened;
@@ -125,113 +116,22 @@ public abstract class LobbyViewBase : MonoBehaviour
         if (!_hasAwakened)
         {
             _hasAwakened = true;
-            _liveViewCount++;
+            LobbyUIInputModuleConfigurator.RegisterViewInstance();
+        }
+        else
+        {
+            LobbyUIInputModuleConfigurator.ConfigureCurrentEventSystem();
         }
 
+        _cachedOwnershipPredicate ??= IsOwnedByThisView;
+        _cachedDefaultFocusFunc ??= GetDefaultFocusTarget;
+
         EnsureComponents();
-        ConfigureUIInputRepeat();
 
         if (_autoAttachButtonSounds)
         {
             AutoAttachButtonSounds();
         }
-    }
-
-    private static void ConfigureUIInputRepeat()
-    {
-        if (EventSystem.current == null) return;
-
-        var uiModule = EventSystem.current.currentInputModule as InputSystemUIInputModule;
-        if (uiModule == null)
-        {
-            uiModule = EventSystem.current.GetComponent<InputSystemUIInputModule>();
-        }
-        if (uiModule != null)
-        {
-            uiModule.moveRepeatDelay = DpadRepeatDelay;
-            uiModule.moveRepeatRate = DpadRepeatRate;
-            EnsureDpadFilteredFromUIModule(uiModule);
-        }
-    }
-
-    private static void EnsureDpadFilteredFromUIModule(InputSystemUIInputModule uiModule)
-    {
-        if (uiModule == null || _configuredUiModule == uiModule) return;
-        if (uiModule.move == null || uiModule.move.action == null) return;
-
-        // ロビーUI表示中はUpdate()でD-Padを直接処理するため、UIInputModule側のMoveからD-Padのみ除外して二重移動を防ぐ。
-        // また、DefaultInputActionsのMoveはPassThrough型のため、ゲームパッド接続時にスティックの微小ノイズ／静止値(0,0)が
-        // キーボード入力を上書きしてレスポンスを低下させる問題がある。
-        // Value型(Vector2)＋スティックデッドゾーン強化にすることで、コントローラー接続中でもキーボード入力が干渉されないようにする。
-        _originalMoveActionRef = uiModule.move;
-        InputAction originalAction = uiModule.move.action;
-
-        _dpadFilteredAsset = ScriptableObject.CreateInstance<InputActionAsset>();
-        _dpadFilteredAsset.name = "LobbyDpadFilteredUIInput";
-        string mapName = originalAction.actionMap != null ? originalAction.actionMap.name : "UI";
-        var map = new InputActionMap(mapName);
-        _dpadFilteredMoveAction = map.AddAction(originalAction.name, InputActionType.Value);
-        _dpadFilteredMoveAction.expectedControlType = "Vector2";
-
-        var bindings = originalAction.bindings;
-        for (int i = 0; i < bindings.Count; i++)
-        {
-            InputBinding b = bindings[i];
-            if (!string.IsNullOrEmpty(b.path) &&
-                b.path.IndexOf("dpad", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                continue;
-            }
-
-            if (!string.IsNullOrEmpty(b.path) &&
-                (b.path.IndexOf("leftStick", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                 b.path.IndexOf("rightStick", StringComparison.OrdinalIgnoreCase) >= 0))
-            {
-                string deadzoneProcessor = b.isPartOfComposite
-                    ? "axisDeadzone(min=0.35,max=0.925)"
-                    : "stickDeadzone(min=0.35,max=0.925)";
-                b.processors = string.IsNullOrEmpty(b.processors)
-                    ? deadzoneProcessor
-                    : $"{b.processors},{deadzoneProcessor}";
-            }
-
-            _dpadFilteredMoveAction.AddBinding(b);
-        }
-
-        _dpadFilteredAsset.AddActionMap(map);
-        _dpadFilteredMoveAction.Enable();
-        _dpadFilteredMoveActionRef = InputActionReference.Create(_dpadFilteredMoveAction);
-        uiModule.move = _dpadFilteredMoveActionRef;
-        _configuredUiModule = uiModule;
-    }
-
-    private static void RestoreOriginalUIModuleMove()
-    {
-        if (_configuredUiModule != null && _originalMoveActionRef != null)
-        {
-            _configuredUiModule.move = _originalMoveActionRef;
-        }
-
-        if (_dpadFilteredMoveAction != null)
-        {
-            _dpadFilteredMoveAction.Disable();
-            _dpadFilteredMoveAction = null;
-        }
-
-        if (_dpadFilteredMoveActionRef != null)
-        {
-            Destroy(_dpadFilteredMoveActionRef);
-            _dpadFilteredMoveActionRef = null;
-        }
-
-        if (_dpadFilteredAsset != null)
-        {
-            Destroy(_dpadFilteredAsset);
-            _dpadFilteredAsset = null;
-        }
-
-        _configuredUiModule = null;
-        _originalMoveActionRef = null;
     }
 
     private void EnsureComponents()
@@ -254,11 +154,7 @@ public abstract class LobbyViewBase : MonoBehaviour
         if (_hasAwakened)
         {
             _hasAwakened = false;
-            _liveViewCount = Mathf.Max(0, _liveViewCount - 1);
-            if (_liveViewCount == 0)
-            {
-                RestoreOriginalUIModuleMove();
-            }
+            LobbyUIInputModuleConfigurator.UnregisterViewInstance();
         }
     }
 
@@ -269,90 +165,10 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     protected void ProcessDPadNavigation()
     {
-        if (!_isVisible || !IsTopActiveView || _canvasGroup == null || !_canvasGroup.interactable)
-        {
-            _dpadLastDirection = MoveDirection.None;
-            return;
-        }
-
-        if (EventSystem.current == null || Gamepad.current == null)
-        {
-            _dpadLastDirection = MoveDirection.None;
-            return;
-        }
-
-        var dpad = Gamepad.current.dpad;
-        bool upPressed = dpad.up.wasPressedThisFrame;
-        bool downPressed = dpad.down.wasPressedThisFrame;
-        bool leftPressed = dpad.left.wasPressedThisFrame;
-        bool rightPressed = dpad.right.wasPressedThisFrame;
-
-        MoveDirection pressedThisFrameDir = ResolvePressedDirection(upPressed, downPressed, leftPressed, rightPressed);
-        MoveDirection heldDir = ResolvePressedDirection(dpad.up.isPressed, dpad.down.isPressed, dpad.left.isPressed, dpad.right.isPressed);
-
-        if (pressedThisFrameDir != MoveDirection.None)
-        {
-            _dpadLastDirection = pressedThisFrameDir;
-            _dpadNextRepeatTime = Time.unscaledTime + DpadRepeatDelay;
-            ExecuteDPadMove(pressedThisFrameDir);
-            return;
-        }
-
-        if (heldDir != MoveDirection.None)
-        {
-            if (heldDir != _dpadLastDirection)
-            {
-                _dpadLastDirection = heldDir;
-                _dpadNextRepeatTime = Time.unscaledTime + DpadRepeatDelay;
-                ExecuteDPadMove(heldDir);
-            }
-            else if (Time.unscaledTime >= _dpadNextRepeatTime)
-            {
-                _dpadNextRepeatTime = Time.unscaledTime + DpadRepeatRate;
-                ExecuteDPadMove(heldDir);
-            }
-            return;
-        }
-
-        _dpadLastDirection = MoveDirection.None;
-    }
-
-    private static MoveDirection ResolvePressedDirection(bool up, bool down, bool left, bool right)
-    {
-        if (up && !down) return MoveDirection.Up;
-        if (down && !up) return MoveDirection.Down;
-        if (left && !right) return MoveDirection.Left;
-        if (right && !left) return MoveDirection.Right;
-        return MoveDirection.None;
-    }
-
-    private void ExecuteDPadMove(MoveDirection dir)
-    {
-        GameObject selected = EventSystem.current.currentSelectedGameObject;
-        if (selected == null || !selected.activeInHierarchy || !IsOwnedByThisView(selected.transform))
-        {
-            GameObject fallback = GetDefaultFocusTarget();
-            if (fallback != null)
-            {
-                EventSystem.current.SetSelectedGameObject(fallback);
-            }
-            return;
-        }
-
-        var axisData = new AxisEventData(EventSystem.current)
-        {
-            moveDir = dir,
-            moveVector = dir switch
-            {
-                MoveDirection.Up => Vector2.up,
-                MoveDirection.Down => Vector2.down,
-                MoveDirection.Left => Vector2.left,
-                MoveDirection.Right => Vector2.right,
-                _ => Vector2.zero
-            }
-        };
-
-        ExecuteEvents.ExecuteHierarchy(selected, axisData, ExecuteEvents.moveHandler);
+        bool canNavigate = _isVisible && IsTopActiveView && _canvasGroup != null && _canvasGroup.interactable;
+        _cachedOwnershipPredicate ??= IsOwnedByThisView;
+        _cachedDefaultFocusFunc ??= GetDefaultFocusTarget;
+        _dpadNavigator.Process(canNavigate, _cachedOwnershipPredicate, _cachedDefaultFocusFunc);
     }
 
     protected virtual void LateUpdate()
@@ -363,8 +179,7 @@ public abstract class LobbyViewBase : MonoBehaviour
         var selected = EventSystem.current.currentSelectedGameObject;
         if (selected != null && !IsOwnedByThisView(selected.transform))
         {
-            var fallback = GetDefaultFocusTarget();
-            EventSystem.current.SetSelectedGameObject(fallback);
+            EventSystem.current.SetSelectedGameObject(GetDefaultFocusTarget());
         }
     }
 
@@ -389,7 +204,6 @@ public abstract class LobbyViewBase : MonoBehaviour
         gameObject.SetActive(true);
         PushActiveView(this);
 
-        // 表示アニメーション中は誤操作を防ぐため入力を遮断
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = true;
 
@@ -409,7 +223,6 @@ public abstract class LobbyViewBase : MonoBehaviour
 
                 elapsed += Time.unscaledDeltaTime;
                 float t = Mathf.Clamp01(elapsed / style.ShowDuration);
-                // EaseOutQuad (1 - (1-t)^2) で滑らかに開く
                 float eased = 1f - (1f - t) * (1f - t);
 
                 _canvasGroup.alpha = eased;
@@ -451,7 +264,6 @@ public abstract class LobbyViewBase : MonoBehaviour
         var ct = _animCts.Token;
 
         _isVisible = false;
-        // 非表示開始時点で直ちに入力受付を遮断し、アクティブUIスタックから外す
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
         OnActiveInteractableChanged(false);
@@ -474,7 +286,6 @@ public abstract class LobbyViewBase : MonoBehaviour
 
                 elapsed += Time.unscaledDeltaTime;
                 float t = Mathf.Clamp01(elapsed / style.HideDuration);
-                // EaseInQuad (t^2) でスッと消える
                 float eased = t * t;
 
                 _canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, eased);
@@ -526,28 +337,24 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     /// <summary>
     /// 子階層にある全Buttonを検索し、UIButtonSoundが未アタッチなら自動付与する
-    /// （ボタン名からUIButtonTypeを自動設定）
     /// </summary>
     public void AutoAttachButtonSounds()
     {
         var buttons = GetComponentsInChildren<Button>(true);
-        foreach (var btn in buttons)
+        for (int i = 0; i < buttons.Length; i++)
         {
-            if (btn == null) continue;
-            if (btn.GetComponent<UIButtonSound>() != null) continue;
-
-            var soundComp = btn.gameObject.AddComponent<UIButtonSound>();
-            soundComp.ButtonType = UIButtonSound.InferTypeFromName(btn.name);
+            var btn = buttons[i];
+            if (btn == null || btn.TryGetComponent<UIButtonSound>(out _)) continue;
+            UIButtonSound.EnsureAttached(btn, UIButtonSound.InferTypeFromName(btn.name));
         }
     }
 
     private void CancelCurrentAnimation()
     {
-        if (_animCts != null)
-        {
-            _animCts.Cancel();
-            _animCts = null;
-        }
+        if (_animCts == null) return;
+        _animCts.Cancel();
+        _animCts.Dispose();
+        _animCts = null;
     }
 
     public void RestoreDefaultFocus()
@@ -565,7 +372,7 @@ public abstract class LobbyViewBase : MonoBehaviour
 
     private static void PruneDestroyedViews()
     {
-        _activeViews.RemoveAll(v => v == null);
+        _activeViews.RemoveAll(static v => v == null);
     }
 
     private static void PushActiveView(LobbyViewBase view)
@@ -590,8 +397,9 @@ public abstract class LobbyViewBase : MonoBehaviour
     {
         PruneDestroyedViews();
         var top = _activeViews.Count > 0 ? _activeViews[_activeViews.Count - 1] : null;
-        foreach (var v in _activeViews)
+        for (int i = 0; i < _activeViews.Count; i++)
         {
+            var v = _activeViews[i];
             bool isTop = (v == top);
             v.EnsureComponents();
             v._canvasGroup.interactable = isTop && v._isVisible;

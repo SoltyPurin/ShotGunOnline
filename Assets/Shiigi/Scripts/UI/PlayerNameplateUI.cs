@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 /// プレイヤーキャラクターの頭上にプレイヤー名を表示するワールド空間ネームプレート。
-/// PlayerMove / LobbyNetworkPlayer / LobbyLocalAvatar のいずれにも自動で紐づいて動作します。
+/// IPlayerNameSource インターフェースにのみ依存し (DIP / OCP)、イベント駆動で表示名を更新することで
+/// LateUpdate での毎フレーム文字列アロケーションをゼロに保ちます。
 /// </summary>
 public class PlayerNameplateUI : MonoBehaviour
 {
@@ -20,15 +22,17 @@ public class PlayerNameplateUI : MonoBehaviour
     private const float MinBackgroundWidth = 100f;
     private const float MaxBackgroundWidth = 340f;
 
-    private PlayerMove _playerMove;
-    private LobbyNetworkPlayer _lobbyNetworkPlayer;
-    private LobbyLocalAvatar _lobbyLocalAvatar;
-    private PlayerStateManager _playerStateManager;
+    private static Font s_cachedFont;
 
+    private IPlayerNameSource _nameSource;
     private GameObject _canvasRoot;
     private RectTransform _backgroundRect;
     private Text _nameText;
-    private string _displayedName;
+    private string _displayedName = string.Empty;
+    private Vector3 _lastParentLossyScale;
+    private float _lastAppliedCanvasScale;
+    private bool _hasAppliedScale;
+    private bool _lastLocalPlayerState;
     private bool _isInitialized;
 
     /// <summary>
@@ -38,32 +42,62 @@ public class PlayerNameplateUI : MonoBehaviour
     {
         if (target == null) return null;
 
-        var nameplate = target.GetComponent<PlayerNameplateUI>();
-        if (nameplate == null)
+        if (!target.TryGetComponent<PlayerNameplateUI>(out var nameplate))
         {
             nameplate = target.AddComponent<PlayerNameplateUI>();
         }
         return nameplate;
     }
 
+    /// <summary>
+    /// 外部から任意の IPlayerNameSource を注入する（テストや拡張プレイヤー種別用）
+    /// </summary>
+    public void SetNameSource(IPlayerNameSource source)
+    {
+        UnsubscribeEvents();
+        _nameSource = source;
+        if (_isInitialized)
+        {
+            SubscribeEvents();
+            RefreshName(_nameSource != null ? _nameSource.PlayerName : PlayerProfileStore.PlayerName);
+        }
+    }
+
     private void Awake()
     {
-        _playerMove = GetComponent<PlayerMove>();
-        _lobbyNetworkPlayer = GetComponent<LobbyNetworkPlayer>();
-        _lobbyLocalAvatar = GetComponent<LobbyLocalAvatar>();
-        _playerStateManager = GetComponent<PlayerStateManager>();
+        _nameSource = ResolveNameSource();
+    }
+
+    private IPlayerNameSource ResolveNameSource()
+    {
+        if (TryGetComponent<IPlayerNameSource>(out var directSource))
+        {
+            return directSource;
+        }
+
+        if (TryGetComponent<PlayerMove>(out var playerMove))
+        {
+            TryGetComponent<PlayerStateManager>(out var stateManager);
+            return new PlayerMoveNameSourceAdapter(playerMove, stateManager);
+        }
+
+        return new FallbackLocalProfileNameSource();
     }
 
     private void Start()
     {
         EnsureVisualsCreated();
         SubscribeEvents();
-        RefreshName(ResolveCurrentName());
+        RefreshName(_nameSource != null ? _nameSource.PlayerName : PlayerProfileStore.PlayerName);
     }
 
     private void OnDestroy()
     {
         UnsubscribeEvents();
+        if (_nameSource is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
         if (_canvasRoot != null)
         {
             Destroy(_canvasRoot);
@@ -74,80 +108,60 @@ public class PlayerNameplateUI : MonoBehaviour
     {
         if (!_isInitialized || _canvasRoot == null) return;
 
-        bool shouldShow = ShouldShowNameplate();
+        bool isLocal = _nameSource == null || _nameSource.IsLocalControl;
+        if (isLocal != _lastLocalPlayerState)
+        {
+            RefreshName(_nameSource != null ? _nameSource.PlayerName : PlayerProfileStore.PlayerName);
+        }
+
+        bool shouldShow = (_nameSource == null || _nameSource.IsNameplateVisible) && !string.IsNullOrEmpty(_displayedName);
         if (_canvasRoot.activeSelf != shouldShow)
         {
             _canvasRoot.SetActive(shouldShow);
         }
         if (!shouldShow) return;
 
-        // キャラクター本体の回転・左右反転の影響を受けないようワールド基準で位置と向きを維持する
-        _canvasRoot.transform.position = transform.position + _worldOffset;
-        _canvasRoot.transform.rotation = Quaternion.identity;
+        _canvasRoot.transform.SetPositionAndRotation(transform.position + _worldOffset, Quaternion.identity);
+        UpdateCanvasScaleIfNeeded();
+    }
 
+    private void UpdateCanvasScaleIfNeeded()
+    {
         Vector3 parentLossy = transform.lossyScale;
-        float invX = Mathf.Abs(parentLossy.x) > 0.0001f ? 1f / parentLossy.x : 1f;
-        float invY = Mathf.Abs(parentLossy.y) > 0.0001f ? 1f / parentLossy.y : 1f;
-        float invZ = Mathf.Abs(parentLossy.z) > 0.0001f ? 1f / parentLossy.z : 1f;
+        if (_hasAppliedScale &&
+            Mathf.Approximately(_lastAppliedCanvasScale, _canvasScale) &&
+            (parentLossy - _lastParentLossyScale).sqrMagnitude <= 0.000001f)
+        {
+            return;
+        }
+
+        _hasAppliedScale = true;
+        _lastAppliedCanvasScale = _canvasScale;
+        _lastParentLossyScale = parentLossy;
+
+        float invX = Mathf.Abs(parentLossy.x) > 0.0001f ? 1f / Mathf.Abs(parentLossy.x) : 1f;
+        float invY = Mathf.Abs(parentLossy.y) > 0.0001f ? 1f / Mathf.Abs(parentLossy.y) : 1f;
+        float invZ = Mathf.Abs(parentLossy.z) > 0.0001f ? 1f / Mathf.Abs(parentLossy.z) : 1f;
         _canvasRoot.transform.localScale = new Vector3(
-            Mathf.Abs(invX) * _canvasScale,
-            Mathf.Abs(invY) * _canvasScale,
-            Mathf.Abs(invZ) * _canvasScale);
-
-        string latestName = ResolveCurrentName();
-        if (latestName != _displayedName)
-        {
-            RefreshName(latestName);
-        }
-    }
-
-    private bool ShouldShowNameplate()
-    {
-        if (_playerStateManager != null && _playerStateManager.PlayerState == PlayerState.Movie)
-        {
-            return false;
-        }
-        return !string.IsNullOrEmpty(ResolveCurrentName());
-    }
-
-    private bool IsLocalPlayer()
-    {
-        if (_playerMove != null) return _playerMove.IsLocalControl;
-        if (_lobbyNetworkPlayer != null) return _lobbyNetworkPlayer.IsOwner || !_lobbyNetworkPlayer.IsSpawned;
-        if (_lobbyLocalAvatar != null) return true;
-        return true;
-    }
-
-    private string ResolveCurrentName()
-    {
-        if (_playerMove != null) return _playerMove.PlayerName;
-        if (_lobbyNetworkPlayer != null) return _lobbyNetworkPlayer.PlayerName;
-        if (_lobbyLocalAvatar != null) return PlayerProfileStore.PlayerName;
-        return PlayerProfileStore.PlayerName;
+            invX * _canvasScale,
+            invY * _canvasScale,
+            invZ * _canvasScale);
     }
 
     private void SubscribeEvents()
     {
-        if (_playerMove != null)
+        if (_nameSource != null)
         {
-            _playerMove.OnPlayerNameChanged += HandleNameChanged;
-        }
-        if (_lobbyNetworkPlayer != null)
-        {
-            _lobbyNetworkPlayer.OnPlayerNameChanged += HandleNameChanged;
+            _nameSource.OnPlayerNameChanged += HandleNameChanged;
         }
         PlayerProfileStore.OnProfileChanged += HandleLocalProfileChanged;
     }
 
     private void UnsubscribeEvents()
     {
-        if (_playerMove != null)
+        if (_nameSource != null)
         {
-            _playerMove.OnPlayerNameChanged -= HandleNameChanged;
-        }
-        if (_lobbyNetworkPlayer != null)
-        {
-            _lobbyNetworkPlayer.OnPlayerNameChanged -= HandleNameChanged;
+            _nameSource.OnPlayerNameChanged -= HandleNameChanged;
         }
         PlayerProfileStore.OnProfileChanged -= HandleLocalProfileChanged;
     }
@@ -159,7 +173,7 @@ public class PlayerNameplateUI : MonoBehaviour
 
     private void HandleLocalProfileChanged(PlayerProfile profile)
     {
-        if (IsLocalPlayer() && profile != null)
+        if (profile != null && (_nameSource == null || _nameSource.IsLocalControl))
         {
             RefreshName(profile.PlayerName);
         }
@@ -168,10 +182,12 @@ public class PlayerNameplateUI : MonoBehaviour
     private void RefreshName(string playerName)
     {
         _displayedName = playerName ?? string.Empty;
+        _lastLocalPlayerState = _nameSource == null || _nameSource.IsLocalControl;
+
         if (_nameText == null) return;
 
         _nameText.text = _displayedName;
-        _nameText.color = IsLocalPlayer() ? _localPlayerTextColor : _remotePlayerTextColor;
+        _nameText.color = _lastLocalPlayerState ? _localPlayerTextColor : _remotePlayerTextColor;
 
         if (_backgroundRect != null)
         {
@@ -187,8 +203,8 @@ public class PlayerNameplateUI : MonoBehaviour
 
         _canvasRoot = new GameObject("PlayerNameplateCanvas", typeof(RectTransform), typeof(Canvas));
         _canvasRoot.transform.SetParent(transform, false);
-        _canvasRoot.transform.position = transform.position + _worldOffset;
-        _canvasRoot.transform.rotation = Quaternion.identity;
+        _canvasRoot.transform.SetPositionAndRotation(transform.position + _worldOffset, Quaternion.identity);
+        UpdateCanvasScaleIfNeeded();
 
         var canvas = _canvasRoot.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
@@ -220,7 +236,7 @@ public class PlayerNameplateUI : MonoBehaviour
         txtRect.offsetMax = new Vector2(-8f, -2f);
 
         _nameText = txtGo.GetComponent<Text>();
-        _nameText.font = ResolveFont();
+        _nameText.font = ResolveFontCached();
         _nameText.fontSize = 24;
         _nameText.fontStyle = FontStyle.Bold;
         _nameText.alignment = TextAnchor.MiddleCenter;
@@ -236,13 +252,70 @@ public class PlayerNameplateUI : MonoBehaviour
         _isInitialized = true;
     }
 
-    private static Font ResolveFont()
+    private static Font ResolveFontCached()
     {
+        if (s_cachedFont != null) return s_cachedFont;
+
         var existingText = FindAnyObjectByType<Text>();
         if (existingText != null && existingText.font != null)
         {
-            return existingText.font;
+            s_cachedFont = existingText.font;
+            return s_cachedFont;
         }
-        return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+        s_cachedFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        return s_cachedFont;
+    }
+
+    /// <summary>
+    /// 外部フォルダ（Assets/Oohashi）の PlayerMove を無修正で IPlayerNameSource として扱うアダプタークラス (Adapter / OCP)。
+    /// </summary>
+    private sealed class PlayerMoveNameSourceAdapter : IPlayerNameSource, IDisposable
+    {
+        private readonly PlayerMove _playerMove;
+        private readonly PlayerStateManager _stateManager;
+        private string _cachedName;
+
+        public string PlayerName => _playerMove != null && _playerMove.IsLocalControl
+            ? PlayerProfileStore.PlayerName
+            : _cachedName;
+
+        public bool IsLocalControl => _playerMove == null || _playerMove.IsLocalControl;
+        public bool IsNameplateVisible => _stateManager == null || _stateManager.PlayerState != PlayerState.Movie;
+
+        public event Action<string> OnPlayerNameChanged;
+
+        public PlayerMoveNameSourceAdapter(PlayerMove playerMove, PlayerStateManager stateManager)
+        {
+            _playerMove = playerMove;
+            _stateManager = stateManager;
+            _cachedName = _playerMove != null ? _playerMove.PlayerName : PlayerProfileStore.PlayerName;
+            if (_playerMove != null)
+            {
+                _playerMove.OnPlayerNameChanged += ForwardNameChanged;
+            }
+        }
+
+        private void ForwardNameChanged(string newName)
+        {
+            _cachedName = newName ?? string.Empty;
+            OnPlayerNameChanged?.Invoke(_cachedName);
+        }
+
+        public void Dispose()
+        {
+            if (_playerMove != null)
+            {
+                _playerMove.OnPlayerNameChanged -= ForwardNameChanged;
+            }
+        }
+    }
+
+    private sealed class FallbackLocalProfileNameSource : IPlayerNameSource
+    {
+        public string PlayerName => PlayerProfileStore.PlayerName;
+        public bool IsLocalControl => true;
+        public bool IsNameplateVisible => true;
+        public event Action<string> OnPlayerNameChanged { add { } remove { } }
     }
 }

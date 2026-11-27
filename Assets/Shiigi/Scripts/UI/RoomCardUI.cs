@@ -6,12 +6,14 @@ using UnityEngine.UI;
 
 public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
 {
-    [Header("テキスト")] [SerializeField] private Text _roomNameText;
+    [Header("テキスト")]
+    [SerializeField] private Text _roomNameText;
     [SerializeField] private Text _playerCountText;
     [SerializeField] private Text _statusText;
     [SerializeField] private Graphic _statusIndicator;
 
-    [Header("ボタン")] [SerializeField] private Button _joinButton;
+    [Header("ボタン")]
+    [SerializeField] private Button _joinButton;
     [SerializeField] private Button _cardButton;
 
     [Header("選択状態の見た目")]
@@ -40,23 +42,13 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
     private bool _isSelected;
     private bool _visualInitialized;
 
-    // 参加ボタンが押されたことを通知するイベント（旧UI互換）
     public event Action<ISessionInfo> OnJoinRequested;
-    // カードが選択状態になったことを通知するイベント
     public event Action<ISessionInfo, RoomCardUI> OnCardSelected;
-    // カードが決定（クリック/Submit）されたことを通知するイベント
     public event Action<ISessionInfo, RoomCardUI> OnCardSubmitted;
 
     public ISessionInfo SessionInfo => _sessionInfo;
     public Button JoinButton => NavigationButton;
-    public Button NavigationButton
-    {
-        get
-        {
-            if (_joinButton != null && _joinButton.gameObject.activeInHierarchy) return _joinButton;
-            return _cardButton;
-        }
-    }
+    public Button NavigationButton => (_joinButton != null && _joinButton.gameObject.activeInHierarchy) ? _joinButton : _cardButton;
 
     private void Awake()
     {
@@ -74,14 +66,13 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
             _cardButton.onClick.AddListener(HandleCardClicked);
             _cardVisual = UIButtonMetallicVisual.Attach(_cardButton);
             _cardVisual?.SetUseOutline(false);
-            EnsureButtonSound(_cardButton);
+            UIButtonSound.EnsureAttached(_cardButton, UIButtonType.Default);
         }
 
         if (_joinButton != null)
         {
-            UIButtonMetallicVisual.Attach(_joinButton);
             _joinButton.onClick.AddListener(() => OnJoinRequested?.Invoke(_sessionInfo));
-            EnsureButtonSound(_joinButton);
+            UIButtonSound.ConfigureButton(_joinButton, UIButtonType.Default);
         }
 
         ApplySelectedVisual(false);
@@ -140,11 +131,9 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
     {
         if (_cardButton != null) return;
 
-        // 旧UIの参加ボタンが非アクティブな場合はカードルート自体を選択・クリック可能にする
         if (_joinButton == null || !_joinButton.gameObject.activeSelf)
         {
-            _cardButton = GetComponent<Button>();
-            if (_cardButton == null)
+            if (!TryGetComponent(out _cardButton))
             {
                 _cardButton = gameObject.AddComponent<Button>();
                 var colors = _cardButton.colors;
@@ -162,9 +151,6 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
         }
     }
 
-    /// <summary>
-    /// ルーム一覧上で現在選択されているカードかどうかの表示を切り替える
-    /// </summary>
     public void SetSelected(bool selected)
     {
         if (_visualInitialized && _isSelected == selected) return;
@@ -205,15 +191,6 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
         }
     }
 
-    private static void EnsureButtonSound(Button button)
-    {
-        if (button != null && button.GetComponent<UIButtonSound>() == null)
-        {
-            var sound = button.gameObject.AddComponent<UIButtonSound>();
-            sound.ButtonType = UIButtonType.Default;
-        }
-    }
-
     public void OnSelect(BaseEventData eventData)
     {
         if (_sessionInfo != null)
@@ -238,7 +215,7 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
     }
 
     /// <summary>
-    /// セッション情報を元にカードの表示を更新する
+    /// セッション情報を元にカードの表示を更新する（ドメインルールは SessionPlayerPropertyHelper へ委譲）
     /// </summary>
     public void Setup(ISessionInfo sessionInfo)
     {
@@ -250,14 +227,18 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
 
         if (_playerCountText != null)
         {
-            var currentPlayerCount = sessionInfo.MaxPlayers - sessionInfo.AvailableSlots;
+            int currentPlayerCount = SessionPlayerPropertyHelper.GetCurrentPlayerCount(sessionInfo);
             _playerCountText.text = $"{currentPlayerCount} / {sessionInfo.MaxPlayers}";
         }
 
-        bool isInGame = SessionPlayerPropertyHelper.IsSessionInGame(sessionInfo);
-        bool isFull = sessionInfo.AvailableSlots <= 0;
-        string statusLabel = isInGame ? "試合中" : (isFull ? "満員" : "待機中");
-        Color statusColor = isInGame ? _inGameStatusColor : (isFull ? _fullStatusColor : _waitingStatusColor);
+        var status = SessionPlayerPropertyHelper.GetRoomAvailabilityStatus(sessionInfo);
+        string statusLabel = SessionPlayerPropertyHelper.GetRoomStatusDisplayText(status);
+        Color statusColor = status switch
+        {
+            RoomAvailabilityStatus.InGame => _inGameStatusColor,
+            RoomAvailabilityStatus.Full => _fullStatusColor,
+            _ => _waitingStatusColor
+        };
 
         if (_statusText != null)
         {
@@ -269,10 +250,9 @@ public class RoomCardUI : MonoBehaviour, ISelectHandler, IPointerEnterHandler
             _statusIndicator.color = statusColor;
         }
 
-        // 旧参加ボタンが有効な場合のみ満員時に非活性化する（カード自体の選択は満員でも許可）
         if (_joinButton != null && _joinButton.gameObject.activeSelf)
         {
-            _joinButton.interactable = sessionInfo.AvailableSlots > 0;
+            _joinButton.interactable = SessionPlayerPropertyHelper.CanJoinSession(sessionInfo);
         }
     }
 }
